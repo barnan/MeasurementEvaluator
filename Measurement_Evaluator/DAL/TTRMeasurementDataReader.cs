@@ -20,16 +20,12 @@ namespace Measurement_Evaluator.DAL
     }
 
 
-
-    
-
     /// <summary>
     /// 
     /// </summary>
     interface ITTRDataFileReader : IDataFileReader
     {
     }
-
 
 
     /// <summary>

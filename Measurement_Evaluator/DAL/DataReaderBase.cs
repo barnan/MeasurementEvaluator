@@ -7,17 +7,14 @@ using Measurement_Evaluator.Interfaces;
 
 namespace Measurement_Evaluator.DAL
 {
-    //class DataReaderBase
-    //{
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public interface IDataFileReader
-        {
-            IToolMeasurementData Read(string fileName);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IDataFileReader
+    {
+        IToolMeasurementData Read(string fileName);
+    }
 
 
-    //}
 }
