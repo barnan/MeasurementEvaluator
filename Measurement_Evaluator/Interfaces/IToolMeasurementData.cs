@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Measurement_Evaluator.Interfaces
 {
-    interface IToolMeasurementData
+    public interface IToolMeasurementData
     {
         string Name { get; set; }
         DateTime DateTimeOfMeas { get; set; }
