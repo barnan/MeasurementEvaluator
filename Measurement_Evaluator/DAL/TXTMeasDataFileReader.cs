@@ -7,12 +7,12 @@ using Measurement_Evaluator.Interfaces;
 
 namespace Measurement_Evaluator.DAL
 {
-    class TXTReader
+    class TXTMeasDataFileReader
     {
         string _file;
         string _toolName;
 
-        public TXTReader(string fileName, string toolname)
+        public TXTMeasDataFileReader(string fileName, string toolname)
         {
             _file = fileName;
             _toolName = toolname;

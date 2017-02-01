@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Measurement_Evaluator.Interfaces
 {
-    interface IMeasurementDataReader
+    public interface IMeasurementDataReader
     {
         IToolMeasurementData ReadMeasurementData(List<string> inputs);
     }

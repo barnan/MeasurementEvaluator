@@ -89,11 +89,13 @@
     <Compile Include="Calculation\QcellsStrictStatisticsCalculation\QCellsStrictStatisticsCalculation_1D.cs" />
     <Compile Include="Calculation\QcellsStrictStatisticsCalculation\QCellsStrictStatisticsCalculationBase_1D.cs" />
     <Compile Include="DAL\CSVReader.cs" />
-    <Compile Include="DAL\DataReaderBase.cs" />
+    <Compile Include="DAL\MeasDataFile.cs" />
+    <Compile Include="DAL\MeasDataFileReaderBase.cs" />
+    <Compile Include="DAL\IMeasDataFileReader.cs" />
     <Compile Include="DAL\InputDirContentManager.cs" />
     <Compile Include="DAL\SHPMeasurementDataReader.cs" />
     <Compile Include="DAL\TTRMeasurementDataReader.cs" />
-    <Compile Include="DAL\TXTReader.cs" />
+    <Compile Include="DAL\TXTMeasDataFileReader.cs" />
     <Compile Include="Interfaces\ICalculator.cs" />
     <Compile Include="Interfaces\IConditionBase.cs" />
     <Compile Include="Interfaces\IDataReader.cs" />

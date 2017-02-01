@@ -25,6 +25,13 @@ namespace Measurement_Evaluator.DAL
         }
 
 
+
+        public IToolMeasurementData Read(string fileName)
+        {
+            return ReadMeasData_CSV_File();
+        }
+
+
         //public bool ReadMeasData_CSV_File(string measFile, ref List<List<double>> ResListDouble, ref List<string> columnNameList, ref DateTime dateofmeas)
         public IToolMeasurementData ReadMeasData_CSV_File()
         {
@@ -60,8 +67,6 @@ namespace Measurement_Evaluator.DAL
 
             return toolMeasData;
         }
-
-
 
 
 

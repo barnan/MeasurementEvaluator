@@ -11,5 +11,6 @@ namespace Measurement_Evaluator.Interfaces
         string Name { get; set; }
         DateTime DateTimeOfMeas { get; set; }
         List<IQuantityMeasurementData> Results { get; set; }
+
     }
 }
