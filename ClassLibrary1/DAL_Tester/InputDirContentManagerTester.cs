@@ -239,7 +239,11 @@ namespace ClassLibrary1
         public void TestEmptyFileListReading_11()
         {
             InputConfigDirectoryContentManager idcm = new InputConfigDirectoryContentManager();
-            List<List<string>> fileList_Spec = idcm.GetDirectoryContent(_folder3, "ref");
+
+            List<List<string>> fileList_Spec = null;
+
+            Assert.DoesNotThrow(() => fileList_Spec = idcm.GetDirectoryContent(_folder3, "spec"));
+
             int expectedExtensionCount = 0;
             Assert.AreEqual(expectedExtensionCount, fileList_Spec.Count);
         }

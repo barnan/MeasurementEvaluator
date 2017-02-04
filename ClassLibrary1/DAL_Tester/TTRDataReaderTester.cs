@@ -31,7 +31,7 @@ namespace ClassLibrary1.DAL_Tester
         [Test, Category("MeasurementDataReading")]
         public void TestNumberOfColumnsAndRows()
         {
-            IMeasurementDataReader reader = new TTRMeasurementDataReader(new List<string> { new  });
+            //IMeasurementDataReader reader = new TTRMeasurementDataReader(new List<string> { new  });
 
 
         }
