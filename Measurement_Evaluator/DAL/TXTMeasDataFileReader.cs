@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Measurement_Evaluator.BLL;
 using Measurement_Evaluator.Interfaces;
 

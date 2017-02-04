@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using Measurement_Evaluator.BLL;
 using Measurement_Evaluator.Interfaces;
 
 namespace Measurement_Evaluator.DAL
@@ -44,6 +43,9 @@ namespace Measurement_Evaluator.DAL
             //Join data:
             IToolMeasurementData finalResu = JoinToolMeasurementData(resuList);
 
+
+
+
             return finalResu;
         }
 
@@ -55,9 +57,29 @@ namespace Measurement_Evaluator.DAL
         /// <returns></returns>
         private IToolMeasurementData JoinToolMeasurementData(List<IToolMeasurementData> inputList)
         {
+            if (inputList == null || inputList.Count == 0)
+                return null;
 
+            IToolMeasurementData summadata = new ToolMeasurementData(inputList[0].Name);
 
+            foreach (var toolmeasdata in inputList)
+            {
+                foreach (var measdata in toolmeasdata.Results)
+                {
+                    int index = summadata.Results.FindIndex(p => p.Name == measdata.Name);
 
+                    if (index != -1)
+                    {
+                        summadata.Results[index].MeasData.AddRange(measdata.MeasData);
+                    }
+                    else    // new element must be created
+                    {
+                        summadata.Results.Add(new QuantityMeasurementData { Name=measdata.Name, MeasData=measdata.MeasData });
+                    }
+                }
+            }
+
+            return summadata;
         }
 
 

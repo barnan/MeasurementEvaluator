@@ -27,12 +27,8 @@ namespace Measurement_Evaluator.DAL
         public TTRMeasDataFileReader(List<string> inputs)
             :base(inputs, "TTR")
         {
-            
 
-            //if (inputs?.Count == 0)
-            //    return null;
-
-            if (InputFileList != null)
+            if (InputFileList != null && InputFileList.Count > 0)
             {
 
                 List<string> enumDescriptions = new List<string>();
