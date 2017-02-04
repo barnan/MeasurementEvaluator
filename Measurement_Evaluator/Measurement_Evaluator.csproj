@@ -90,10 +90,8 @@
     <Compile Include="Calculation\QcellsStrictStatisticsCalculation\QCellsStrictStatisticsCalculationBase_1D.cs" />
     <Compile Include="DAL\TabularTextReader.cs" />
     <Compile Include="DAL\MeasDataFileBase.cs" />
-    <Compile Include="DAL\ToolReaderBase.cs" />
+    <Compile Include="DAL\ToolMeasDataReader.cs" />
     <Compile Include="DAL\InputDirContentManager.cs" />
-    <Compile Include="DAL\SHPToolReader.cs" />
-    <Compile Include="DAL\TTRToolReader.cs" />
     <Compile Include="DAL\XmlReader.cs" />
     <Compile Include="Interfaces\ICalculator.cs" />
     <Compile Include="Interfaces\IConditionBase.cs" />

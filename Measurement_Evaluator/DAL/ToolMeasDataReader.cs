@@ -26,7 +26,7 @@ namespace Measurement_Evaluator.DAL
     /// <summary>
     /// 
     /// </summary>
-    public abstract class ToolReaderBase : IMeasDataFileReader
+    public abstract class ToolMeasDataReader : IMeasDataFileReader
     {
         public string ToolName { get; set; }
         public List<string> InputFileList { get; set; }
@@ -34,17 +34,45 @@ namespace Measurement_Evaluator.DAL
 
         public List<string[]> ExtensionList { get; set; }
 
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="inputs"></param>
         /// <param name="toolname"></param>
-        public ToolReaderBase(List<string> inputs, string toolname, List<string[]> extensionList)
+        public ToolMeasDataReader(List<string> inputs, string toolname, List<string[]> extensionList)
         {
             InputFileList = inputs;
             ToolName = toolname;
 
             ExtensionList = extensionList;
+
+
+            if (InputFileList != null && InputFileList.Count > 0)
+            {
+                List<string> finalFileList = CheckFileExtension();
+
+                if (finalFileList != null)
+                {
+                    MeasDataFileList = new List<IMeasDataFile>(finalFileList.Count);
+
+                    foreach (var item in finalFileList)
+                    {
+                        if (Path.GetExtension(item) == ".xml")
+                        {
+                            MeasDataFileList.Add(new XmlReader(item, ToolName));         // xml-reader
+                        }
+                        else
+                        {
+                            char separator = Convert.ToChar(ExtensionList.Find(p => p[0] == Path.GetExtension(item))[0]);
+
+                            MeasDataFileList.Add(new TabularTextReader(item, ToolName, separator));    // tabular-text-reader
+                        }
+                    }
+                }
+
+            }
         }
 
 

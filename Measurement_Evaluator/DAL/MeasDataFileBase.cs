@@ -16,22 +16,6 @@ namespace Measurement_Evaluator.DAL
     }
 
 
-
-    //public class AvailableExtension
-    //{
-    //    List<string[]> _extensions;
-
-    //    public AvailableExtension(List<string[]> extensions)
-    //    {
-    //        if (extensions == null || extensions.Count < 1)
-    //            throw new ArgumentException("The format of the extension input is not proper.");
-
-    //        _extensions = extensions;
-    //    }
-    //}
-
-
-
     /// <summary>
     /// 
     /// </summary>

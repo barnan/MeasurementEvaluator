@@ -17,14 +17,12 @@ namespace Measurement_Evaluator.DAL
         }
 
 
-        //public bool ReadMeasData_CSV_File(string measFile, ref List<List<double>> ResListDouble, ref List<string> columnNameList, ref DateTime dateofmeas)
         public override IToolMeasurementData ReadFile()
         {
             IToolMeasurementData toolMeasData = new ToolMeasurementData();
 
             if (CanRead())
             {
-                
                 toolMeasData.Name = ToolName;
 
                 using (StreamReader reader = new StreamReader(File.OpenRead(FileName)))
