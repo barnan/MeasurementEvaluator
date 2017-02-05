@@ -24,10 +24,12 @@ namespace Measurement_Evaluator.DAL
         public string FileName { get; set; }
         public string ToolName { get; set; }
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="filename"></param>
+        /// <param name="toolname"></param>
         public MeasDataFileBase(string filename, string toolname)
         {
             FileName = filename;
@@ -42,9 +44,12 @@ namespace Measurement_Evaluator.DAL
         {
             if (!string.IsNullOrEmpty(FileName))
             {
-                FileStream fs = new FileStream(FileName, FileMode.Open, FileAccess.Read);
-                if (fs.CanRead)
-                    return true;
+                //FileStream fstream = null;
+                using (FileStream fstream = new FileStream(FileName, FileMode.Open, FileAccess.Read))
+                {
+                    if (fstream.CanRead)
+                        return true;
+                }
             }
             return false;
         }

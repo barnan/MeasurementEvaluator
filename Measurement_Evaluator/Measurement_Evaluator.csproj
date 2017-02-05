@@ -108,7 +108,6 @@
     <Compile Include="Interfaces\IToolSpecification.cs" />
     <Compile Include="Interfaces\IWSIReferenceSample.cs" />
     <Compile Include="Interfaces\IQuantityMeasurementData.cs" />
-    <Compile Include="Interfaces\IMeasurementDataReader.cs" />
     <Compile Include="Interfaces\MeasurementEvaluator.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

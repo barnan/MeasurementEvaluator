@@ -10,7 +10,9 @@ namespace Measurement_Evaluator.Interfaces
     {
         string Name { get; set; }
         DateTime DateTimeOfMeas { get; set; }
-        List<IQuantityMeasurementData> Results { get; set; }
-
+        List<IQuantityMeasurementData> Results { get; }
+        void Add(IQuantityMeasurementData data);
+        IQuantityMeasurementData this[int i] { get; set; }
     }
+
 }

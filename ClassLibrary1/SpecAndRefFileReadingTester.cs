@@ -58,19 +58,29 @@ namespace ClassLibrary1
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         [OneTimeTearDown]
         public void DestroyTestEnvironment()
         {
             Directory.Delete(folder1, true);
         }
 
-        [Test]
+        /// <summary>
+        /// 
+        /// </summary>
+        [Test, Category("ReferenceFileSaveReadTest")]
         public void ReferenceFileSerializationTest()
         {
+            // reference save-test:
             Assert.DoesNotThrow(() => ReferenceSample.Save(folder1 + "\\TTR-001.refTTR", _rsOriginal));
+            // reference read-test
             Assert.DoesNotThrow(() => _rsCheck = ReferenceSample.Read(folder1 + "\\TTR-001.refTTR"));
 
+            // reference name test
             Assert.AreEqual(_rsOriginal.SampleID, _rsCheck.SampleID);
+            // reference count test:
             Assert.AreEqual(_rsOriginal.ListOfReferenceValues.Count, _rsCheck.ListOfReferenceValues.Count);
 
             for ( int i = 0; i < _rsOriginal.ListOfReferenceValues.Count; i++)
@@ -81,14 +91,19 @@ namespace ClassLibrary1
             }
         }
 
-        [Test]
+        [Test, Category("SpecificationFileSaveReadTest")]
         public void SpecificationFileSerializationTest()
         {
+            // specification save-test:
             Assert.DoesNotThrow(() => ToolSpecification.Save(folder1 + "\\TTR_spec.specTTR", _tsOriginal));
+            // specification read-test
             Assert.DoesNotThrow(() => _tsCheck = ToolSpecification.Read(folder1 + "\\TTR_spec.specTTR"));
 
+            // specification name test:
             Assert.AreEqual(_tsOriginal.ToolName, _tsCheck.ToolName);
+            // specification count test:
             Assert.AreEqual(_tsOriginal.ToolspecificationList.Count, _tsCheck.ToolspecificationList.Count);
+
 
             for (int i = 0; i < _tsOriginal.ToolspecificationList.Count; i++)
             {

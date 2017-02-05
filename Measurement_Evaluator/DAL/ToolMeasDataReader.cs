@@ -13,26 +13,25 @@ namespace Measurement_Evaluator.DAL
     /// </summary>
     public interface IMeasDataFileReader
     {
-        IToolMeasurementData Read(string fileName);
-        List<string> CheckFileExtension();
+        IToolMeasurementData Read();
+        //List<string> CheckFileExtension();
 
         string ToolName { get; set; }
         List<string> InputFileList { get; set; }
         List<string[]> ExtensionList { get; set; }
-        List<IMeasDataFile> MeasDataFileList { get; set; }
+        //List<IMeasDataFile> MeasDataFileList { get; set; }
     }
 
 
     /// <summary>
     /// 
     /// </summary>
-    public abstract class ToolMeasDataReader : IMeasDataFileReader
+    public class ToolMeasDataReader : IMeasDataFileReader
     {
         public string ToolName { get; set; }
         public List<string> InputFileList { get; set; }
-        public List<IMeasDataFile> MeasDataFileList { get; set; }
-
         public List<string[]> ExtensionList { get; set; }
+        private List<IMeasDataFile> MeasDataFileList { get; set; }
 
 
 
@@ -41,11 +40,14 @@ namespace Measurement_Evaluator.DAL
         /// </summary>
         /// <param name="inputs"></param>
         /// <param name="toolname"></param>
+        /// <param name="extensionList"></param>
         public ToolMeasDataReader(List<string> inputs, string toolname, List<string[]> extensionList)
         {
+            if (inputs == null || inputs.Count == 0 || toolname == null || extensionList== null || extensionList.Count == 0)
+                return;
+
             InputFileList = inputs;
             ToolName = toolname;
-
             ExtensionList = extensionList;
 
 
@@ -65,7 +67,7 @@ namespace Measurement_Evaluator.DAL
                         }
                         else
                         {
-                            char separator = Convert.ToChar(ExtensionList.Find(p => p[0] == Path.GetExtension(item))[0]);
+                            char separator = Convert.ToChar(ExtensionList.Find(p => p[0] == Path.GetExtension(item))[1]);
 
                             MeasDataFileList.Add(new TabularTextReader(item, ToolName, separator));    // tabular-text-reader
                         }
@@ -79,19 +81,23 @@ namespace Measurement_Evaluator.DAL
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fileName"></param>
         /// <returns></returns>
-        public IToolMeasurementData Read(string fileName)
+        public IToolMeasurementData Read()
         {
-            List<IToolMeasurementData> resuList = new List<IToolMeasurementData>(MeasDataFileList.Count);
+            IToolMeasurementData finalResu = new ToolMeasurementData();
 
-            foreach (var measdatafiles in MeasDataFileList)
+            if (MeasDataFileList != null && MeasDataFileList.Count > 0)
             {
-                resuList.Add(measdatafiles.ReadFile());
-            }
+                List<IToolMeasurementData> resuList = new List<IToolMeasurementData>(MeasDataFileList.Count);
 
-            //Join data from different files into 1 ToolMeasurementData:
-            IToolMeasurementData finalResu = JoinToolMeasurementData(resuList);
+                foreach (var measdatafiles in MeasDataFileList)
+                {
+                    resuList.Add(measdatafiles.ReadFile());
+                }
+
+                //Join data from different files into 1 ToolMeasurementData:
+                finalResu = JoinToolMeasurementData(resuList);
+            }
 
             return finalResu;
         }
@@ -104,10 +110,10 @@ namespace Measurement_Evaluator.DAL
         /// <returns></returns>
         private IToolMeasurementData JoinToolMeasurementData(List<IToolMeasurementData> inputList)
         {
-            if (inputList == null || inputList.Count == 0)
-                return null;
-
             IToolMeasurementData summadata = new ToolMeasurementData(inputList[0].Name);
+
+            if (inputList == null || inputList.Count == 0)
+                return summadata;
 
             foreach (var toolmeasdata in inputList)
             {
@@ -117,11 +123,11 @@ namespace Measurement_Evaluator.DAL
 
                     if (index != -1)
                     {
-                        summadata.Results[index].MeasData.AddRange(measdata.MeasData);
+                        summadata[index].MeasData.AddRange(measdata.MeasData);
                     }
                     else    // new element must be created
                     {
-                        summadata.Results.Add(new QuantityMeasurementData { Name=measdata.Name, MeasData=measdata.MeasData });
+                        summadata.Add(new QuantityMeasurementData { Name=measdata.Name, MeasData=measdata.MeasData });
                     }
                 }
             }
@@ -133,11 +139,8 @@ namespace Measurement_Evaluator.DAL
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="inputs"></param>
-        /// <param name="enumDescriptions"></param>
         /// <returns></returns>
-        //public List<string> CheckFileExtension(List<string> inputs, List<string> enumDescriptions)
-        public List<string> CheckFileExtension()
+        private List<string> CheckFileExtension()
         {
             List<string> descriptionList = ExtensionList.Select(a => a[0]).ToList();
 

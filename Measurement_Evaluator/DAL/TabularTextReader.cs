@@ -10,6 +10,13 @@ namespace Measurement_Evaluator.DAL
     {
         char _separator;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="toolname"></param>
+        /// <param name="sep"></param>
         public TabularTextReader(string fileName, string toolname, char sep = ';' )
             :base(fileName, toolname)
         {
@@ -17,40 +24,63 @@ namespace Measurement_Evaluator.DAL
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override IToolMeasurementData ReadFile()
         {
             IToolMeasurementData toolMeasData = new ToolMeasurementData();
 
-            if (CanRead())
+            try
             {
-                toolMeasData.Name = ToolName;
-
-                using (StreamReader reader = new StreamReader(File.OpenRead(FileName)))
+                if (CanRead())
                 {
-                    bool firstLine = true;
-                    while (!reader.EndOfStream)
+                    toolMeasData.Name = ToolName;
+
+                    using (StreamReader reader = new StreamReader(File.OpenRead(FileName)))
                     {
-                        string line = reader.ReadLine();
-
-                        string[] elements = line.Split(_separator);
-
-                        if (firstLine)
+                        bool firstLine = true;
+                        while (!reader.EndOfStream)
                         {
-                            toolMeasData.Results = new List<IQuantityMeasurementData>(elements.Length);
+                            string line = reader.ReadLine();
 
-                            for (int i = 0; i < elements.Length; i++)
-                                toolMeasData.Results[i].Name = elements[i];
+                            string[] elements = line.Split(_separator);
 
-                            firstLine = false;
+                            if (firstLine)
+                            {
+                                for (int i = 0; i < elements.Length; i++)
+                                    toolMeasData.Add(new QuantityMeasurementData { Name = elements[i] });
+
+                                firstLine = false;
+                            }
+                            else
+                            {
+                                for (int i = 0; i < elements.Length; i++)
+                                {
+                                    double szam;
+                                    try
+                                    {
+                                        szam = Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture);
+                                    }
+                                    catch (FormatException ex)
+                                    {
+                                        szam = 0.0;
+                                    }
+
+
+                                    toolMeasData[i].MeasData.Add(szam);
+                                }
+
+                            }
                         }
-                        else
-                        {
-                            for (int i = 0; i < elements.Length; i++)
-                                toolMeasData.Results[i].MeasData.Add(Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture));
-                        }
+
                     }
-
                 }
+            }
+            catch (Exception ex)
+            {
+                // TODO: error in file read
             }
 
             return toolMeasData;

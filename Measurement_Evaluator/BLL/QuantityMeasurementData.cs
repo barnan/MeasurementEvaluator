@@ -11,5 +11,13 @@ namespace Measurement_Evaluator.BLL
     {
         public string Name { get; set; }
         public List<double> MeasData { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public QuantityMeasurementData()
+        {
+            MeasData = new List<double>();
+        }
     }
 }
