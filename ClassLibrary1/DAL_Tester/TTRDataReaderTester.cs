@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Measurement_Evaluator.DAL;
 using Measurement_Evaluator.Interfaces;
 using NUnit.Framework;
@@ -27,9 +24,11 @@ namespace ClassLibrary1.DAL_Tester
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             DirectoryInfo dirName = Directory.GetParent(Directory.GetParent(path.Substring(6, path.Length - 6)).ToString());
 
-            folder1 = dirName.ToString() + "\\DAL_Tester\\TTR_InputData";
+            folder1 = dirName.ToString() + @"\DAL_Tester\TTR_InputData";
         }
 
+
+        #region only txt extension
         /// <summary>
         /// 
         /// </summary>
@@ -50,6 +49,9 @@ namespace ClassLibrary1.DAL_Tester
             Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
         }
 
+        #endregion
+        
+        #region only csv extension
         /// <summary>
         /// 
         /// </summary>
@@ -69,6 +71,10 @@ namespace ClassLibrary1.DAL_Tester
             Assert.AreEqual(expectedColumnCount, data.Results.Count);
             Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
         }
+
+        #endregion
+
+        #region txt and csv
 
         /// <summary>
         /// 
@@ -93,26 +99,9 @@ namespace ClassLibrary1.DAL_Tester
             Assert.AreEqual(expectedRowCount2, data.Results[expectedColumnCount-1].MeasData.Count);
         }
 
-        /// <summary>
-        /// Checks the number of joint measdata
-        /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData4()
-        {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" },
-                                                                    "TTR",
-                                                                    new List<string[]> { new string[] {".csv", ";" }
-                                                                                 });
-
-            IToolMeasurementData data = reader.Read();
-
-            int expectedColumnCount = 11;
-            int expectedRowCount = 10;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
-        }
-
+        #endregion
+        
+        #region null extension list
 
         /// <summary>
         /// checks the response in case of NULL extension list
@@ -146,6 +135,10 @@ namespace ClassLibrary1.DAL_Tester
 
         }
 
+        #endregion
+
+        #region empty extension list
+
         /// <summary>
         /// checks the response in case of EMPTY extension list
         /// </summary>
@@ -176,11 +169,15 @@ namespace ClassLibrary1.DAL_Tester
             }
         }
 
+        #endregion
+
+        #region empty filelist
+
         /// <summary>
         /// checks the response in case of EMPTY file list
         /// </summary>
         [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData67()
+        public void TestReadingOfTTRMeasurementData7()
         {
             IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> (),
                                                                     "TTR",
@@ -204,8 +201,29 @@ namespace ClassLibrary1.DAL_Tester
             {
                 Assert.Fail();
             }
-
         }
+
+        #endregion
+
+        #region empty columns and/or empty headers
+
+        public void TestReadingOfTTRMeasurementData8()
+        {
+            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_3.csv" },
+                                                                    "TTR",
+                                                                    new List<string[]> { new string[] { ".csv", ";" } }
+                                                               );
+
+            IToolMeasurementData data = reader.Read();
+
+            int expectedColumnCount = 11;
+            int expectedRowCount = 10;
+
+            Assert.AreEqual(expectedColumnCount, data.Results.Count);
+            Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
+        }
+
+        #endregion
 
     }
 }

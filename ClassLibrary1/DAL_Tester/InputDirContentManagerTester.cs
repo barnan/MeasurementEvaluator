@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
 using Measurement_Evaluator.DAL;
-using System.CodeDom.Compiler;
+using NUnit.Framework;
 
-namespace ClassLibrary1
+namespace ClassLibrary1.DAL_Tester
 {
     [TestFixture]
     class InputDirContentManagerTester
@@ -17,7 +13,7 @@ namespace ClassLibrary1
         string _folder2;
         string _folder3;
 
-
+        #region init and close
         [OneTimeSetUp]
         public void InitTestEnvironment()
         {
@@ -95,8 +91,9 @@ namespace ClassLibrary1
             {
                 // errror in the file deleting
             }
-
         }
+        #endregion
+
 
         #region spec test
 
@@ -170,7 +167,6 @@ namespace ClassLibrary1
         #endregion
 
         #region ref test
-
 
         /// <summary>
         /// Checks the number of extensions in the reference folder:

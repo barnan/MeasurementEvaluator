@@ -14,12 +14,10 @@ namespace Measurement_Evaluator.DAL
     public interface IMeasDataFileReader
     {
         IToolMeasurementData Read();
-        //List<string> CheckFileExtension();
 
         string ToolName { get; set; }
         List<string> InputFileList { get; set; }
         List<string[]> ExtensionList { get; set; }
-        //List<IMeasDataFile> MeasDataFileList { get; set; }
     }
 
 
@@ -36,7 +34,10 @@ namespace Measurement_Evaluator.DAL
 
 
         /// <summary>
-        /// 
+        /// Constructor
+        /// 1.  checks the input data
+        /// 2. Calls the file extension check
+        /// 3. creates the datafiles objects
         /// </summary>
         /// <param name="inputs"></param>
         /// <param name="toolname"></param>
@@ -79,7 +80,7 @@ namespace Measurement_Evaluator.DAL
 
 
         /// <summary>
-        /// 
+        /// Reads the content of the files
         /// </summary>
         /// <returns></returns>
         public IToolMeasurementData Read()
@@ -104,7 +105,8 @@ namespace Measurement_Evaluator.DAL
 
 
         /// <summary>
-        /// 
+        /// Merges the different ToolMeaseData into one object
+        /// If 10 results are in Column1 in ToolMeasData1 and 10 results for Column1 in ToolMeasData2 -> 20 result will be for Column1 in the resultant ToolMeasData
         /// </summary>
         /// <param name="inputList"></param>
         /// <returns></returns>
@@ -114,6 +116,9 @@ namespace Measurement_Evaluator.DAL
 
             if (inputList == null || inputList.Count == 0)
                 return summadata;
+
+            if (inputList.Count == 1)
+                return inputList[0];
 
             foreach (var toolmeasdata in inputList)
             {
@@ -137,7 +142,7 @@ namespace Measurement_Evaluator.DAL
 
 
         /// <summary>
-        /// 
+        /// Checks the file extensions -> a new file list is generated, from those input files which have the extension from ExtensionList 
         /// </summary>
         /// <returns></returns>
         private List<string> CheckFileExtension()
@@ -149,8 +154,6 @@ namespace Measurement_Evaluator.DAL
 
             return finalFileList;
         }
-
     }
-
 
 }

@@ -12,7 +12,7 @@ namespace Measurement_Evaluator.DAL
 
 
         /// <summary>
-        /// 
+        /// constructor
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="toolname"></param>
@@ -25,7 +25,7 @@ namespace Measurement_Evaluator.DAL
 
 
         /// <summary>
-        /// 
+        /// Reads the file content -> returns with the full IToolMeasurement result
         /// </summary>
         /// <returns></returns>
         public override IToolMeasurementData ReadFile()
@@ -45,12 +45,22 @@ namespace Measurement_Evaluator.DAL
                         {
                             string line = reader.ReadLine();
 
+                            if (line == null)
+                                continue;
+
                             string[] elements = line.Split(_separator);
 
                             if (firstLine)
                             {
-                                for (int i = 0; i < elements.Length; i++)
-                                    toolMeasData.Add(new QuantityMeasurementData { Name = elements[i] });
+                                int emptycounter = 0;
+
+                                foreach (string str in elements)
+                                {
+                                    if (string.IsNullOrEmpty(str))
+                                        toolMeasData.Add(new QuantityMeasurementData {Name = "Empty_" + emptycounter});
+                                    else
+                                        toolMeasData.Add(new QuantityMeasurementData {Name = str});
+                                }
 
                                 firstLine = false;
                             }
@@ -68,10 +78,8 @@ namespace Measurement_Evaluator.DAL
                                         szam = 0.0;
                                     }
 
-
                                     toolMeasData[i].MeasData.Add(szam);
                                 }
-
                             }
                         }
 
@@ -85,8 +93,6 @@ namespace Measurement_Evaluator.DAL
 
             return toolMeasData;
         }
-
-
 
     }
 }

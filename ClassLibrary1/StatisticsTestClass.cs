@@ -13,7 +13,7 @@ namespace UnitTestProject1
     public class StatisticsTestClass
     {
         [Test]
-        public void Test1()
+        public void CalcTest01()
         {
             BasicStatisticsCalculation_1D b = new BasicStatisticsCalculation_1D();
 
