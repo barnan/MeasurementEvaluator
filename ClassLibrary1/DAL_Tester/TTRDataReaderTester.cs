@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Measurement_Evaluator.DAL;
@@ -13,217 +14,124 @@ namespace ClassLibrary1.DAL_Tester
         /// <summary>
         /// contains the 
         /// </summary>
-        string folder1;
+        static string folder1 = SetupPath();
+
 
         /// <summary>
-        /// 
+        /// get the durrent directory and navigate to the test directory
         /// </summary>
-        [OneTimeSetUp]
-        public void SetInputDir()
+        /// <returns></returns>
+        static string SetupPath ()
         {
             string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             DirectoryInfo dirName = Directory.GetParent(Directory.GetParent(path.Substring(6, path.Length - 6)).ToString());
 
-            folder1 = dirName.ToString() + @"\DAL_Tester\TTR_InputData";
+            return  dirName.ToString() + @"\DAL_Tester\TTR_InputData";
         }
 
 
-        #region only txt extension
+        public class TTRColumnTestFactory
+        {
+            public static IEnumerable TestCases
+            {
+                get
+                {
+                    //only csv extension
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData column - only csv 1").Returns(11);
+
+                    //only txt extension
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt" }, new List<string[]> { new string[] { ".txt", "\t" } }).SetName("TTR ReadData column - only txt 1").Returns(11);
+
+                    // only csv
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData column - only csv 2").Returns(11);
+
+                    // both txt and csv
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData column - both csv and txt").Returns(13);
+
+                    // null extension list
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, null).SetName("TTR ReadData column - null extension list").Returns(0);
+
+                    // empty extension list
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]>()).SetName("TTR ReadData column - empty extension list").Returns(0);
+
+                    //  null file List
+                    yield return new TestCaseData(null, new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData column - null filelist").Returns(0);
+
+                    // empty file list
+                    yield return new TestCaseData(new List<string>(), new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData column - empty file list").Returns(0);
+
+                    //  both lists are null
+                    yield return new TestCaseData(new List<string>(), new List<string[]>()).SetName("TTR ReadData column - both lists null").Returns(0);
+
+                    // test the reading of a csv file with empty sections
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_3.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData column - empty number csv").Returns(11);
+                }
+            }
+        }
+
+
+
+        public class TTRRowTestFactory
+        {
+            public static IEnumerable TestCases
+            {
+                get
+                {
+                    //only csv extension
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData row - only csv 1").Returns(10);
+
+                    //only txt extension
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt" }, new List<string[]> { new string[] { ".txt", "\t" } }).SetName("TTR ReadData row - only txt 1").Returns(10);
+
+                    // only csv
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData row - only csv 2").Returns(10);
+
+                    // both txt and csv
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData row - both txt and csv").Returns(20);
+
+                    // test the reading of a csv file with empty sections
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_3.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData row - empty number csv").Returns(10);
+                }
+            }
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData1()
+        /// <param name="fileList"></param>
+        /// <param name="extensionList"></param>
+        /// <param name="expectedColumnCount"></param>
+        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRColumnTestFactory), "TestCases")]
+        public int TestReadOfTTRData_ColumnCount(List<string> fileList, List<string[]> extensionList)
         {
-            IMeasDataFileReader reader = new ToolMeasDataReader(    new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt"}, 
-                                                                    "TTR", 
-                                                                    new List<string[]> { new string[] {".txt", "\t" }                                                                                        }
-                                                               );
+            IMeasDataFileReader reader = new ToolMeasDataReader(fileList, "TTR", extensionList );
 
             IToolMeasurementData data = reader.Read();
 
-            int expectedColumnCount = 11;
-            int expectedRowCount = 10;
+            //Assert.AreEqual(expectedColumnCount, data.Results.Count);
+            //Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
 
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
+            return data.Results.Count;
         }
 
-        #endregion
-        
-        #region only csv extension
-        /// <summary>
-        /// 
-        /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData2()
-        {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" },
-                                                                    "TTR",
-                                                                    new List<string[]> { new string[] {".csv", ";" }
-                                                               });
-
-            IToolMeasurementData data = reader.Read();
-
-            int expectedColumnCount = 11;
-            int expectedRowCount = 10;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
-        }
-
-        #endregion
-
-        #region txt and csv
 
         /// <summary>
         /// 
         /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData3()
+        /// <param name="fileList"></param>
+        /// <param name="extensionList"></param>
+        /// <param name="expectedColumnCount"></param>
+        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRRowTestFactory), "TestCases")]
+        public int TestReadOfTTRData_RowCount(List<string> fileList, List<string[]> extensionList)
         {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" },
-                                                                    "TTR",
-                                                                    new List<string[]> { new string[] {".csv", ";" },
-                                                                                         new string[] {".txt", "\t" }
-                                                                                 });
+            IMeasDataFileReader reader = new ToolMeasDataReader(fileList, "TTR", extensionList);
 
             IToolMeasurementData data = reader.Read();
 
-            int expectedColumnCount = 13;
-            int expectedRowCount1 = 20;
-            int expectedRowCount2 = 10;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            Assert.AreEqual(expectedRowCount1, data.Results[0].MeasData.Count);
-            Assert.AreEqual(expectedRowCount2, data.Results[expectedColumnCount-1].MeasData.Count);
+            return data.Results[0].MeasData.Count;
         }
 
-        #endregion
-        
-        #region null extension list
-
-        /// <summary>
-        /// checks the response in case of NULL extension list
-        /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData5()
-        {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" },
-                                                                    "TTR",
-                                                                    null);
-
-            IToolMeasurementData data = reader.Read();
-
-            int expectedColumnCount = 0;
-            int expectedRowCount = 0;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            try
-            {
-                Assert.AreEqual(expectedRowCount, data.Results[0]?.MeasData.Count);
-            }
-            catch(ArgumentOutOfRangeException)
-            {
-                Assert.Pass();
-
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-
-        }
-
-        #endregion
-
-        #region empty extension list
-
-        /// <summary>
-        /// checks the response in case of EMPTY extension list
-        /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData6()
-        {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" },
-                                                                    "TTR",
-                                                                    new List<string[]> ());
-
-            IToolMeasurementData data = reader.Read();
-
-            int expectedColumnCount = 0;
-            int expectedRowCount = 0;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            try
-            {
-                Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                Assert.Pass();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-        }
-
-        #endregion
-
-        #region empty filelist
-
-        /// <summary>
-        /// checks the response in case of EMPTY file list
-        /// </summary>
-        [Test, Category("TTRMeasurementDataReading")]
-        public void TestReadingOfTTRMeasurementData7()
-        {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> (),
-                                                                    "TTR",
-                                                                   new List<string[]> { new string[] { ".csv", ";" } });
-
-            IToolMeasurementData data = reader.Read();
-
-            int expectedColumnCount = 0;
-            int expectedRowCount = 0;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            try
-            {
-                Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                Assert.Pass();
-            }
-            catch (Exception)
-            {
-                Assert.Fail();
-            }
-        }
-
-        #endregion
-
-        #region empty columns and/or empty headers
-
-        public void TestReadingOfTTRMeasurementData8()
-        {
-            IMeasDataFileReader reader = new ToolMeasDataReader(new List<string> { folder1 + @"\\TTR_TestMeasData_3.csv" },
-                                                                    "TTR",
-                                                                    new List<string[]> { new string[] { ".csv", ";" } }
-                                                               );
-
-            IToolMeasurementData data = reader.Read();
-
-            int expectedColumnCount = 11;
-            int expectedRowCount = 10;
-
-            Assert.AreEqual(expectedColumnCount, data.Results.Count);
-            Assert.AreEqual(expectedRowCount, data.Results[0].MeasData.Count);
-        }
-
-        #endregion
 
     }
 }
