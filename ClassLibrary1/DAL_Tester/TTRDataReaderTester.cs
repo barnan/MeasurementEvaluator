@@ -30,9 +30,9 @@ namespace ClassLibrary1.DAL_Tester
         }
 
 
-        public class TTRColumnTestFactory
+        public class TTRTestFactory
         {
-            public static IEnumerable TestCases
+            public static IEnumerable ColummTestCases
             {
                 get
                 {
@@ -67,13 +67,8 @@ namespace ClassLibrary1.DAL_Tester
                     yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_3.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData column - empty number csv").Returns(11);
                 }
             }
-        }
 
-
-
-        public class TTRRowTestFactory
-        {
-            public static IEnumerable TestCases
+            public static IEnumerable RowTestCases
             {
                 get
                 {
@@ -96,13 +91,14 @@ namespace ClassLibrary1.DAL_Tester
         }
 
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="fileList"></param>
         /// <param name="extensionList"></param>
         /// <param name="expectedColumnCount"></param>
-        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRColumnTestFactory), "TestCases")]
+        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRTestFactory), "ColumnTestCases")]
         public int TestReadOfTTRData_ColumnCount(List<string> fileList, List<string[]> extensionList)
         {
             IMeasDataFileReader reader = new ToolMeasDataReader(fileList, "TTR", extensionList );
@@ -122,7 +118,7 @@ namespace ClassLibrary1.DAL_Tester
         /// <param name="fileList"></param>
         /// <param name="extensionList"></param>
         /// <param name="expectedColumnCount"></param>
-        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRRowTestFactory), "TestCases")]
+        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRTestFactory), "RowTestCases")]
         public int TestReadOfTTRData_RowCount(List<string> fileList, List<string[]> extensionList)
         {
             IMeasDataFileReader reader = new ToolMeasDataReader(fileList, "TTR", extensionList);

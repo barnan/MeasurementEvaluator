@@ -44,6 +44,8 @@ namespace Measurement_Evaluator.DAL
         /// <param name="extensionList"></param>
         public ToolMeasDataReader(List<string> inputs, string toolname, List<string[]> extensionList)
         {
+            // TODO: kezelni a különböző kiterjesztéésű input file listát!!
+
             if (inputs == null || inputs.Count == 0 || toolname == null || extensionList== null || extensionList.Count == 0)
                 return;
 
