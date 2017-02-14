@@ -84,10 +84,36 @@ namespace ClassLibrary1.DAL_Tester
                     // both txt and csv
                     yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData row - both txt and csv").Returns(20);
 
+
+
                     // test the reading of a csv file with empty sections
                     yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_3.csv" }, new List<string[]> { new string[] { ".csv", ";" } }).SetName("TTR ReadData row - empty number csv").Returns(10);
                 }
             }
+
+
+            public static IEnumerable RowTestCases_Exception
+            {
+                get
+                {
+                    // null extension list
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, null).SetName("TTR ReadData row - null extension list").Returns(0);
+
+                    // empty extension list
+                    yield return new TestCaseData(new List<string> { folder1 + @"\\TTR_TestMeasData_1.txt", folder1 + @"\\TTR_TestMeasData_2.csv" }, new List<string[]>()).SetName("TTR ReadData row - empty extension list").Returns(0);
+
+                    //  null file List
+                    yield return new TestCaseData(null, new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData row - null filelist").Returns(0);
+
+                    // empty file list
+                    yield return new TestCaseData(new List<string>(), new List<string[]> { new string[] { ".csv", ";" }, new string[] { ".txt", "\t" } }).SetName("TTR ReadData row - empty file list").Returns(0);
+
+                    //  both lists are null
+                    yield return new TestCaseData(new List<string>(), new List<string[]>()).SetName("TTR ReadData row - both lists null").Returns(0);
+                }
+            }
+
+
         }
 
 
@@ -126,6 +152,24 @@ namespace ClassLibrary1.DAL_Tester
             IToolMeasurementData data = reader.Read();
 
             return data.Results[0].MeasData.Count;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileList"></param>
+        /// <param name="extensionList"></param>
+        /// <param name="expectedColumnCount"></param>
+        [Test, Category("TTRMeasurementDataReading"), TestCaseSource(typeof(TTRTestFactory), "RowTestCases_exception")]
+        public void TestReadOfTTRData_RowCount_exception(List<string> fileList, List<string[]> extensionList)
+        {
+            IMeasDataFileReader reader = new ToolMeasDataReader(fileList, "TTR", extensionList);
+
+            IToolMeasurementData data = reader.Read();
+
+            int t = 0;
+            Assert.Throws(typeof(ArgumentOutOfRangeException), () => t = data.Results[0].MeasData.Count);
         }
 
 

@@ -87,7 +87,7 @@ namespace Measurement_Evaluator.DAL
         /// <returns></returns>
         public IToolMeasurementData Read()
         {
-            IToolMeasurementData finalResu = new ToolMeasurementData();
+            IToolMeasurementData finalResu = new ToolMeasurementData(ToolName);
 
             if (MeasDataFileList != null && MeasDataFileList.Count > 0)
             {
