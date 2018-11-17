@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6DCA4D70-0D2C-4A32-80BE-485667CEAC24}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Interfaces</RootNamespace>
-    <AssemblyName>Interfaces</AssemblyName>
+    <ProjectGuid>{444B3526-413C-4C71-819B-EB527346CDC6}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DataAcquisition</RootNamespace>
+    <AssemblyName>DataAcquisition</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,25 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Calculations\ICalculation.cs" />
-    <Compile Include="Calculations\ICalculationResult.cs" />
-    <Compile Include="Enumerations.cs" />
-    <Compile Include="Evaluation\IEvaluator.cs" />
-    <Compile Include="MeasuredData\IIndividualMeasurementResult.cs" />
-    <Compile Include="ToolSpecifications\IBoolCondition.cs" />
-    <Compile Include="ToolSpecifications\ICondition.cs" />
-    <Compile Include="ToolSpecifications\IQCellsCondition.cs" />
-    <Compile Include="MeasuredData\IMeasurementSeriesData.cs" />
-    <Compile Include="ToolSpecifications\IQuantitySpecification.cs" />
-    <Compile Include="ReferenceSample\IReferenceSample.cs" />
-    <Compile Include="ReferenceSample\IReferenceValue.cs" />
-    <Compile Include="MeasuredData\IToolMeasurementData.cs" />
-    <Compile Include="ToolSpecifications\IToolSpecification.cs" />
-    <Compile Include="ToolSpecifications\ISimpleCondition.cs" />
-    <Compile Include="ReferenceSample\IToolSpecificReferenceSample.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToolSpecifications\IValueCondition.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repository\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

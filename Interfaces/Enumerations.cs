@@ -62,12 +62,13 @@ namespace Interfaces
     }
 
 
-    public enum CalculationTypes
+    public enum CalculationTypes : byte
     {
         Unknown = 0,
         Average,
         StandardDeviation,
-        Cpk
+        Cpk,
+        G_RAndR
     }
 
 }

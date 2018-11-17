@@ -10,11 +10,6 @@
         string Name { get; }
 
         /// <summary>
-        /// value of the condition
-        /// </summary>
-        double Value { get; }
-
-        /// <summary>
         /// type of the calculation what this condition requires.
         /// </summary>
         CalculationTypes CalculationType { get; }

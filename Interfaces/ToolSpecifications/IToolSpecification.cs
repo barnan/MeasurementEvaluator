@@ -3,7 +3,7 @@
 namespace Interfaces.ToolSpecifications
 {
 
-    interface IToolSpecification
+    public interface IToolSpecification
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool
@@ -14,6 +14,12 @@ namespace Interfaces.ToolSpecifications
         /// Name of the tool
         /// </summary>
         ToolNames ToolName { set; }
+    }
+
+
+    public interface IToolSpecificationProvider
+    {
 
     }
+
 }
