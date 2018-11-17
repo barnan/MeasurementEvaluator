@@ -4,15 +4,20 @@ namespace Interfaces.ToolSpecifications
 {
     public interface IQuantitySpecification
     {
-        string QuantityName { get; set; }
+        /// <summary>
+        /// Name of this quantity
+        /// </summary>
+        string QuantityName { get; }
+
+        /// <summary>
+        /// unit of this quantity
+        /// </summary>
         Units Dimension { get; }
 
-        IReadOnlyList<ICondition> Conditions { get; set; }
+        /// <summary>
+        /// Condition set which is realted to this quantity
+        /// </summary>
+        IReadOnlyList<ICondition> Conditions { get; }
 
-        //ISimpleCondition AccurAbsolute { get; set; }
-        //ISimpleCondition AccurRelative { get; set; }
-        //ISimpleCondition StdAbsolute { get; set; }
-        //ISimpleCondition StdRelative { get; set; }
-        //ICpkCondition Cpk { get; set; }
     }
 }

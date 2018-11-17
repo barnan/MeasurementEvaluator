@@ -61,4 +61,13 @@ namespace Interfaces
         UPCD
     }
 
+
+    public enum CalculationTypes
+    {
+        Unknown = 0,
+        Average,
+        StandardDeviation,
+        Cpk
+    }
+
 }

@@ -44,20 +44,17 @@
     <Compile Include="Calculations\ICalculation.cs" />
     <Compile Include="Calculations\ICalculationResult.cs" />
     <Compile Include="Enumerations.cs" />
-    <Compile Include="ICalculator.cs" />
     <Compile Include="MeasuredData\IIndividualMeasurementResult.cs" />
     <Compile Include="ToolSpecifications\ICondition.cs" />
-    <Compile Include="IDataReader.cs" />
-    <Compile Include="IEvaluator.cs" />
     <Compile Include="ToolSpecifications\IQCellsCondition.cs" />
     <Compile Include="MeasuredData\IMeasurementSeriesData.cs" />
     <Compile Include="ToolSpecifications\IQuantitySpecification.cs" />
     <Compile Include="ReferenceSample\IReferenceSample.cs" />
     <Compile Include="ReferenceSample\IReferenceValue.cs" />
-    <Compile Include="IToolMeasurementData.cs" />
+    <Compile Include="MeasuredData\IToolMeasurementData.cs" />
     <Compile Include="ToolSpecifications\IToolSpecification.cs" />
     <Compile Include="ToolSpecifications\ISimpleCondition.cs" />
-    <Compile Include="IWSIReferenceSample.cs" />
+    <Compile Include="ReferenceSample\IToolSpecificReferenceSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

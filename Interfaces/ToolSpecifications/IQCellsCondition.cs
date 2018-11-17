@@ -5,11 +5,11 @@
         /// <summary>
         /// Half of the tolerance interval
         /// </summary>
-        double HalfTolerance { get; set; }
+        double HalfTolerance { get; }
 
         /// <summary>
         /// Defines whether relaite or absolute condition
         /// </summary>
-        RELATIVEORABSOLUTE RelOrAbs { get; set; }
+        RELATIVEORABSOLUTE RelOrAbs { get; }
     }
 }

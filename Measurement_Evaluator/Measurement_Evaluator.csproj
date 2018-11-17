@@ -72,7 +72,6 @@
     </Compile>
     <Compile Include="BLL\Class1.cs" />
     <Compile Include="BLL\CpkCondition.cs" />
-    <Compile Include="BLL\Evaluator.cs" />
     <Compile Include="BLL\QuantityMeasurementData.cs" />
     <Compile Include="BLL\ReferenceSample.cs" />
     <Compile Include="BLL\ReferenceValue.cs" />

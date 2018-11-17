@@ -8,12 +8,12 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// List of all defined specification of the quantities of the tool
         /// </summary>
-        List<IQuantitySpecification> Specifications { get; set; }
+        List<IQuantitySpecification> Specifications { get; }
 
         /// <summary>
         /// Name of the tool
         /// </summary>
-        ToolNames ToolName { set; get; }
+        ToolNames ToolName { set; }
 
     }
 }

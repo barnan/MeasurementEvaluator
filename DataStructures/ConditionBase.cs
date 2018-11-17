@@ -1,55 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Measurement_Evaluator.Interfaces;
+﻿using Interfaces;
+using Interfaces.ToolSpecifications;
 
 namespace Measurement_Evaluator.BLL
 {
-    
-    public class ConditionBase :IConditionBase
+
+    public class ConditionBase : ICondition
     {
+        public string Name { get; set; }
+
+        public CalculationTypes CalculationType { get; set; }
+
+        public Relations ConditionRelation { get; set; }
+
+        public bool Enabled { get; set; }
+
         public double Value { get; set; }
-        public Relation ConditionRel { get; set; }
-        public bool Valid { get; set; }
+
+
+        public ConditionBase(double value, Relations relation, bool enabled)
+        {
+            Value = value;
+            ConditionRelation = relation;
+            Enabled = enabled;
+        }
 
         public ConditionBase()
         {
         }
 
-        public ConditionBase(double value, Relation relat, bool valid)
-        {
-            Value = value;
-            ConditionRel = relat;
-            Valid = valid;
-        }
-
         public override string ToString()
         {
-            if (Valid)
-                return "Valid. It should be " + ConditionRel.ToString() + " than " + Value.ToString();
+            if (Enabled)
+                return "Valid. It should be " + ConditionRelation.ToString() + " than " + Value.ToString();
             else
-                return "NOT Valid. It should be " + ConditionRel.ToString() + " than " + Value.ToString();
+                return "NOT Valid. It should be " + ConditionRelation.ToString() + " than " + Value.ToString();
         }
 
-        public static bool Compare(double value1, Relation condrel, double value2)
+
+        public static bool Compare(double value1, Relations relation, double value2)
         {
-            switch (condrel)
+            switch (relation)
             {
-                case Relation.LESS:
+                case Relations.LESS:
                     return (value1 < value2);
-                case Relation.GREATER:
+                case Relations.GREATER:
                     return (value1 > value2);
-                case Relation.LESSOREQUAL:
+                case Relations.LESSOREQUAL:
                     return (value1 <= value2);
-                case Relation.GREATEROREQUAL:
+                case Relations.GREATEROREQUAL:
                     return (value1 >= value2);
-                case Relation.EQUAL:
+                case Relations.EQUAL:
                     return (value1 == value2);
-                case Relation.NOTEQUAL:
+                case Relations.NOTEQUAL:
                     return (value1 != value2);
             }
             return false;

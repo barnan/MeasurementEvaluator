@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Measurement_Evaluator.Interfaces;
+﻿using Interfaces;
+using Interfaces.ToolSpecifications;
 
 namespace Measurement_Evaluator.BLL
 {
@@ -16,11 +12,12 @@ namespace Measurement_Evaluator.BLL
             : base()
         { }
 
-        public CpkCondition(double value, Relation relation, RELATIVEORABSOLUTE relorabs, bool valid, double halfTolerance)
+
+        public CpkCondition(double value, Relations relation, RELATIVEORABSOLUTE relativeorabsolute, bool valid, double halfTolerance)
             : base(value, relation, valid)
         {
             this.HalfTolerance = halfTolerance;
-            this.RelOrAbs = relorabs;
+            this.RelOrAbs = relativeorabsolute;
         }
 
     }

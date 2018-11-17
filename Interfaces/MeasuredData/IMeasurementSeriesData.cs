@@ -2,7 +2,7 @@
 
 namespace Interfaces.MeasuredData
 {
-    public interface IMeasurementSeriesData
+    public interface IMeasurementSerieData
     {
         /// <summary>
         /// Name of the measured quantity
@@ -13,6 +13,13 @@ namespace Interfaces.MeasuredData
         /// List of measurement result
         /// </summary>
         List<IIndividualMeasurementResult> MeasData { get; set; }
+
+        /// <summary>
+        /// indexer to get a data point with a given index
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        IIndividualMeasurementResult this[int i] { get; }
 
         /// <summary>
         /// Unit of the measurement

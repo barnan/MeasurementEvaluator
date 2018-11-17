@@ -5,17 +5,17 @@
         /// <summary>
         /// Dimension of the quantity, which is related to this condition
         /// </summary>
-        string Dimension { get; set; }
+        string Dimension { get; }
 
         /// <summary>
         /// The condition is valid if the absolute value of the measurement data meets this relation -> this is the relation
         /// </summary>
-        Relations ValidIf { get; set; }
+        Relations ValidIf { get; }
 
         /// <summary>
         /// The condition is valid if the absolute value of the measurement data meet this relation  -> this is the value
         /// </summary>
-        double ValidIf_Value { get; set; }
+        double ValidIf_Value { get; }
 
     }
 }

@@ -6,7 +6,7 @@ namespace Interfaces.MeasuredData
     {
     }
 
-    interface IIndividualMeasurementResult<T> : IIndividualMeasurementResult where T : struct
+    public interface IIndividualMeasurementResult<T> : IIndividualMeasurementResult where T : struct
     {
         /// <summary>
         /// result of one individual the measurement session
@@ -14,7 +14,8 @@ namespace Interfaces.MeasuredData
         T Result { get; set; }
     }
 
-    interface ITimedIndividualMeasurementResult<T> : IIndividualMeasurementResult<T> where T : struct
+
+    public interface ITimedIndividualMeasurementResult<T> : IIndividualMeasurementResult<T> where T : struct
     {
         /// <summary>
         /// date and time when the measurement was taken

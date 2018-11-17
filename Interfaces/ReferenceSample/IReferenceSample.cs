@@ -4,7 +4,7 @@ namespace Interfaces.ReferenceSample
 {
 
     // TODO: separate reader and writer interfaces
-    interface IReferenceSample
+    public interface IReferenceSample
     {
         /// <summary>
         /// name or ID of the sample

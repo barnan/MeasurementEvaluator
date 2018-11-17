@@ -3,11 +3,13 @@
 namespace Interfaces.Calculations
 {
 
-    interface ICalculationResult
+    public interface ICalculationResult
     {
-        IMeasurementSeriesData MeasurementData { get; set; }
+        IMeasurementSerieData MeasurementData { get; }
+    }
 
-
-
+    public interface ICalculationResult<T> where T : struct
+    {
+        T Result { get; }
     }
 }

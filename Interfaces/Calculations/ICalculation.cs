@@ -2,9 +2,9 @@
 
 namespace Interfaces.Calculations
 {
-    interface ICalculation
+    public interface ICalculation
     {
-        ICalculationResult DoCalculation(IMeasurementSeriesData inputData);
+        ICalculationResult DoCalculation(IMeasurementSerieData inputData);
     }
 
 
