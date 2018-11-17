@@ -41,12 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculations\ICalculation.cs" />
+    <Compile Include="Calculations\ICalculationResult.cs" />
+    <Compile Include="Enumerations.cs" />
     <Compile Include="ICalculator.cs" />
+    <Compile Include="MeasuredData\IIndividualMeasurementResult.cs" />
     <Compile Include="ToolSpecifications\ICondition.cs" />
     <Compile Include="IDataReader.cs" />
     <Compile Include="IEvaluator.cs" />
     <Compile Include="ToolSpecifications\IQCellsCondition.cs" />
-    <Compile Include="MeasuredData\IMeasuredData.cs" />
+    <Compile Include="MeasuredData\IMeasurementSeriesData.cs" />
     <Compile Include="ToolSpecifications\IQuantitySpecification.cs" />
     <Compile Include="ReferenceSample\IReferenceSample.cs" />
     <Compile Include="ReferenceSample\IReferenceValue.cs" />
@@ -56,5 +60,6 @@
     <Compile Include="IWSIReferenceSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

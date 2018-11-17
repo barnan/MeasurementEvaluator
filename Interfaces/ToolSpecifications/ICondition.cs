@@ -1,23 +1,5 @@
-﻿namespace Measurement_Evaluator.Interfaces.ToolSpecifications
+﻿namespace Interfaces.ToolSpecifications
 {
-
-    public enum Relations : byte
-    {
-        EQUAL = 0,
-        NOTEQUAL,
-        LESS,
-        LESSOREQUAL,
-        GREATER,
-        GREATEROREQUAL
-    }
-
-    public enum RELATIVEORABSOLUTE : byte
-    {
-        ABSOLUTE = 0,
-        RELATIVE = 1
-    }
-
-
 
     public interface ICondition
     {

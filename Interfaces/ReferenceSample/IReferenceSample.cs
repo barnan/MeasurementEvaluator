@@ -1,15 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace Measurement_Evaluator.Interfaces.ReferenceSample
+namespace Interfaces.ReferenceSample
 {
-    public enum SampleOrientation
-    {
-        Orientation1 = 0,
-        Orientation2 = 90,
-        Orientation3 = 270,
-        Orientation4 = 360
-    };
-
 
     // TODO: separate reader and writer interfaces
     interface IReferenceSample
@@ -22,7 +14,7 @@ namespace Measurement_Evaluator.Interfaces.ReferenceSample
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>
-        List<IReferenceValue> ListOfReferenceValues { get; set; }
+        List<IReferenceValue> ReferenceValues { get; set; }
 
         /// <summary>
         /// orientation of the sample, when its reference values were measured

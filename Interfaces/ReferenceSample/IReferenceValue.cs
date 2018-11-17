@@ -1,28 +1,5 @@
-﻿using System.ComponentModel;
-
-namespace Measurement_Evaluator.Interfaces.ReferenceSample
+﻿namespace Interfaces.ReferenceSample
 {
-
-    public enum Dimensions : byte
-    {
-        ADU = 0,
-
-        count,
-
-        [Description("LengthUnit")]
-        mm,
-
-        [Description("LengthUnit")]
-        um,
-
-        [Description("ResistivityUnit")]
-        Ohmcm,
-
-        [Description("TimeUnit")]
-        sec
-
-    }
-
 
     public interface IReferenceValue
     {
@@ -34,8 +11,11 @@ namespace Measurement_Evaluator.Interfaces.ReferenceSample
         /// <summary>
         /// Dimension of the Value
         /// </summary>
-        Dimensions Dimension { get; }
+        Units Dimension { get; }
 
+        /// <summary>
+        /// number value
+        /// </summary>
         double Value { get; }
 
     }
@@ -44,7 +24,7 @@ namespace Measurement_Evaluator.Interfaces.ReferenceSample
     {
         new string Name { get; set; }
 
-        new Dimensions Dimension { get; set; }
+        new Units Dimension { get; set; }
 
         new double Value { get; set; }
 

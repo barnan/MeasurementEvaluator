@@ -1,4 +1,4 @@
-﻿namespace Measurement_Evaluator.Interfaces.ToolSpecifications
+﻿namespace Interfaces.ToolSpecifications
 {
     public interface ISimpleCondition : ICondition
     {
