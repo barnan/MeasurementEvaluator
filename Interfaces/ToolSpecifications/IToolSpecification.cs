@@ -16,10 +16,4 @@ namespace Interfaces.ToolSpecifications
         ToolNames ToolName { set; }
     }
 
-
-    public interface IToolSpecificationProvider
-    {
-
-    }
-
 }
