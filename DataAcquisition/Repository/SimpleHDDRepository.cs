@@ -5,41 +5,24 @@ using System.Linq.Expressions;
 
 namespace DataAcquisition.Repository
 {
-    class SimpleHDDRepository<T> : IRepository<T> where T : class
+    abstract class SimpleHDDRepository<T> : IRepository<T> where T : class
     {
-        public void Add(T item)
-        {
-            throw new NotImplementedException();
-        }
+        protected string Path { get; set; }
+        protected string ExtensionFilter { get; set; }
 
-        public void AddRange(IEnumerable<T> items)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IEnumerable<T> Find(Expression<Func<T>> predicate)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Add(T item);
 
-        public T Get(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void AddRange(IEnumerable<T> items);
 
-        public IEnumerable<T> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract IEnumerable<T> Find(Expression<Func<T>> predicate);
 
-        public void Remove(T item)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract T Get(int index);
 
-        public void RemoveRange(IEnumerable<T> items)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract IEnumerable<T> GetAll();
+
+        public abstract void Remove(T item);
+
+        public abstract void RemoveRange(IEnumerable<T> items);
     }
 }
