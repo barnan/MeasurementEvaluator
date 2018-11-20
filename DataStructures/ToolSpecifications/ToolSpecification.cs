@@ -8,6 +8,12 @@ namespace DataStructures.ToolSpecifications
     [Serializable]
     public class ToolSpecification : IToolSpecification
     {
+
+        public List<IQuantitySpecification> Specifications { get; set; }
+
+        public ToolNames ToolName { get; set; }
+
+
         //    public string ToolName { set; get; }
 
         //    public List<QuantitySpecification> ToolspecificationList { get; set; }          // -> szerializálásra??
@@ -87,9 +93,6 @@ namespace DataStructures.ToolSpecifications
 
 
 
-        public List<IQuantitySpecification> Specifications { get; set; }
-
-        public ToolNames ToolName { get; set; }
     }
 
 

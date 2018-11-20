@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataStructures.ToolSpecifications
 {
-    class DoubleValueComparer : IComparer<double>
+    public class DoubleValueComparer : IComparer<double>
     {
         private const double EQUALITY_LIMIT = 1E-7;
 
