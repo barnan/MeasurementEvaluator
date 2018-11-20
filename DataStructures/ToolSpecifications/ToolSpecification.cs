@@ -5,13 +5,35 @@ using System.Collections.Generic;
 
 namespace DataStructures.ToolSpecifications
 {
-    [Serializable]
-    public class ToolSpecification : IToolSpecification
+
+    public class ToolSpecification : IToolSpecification, IComparable<IToolSpecification>, IEqualityComparer<IToolSpecification>
     {
 
         public List<IQuantitySpecification> Specifications { get; set; }
 
         public ToolNames ToolName { get; set; }
+
+        public int CompareTo(IToolSpecification other)
+        {
+
+            string toolName1 = ToolName.ToString();
+            string toolName2 = other.ToolName.ToString();
+
+            return toolName1.CompareTo(toolName2);
+
+        }
+
+
+
+        public bool Equals(IToolSpecification x, IToolSpecification y)
+        {
+        }
+
+        public int GetHashCode(IToolSpecification obj)
+        {
+            if obj.GetHashCode();
+
+        }
 
 
         //    public string ToolName { set; get; }

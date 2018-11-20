@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace DataStructures.ToolSpecifications
 {
 
-    public class ConditionBase<T> : ICondition<T>
+    public class ConditionBase<T> : ICondition<T> where T : struct
     {
         public string Name { get; set; }
 
@@ -29,6 +29,7 @@ namespace DataStructures.ToolSpecifications
             _comparer = comparer;
         }
 
+
         public ConditionBase()
         {
             Value = default(T);
@@ -36,6 +37,7 @@ namespace DataStructures.ToolSpecifications
             Enabled = false;
             _comparer = Comparer<T>.Default;
         }
+
 
         public override string ToString()
         {
@@ -76,9 +78,4 @@ namespace DataStructures.ToolSpecifications
 
 
     }
-
-
-
-
-
 }

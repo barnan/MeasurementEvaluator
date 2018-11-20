@@ -1,5 +1,5 @@
-﻿using Interfaces.ToolSpecifications;
-using Measurement_Evaluator.BLL;
+﻿using DataStructures.ToolSpecifications;
+using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,29 +12,50 @@ namespace DataAcquisition.Repository
     class SpecificationRepository : SimpleHDDRepository<IToolSpecification>
     {
 
-        private List<IToolSpecification> SpecificationList;
-
 
         public SpecificationRepository(SimpleHDDRepositoryParameter parameters)
             : base(parameters)
         {
-            SpecificationList = new List<IToolSpecification>();
         }
 
 
         public override IEnumerable<IToolSpecification> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<IToolSpecification> SpecificationList = GetSpecificationList(_parameters.FullDirectoryPath);
+
+                return SpecificationList;
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured: {ex}");
+                return null;
+            }
         }
+
 
         public override void Remove(IToolSpecification item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<IToolSpecification> SpecificationList = GetSpecificationList(_parameters.FullDirectoryPath);
+
+                SpecificationList.Remove(item);
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured: {ex}");
+                return;
+            }
         }
+
+
+
 
         public override void RemoveRange(IEnumerable<IToolSpecification> items)
         {
-            throw new NotImplementedException();
+
         }
 
         public override IEnumerable<IToolSpecification> Find(Expression<Func<IToolSpecification>> predicate)
@@ -42,40 +63,37 @@ namespace DataAcquisition.Repository
             throw new NotImplementedException();
         }
 
+
         public override IToolSpecification Get(int index, IComparer<IToolSpecification> comprarer = null)
         {
             try
             {
-                CheckFolder(_parameters.FullDirectoryPath);
-
-                FileList = Directory.GetFiles(_parameters.FullDirectoryPath).ToList();
-
-                //read them
-                List<XmlDocument> documents = new List<XmlDocument>();
-                foreach (string item in FileList)
+                if (index < 0)
                 {
-                    IToolSpecification spec = new ToolSpecification();
-
-                    XmlDocument currentDocument = new XmlDocument();
-                    currentDocument.LoadXml(item);
-
-                    _parameters.XmlParser.ParseDocument()
-
+                    _parameters.Logger.Error("The arrived index is below 0..");
+                    return null;
                 }
 
+                List<IToolSpecification> SpecificationList = GetSpecificationList(_parameters.FullDirectoryPath);
 
+                SpecificationList.Sort();
 
-                //parse them
+                if (index > SpecificationList.Count)
+                {
+                    _parameters.Logger.Error("The arrived index is higher than the length of the specification list.");
+                    return null;
+                }
 
-                // order them
+                return SpecificationList[index];
 
-                // give back the required
             }
             catch (Exception ex)
             {
                 _parameters.Logger.Error($"Exception occured: {ex}");
+                return null;
             }
         }
+
 
         public override void Add(IToolSpecification item)
         {
@@ -87,7 +105,48 @@ namespace DataAcquisition.Repository
             throw new NotImplementedException();
         }
 
+
+
+
+
+        private List<IToolSpecification> GetSpecificationList(string fullPath)
+        {
+            if (!CheckFolder(_parameters.FullDirectoryPath))
+            {
+                _parameters.Logger.Error($"The given folder does not exists: {fullPath}");
+                return null;
+            }
+
+            List<string> FileList = Directory.GetFiles(_parameters.FullDirectoryPath).ToList();
+            List<IToolSpecification> SpecificationList = new List<IToolSpecification>();
+            List<XmlDocument> documents = new List<XmlDocument>();
+
+            foreach (string item in FileList)
+            {
+                IToolSpecification spec = new ToolSpecification();
+
+                XmlDocument currentXmlDocument = new XmlDocument();
+                currentXmlDocument.LoadXml(item);
+
+                _parameters.XmlParser.ParseDocument(spec, currentXmlDocument);
+
+                SpecificationList.Add(spec);
+
+            }
+
+            if (_parameters.Logger.IsTraceEnabled)
+            {
+                foreach (var item in SpecificationList)
+                {
+                    _parameters.Logger.Trace(item.ToString());
+                }
+            }
+
+
+            return SpecificationList;
+        }
+
+
+
     }
-
-
 }

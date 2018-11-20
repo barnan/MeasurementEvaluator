@@ -26,7 +26,7 @@
     }
 
 
-    public interface ICondition<out T> : ICondition
+    public interface ICondition<T> : ICondition where T : struct
     {
         /// <summary>
         /// valueof part of the relation
