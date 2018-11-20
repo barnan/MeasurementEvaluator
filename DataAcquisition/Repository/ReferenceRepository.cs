@@ -7,6 +7,12 @@ namespace DataAcquisition.Repository
 {
     class ReferenceRepository : SimpleHDDRepository<IReferenceSample>
     {
+        public ReferenceRepository(SimpleHDDRepositoryParameter parameters)
+            : base(parameters)
+        {
+        }
+
+
         public override IEnumerable<IReferenceSample> GetAll()
         {
             throw new NotImplementedException();
@@ -27,7 +33,7 @@ namespace DataAcquisition.Repository
             throw new NotImplementedException();
         }
 
-        public override IReferenceSample Get(int index)
+        public override IReferenceSample Get(int index, IComparer<IReferenceSample> comparer = null)
         {
             throw new NotImplementedException();
         }
@@ -41,5 +47,7 @@ namespace DataAcquisition.Repository
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

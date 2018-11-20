@@ -23,6 +23,15 @@
         /// Validity of the condition -> if false, the condition does not work
         /// </summary>
         bool Enabled { get; }
-
     }
+
+
+    public interface ICondition<out T> : ICondition
+    {
+        /// <summary>
+        /// valueof part of the relation
+        /// </summary>
+        T Value { get; }
+    }
+
 }

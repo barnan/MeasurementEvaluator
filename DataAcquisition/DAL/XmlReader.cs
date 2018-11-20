@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
+using Interfaces.MeasuredData;
 using Measurement_Evaluator.BLL;
 using Measurement_Evaluator.Interfaces;
 

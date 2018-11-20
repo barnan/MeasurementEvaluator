@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Interfaces.MeasuredData;
 using System.IO;
-using Measurement_Evaluator.Interfaces;
 
 namespace Measurement_Evaluator.DAL
 {

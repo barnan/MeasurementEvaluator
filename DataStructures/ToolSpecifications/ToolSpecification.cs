@@ -3,7 +3,7 @@ using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 
-namespace Measurement_Evaluator.BLL
+namespace DataStructures.ToolSpecifications
 {
     [Serializable]
     public class ToolSpecification : IToolSpecification
@@ -87,10 +87,9 @@ namespace Measurement_Evaluator.BLL
 
 
 
+        public List<IQuantitySpecification> Specifications { get; set; }
 
-        public List<IQuantitySpecification> Specifications => throw new NotImplementedException();
-
-        public ToolNames ToolName { set => throw new NotImplementedException(); }
+        public ToolNames ToolName { get; set; }
     }
 
 

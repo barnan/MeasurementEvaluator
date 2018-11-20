@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Interfaces.ReferenceSample;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Measurement_Evaluator.Interfaces;
 
-namespace Measurement_Evaluator.BLL
+namespace DataAcquisition
 {
     [Serializable]
-    public class ReferenceSample :IReferenceSample
+    public class ReferenceSample : IReferenceSample
     {
         public string SampleID { get; set; }
         public Orientation SampleOrientation { get; set; }

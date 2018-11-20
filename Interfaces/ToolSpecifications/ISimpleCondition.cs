@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.ToolSpecifications
 {
-    public interface ISimpleCondition : ICondition
+    public interface ISimpleCondition<T> : ICondition<T>
     {
         /// <summary>
         /// Dimension of the quantity, which is related to this condition

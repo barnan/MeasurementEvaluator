@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Measurement_Evaluator.Interfaces;
+﻿using System.Collections.Generic;
 
-namespace Measurement_Evaluator.BLL
+namespace DataAcquisition
 {
-    class QuantityMeasurementData :IQuantityMeasurementData
+    class QuantityMeasurementData : IQuantityMeasurementData
     {
         public string Name { get; set; }
         public List<double> MeasData { get; set; }

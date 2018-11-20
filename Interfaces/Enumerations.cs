@@ -2,14 +2,14 @@
 
 namespace Interfaces
 {
-    public enum Relations : byte
+    public enum Relations : int
     {
         EQUAL = 0,
-        NOTEQUAL,
-        LESS,
-        LESSOREQUAL,
-        GREATER,
-        GREATEROREQUAL
+        NOTEQUAL = 1,
+        LESS = 2,
+        LESSOREQUAL = 3,
+        GREATER = 4,
+        GREATEROREQUAL = 5
     }
 
     public enum RELATIVEORABSOLUTE : byte

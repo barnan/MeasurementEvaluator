@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Measurement_Evaluator.Interfaces;
+﻿using Interfaces.ReferenceSample;
 
-namespace Measurement_Evaluator.BLL
+namespace DataAcquisition
 {
-    public class ReferenceValue :IReferenceValue
+    public class ReferenceValue : IReferenceValue
     {
         public string Name { get; set; }
         public string Dimension { get; set; }

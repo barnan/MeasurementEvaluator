@@ -6,7 +6,7 @@ namespace Interfaces.DataAcquisition
 {
     public interface IRepository<T> where T : class
     {
-        T Get(int index);
+        T Get(int index, IComparer<T> comparer = null);
         IEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T>> predicate);
 

@@ -1,13 +1,12 @@
-﻿using System;   
+﻿using Interfaces.MeasuredData;
+using Measurement_Evaluator.BLL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Measurement_Evaluator.Interfaces;
 
-namespace Measurement_Evaluator.BLL
+namespace DataAcquisition
 {
-    public class ToolMeasurementData :IToolMeasurementData
+    public class ToolMeasurementData : IToolMeasurementData
     {
         public string Name { get; set; }
         public DateTime DateTimeOfMeas { get; set; }
@@ -18,7 +17,7 @@ namespace Measurement_Evaluator.BLL
             get
             {
                 return _results.Select(c => (IQuantityMeasurementData)c).ToList();
-            }            
+            }
         }
 
 
@@ -60,12 +59,12 @@ namespace Measurement_Evaluator.BLL
         }
 
         public ToolMeasurementData(string toolname)
-            :this()
+            : this()
         {
             Name = toolname;
         }
 
     }
-    
+
 
 }

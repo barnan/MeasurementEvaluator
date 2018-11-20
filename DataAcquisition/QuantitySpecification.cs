@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Interfaces.ToolSpecifications;
+using Measurement_Evaluator.BLL;
+using System;
 using System.Xml.Serialization;
-using Measurement_Evaluator.Interfaces;
 
-namespace Measurement_Evaluator.BLL
+namespace DataAcquisition
 {
-    
+
     public class QuantitySpecification : IQuantitySpecification
     {
-        
+
         public string QuantityName { get; set; }
 
         public string Dimension
@@ -20,7 +16,7 @@ namespace Measurement_Evaluator.BLL
             get
             {
                 string dim = AccurAbsolute.Dimension;
-                if (string.Compare(AccurRelative.Dimension, StdAbsolute.Dimension, StringComparison.InvariantCultureIgnoreCase) == 0 )
+                if (string.Compare(AccurRelative.Dimension, StdAbsolute.Dimension, StringComparison.InvariantCultureIgnoreCase) == 0)
                     return AccurRelative.Dimension;
 
                 return string.Empty;

@@ -41,15 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConditionBase.cs" />
-    <Compile Include="CpkCondition.cs" />
+    <Compile Include="ToolSpecifications\ConditionBase.cs" />
+    <Compile Include="ToolSpecifications\CpkCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolSpecifications\SimpleCondition.cs" />
+    <Compile Include="ToolSpecifications\ToolSpecification.cs" />
+    <Compile Include="ToolSpecifications\ValueComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Measurement_Evaluator\Measurement_Evaluator.csproj">
+      <Project>{55295552-024E-452E-B30D-E6A1CFDD63AB}</Project>
+      <Name>Measurement_Evaluator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ReferenceSample\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
