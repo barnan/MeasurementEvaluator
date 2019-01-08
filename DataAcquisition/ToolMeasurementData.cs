@@ -1,5 +1,4 @@
 ﻿using Interfaces.MeasuredData;
-using Measurement_Evaluator.BLL;
 using System;
 using System.Collections.Generic;
 using System.Linq;

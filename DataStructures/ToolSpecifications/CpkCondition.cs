@@ -1,10 +1,9 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
-using System.Collections.Generic;
 
 namespace DataStructures.ToolSpecifications
 {
-    public class CpkCondition : ConditionBase<double>, ICpkCondition<double>
+    public partial class CpkCondition : ConditionBase<double>, ICpkCondition
     {
         public double HalfTolerance { get; set; }
         public RELATIVEORABSOLUTE RelOrAbs { get; set; }
@@ -17,12 +16,14 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public CpkCondition(double value, Relations relation, bool valid, IComparer<double> comparer, RELATIVEORABSOLUTE relativeorabsolute, double halfTolerance)
-            : base(value, relation, valid, comparer)
+        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, RELATIVEORABSOLUTE relativeorabsolute, double halfTolerance)
+            : base(name, calculationtype, value, relation, enabled)
         {
             RelOrAbs = relativeorabsolute;
             HalfTolerance = halfTolerance;
         }
 
     }
+
+
 }

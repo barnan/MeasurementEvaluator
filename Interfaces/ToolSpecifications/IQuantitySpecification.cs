@@ -10,7 +10,7 @@ namespace Interfaces.ToolSpecifications
         string QuantityName { get; }
 
         /// <summary>
-        /// unit of this quantity
+        /// unit of quantity
         /// </summary>
         Units Dimension { get; }
 

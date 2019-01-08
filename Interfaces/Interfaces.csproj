@@ -49,7 +49,6 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="Evaluation\IEvaluator.cs" />
     <Compile Include="MeasuredData\IIndividualMeasurementResult.cs" />
-    <Compile Include="ToolSpecifications\IBoolCondition.cs" />
     <Compile Include="ToolSpecifications\ICondition.cs" />
     <Compile Include="ToolSpecifications\IQCellsCondition.cs" />
     <Compile Include="MeasuredData\IMeasurementSeriesData.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="ToolSpecifications\ISimpleCondition.cs" />
     <Compile Include="ReferenceSample\IToolSpecificReferenceSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToolSpecifications\IValueCondition.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

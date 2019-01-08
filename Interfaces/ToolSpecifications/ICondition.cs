@@ -32,6 +32,14 @@
         /// valueof part of the relation
         /// </summary>
         T Value { get; }
+
+
+        /// <summary>
+        /// Checks the condition. The RIGHT value and the relation is stored in the condition
+        /// </summary>
+        /// <param name="value">LEFT value</param>
+        /// <returns></returns>
+        bool Compare(T value);
     }
 
 }

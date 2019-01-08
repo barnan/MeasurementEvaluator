@@ -51,8 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConditionBase.cs" />
-    <Compile Include="CpkCondition.cs" />
     <Compile Include="DAL\InputDirContentManager.cs" />
     <Compile Include="DAL\MeasDataFileBase.cs" />
     <Compile Include="DAL\TabularTextReader.cs" />
@@ -68,7 +66,6 @@
     <Compile Include="Repository\SimpleHDDRepository.cs" />
     <Compile Include="Repository\SpecificationRepository.cs" />
     <Compile Include="ToolMeasurementData.cs" />
-    <Compile Include="UsualCondition.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

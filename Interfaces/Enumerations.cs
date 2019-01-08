@@ -1,65 +1,65 @@
 ﻿using System.ComponentModel;
 
 namespace Interfaces
-    {
+{
+
     public enum Relations : int
-        {
+    {
         EQUAL = 0,
         NOTEQUAL = 1,
         LESS = 2,
         LESSOREQUAL = 3,
         GREATER = 4,
         GREATEROREQUAL = 5
-        }
+    }
 
     public enum RELATIVEORABSOLUTE : byte
-        {
+    {
         ABSOLUTE = 0,
         RELATIVE = 1
-        }
+    }
 
 
     public enum SampleOrientation
-        {
-        Orientation1 = 0,
-        Orientation2 = 90,
-        Orientation3 = 270,
-        Orientation4 = 360
-        };
+    {
+        Orientation_0 = 0,
+        Orientation_90 = 90,
+        Orientation_180 = 270,
+        Orientation_270 = 360
+    };
 
     public enum Units : byte
-        {
+    {
         ADU = 0,
 
         count,
 
-        [Description("LengthUnit")]
+        [Description("mm")]
         mm,
 
-        [Description("LengthUnit")]
+        [Description("um")]
         um,
 
-        [Description("ResistivityUnit")]
+        [Description("Ohmcm")]
         Ohmcm,
 
-        [Description("TimeUnit")]
+        [Description("sec")]
         sec
 
-        };
+    };
 
 
     // type safe enum pattern:
     public sealed class ToolNames
-        {
+    {
         private readonly string _name;
         private readonly int _value;
 
         public ToolNames(string name, int value)
-            {
+        {
             _name = name;
             _value = value;
-            }
-
+        }
 
         public static ToolNames Unknown = new ToolNames(nameof(Unknown), 0);
         public static ToolNames TTR = new ToolNames(nameof(TTR), 0);
@@ -72,20 +72,19 @@ namespace Interfaces
         public static ToolNames UPCD = new ToolNames(nameof(UPCD), 0);
 
         public override string ToString()
-            {
+        {
             return _name;
-            }
-
         }
+    }
 
 
     public enum CalculationTypes : byte
-        {
+    {
         Unknown = 0,
         Average,
         StandardDeviation,
         Cpk,
         G_RAndR
-        }
-
     }
+
+}

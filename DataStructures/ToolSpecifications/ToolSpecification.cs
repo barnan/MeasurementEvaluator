@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace DataStructures.ToolSpecifications
 {
 
-    public class ToolSpecification : IToolSpecification, IComparable<IToolSpecification>, IEqualityComparer<IToolSpecification>
+    public class ToolSpecification : IToolSpecification, IComparable<IToolSpecification>
     {
 
         public List<IQuantitySpecification> Specifications { get; set; }
@@ -23,17 +23,6 @@ namespace DataStructures.ToolSpecifications
 
         }
 
-
-
-        public bool Equals(IToolSpecification x, IToolSpecification y)
-        {
-        }
-
-        public int GetHashCode(IToolSpecification obj)
-        {
-            if obj.GetHashCode();
-
-        }
 
 
         //    public string ToolName { set; get; }

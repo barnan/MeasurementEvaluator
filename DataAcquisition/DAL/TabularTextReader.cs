@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataAcquisition;
+using Interfaces.MeasuredData;
+using System;
 using System.IO;
-using Measurement_Evaluator.BLL;
-using Measurement_Evaluator.Interfaces;
 
 namespace Measurement_Evaluator.DAL
 {
@@ -17,8 +16,8 @@ namespace Measurement_Evaluator.DAL
         /// <param name="fileName"></param>
         /// <param name="toolname"></param>
         /// <param name="sep"></param>
-        public TabularTextReader(string fileName, string toolname, char sep = ';' )
-            :base(fileName, toolname)
+        public TabularTextReader(string fileName, string toolname, char sep = ';')
+            : base(fileName, toolname)
         {
             _separator = sep;
         }
@@ -57,9 +56,9 @@ namespace Measurement_Evaluator.DAL
                                 foreach (string str in elements)
                                 {
                                     if (string.IsNullOrEmpty(str))
-                                        toolMeasData.Add(new QuantityMeasurementData {Name = "Empty_" + emptycounter});
+                                        toolMeasData.Add(new QuantityMeasurementData { Name = "Empty_" + emptycounter });
                                     else
-                                        toolMeasData.Add(new QuantityMeasurementData {Name = str});
+                                        toolMeasData.Add(new QuantityMeasurementData { Name = str });
                                 }
 
                                 firstLine = false;

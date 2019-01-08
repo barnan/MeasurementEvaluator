@@ -12,22 +12,31 @@
         /// Dimension of the Value
         /// </summary>
         Units Dimension { get; }
+    }
 
+    public interface IReferenceValue<T> : IReferenceValue where T : struct
+    {
         /// <summary>
         /// number value
         /// </summary>
-        double Value { get; }
-
+        T Value { get; }
     }
+
+
 
     public interface IReferenceValueHandler : IReferenceValue
     {
         new string Name { get; set; }
 
         new Units Dimension { get; set; }
+    }
 
-        new double Value { get; set; }
-
+    public interface IReferenceValueHandler<T> : IReferenceValue<T> where T : struct
+    {
+        /// <summary>
+        /// number value
+        /// </summary>
+        T Value { get; set; }
     }
 
 

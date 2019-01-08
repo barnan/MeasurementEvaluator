@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Interfaces.MeasuredData;
+using System;
 using System.Linq;
 using System.Xml.Linq;
-using Interfaces.MeasuredData;
-using Measurement_Evaluator.BLL;
-using Measurement_Evaluator.Interfaces;
 
 namespace Measurement_Evaluator.DAL
 {
     class XmlReader : MeasDataFileBase
     {
-        public XmlReader(string filename, string toolname) 
+        public XmlReader(string filename, string toolname)
             : base(filename, toolname)
         {
         }
@@ -19,9 +17,10 @@ namespace Measurement_Evaluator.DAL
             // TODO: finish xml reading:
 
             XDocument xml = XDocument.Load(FileName);
-            
+
             // Query the data and write out a subset 
-            var query = from c in xml.Root.Descendants("contact") where (int)c.Attribute("id") < 4
+            var query = from c in xml.Root.Descendants("contact")
+                        where (int)c.Attribute("id") < 4
                         select c.Element("firstName").Value + " " + c.Element("lastName").Value;
 
             foreach (string name in query)

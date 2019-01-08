@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.ToolSpecifications
 {
-    public interface ICpkCondition<T> : ICondition<T> where T : struct
+    public interface ICpkCondition : ICondition<double>
     {
         /// <summary>
         /// Half of the tolerance interval

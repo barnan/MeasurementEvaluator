@@ -1,12 +1,7 @@
 ﻿namespace Interfaces.ToolSpecifications
 {
-    public interface ISimpleCondition<T> : ICondition<T> where T : struct
+    public interface ISimpleCondition : ICondition<double>
     {
-        /// <summary>
-        /// Dimension of the quantity, which is related to this condition
-        /// </summary>
-        string Dimension { get; }
-
         /// <summary>
         /// The condition is valid if the absolute value of the measurement data meets this relation -> this is the relation
         /// </summary>

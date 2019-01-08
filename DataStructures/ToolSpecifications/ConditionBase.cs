@@ -5,75 +5,81 @@ using System.Collections.Generic;
 namespace DataStructures.ToolSpecifications
 {
 
-    public class ConditionBase<T> : ICondition<T> where T : struct
+    public class ConditionBase : ICondition
     {
-        public string Name { get; set; }
-
-        public CalculationTypes CalculationType { get; set; }
-
-        public Relations ConditionRelation { get; set; }
-
-        public bool Enabled { get; set; }
-
-        public T Value { get; set; }
-
-        private readonly IComparer<T> _comparer;
-
-
-
-        public ConditionBase(T value, Relations relation, bool enabled, IComparer<T> comparer)
+        public ConditionBase()
         {
-            Value = value;
+        }
+
+        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled)
+        {
+            Name = name;
+            CalculationType = calculationtype;
             ConditionRelation = relation;
             Enabled = enabled;
-            _comparer = comparer;
+        }
+
+        public string Name { get; }
+
+        public CalculationTypes CalculationType { get; }
+
+        public Relations ConditionRelation { get; }
+
+        public bool Enabled { get; }
+
+
+        public override string ToString()
+        {
+            return $"{(Enabled ? "Enabled" : "NOT Enabled")}.";
+        }
+    }
+
+
+
+    public class ConditionBase<T> : ConditionBase, ICondition<T> where T : struct
+    {
+        public T Value { get; private set; }
+
+        public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled)
+            : base(name, calculationtype, relation, enabled)
+        {
+            Value = value;
         }
 
 
         public ConditionBase()
         {
             Value = default(T);
-            ConditionRelation = Relations.EQUAL;
-            Enabled = false;
-            _comparer = Comparer<T>.Default;
+        }
+
+
+        public virtual bool Compare(T leftValue)
+        {
+            bool equality = EqualityComparer<T>.Default.Equals(leftValue, Value);
+            int compResult = Comparer<T>.Default.Compare(leftValue, Value);
+
+            switch (ConditionRelation)
+            {
+                case Relations.LESS:
+                    return compResult == -1;
+                case Relations.GREATER:
+                    return compResult == 1;
+                case Relations.LESSOREQUAL:
+                    return compResult == -1 && equality;
+                case Relations.GREATEROREQUAL:
+                    return compResult == 1 && equality;
+                case Relations.EQUAL:
+                    return equality;
+                case Relations.NOTEQUAL:
+                    return equality;
+            }
+            return false;
         }
 
 
         public override string ToString()
         {
-            if (Enabled)
-                return "Valid. It should be " + ConditionRelation.ToString() + " than " + Value.ToString();
-            else
-                return "NOT Valid. It should be " + ConditionRelation.ToString() + " than " + Value.ToString();
-        }
-
-
-        public bool Compare(T value1, Relations relation, T value2)
-        {
-            int calculatedrelation = _comparer.Compare(value1, value2);
-
-            switch (calculatedrelation)
-            {
-                case -1:
-                    if (relation == Relations.LESS || relation == Relations.LESSOREQUAL || relation == Relations.NOTEQUAL)
-                    {
-                        return true;
-                    }
-                    return false;
-                case 1:
-                    if (relation == Relations.GREATER || relation == Relations.GREATEROREQUAL || relation == Relations.NOTEQUAL)
-                    {
-                        return true;
-                    }
-                    return false;
-                case 0:
-                    if (relation == Relations.EQUAL || relation == Relations.GREATEROREQUAL)
-                    {
-                        return true;
-                    }
-                    return false;
-            }
-            return false;
+            return $"{(Enabled ? "Enabled" : "NOT Enabled")}. It is true if " + ConditionRelation.ToString() + " than " + Value.ToString();
         }
 
 
