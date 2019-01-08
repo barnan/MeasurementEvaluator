@@ -1,4 +1,5 @@
-﻿using Interfaces.MeasuredData;
+﻿using DataStructures.MeasuredData;
+using Interfaces.MeasuredData;
 using System;
 using System.Collections.Generic;
 using System.IO;

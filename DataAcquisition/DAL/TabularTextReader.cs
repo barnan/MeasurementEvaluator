@@ -1,24 +1,18 @@
-﻿using Interfaces.MeasuredData;
+﻿using DataStructures.MeasuredData;
+using Interfaces.MeasuredData;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DataAcquisition.DAL
 {
-    class TabularTextReader : MeasDataFileBase
+    public class TabularTextReader : MeasurementDataFileBase
     {
-        char _separator;
+        private char _separator;
 
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="toolname"></param>
-        /// <param name="sep"></param>
-        public TabularTextReader(string fileName, string toolname, char sep = ';')
-            : base(fileName, toolname)
+        public TabularTextReader(char separator = ';')
         {
-            _separator = sep;
+            _separator = separator;
         }
 
 
@@ -26,17 +20,17 @@ namespace DataAcquisition.DAL
         /// Reads the file content -> returns with the full IToolMeasurement result
         /// </summary>
         /// <returns></returns>
-        public override IToolMeasurementData ReadFile()
+        public override IToolMeasurementData ReadFile(string fileNameAndPath, string toolName)
         {
-            IToolMeasurementData toolMeasData = new ToolMeasurementData();
+            IToolMeasurementData toolMeasData = null;
 
             try
             {
-                if (CanRead())
+                if (CheckFilePath(fileNameAndPath) && CanRead(fileNameAndPath))
                 {
-                    toolMeasData.Name = ToolName;
+                    toolMeasData = new ToolMeasurementData(toolName, new List<IMeasurementSerie>());
 
-                    using (StreamReader reader = new StreamReader(File.OpenRead(FileName)))
+                    using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
                     {
                         bool firstLine = true;
                         while (!reader.EndOfStream)
@@ -44,7 +38,9 @@ namespace DataAcquisition.DAL
                             string line = reader.ReadLine();
 
                             if (line == null)
+                            {
                                 continue;
+                            }
 
                             string[] elements = line.Split(_separator);
 
@@ -55,9 +51,13 @@ namespace DataAcquisition.DAL
                                 foreach (string str in elements)
                                 {
                                     if (string.IsNullOrEmpty(str))
-                                        toolMeasData.Add(new QuantityMeasurementData { Name = "Empty_" + emptycounter });
+                                    {
+                                        toolMeasData.Results.Add(new MeasurementSerie("Empty_" + emptycounter, new List<IUniqueMeasurementResult>()));
+                                    }
                                     else
-                                        toolMeasData.Add(new QuantityMeasurementData { Name = str });
+                                    {
+                                        toolMeasData.Results.Add(new MeasurementSerie(str, new List<IUniqueMeasurementResult>()));
+                                    }
                                 }
 
                                 firstLine = false;
@@ -76,17 +76,17 @@ namespace DataAcquisition.DAL
                                         szam = 0.0;
                                     }
 
-                                    toolMeasData[i].MeasData.Add(szam);
+                                    toolMeasData.Results[i].MeasData.Add(new UniqueMeasurementResult<double>(szam));
                                 }
                             }
                         }
-
                     }
                 }
             }
             catch (Exception ex)
             {
                 // TODO: error in file read
+                return toolMeasData;
             }
 
             return toolMeasData;

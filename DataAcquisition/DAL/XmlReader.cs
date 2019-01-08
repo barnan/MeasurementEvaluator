@@ -1,22 +1,22 @@
-﻿using Interfaces.MeasuredData;
+﻿using DataStructures.MeasuredData;
+using Interfaces.MeasuredData;
 using System;
 using System.Linq;
 using System.Xml.Linq;
 
 namespace DataAcquisition.DAL
 {
-    class XmlReader : MeasDataFileBase
+    class XmlReader : MeasurementDataFileBase
     {
         public XmlReader(string filename, string toolname)
-            : base(filename, toolname)
         {
         }
 
-        public override IToolMeasurementData ReadFile()
+        public override IToolMeasurementData ReadFile(string filename, string toolname)
         {
             // TODO: finish xml reading:
 
-            XDocument xml = XDocument.Load(FileName);
+            XDocument xml = XDocument.Load(filename);
 
             // Query the data and write out a subset 
             var query = from c in xml.Root.Descendants("contact")

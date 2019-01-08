@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MeasuredData\MeasurementSerie.cs" />
+    <Compile Include="MeasuredData\ToolMeasurementData.cs" />
     <Compile Include="MeasuredData\UniqueMeasurementResult.cs" />
     <Compile Include="ReferenceSample\ReferenceSample.cs" />
     <Compile Include="ReferenceSample\ReferenceValue.cs" />

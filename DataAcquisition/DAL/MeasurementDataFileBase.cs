@@ -3,47 +3,20 @@ using System.IO;
 
 namespace DataAcquisition.DAL
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public interface IMeasDataFile
     {
-        string FileName { get; set; }
-        IToolMeasurementData ReadFile();
-        bool CanRead();
+        IToolMeasurementData ReadFile(string fileNameAndPath, string toolName);
+        bool CanRead(string fileNameAndPath);
     }
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public abstract class MeasDataFileBase : IMeasDataFile
+    public abstract class MeasurementDataFileBase : IMeasDataFile
     {
-        public string FileName { get; set; }
-        public string ToolName { get; set; }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="toolname"></param>
-        public MeasDataFileBase(string filename, string toolname)
+        public bool CanRead(string fileNameAndPath)
         {
-            FileName = filename;
-            ToolName = toolname;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool CanRead()
-        {
-            if (!string.IsNullOrEmpty(FileName))
+            if (!string.IsNullOrEmpty(fileNameAndPath))
             {
-                //FileStream fstream = null;
-                using (FileStream fstream = new FileStream(FileName, FileMode.Open, FileAccess.Read))
+                using (FileStream fstream = new FileStream(fileNameAndPath, FileMode.Open, FileAccess.Read))
                 {
                     if (fstream.CanRead)
                         return true;
@@ -52,11 +25,12 @@ namespace DataAcquisition.DAL
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract IToolMeasurementData ReadFile();
+        protected bool CheckFilePath(string fileNameAndPath)
+        {
+            return File.Exists(fileNameAndPath);
+        }
+
+        public abstract IToolMeasurementData ReadFile(string fileNameAndPath, string toolName);
     }
 
 

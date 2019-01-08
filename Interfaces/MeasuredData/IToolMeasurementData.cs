@@ -6,17 +6,16 @@ namespace Interfaces.MeasuredData
     {
 
         /// <summary>
+        /// Name of the tool, which was used to prepare the measurement data
+        /// </summary>
+        string ToolName { get; }
+
+        /// <summary>
         /// collection of measurement result of a given tool 
         /// (etc -> thickness, resistivity, sawmark are results of TTR)
         /// </summary>
         List<IMeasurementSerie> Results { get; }
 
-        /// <summary>
-        /// indexer to get a given measurement series with a given index
-        /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
-        IMeasurementSerie this[int i] { get; }
     }
 
 }

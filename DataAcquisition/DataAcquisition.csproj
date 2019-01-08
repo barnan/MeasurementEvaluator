@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAL\InputDirContentManager.cs" />
-    <Compile Include="DAL\MeasDataFileBase.cs" />
+    <Compile Include="DAL\MeasurementDataFileBase.cs" />
     <Compile Include="DAL\TabularTextReader.cs" />
     <Compile Include="DAL\ToolMeasDataReader.cs" />
     <Compile Include="DAL\XmlReader.cs" />

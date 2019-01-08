@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DataStructures.MeasuredData
 {
-    class MeasurementSerie : IMeasurementSerie
+    public class MeasurementSerie : IMeasurementSerie
     {
         public string Name { get; }
 
@@ -13,7 +13,7 @@ namespace DataStructures.MeasuredData
         public Units Dimension { get; }
 
 
-        public MeasurementSerie(string name, List<IUniqueMeasurementResult> measData, Units dimension)
+        public MeasurementSerie(string name, List<IUniqueMeasurementResult> measData, Units dimension = Units.ADU)
         {
             Name = name;
             MeasData = measData;
