@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Measurement_Evaluator.DAL
+namespace DataAcquisition.DAL
 {
     class XmlReader : MeasDataFileBase
     {

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Interfaces.MeasuredData;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Measurement_Evaluator.BLL;
-using Measurement_Evaluator.Interfaces;
 
-namespace Measurement_Evaluator.DAL
+namespace DataAcquisition.DAL
 {
 
     /// <summary>
@@ -46,7 +45,7 @@ namespace Measurement_Evaluator.DAL
         {
             // TODO: kezelni a különböző kiterjesztéésű input file listát!!
 
-            if (inputs == null || inputs.Count == 0 || toolname == null || extensionList== null || extensionList.Count == 0)
+            if (inputs == null || inputs.Count == 0 || toolname == null || extensionList == null || extensionList.Count == 0)
                 return;
 
             InputFileList = inputs;
@@ -134,7 +133,7 @@ namespace Measurement_Evaluator.DAL
                     }
                     else    // new element must be created
                     {
-                        summadata.Add(new QuantityMeasurementData { Name=measdata.Name, MeasData=measdata.MeasData });
+                        summadata.Add(new QuantityMeasurementData { Name = measdata.Name, MeasData = measdata.MeasData });
                     }
                 }
             }

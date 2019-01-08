@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MeasuredData\MeasurementSerie.cs" />
+    <Compile Include="MeasuredData\UniqueMeasurementResult.cs" />
+    <Compile Include="ReferenceSample\ReferenceSample.cs" />
+    <Compile Include="ReferenceSample\ReferenceValue.cs" />
     <Compile Include="ToolSpecifications\ConditionBase.cs" />
     <Compile Include="ToolSpecifications\CpkCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,8 +63,6 @@
       <Name>Measurement_Evaluator</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ReferenceSample\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

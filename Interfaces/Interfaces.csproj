@@ -48,10 +48,10 @@
     <Compile Include="DataAcquisition\IXmlReader.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Evaluation\IEvaluator.cs" />
-    <Compile Include="MeasuredData\IIndividualMeasurementResult.cs" />
+    <Compile Include="MeasuredData\IUniqueMeasurementResult.cs" />
     <Compile Include="ToolSpecifications\ICondition.cs" />
     <Compile Include="ToolSpecifications\IQCellsCondition.cs" />
-    <Compile Include="MeasuredData\IMeasurementSeriesData.cs" />
+    <Compile Include="MeasuredData\IMeasurementSerie.cs" />
     <Compile Include="ToolSpecifications\IQuantitySpecification.cs" />
     <Compile Include="ReferenceSample\IReferenceSample.cs" />
     <Compile Include="ReferenceSample\IReferenceValue.cs" />

@@ -10,7 +10,7 @@
         string Name { get; }
 
         /// <summary>
-        /// type of the calculation what this condition requires.
+        /// type of the calculation that is required by this condition 
         /// </summary>
         CalculationTypes CalculationType { get; }
 
@@ -29,7 +29,7 @@
     public interface ICondition<T> : ICondition where T : struct
     {
         /// <summary>
-        /// valueof part of the relation
+        /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
         T Value { get; }
 
@@ -37,7 +37,7 @@
         /// <summary>
         /// Checks the condition. The RIGHT value and the relation is stored in the condition
         /// </summary>
-        /// <param name="value">LEFT value</param>
+        /// <param name="value">LEFT value of the comparison</param>
         /// <returns></returns>
         bool Compare(T value);
     }

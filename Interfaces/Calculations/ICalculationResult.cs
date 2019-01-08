@@ -5,7 +5,7 @@ namespace Interfaces.Calculations
 
     public interface ICalculationResult
     {
-        IMeasurementSerieData MeasurementData { get; }
+        IMeasurementSerie Measurement { get; }
     }
 
     public interface ICalculationResult<T> where T : struct

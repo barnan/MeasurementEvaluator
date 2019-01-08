@@ -40,6 +40,7 @@ namespace DataStructures.ToolSpecifications
     {
         public T Value { get; private set; }
 
+
         public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled)
             : base(name, calculationtype, relation, enabled)
         {
@@ -79,7 +80,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"{(Enabled ? "Enabled" : "NOT Enabled")}. It is true if " + ConditionRelation.ToString() + " than " + Value.ToString();
+            return $"{(Enabled ? "Enabled" : "NOT Enabled")}. It is true if " + ConditionRelation + " than " + Value.ToString();
         }
 
 

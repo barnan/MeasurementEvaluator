@@ -8,7 +8,7 @@
         double HalfTolerance { get; }
 
         /// <summary>
-        /// Defines whether relaite or absolute condition
+        /// Defines whether relative or absolute condition
         /// </summary>
         RELATIVEORABSOLUTE RelOrAbs { get; }
     }

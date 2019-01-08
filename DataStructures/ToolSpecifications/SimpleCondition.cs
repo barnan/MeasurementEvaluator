@@ -10,6 +10,13 @@ namespace DataStructures.ToolSpecifications
         public double ValidIf_Value { get; }
 
 
+        public SimpleCondition()
+            : base()
+        {
+            ValidIf = Relations.EQUAL;
+            ValidIf_Value = 0;
+        }
+
 
         public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relations validIf, double validIf_Value)
             : base(name, calculationtype, value, relation, enabled)

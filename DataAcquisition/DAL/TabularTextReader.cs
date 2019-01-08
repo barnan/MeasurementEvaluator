@@ -1,9 +1,8 @@
-﻿using DataAcquisition;
-using Interfaces.MeasuredData;
+﻿using Interfaces.MeasuredData;
 using System;
 using System.IO;
 
-namespace Measurement_Evaluator.DAL
+namespace DataAcquisition.DAL
 {
     class TabularTextReader : MeasDataFileBase
     {

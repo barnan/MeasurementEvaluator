@@ -4,7 +4,7 @@ namespace Interfaces.Calculations
 {
     public interface ICalculation
     {
-        ICalculationResult DoCalculation(IMeasurementSerieData inputData);
+        ICalculationResult DoCalculation(IMeasurementSerie input);
     }
 
 

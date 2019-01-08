@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Measurement_Evaluator.DAL
+namespace DataAcquisition.DAL
 {
     public class InputConfigDirectoryContentManager
     {
@@ -38,7 +38,7 @@ namespace Measurement_Evaluator.DAL
                         fileList.Add(actualFiles);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
             }
 

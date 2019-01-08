@@ -2,28 +2,28 @@
 
 namespace Interfaces.MeasuredData
 {
-    public interface IMeasurementSerieData
+    public interface IMeasurementSerie
     {
         /// <summary>
         /// Name of the measured quantity
         /// </summary>
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// List of measurement result
         /// </summary>
-        List<IIndividualMeasurementResult> MeasData { get; set; }
+        List<IUniqueMeasurementResult> MeasData { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        IIndividualMeasurementResult this[int i] { get; }
+        IUniqueMeasurementResult this[int i] { get; }
 
         /// <summary>
         /// Unit of the measurement
         /// </summary>
-        Units Dimension { get; set; }
+        Units Dimension { get; }
     }
 }

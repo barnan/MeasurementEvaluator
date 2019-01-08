@@ -1,7 +1,7 @@
 ﻿using Interfaces.MeasuredData;
 using System.IO;
 
-namespace Measurement_Evaluator.DAL
+namespace DataAcquisition.DAL
 {
     /// <summary>
     /// 

@@ -9,16 +9,16 @@ namespace Interfaces.ReferenceSample
         /// <summary>
         /// name or ID of the sample
         /// </summary>
-        string SampleID { get; set; }
+        string SampleID { get; }
 
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>
-        List<IReferenceValue> ReferenceValues { get; set; }
+        IReadOnlyList<IReferenceValue> ReferenceValues { get; }
 
         /// <summary>
         /// orientation of the sample, when its reference values were measured
         /// </summary>
-        SampleOrientation SampleOrientation { get; set; }
+        SampleOrientation SampleOrientation { get; }
     }
 }
