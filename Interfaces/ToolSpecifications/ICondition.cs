@@ -1,7 +1,9 @@
-﻿namespace Interfaces.ToolSpecifications
+﻿using System;
+
+namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition
+    public interface ICondition : IFormattable
     {
 
         /// <summary>

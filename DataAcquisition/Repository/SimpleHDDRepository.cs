@@ -11,15 +11,13 @@ namespace DataAcquisition.Repository
     {
         protected SimpleHDDRepositoryParameter _parameters;
 
-        //protected List<string> FileList { get; set; }
-
 
         protected SimpleHDDRepository(SimpleHDDRepositoryParameter parameters)
         {
             _parameters = parameters;
-            //FileList = new List<string>();
-
         }
+
+        #region IRepository<T>
 
         public abstract void Add(T item);
 
@@ -35,13 +33,22 @@ namespace DataAcquisition.Repository
 
         public abstract void RemoveRange(IEnumerable<T> items);
 
+        #endregion
+
+
 
 
         protected bool CheckFolder(string fullPath)
         {
-            if (fullPath == null)
+            if (string.IsNullOrEmpty(fullPath))
             {
-                _parameters.Logger.Error("The given path is null.");
+                _parameters.Logger.Error("The given path is null or empty.");
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(Path.GetFileName(fullPath)))
+            {
+                _parameters.Logger.Error($"The given path contains filename too, it is not a folder.");
                 return false;
             }
 

@@ -62,14 +62,14 @@ namespace Interfaces
         }
 
         public static ToolNames Unknown = new ToolNames(nameof(Unknown), 0);
-        public static ToolNames TTR = new ToolNames(nameof(TTR), 0);
-        public static ToolNames SHP = new ToolNames(nameof(SHP), 0);
-        public static ToolNames WSIChipping = new ToolNames(nameof(WSIChipping), 0);
-        public static ToolNames WSIContamination = new ToolNames(nameof(WSIContamination), 0);
-        public static ToolNames PED = new ToolNames(nameof(PED), 0);
-        public static ToolNames MCI = new ToolNames(nameof(MCI), 0);
-        public static ToolNames PLI = new ToolNames(nameof(PLI), 0);
-        public static ToolNames UPCD = new ToolNames(nameof(UPCD), 0);
+        public static ToolNames TTR = new ToolNames(nameof(TTR), 1);
+        public static ToolNames SHP = new ToolNames(nameof(SHP), 2);
+        public static ToolNames WSIChipping = new ToolNames(nameof(WSIChipping), 3);
+        public static ToolNames WSIContamination = new ToolNames(nameof(WSIContamination), 4);
+        public static ToolNames PED = new ToolNames(nameof(PED), 5);
+        public static ToolNames MCI = new ToolNames(nameof(MCI), 6);
+        public static ToolNames PLI = new ToolNames(nameof(PLI), 7);
+        public static ToolNames UPCD = new ToolNames(nameof(UPCD), 8);
 
         public override string ToString()
         {

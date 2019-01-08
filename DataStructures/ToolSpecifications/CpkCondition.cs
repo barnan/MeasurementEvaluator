@@ -1,5 +1,7 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
+using System;
+using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -22,6 +24,22 @@ namespace DataStructures.ToolSpecifications
             RelOrAbs = relativeorabsolute;
             HalfTolerance = halfTolerance;
         }
+
+
+        #region IFormattable
+
+        public override string ToString(string format, IFormatProvider formatProvider)
+        {
+            StringBuilder sb = new StringBuilder(base.ToString());
+
+            sb.AppendLine($"HalfTolerance: {HalfTolerance}");
+            sb.AppendLine($"{RelOrAbs}");
+
+            return sb.ToString();
+        }
+
+        #endregion
+
 
     }
 

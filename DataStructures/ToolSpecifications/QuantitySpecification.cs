@@ -1,7 +1,8 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
+using System;
 using System.Collections.Generic;
-using IQuantitySpecification = Interfaces.ToolSpecifications.IQuantitySpecification;
+using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -13,6 +14,28 @@ namespace DataStructures.ToolSpecifications
         public Units Dimension { get; }
 
         public IReadOnlyList<ICondition> Conditions { get; }
+
+
+        #region IFormattable
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(QuantityName);
+            sb.AppendLine(Dimension.ToString());
+
+            foreach (var item in Conditions)
+            {
+                sb.Append(item.ToString());
+            }
+
+            return sb.ToString();
+        }
+
+        #endregion
+
+
 
 
         //public string QuantityName { get; set; }

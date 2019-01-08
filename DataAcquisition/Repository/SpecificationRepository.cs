@@ -12,12 +12,12 @@ namespace DataAcquisition.Repository
     class SpecificationRepository : SimpleHDDRepository<IToolSpecification>
     {
 
-
         public SpecificationRepository(SimpleHDDRepositoryParameter parameters)
             : base(parameters)
         {
         }
 
+        #region IRepository<T>
 
         public override IEnumerable<IToolSpecification> GetAll()
         {
@@ -106,19 +106,19 @@ namespace DataAcquisition.Repository
         }
 
 
-
+        #endregion
 
 
         private List<IToolSpecification> GetSpecificationList(string fullPath)
         {
-            if (!CheckFolder(_parameters.FullDirectoryPath))
+            if (!CheckFolder(fullPath))
             {
-                _parameters.Logger.Error($"The given folder does not exists: {fullPath}");
+                _parameters.Logger.Error($"The given folder can not be used: {fullPath}");
                 return null;
             }
 
             List<string> FileList = Directory.GetFiles(_parameters.FullDirectoryPath).ToList();
-            List<IToolSpecification> SpecificationList = new List<IToolSpecification>();
+            List<IToolSpecification> SpecificationList = new List<IToolSpecification>(FileList.Count);
             List<XmlDocument> documents = new List<XmlDocument>();
 
             foreach (string item in FileList)

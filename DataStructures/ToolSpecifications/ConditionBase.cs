@@ -1,6 +1,8 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -28,10 +30,20 @@ namespace DataStructures.ToolSpecifications
         public bool Enabled { get; }
 
 
-        public override string ToString()
+        #region IFormattable
+
+        public virtual string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"{(Enabled ? "Enabled" : "NOT Enabled")}.";
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Name: {Name}");
+            sb.AppendLine($"Enabled: {Enabled}");
+            sb.AppendLine($"CalculationType: {CalculationType}");
+
+            return sb.ToString();
         }
+
+        #endregion
     }
 
 
@@ -78,11 +90,18 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public override string ToString()
+        #region IFormattable
+
+        public override string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"{(Enabled ? "Enabled" : "NOT Enabled")}. It is true if " + ConditionRelation + " than " + Value.ToString();
+            StringBuilder sb = new StringBuilder(base.ToString());
+
+            sb.AppendLine($"true, if {ConditionRelation} than {Value}");
+
+            return sb.ToString();
         }
 
+        #endregion
 
     }
 }

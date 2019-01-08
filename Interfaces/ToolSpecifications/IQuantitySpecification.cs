@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {
-    public interface IQuantitySpecification
+    public interface IQuantitySpecification : IFormattable
     {
         /// <summary>
         /// Name of this quantity

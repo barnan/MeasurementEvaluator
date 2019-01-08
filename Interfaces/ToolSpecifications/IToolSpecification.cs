@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface IToolSpecification
+    public interface IToolSpecification : IFormattable
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool

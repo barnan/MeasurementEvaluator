@@ -2,6 +2,7 @@
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -21,6 +22,20 @@ namespace DataStructures.ToolSpecifications
 
             return toolName1.CompareTo(toolName2);
 
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider = null)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(ToolName.ToString());
+
+            foreach (var item in Specifications)
+            {
+                sb.Append(item.ToString());
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
 

@@ -56,7 +56,6 @@
     <Compile Include="DAL\TabularTextReader.cs" />
     <Compile Include="DAL\ToolMeasDataReader.cs" />
     <Compile Include="DAL\XmlReader.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ReferenceRepository.cs" />
     <Compile Include="Repository\SimpleHDDRepository.cs" />

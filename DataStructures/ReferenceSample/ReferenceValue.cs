@@ -28,11 +28,6 @@ namespace DataStructures.ReferenceSample
     {
         public T Value { get; }
 
-
-        public ReferenceValue()
-        {
-        }
-
         public ReferenceValue(T val)
         {
             Value = val;
