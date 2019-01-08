@@ -1,5 +1,6 @@
 ﻿using DataStructures.ToolSpecifications;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +24,9 @@ namespace DataAcquisition.Repository
         {
             try
             {
-                List<IToolSpecification> SpecificationList = GetSpecificationList(_parameters.FullDirectoryPath);
+                List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
 
-                return SpecificationList;
+                return specificationList;
             }
             catch (Exception ex)
             {
@@ -34,14 +35,14 @@ namespace DataAcquisition.Repository
             }
         }
 
-
+        // TODO: finish, compare the content of the file and delete the file if equals
         public override void Remove(IToolSpecification item)
         {
             try
             {
-                List<IToolSpecification> SpecificationList = GetSpecificationList(_parameters.FullDirectoryPath);
+                List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
 
-                SpecificationList.Remove(item);
+                specificationList.Remove(item);
             }
             catch (Exception ex)
             {
@@ -49,8 +50,6 @@ namespace DataAcquisition.Repository
                 return;
             }
         }
-
-
 
 
         public override void RemoveRange(IEnumerable<IToolSpecification> items)
@@ -74,17 +73,17 @@ namespace DataAcquisition.Repository
                     return null;
                 }
 
-                List<IToolSpecification> SpecificationList = GetSpecificationList(_parameters.FullDirectoryPath);
+                List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
 
-                SpecificationList.Sort();
+                specificationList.Sort();
 
-                if (index > SpecificationList.Count)
+                if (index > specificationList.Count)
                 {
                     _parameters.Logger.Error("The arrived index is higher than the length of the specification list.");
                     return null;
                 }
 
-                return SpecificationList[index];
+                return specificationList[index];
 
             }
             catch (Exception ex)
@@ -97,8 +96,9 @@ namespace DataAcquisition.Repository
 
         public override void Add(IToolSpecification item)
         {
-            throw new NotImplementedException();
+
         }
+
 
         public override void AddRange(IEnumerable<IToolSpecification> items)
         {
@@ -117,11 +117,11 @@ namespace DataAcquisition.Repository
                 return null;
             }
 
-            List<string> FileList = Directory.GetFiles(_parameters.FullDirectoryPath).ToList();
-            List<IToolSpecification> SpecificationList = new List<IToolSpecification>(FileList.Count);
+            List<string> fileList = Directory.GetFiles(fullPath).ToList();
+            List<IToolSpecification> specificationList = new List<IToolSpecification>(fileList.Count);
             List<XmlDocument> documents = new List<XmlDocument>();
 
-            foreach (string item in FileList)
+            foreach (string item in fileList)
             {
                 IToolSpecification spec = new ToolSpecification();
 
@@ -130,20 +130,25 @@ namespace DataAcquisition.Repository
 
                 _parameters.XmlParser.ParseDocument(spec, currentXmlDocument);
 
-                SpecificationList.Add(spec);
+                specificationList.Add(spec);
 
+
+                if (_parameters.Logger.IsTraceEnabled)
+                {
+                    _parameters.Logger.MethodTrace($"Specification file read: {fullPath}");
+                }
             }
 
             if (_parameters.Logger.IsTraceEnabled)
             {
-                foreach (var item in SpecificationList)
+                foreach (var item in specificationList)
                 {
                     _parameters.Logger.Trace(item.ToString());
                 }
             }
 
 
-            return SpecificationList;
+            return specificationList;
         }
 
 
