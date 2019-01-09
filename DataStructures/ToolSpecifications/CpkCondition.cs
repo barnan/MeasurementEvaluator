@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
-    public partial class CpkCondition : ConditionBase<double>, ICpkCondition
+    public class CpkCondition : ConditionBase<double>, ICpkCondition
     {
         public double HalfTolerance { get; set; }
         public RELATIVEORABSOLUTE RelOrAbs { get; set; }

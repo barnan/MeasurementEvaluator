@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DataAcquisition.Repository
 {
-    abstract class SimpleHDDRepository<T> : IRepository<T> where T : class
+    public abstract class SimpleHDDRepository<T> : IRepository<T> where T : class
     {
         protected SimpleHDDRepositoryParameter _parameters;
 
@@ -36,8 +36,6 @@ namespace DataAcquisition.Repository
         #endregion
 
 
-
-
         protected bool CheckFolder(string fullPath)
         {
             if (string.IsNullOrEmpty(fullPath))
@@ -48,7 +46,7 @@ namespace DataAcquisition.Repository
 
             if (!string.IsNullOrEmpty(Path.GetFileName(fullPath)))
             {
-                _parameters.Logger.Error($"The given path contains filename too, it is not a folder.");
+                _parameters.Logger.Error($"The given path ({fullPath}) contains filename too, it is not a folder.");
                 return false;
             }
 

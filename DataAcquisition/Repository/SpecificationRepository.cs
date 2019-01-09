@@ -12,6 +12,8 @@ namespace DataAcquisition.Repository
 {
     class SpecificationRepository : SimpleHDDRepository<IToolSpecification>
     {
+        private Dictionary<string, IToolSpecification> _fileContentDictionary;
+
 
         public SpecificationRepository(SimpleHDDRepositoryParameter parameters)
             : base(parameters)
@@ -25,12 +27,11 @@ namespace DataAcquisition.Repository
             try
             {
                 List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
-
                 return specificationList;
             }
             catch (Exception ex)
             {
-                _parameters.Logger.Error($"Exception occured: {ex}");
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
                 return null;
             }
         }
@@ -46,7 +47,7 @@ namespace DataAcquisition.Repository
             }
             catch (Exception ex)
             {
-                _parameters.Logger.Error($"Exception occured: {ex}");
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
                 return;
             }
         }
@@ -69,7 +70,7 @@ namespace DataAcquisition.Repository
             {
                 if (index < 0)
                 {
-                    _parameters.Logger.Error("The arrived index is below 0..");
+                    _parameters.Logger.MethodError("The arrived index is below 0..");
                     return null;
                 }
 
@@ -79,7 +80,7 @@ namespace DataAcquisition.Repository
 
                 if (index > specificationList.Count)
                 {
-                    _parameters.Logger.Error("The arrived index is higher than the length of the specification list.");
+                    _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
                     return null;
                 }
 
@@ -88,7 +89,7 @@ namespace DataAcquisition.Repository
             }
             catch (Exception ex)
             {
-                _parameters.Logger.Error($"Exception occured: {ex}");
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
                 return null;
             }
         }
@@ -113,40 +114,42 @@ namespace DataAcquisition.Repository
         {
             if (!CheckFolder(fullPath))
             {
-                _parameters.Logger.Error($"The given folder can not be used: {fullPath}");
+                _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
                 return null;
             }
 
-            List<string> fileList = Directory.GetFiles(fullPath).ToList();
-            List<IToolSpecification> specificationList = new List<IToolSpecification>(fileList.Count);
+            _fileContentDictionary = new Dictionary<string, IToolSpecification>();
+
+            List<string> fileNameList = Directory.GetFiles(fullPath).ToList();
+            List<IToolSpecification> specificationList = new List<IToolSpecification>(fileNameList.Count);
             List<XmlDocument> documents = new List<XmlDocument>();
 
-            foreach (string item in fileList)
+            foreach (string fileName in fileNameList)
             {
                 IToolSpecification spec = new ToolSpecification();
 
                 XmlDocument currentXmlDocument = new XmlDocument();
-                currentXmlDocument.LoadXml(item);
+                currentXmlDocument.LoadXml(fileName);
 
                 _parameters.XmlParser.ParseDocument(spec, currentXmlDocument);
 
                 specificationList.Add(spec);
+                _fileContentDictionary.Add(fileName, spec);
 
 
                 if (_parameters.Logger.IsTraceEnabled)
                 {
-                    _parameters.Logger.MethodTrace($"Specification file read: {fullPath}");
+                    _parameters.Logger.MethodTrace($"Specification file read: {fileName}");
                 }
             }
 
             if (_parameters.Logger.IsTraceEnabled)
             {
-                foreach (var item in specificationList)
+                foreach (var item in _fileContentDictionary)
                 {
-                    _parameters.Logger.Trace(item.ToString());
+                    _parameters.Logger.MethodTrace($"FileName: {item.Key}, Content: {item.Value}");
                 }
             }
-
 
             return specificationList;
         }
