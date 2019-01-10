@@ -15,6 +15,11 @@ namespace Interfaces.ToolSpecifications
         /// Name of the tool
         /// </summary>
         ToolNames ToolName { get; }
+
+        /// <summary>
+        /// full path and name of the file which contains this specification
+        /// </summary>
+        string FileFullPathAndName { get; }
     }
 
 }

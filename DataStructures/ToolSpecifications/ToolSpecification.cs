@@ -9,10 +9,20 @@ namespace DataStructures.ToolSpecifications
 
     public class ToolSpecification : IToolSpecification, IComparable<IToolSpecification>
     {
+        private readonly ToolSpecificationOnHDD _specOnHDD;
 
-        public List<IQuantitySpecification> Specifications { get; set; }
+        public string FileFullPathAndName { get; }
 
-        public ToolNames ToolName { get; set; }
+        public List<IQuantitySpecification> Specifications => _specOnHDD.Specifications;
+        public ToolNames ToolName => _specOnHDD.ToolName;
+
+
+        public ToolSpecification(string fileName, ToolSpecificationOnHDD spec)
+        {
+            FileFullPathAndName = fileName;
+            _specOnHDD = spec;
+        }
+
 
         public int CompareTo(IToolSpecification other)
         {
@@ -20,8 +30,7 @@ namespace DataStructures.ToolSpecifications
             string toolName1 = ToolName.ToString();
             string toolName2 = other.ToolName.ToString();
 
-            return toolName1.CompareTo(toolName2);
-
+            return string.Compare(toolName1, toolName2, StringComparison.InvariantCulture);
         }
 
         public string ToString(string format, IFormatProvider formatProvider = null)
@@ -31,7 +40,7 @@ namespace DataStructures.ToolSpecifications
 
             foreach (var item in Specifications)
             {
-                sb.Append(item.ToString());
+                sb.Append(item);
                 sb.AppendLine();
             }
 
@@ -39,87 +48,6 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-
-        //    public string ToolName { set; get; }
-
-        //    public List<QuantitySpecification> ToolspecificationList { get; set; }          // -> szerializálásra??
-        //    [XmlIgnore]
-        //    public List<IQuantitySpecification> SpecificationList
-        //    {
-        //        get
-        //        {
-        //            return ToolspecificationList?.Select(c => (IQuantitySpecification)c).ToList();
-        //        }
-        //        set
-        //        {
-        //            if (value?.Count > 0)
-        //            {
-        //                ToolspecificationList.Clear();
-        //                foreach (var item in value)
-        //                    ToolspecificationList.Add((QuantitySpecification)item);
-        //            }
-        //            else
-        //            {
-        //                ToolspecificationList.Clear();
-        //            }
-        //        }
-        //    }
-
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    /// <param name="toolname"></param>
-        //    /// <param name="spec"></param>
-        //    public ToolSpecification(string toolname, List<IQuantitySpecification> spec)
-        //    {
-        //        ToolspecificationList = new List<QuantitySpecification>();
-
-        //        ToolName = toolname;
-        //        SpecificationList = spec;
-        //    }
-
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    public ToolSpecification()
-        //    {
-        //        ToolName = string.Empty;
-        //        ToolspecificationList = new List<QuantitySpecification>();
-        //    }
-
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    /// <param name="FileName"></param>
-        //    public static void Save(string FileName, ToolSpecification toolspec)
-        //    {
-        //        using (var writer = new System.IO.StreamWriter(FileName))
-        //        {
-        //            var serializer = new XmlSerializer(typeof(ToolSpecification));
-        //            serializer.Serialize(writer, toolspec);
-        //            writer.Flush();
-        //        }
-        //    }
-
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    /// <param name="FileName"></param>
-        //    public static ToolSpecification Read(string FileName)
-        //    {
-        //        ToolSpecification ts;
-
-        //        using (var reader = new System.IO.StreamReader(FileName))
-        //        {
-        //            var serializer = new XmlSerializer(typeof(ToolSpecification));
-        //            ts = (ToolSpecification)serializer.Deserialize(reader);
-        //        }
-        //        return ts;
-        //    }
-
-
-
     }
-
 
 }

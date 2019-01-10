@@ -7,8 +7,8 @@ namespace DataStructures.ToolSpecifications
 {
     public class CpkCondition : ConditionBase<double>, ICpkCondition
     {
-        public double HalfTolerance { get; set; }
-        public RELATIVEORABSOLUTE RelOrAbs { get; set; }
+        public double HalfTolerance { get; }
+        public RELATIVEORABSOLUTE RelOrAbs { get; }
 
         public CpkCondition()
             : base()

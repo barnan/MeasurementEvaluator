@@ -12,10 +12,8 @@ namespace DataAcquisition.Repository
 {
     class SpecificationRepository : SimpleHDDRepository<IToolSpecification>
     {
-        private Dictionary<string, IToolSpecification> _fileContentDictionary;
 
-
-        public SpecificationRepository(SimpleHDDRepositoryParameter parameters)
+        public SpecificationRepository(SpecificationRepositoryParameter parameters)
             : base(parameters)
         {
         }
@@ -24,31 +22,25 @@ namespace DataAcquisition.Repository
 
         public override IEnumerable<IToolSpecification> GetAll()
         {
-            try
-            {
-                List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
-                return specificationList;
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.MethodError($"Exception occured: {ex}");
-                return null;
-            }
+            return GetItemList(_parameters.FullDirectoryPath);
         }
 
-        // TODO: finish, compare the content of the file and delete the file if equals
+        // TODO: finish, compare the content of the file and delete the file if equal
         public override void Remove(IToolSpecification item)
         {
             try
             {
-                List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
+                if (item?.FileFullPathAndName == null)
+                {
+                    _parameters.Logger.MethodError("Arrived specification or its filename is null.");
+                    return;
+                }
 
-                specificationList.Remove(item);
+                File.Delete(item.FileFullPathAndName);
             }
             catch (Exception ex)
             {
-                _parameters.Logger.MethodError($"Exception occured: {ex}");
-                return;
+                _parameters.Logger.MethodError($"Delete of {item} was not successful: {ex}");
             }
         }
 
@@ -64,7 +56,7 @@ namespace DataAcquisition.Repository
         }
 
 
-        public override IToolSpecification Get(int index, IComparer<IToolSpecification> comprarer = null)
+        public override IToolSpecification Get(int index, IComparer<IToolSpecification> comparer = null)
         {
             try
             {
@@ -74,15 +66,15 @@ namespace DataAcquisition.Repository
                     return null;
                 }
 
-                List<IToolSpecification> specificationList = GetSpecificationList(_parameters.FullDirectoryPath);
-
-                specificationList.Sort();
+                List<IToolSpecification> specificationList = GetItemList(_parameters.FullDirectoryPath);
 
                 if (index > specificationList.Count)
                 {
                     _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
                     return null;
                 }
+
+                specificationList.Sort(comparer);
 
                 return specificationList[index];
 
@@ -110,51 +102,63 @@ namespace DataAcquisition.Repository
         #endregion
 
 
-        private List<IToolSpecification> GetSpecificationList(string fullPath)
+        private List<IToolSpecification> GetItemList(string fullPath)
         {
-            if (!CheckFolder(fullPath))
+            try
             {
-                _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
-                return null;
-            }
+                if (!CheckFolder(fullPath))
+                {
+                    _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
+                    return null;
+                }
 
-            _fileContentDictionary = new Dictionary<string, IToolSpecification>();
+                List<string> fileNameList = Directory.GetFiles(fullPath).ToList();
+                List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
+                //List<XmlDocument> documents = new List<XmlDocument>();
 
-            List<string> fileNameList = Directory.GetFiles(fullPath).ToList();
-            List<IToolSpecification> specificationList = new List<IToolSpecification>(fileNameList.Count);
-            List<XmlDocument> documents = new List<XmlDocument>();
+                foreach (string fileName in fileNameList)
+                {
+                    ToolSpecificationOnHDD specOnHDD = new ToolSpecificationOnHDD();
 
-            foreach (string fileName in fileNameList)
-            {
-                IToolSpecification spec = new ToolSpecification();
+                    XmlDocument currentXmlDocument = new XmlDocument();
+                    currentXmlDocument.LoadXml(fileName);
 
-                XmlDocument currentXmlDocument = new XmlDocument();
-                currentXmlDocument.LoadXml(fileName);
+                    _parameters.XmlParser.ParseDocument(specOnHDD, currentXmlDocument);
 
-                _parameters.XmlParser.ParseDocument(spec, currentXmlDocument);
+                    fileContentDictionary.Add(new ToolSpecification(fileName, specOnHDD));
 
-                specificationList.Add(spec);
-                _fileContentDictionary.Add(fileName, spec);
-
+                    if (_parameters.Logger.IsTraceEnabled)
+                    {
+                        _parameters.Logger.MethodTrace($"Specification file read: {fileName}");
+                    }
+                }
 
                 if (_parameters.Logger.IsTraceEnabled)
                 {
-                    _parameters.Logger.MethodTrace($"Specification file read: {fileName}");
+                    foreach (var item in fileContentDictionary)
+                    {
+                        _parameters.Logger.MethodTrace($"Specification: {item}");
+                    }
                 }
-            }
 
-            if (_parameters.Logger.IsTraceEnabled)
+                return fileContentDictionary;
+            }
+            catch (Exception ex)
             {
-                foreach (var item in _fileContentDictionary)
-                {
-                    _parameters.Logger.MethodTrace($"FileName: {item.Key}, Content: {item.Value}");
-                }
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
+                return null;
             }
-
-            return specificationList;
         }
 
 
-
     }
+
+
+
+
+
+    public class SpecificationRepositoryParameter : SimpleHDDRepositoryParameter
+    {
+    }
+
 }

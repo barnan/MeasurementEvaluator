@@ -10,6 +10,7 @@ namespace DataAcquisition.Repository
     public abstract class SimpleHDDRepository<T> : IRepository<T> where T : class
     {
         protected SimpleHDDRepositoryParameter _parameters;
+        private readonly object _lockObject = new object();
 
 
         protected SimpleHDDRepository(SimpleHDDRepositoryParameter parameters)
