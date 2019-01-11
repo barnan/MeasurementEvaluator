@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace DataAcquisition.Repository
 {
-    class ReferenceRepository : SimpleHDDRepository<IReferenceSample>
+    class ReferenceRepository : HDDRepository<IReferenceSample>
     {
         public ReferenceRepository(SimpleHDDRepositoryParameter parameters)
             : base(parameters)

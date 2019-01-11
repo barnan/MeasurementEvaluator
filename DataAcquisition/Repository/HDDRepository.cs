@@ -7,13 +7,13 @@ using System.Linq.Expressions;
 
 namespace DataAcquisition.Repository
 {
-    public abstract class SimpleHDDRepository<T> : IRepository<T> where T : class
+    public abstract class HDDRepository<T> : IRepository<T> where T : class
     {
-        protected SimpleHDDRepositoryParameter _parameters;
+        protected readonly SimpleHDDRepositoryParameter _parameters;
         private readonly object _lockObject = new object();
 
 
-        protected SimpleHDDRepository(SimpleHDDRepositoryParameter parameters)
+        protected HDDRepository(SimpleHDDRepositoryParameter parameters)
         {
             _parameters = parameters;
         }
@@ -28,11 +28,20 @@ namespace DataAcquisition.Repository
 
         public abstract T Get(int index, IComparer<T> comparer = null);
 
-        public abstract IEnumerable<T> GetAll();
+        public virtual IEnumerable<T> GetAll()
+        {
+            return GetItemList(_parameters.FullDirectoryPath);
+        }
 
         public abstract void Remove(T item);
 
-        public abstract void RemoveRange(IEnumerable<T> items);
+        public virtual void RemoveRange(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Remove(item);
+            }
+        }
 
         #endregion
 
@@ -60,6 +69,8 @@ namespace DataAcquisition.Repository
             return true;
         }
 
+
+        protected abstract List<T> GetItemList(string fullPath);
 
     }
 

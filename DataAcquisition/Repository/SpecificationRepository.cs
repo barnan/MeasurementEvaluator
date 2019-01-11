@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace DataAcquisition.Repository
 {
-    class SpecificationRepository : SimpleHDDRepository<IToolSpecification>
+    class SpecificationRepository : HDDRepository<IToolSpecification>
     {
 
         public SpecificationRepository(SpecificationRepositoryParameter parameters)
@@ -45,10 +45,13 @@ namespace DataAcquisition.Repository
         }
 
 
-        public override void RemoveRange(IEnumerable<IToolSpecification> items)
-        {
-
-        }
+        //public override void RemoveRange(IEnumerable<IToolSpecification> items)
+        //{
+        //    foreach (var item in items)
+        //    {
+        //        Remove(item);
+        //    }
+        //}
 
         public override IEnumerable<IToolSpecification> Find(Expression<Func<IToolSpecification>> predicate)
         {
@@ -102,7 +105,7 @@ namespace DataAcquisition.Repository
         #endregion
 
 
-        private List<IToolSpecification> GetItemList(string fullPath)
+        protected override List<IToolSpecification> GetItemList(string fullPath)
         {
             try
             {
