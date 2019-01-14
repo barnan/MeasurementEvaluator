@@ -12,11 +12,11 @@ namespace Interfaces.DataAcquisition
 
         IEnumerable<T> Find(Expression<Func<T>> predicate);
 
-        void Add(T item);
+        bool Add(T item);
 
         void AddRange(IEnumerable<T> items);
 
-        void Remove(T item);
+        bool Remove(T item);
 
         void RemoveRange(IEnumerable<T> items);
 

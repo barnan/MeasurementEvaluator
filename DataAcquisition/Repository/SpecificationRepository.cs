@@ -22,36 +22,9 @@ namespace DataAcquisition.Repository
 
         public override IEnumerable<IToolSpecification> GetAll()
         {
-            return GetItemList(_parameters.FullDirectoryPath);
+            return GetItemList(_parameters.RepositoryFullDirectoryPath);
         }
 
-        // TODO: finish, compare the content of the file and delete the file if equal
-        public override void Remove(IToolSpecification item)
-        {
-            try
-            {
-                if (item?.FileFullPathAndName == null)
-                {
-                    _parameters.Logger.MethodError("Arrived specification or its filename is null.");
-                    return;
-                }
-
-                File.Delete(item.FileFullPathAndName);
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.MethodError($"Delete of {item} was not successful: {ex}");
-            }
-        }
-
-
-        //public override void RemoveRange(IEnumerable<IToolSpecification> items)
-        //{
-        //    foreach (var item in items)
-        //    {
-        //        Remove(item);
-        //    }
-        //}
 
         public override IEnumerable<IToolSpecification> Find(Expression<Func<IToolSpecification>> predicate)
         {
@@ -59,47 +32,7 @@ namespace DataAcquisition.Repository
         }
 
 
-        public override IToolSpecification Get(int index, IComparer<IToolSpecification> comparer = null)
-        {
-            try
-            {
-                if (index < 0)
-                {
-                    _parameters.Logger.MethodError("The arrived index is below 0..");
-                    return null;
-                }
 
-                List<IToolSpecification> specificationList = GetItemList(_parameters.FullDirectoryPath);
-
-                if (index > specificationList.Count)
-                {
-                    _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
-                    return null;
-                }
-
-                specificationList.Sort(comparer);
-
-                return specificationList[index];
-
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.MethodError($"Exception occured: {ex}");
-                return null;
-            }
-        }
-
-
-        public override void Add(IToolSpecification item)
-        {
-
-        }
-
-
-        public override void AddRange(IEnumerable<IToolSpecification> items)
-        {
-            throw new NotImplementedException();
-        }
 
 
         #endregion
@@ -115,7 +48,7 @@ namespace DataAcquisition.Repository
                     return null;
                 }
 
-                List<string> fileNameList = Directory.GetFiles(fullPath).ToList();
+                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
                 List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
                 //List<XmlDocument> documents = new List<XmlDocument>();
 
@@ -152,7 +85,6 @@ namespace DataAcquisition.Repository
                 return null;
             }
         }
-
 
     }
 

@@ -8,7 +8,7 @@ namespace DataStructures.ToolSpecifications
     public class ToolSpecificationOnHDD
     {
 
-        public List<IQuantitySpecification> Specifications { get; set; }
+        public List<IQuantitySpecification> Specifications { get; private set; }
 
         public ToolNames ToolName { get; set; }
 

@@ -18,12 +18,7 @@ namespace DataAcquisition.Repository
             throw new NotImplementedException();
         }
 
-        public override void Remove(IReferenceSample item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void RemoveRange(IEnumerable<IReferenceSample> items)
+        public override bool Remove(IReferenceSample item)
         {
             throw new NotImplementedException();
         }
@@ -38,12 +33,13 @@ namespace DataAcquisition.Repository
             throw new NotImplementedException();
         }
 
-        public override void Add(IReferenceSample item)
+        public override bool Add(IReferenceSample item)
         {
             throw new NotImplementedException();
         }
 
-        public override void AddRange(IEnumerable<IReferenceSample> items)
+
+        protected override List<IReferenceSample> GetItemList(string fullPath)
         {
             throw new NotImplementedException();
         }
