@@ -11,7 +11,7 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// result of one individual the measurement session
         /// </summary>
-        T Result { get; set; }
+        T Result { get; }
     }
 
 
@@ -20,7 +20,7 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// date and time when the measurement was taken
         /// </summary>
-        DateTime MeasurementTime { get; set; }
+        DateTime MeasurementTime { get; }
     }
 
 

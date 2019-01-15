@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.ReferenceSample;
+using System;
 
 namespace DataStructures.ReferenceSample
 {
@@ -21,6 +22,21 @@ namespace DataStructures.ReferenceSample
             Dimension = dim;
         }
 
+
+        public int CompareTo(IReferenceValue other)
+        {
+            if (ReferenceEquals(this, other))
+            {
+                return 0;
+            }
+
+            if (ReferenceEquals(null, other))
+            {
+                return 1;
+            }
+
+            return string.Compare(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+        }
     }
 
 

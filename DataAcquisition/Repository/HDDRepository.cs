@@ -4,12 +4,11 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
 
 namespace DataAcquisition.Repository
 {
     public abstract class HDDRepository<T> : IRepository<T>
-        where T : class, IStoredData, IComparer<T>
+        where T : class, IStoredDataOnHDD, IComparable<T>
     {
         protected readonly SimpleHDDRepositoryParameter _parameters;
         private readonly object _lockObject = new object();
@@ -23,7 +22,29 @@ namespace DataAcquisition.Repository
 
         #region IRepository<T>
 
-        public abstract IEnumerable<T> Find(Expression<Func<T>> predicate);
+        public virtual IEnumerable<T> Find(Predicate<T> predicate)
+        {
+
+            if (predicate == null)
+            {
+                _parameters.Logger.MethodError("The arrived predicate is null.");
+                return null;
+            }
+
+            List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath);
+            List<T> hitList = new List<T>();
+
+            foreach (T item in itemList)
+            {
+                if (predicate(item))
+                {
+                    hitList.Add(item);
+                }
+            }
+
+            return hitList;
+        }
+
 
         public virtual T Get(int index, IComparer<T> comparer = null)
         {
@@ -35,9 +56,9 @@ namespace DataAcquisition.Repository
                     return null;
                 }
 
-                List<T> specificationList = GetItemList(_parameters.RepositoryFullDirectoryPath);
+                List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath);
 
-                if (index > specificationList.Count)
+                if (index > itemList.Count)
                 {
                     _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
                     return null;
@@ -45,14 +66,14 @@ namespace DataAcquisition.Repository
 
                 if (comparer == null)
                 {
-                    specificationList.Sort();
+                    itemList.Sort();
                 }
                 else
                 {
-                    specificationList.Sort(comparer);
+                    itemList.Sort(comparer);
                 }
 
-                return specificationList[index];
+                return itemList[index];
 
             }
             catch (Exception ex)
@@ -67,15 +88,15 @@ namespace DataAcquisition.Repository
         {
             try
             {
-                if (string.IsNullOrEmpty(item?.FullNameOnStorage))
+                if (string.IsNullOrEmpty(item?.FullNameOnHDD))
                 {
                     _parameters.Logger.MethodError("Arrived specification is null or its filename is null or empty.");
                     return false;
                 }
 
-                if (File.Exists(item.FullNameOnStorage))
+                if (File.Exists(item.FullNameOnHDD))
                 {
-                    _parameters.Logger.MethodError($"The given file: {item.FullNameOnStorage} already exists.");
+                    _parameters.Logger.MethodError($"The given file: {item.FullNameOnHDD} already exists.");
                     return false;
                 }
 
@@ -91,6 +112,7 @@ namespace DataAcquisition.Repository
             }
         }
 
+
         public virtual void AddRange(IEnumerable<T> items)
         {
             foreach (var item in items)
@@ -99,28 +121,30 @@ namespace DataAcquisition.Repository
             }
         }
 
+
         public virtual IEnumerable<T> GetAll()
         {
             return GetItemList(_parameters.RepositoryFullDirectoryPath);
         }
 
+
         public virtual bool Remove(T item)
         {
             try
             {
-                if (string.IsNullOrEmpty(item?.FullNameOnStorage))
+                if (string.IsNullOrEmpty(item?.FullNameOnHDD))
                 {
                     _parameters.Logger.MethodError("Arrived specification is null or its filename is null or empty.");
                     return false;
                 }
 
-                if (!File.Exists(item.FullNameOnStorage))
+                if (!File.Exists(item.FullNameOnHDD))
                 {
-                    _parameters.Logger.MethodError($"The given file: {item.FullNameOnStorage} does not exist.");
+                    _parameters.Logger.MethodError($"The given file: {item.FullNameOnHDD} does not exist.");
                     return false;
                 }
 
-                File.Delete(item.FullNameOnStorage);
+                File.Delete(item.FullNameOnHDD);
 
                 return true;
             }
@@ -131,6 +155,7 @@ namespace DataAcquisition.Repository
             }
         }
 
+
         public virtual void RemoveRange(IEnumerable<T> items)
         {
             foreach (var item in items)
@@ -138,6 +163,7 @@ namespace DataAcquisition.Repository
                 Remove(item);
             }
         }
+
 
         #endregion
 

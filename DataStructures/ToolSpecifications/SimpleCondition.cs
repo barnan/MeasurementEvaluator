@@ -1,7 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
 using System;
-using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -32,11 +31,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {
-            StringBuilder sb = new StringBuilder(base.ToString());
-
-            sb.AppendLine($"Valid, if {ValidIf} than {ValidIf_Value}");
-
-            return sb.ToString();
+            return $"{base.ToString()}{Environment.NewLine}Valid, if {ValidIf} than {ValidIf_Value}";
         }
 
         #endregion

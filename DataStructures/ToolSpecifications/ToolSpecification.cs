@@ -1,5 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -8,41 +9,31 @@ using System.Text;
 namespace DataStructures.ToolSpecifications
 {
 
-    public class ToolSpecification : IToolSpecification, IComparable<IToolSpecification>
+    public class ToolSpecification : IToolSpecification
     {
         private readonly ToolSpecificationOnHDD _specOnHDD;
         private readonly ILogger _logger;
 
 
-
-        public string FullNameOnStorage { get; }
-
+        public string FullNameOnHDD { get; }
 
         public IReadOnlyList<IQuantitySpecification> Specifications => _specOnHDD.Specifications.AsReadOnly();
-
 
         public ToolNames ToolName => _specOnHDD.ToolName;
 
 
-        public ToolSpecification(string fileName, ToolSpecificationOnHDD spec, ILogger logger)
+
+        public ToolSpecification(string fileName, ToolSpecificationOnHDD spec)
         {
-            FullNameOnStorage = fileName;
-            _logger = logger;
+            FullNameOnHDD = fileName;
+            _logger = LogManager.GetCurrentClassLogger();
 
             _specOnHDD = spec;
+
+            _logger.MethodInfo($"{ToolName} specification created.");
         }
 
-
-        public int CompareTo(IToolSpecification other)
-        {
-
-            //string toolName1 = ToolName.ToString();
-            //string toolName2 = other.ToolName.ToString();
-
-            //return string.Compare(toolName1, toolName2, StringComparison.InvariantCulture);
-            return 0;
-        }
-
+        #region IFormattable
 
         public string ToString(string format, IFormatProvider formatProvider = null)
         {
@@ -58,23 +49,66 @@ namespace DataStructures.ToolSpecifications
             return sb.ToString();
         }
 
+        #endregion
 
-        public int Compare(IToolSpecification x, IToolSpecification y)
+        #region Comparable
+
+        public int CompareTo(IToolSpecification other)
         {
-            if (x?.ToolName == null || y?.ToolName == null)
+            try
             {
-                _logger.Error("Arrived data is null.");
-                throw new ArgumentNullException();
+                if (ReferenceEquals(this, other))
+                {
+                    return 0;
+                }
+
+                if (ReferenceEquals(null, other))
+                {
+                    return 1;
+                }
+
+                if (other.ToolName == null)
+                {
+                    _logger.Error("Tool Name is null in Arrived data.");
+                    return 0;
+                }
+
+                string toolName1 = ToolName.ToString();
+                string toolName2 = other.ToolName.ToString();
+
+                int toolNameComparisonResult = string.Compare(toolName1, toolName2, StringComparison.OrdinalIgnoreCase);
+
+                if (toolNameComparisonResult != 0)
+                {
+                    return toolNameComparisonResult;
+                }
+
+                if (Specifications.Count != other.Specifications.Count)
+                {
+                    return Specifications.Count > other.Specifications.Count ? 1 : -1;
+                }
+
+                int summ = 0;
+                for (int i = 0; i < Specifications.Count; i++)
+                {
+                    summ += Specifications[i].CompareTo(other.Specifications[i]);
+                }
+
+                if (summ != 0)
+                {
+                    summ /= Math.Abs(summ);
+                }
+
+                return summ;
             }
-
-
-            string toolName1 = x.ToolName.ToString();
-            string toolName2 = y.ToolName.ToString();
-
-            int toolNameComparisonResult = string.Compare(toolName1, toolName2, StringComparison.InvariantCulture);
-
-            // TODO : finish
+            catch (Exception ex)
+            {
+                _logger.MethodError($"Exception occured: {ex}");
+                return 0;
+            }
         }
+
+        #endregion
     }
 
 }

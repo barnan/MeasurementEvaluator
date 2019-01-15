@@ -44,7 +44,7 @@
     <Compile Include="Calculations\ICalculation.cs" />
     <Compile Include="Calculations\ICalculationResult.cs" />
     <Compile Include="DataAcquisition\IRepository.cs" />
-    <Compile Include="DataAcquisition\IStoredData.cs" />
+    <Compile Include="DataAcquisition\IStoredDataOnHDD.cs" />
     <Compile Include="DataAcquisition\IXmlParser.cs" />
     <Compile Include="DataAcquisition\IXmlReader.cs" />
     <Compile Include="Enumerations.cs" />

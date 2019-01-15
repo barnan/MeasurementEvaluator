@@ -1,7 +1,9 @@
-﻿namespace Interfaces.ReferenceSample
+﻿using System;
+
+namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceValue
+    public interface IReferenceValue : IComparable<IReferenceValue>
     {
         /// <summary>
         /// value name

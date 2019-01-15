@@ -1,20 +1,20 @@
 ﻿namespace Interfaces.DataAcquisition
 {
-    public interface IStoredData
+    public interface IStoredDataOnHDD
     {
         /// <summary>
         /// full path and name of the data on the media
         /// </summary>
-        string FullNameOnStorage { get; }
+        string FullNameOnHDD { get; }
     }
 
 
-    public interface IStoredDataHandler : IStoredData
+    public interface IStoredDataOnHDDHandler : IStoredDataOnHDD
     {
         /// <summary>
         /// full path and name of the data on the media
         /// </summary>
-        string FullNameOnStorage { get; set; }
+        string FullNameOnHDD { get; set; }
     }
 
 }

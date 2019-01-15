@@ -5,37 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml;
 
 namespace DataAcquisition.Repository
 {
-    class SpecificationRepository : HDDRepository<IToolSpecification>
+    class HDDSpecificationRepository : HDDRepository<IToolSpecification>
     {
 
-        public SpecificationRepository(SpecificationRepositoryParameter parameters)
+        public HDDSpecificationRepository(SpecificationRepositoryParameter parameters)
             : base(parameters)
         {
         }
-
-        #region IRepository<T>
-
-        public override IEnumerable<IToolSpecification> GetAll()
-        {
-            return GetItemList(_parameters.RepositoryFullDirectoryPath);
-        }
-
-
-        public override IEnumerable<IToolSpecification> Find(Expression<Func<IToolSpecification>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-
-        #endregion
 
 
         protected override List<IToolSpecification> GetItemList(string fullPath)

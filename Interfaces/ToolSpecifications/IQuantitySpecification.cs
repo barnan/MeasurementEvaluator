@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {
-    public interface IQuantitySpecification : IFormattable
+    public interface IQuantitySpecification : IFormattable, IComparable<IQuantitySpecification>
     {
         /// <summary>
         /// Name of this quantity

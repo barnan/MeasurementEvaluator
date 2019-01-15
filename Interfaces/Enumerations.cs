@@ -84,7 +84,7 @@ namespace Interfaces
         Average,
         StandardDeviation,
         Cpk,
-        G_RAndR
+        GRAndR
     }
 
 }

@@ -1,10 +1,11 @@
 ﻿using Interfaces.DataAcquisition;
+using System;
 using System.Collections.Generic;
 
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceSample : IStoredData, IComparer<IReferenceSample>
+    public interface IReferenceSample : IComparable<IReferenceSample>, IStoredDataOnHDD
     {
         /// <summary>
         /// name or ID of the sample
@@ -25,7 +26,7 @@ namespace Interfaces.ReferenceSample
 
 
 
-    public interface IReferenceSampleHandler : IReferenceSample, IStoredDataHandler
+    public interface IReferenceSampleOnHDDHandler : IReferenceSample, IStoredDataOnHDDHandler
     {
         /// <summary>
         /// name or ID of the sample

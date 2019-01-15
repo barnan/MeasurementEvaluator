@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace Interfaces.DataAcquisition
 {
@@ -10,7 +9,7 @@ namespace Interfaces.DataAcquisition
 
         IEnumerable<T> GetAll();
 
-        IEnumerable<T> Find(Expression<Func<T>> predicate);
+        IEnumerable<T> Find(Predicate<T> predicate);
 
         bool Add(T item);
 

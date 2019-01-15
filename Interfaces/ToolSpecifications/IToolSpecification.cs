@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface IToolSpecification : IFormattable, IStoredData, IComparer<IToolSpecification>
+    public interface IToolSpecification : IFormattable, IStoredDataOnHDD, IComparable<IToolSpecification>
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool
@@ -20,7 +20,7 @@ namespace Interfaces.ToolSpecifications
     }
 
 
-    public interface IToolSpecificationHandler : IToolSpecification, IStoredDataHandler
+    public interface IToolSpecificationOnHDDHandler : IToolSpecification, IStoredDataOnHDDHandler
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool
