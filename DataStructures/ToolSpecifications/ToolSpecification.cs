@@ -9,27 +9,28 @@ using System.Text;
 namespace DataStructures.ToolSpecifications
 {
 
-    public class ToolSpecification : IToolSpecification
+    public class ToolSpecification : IToolSpecificationHandler
     {
-        private readonly ToolSpecificationOnHDD _specOnHDD;
         private readonly ILogger _logger;
 
 
-        public string FullNameOnHDD { get; }
-
-        public IReadOnlyList<IQuantitySpecification> Specifications => _specOnHDD.Specifications.AsReadOnly();
-
-        public ToolNames ToolName => _specOnHDD.ToolName;
-
-
-
-        public ToolSpecification(string fileName, ToolSpecificationOnHDD spec)
+        private List<IQuantitySpecification> _specifications;
+        public IReadOnlyList<IQuantitySpecification> Specifications
         {
-            FullNameOnHDD = fileName;
+            get { return _specifications.AsReadOnly(); }
+            set { _specifications = (List<IQuantitySpecification>)value; }
+        }
+
+        public ToolNames ToolName { get; set; }
+
+
+        public string FullNameOnHDD { get; set; }
+
+
+
+        public ToolSpecification(string fileName)
+        {
             _logger = LogManager.GetCurrentClassLogger();
-
-            _specOnHDD = spec;
-
             _logger.MethodInfo($"{ToolName} specification created.");
         }
 

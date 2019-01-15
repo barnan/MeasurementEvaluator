@@ -231,10 +231,7 @@ namespace DataAcquisition.Repository
         public string RepositoryFullDirectoryPath { get; set; }
         public string FileExtensionFilter { get; set; }
         public ILogger Logger { get; set; }
-        public IXmlReader XmlReader { get; set; }
-        public IXmlParser XmlParser { get; set; }
-
+        public IFileReaderWriter HDDReaderWriter { get; set; }
     }
-
 
 }

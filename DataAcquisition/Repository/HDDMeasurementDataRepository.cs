@@ -1,8 +1,13 @@
 ﻿using Interfaces.MeasuredData;
+using Miscellaneous;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DataAcquisition.Repository
 {
-    class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>
+    public class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>
     {
 
         public HDDMeasurementDataRepository(SpecificationRepositoryParameters parameters)
@@ -22,19 +27,13 @@ namespace DataAcquisition.Repository
                 }
 
                 List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
-                List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
-                //List<XmlDocument> documents = new List<XmlDocument>();
+                List<IToolMeasurementData> fileContentDictionary = new List<IToolMeasurementData>(fileNameList.Count);
 
                 foreach (string fileName in fileNameList)
                 {
-                    ToolSpecificationOnHDD specOnHDD = new ToolSpecificationOnHDD();
+                    IToolMeasurementData data = _parameters.HDDReaderWriter.ReadFile<IToolMeasurementData>(fileName);
 
-                    XmlDocument currentXmlDocument = new XmlDocument();
-                    currentXmlDocument.LoadXml(fileName);
-
-                    _parameters.XmlParser.ParseDocument(specOnHDD, currentXmlDocument);
-
-                    fileContentDictionary.Add(new ToolSpecification(fileName, specOnHDD));
+                    fileContentDictionary.Add(data);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {

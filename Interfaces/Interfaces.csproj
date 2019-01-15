@@ -43,11 +43,11 @@
   <ItemGroup>
     <Compile Include="Calculations\ICalculation.cs" />
     <Compile Include="Calculations\ICalculationResult.cs" />
-    <Compile Include="DataAcquisition\IMeasDataFileReader.cs" />
+    <Compile Include="DataAcquisition\IFileReaderWriter.cs" />
     <Compile Include="DataAcquisition\IRepository.cs" />
     <Compile Include="DataAcquisition\IStoredDataOnHDD.cs" />
     <Compile Include="DataAcquisition\IXmlParser.cs" />
-    <Compile Include="DataAcquisition\IXmlReader.cs" />
+    <Compile Include="DataAcquisition\IHDDXmlReader.cs" />
     <Compile Include="Enumerations.cs" />
     <Compile Include="Evaluation\IEvaluator.cs" />
     <Compile Include="MeasuredData\IUniqueMeasurementResult.cs" />

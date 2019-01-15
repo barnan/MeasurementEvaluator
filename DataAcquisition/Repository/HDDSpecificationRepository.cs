@@ -1,11 +1,9 @@
-﻿using DataStructures.ToolSpecifications;
-using Interfaces.ToolSpecifications;
+﻿using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 
 namespace DataAcquisition.Repository
 {
@@ -30,18 +28,13 @@ namespace DataAcquisition.Repository
 
                 List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
                 List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
-                //List<XmlDocument> documents = new List<XmlDocument>();
 
                 foreach (string fileName in fileNameList)
                 {
-                    ToolSpecificationOnHDD specOnHDD = new ToolSpecificationOnHDD();
 
-                    XmlDocument currentXmlDocument = new XmlDocument();
-                    currentXmlDocument.LoadXml(fileName);
+                    IToolSpecification spec = _parameters.HDDReaderWriter.ReadFile<IToolSpecification>(fileName);
 
-                    _parameters.XmlParser.ParseDocument(specOnHDD, currentXmlDocument);
-
-                    fileContentDictionary.Add(new ToolSpecification(fileName, specOnHDD));
+                    fileContentDictionary.Add(spec);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {

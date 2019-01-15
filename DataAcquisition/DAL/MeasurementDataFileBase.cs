@@ -1,12 +1,17 @@
 ﻿using Interfaces.DataAcquisition;
-using Interfaces.MeasuredData;
 using System.IO;
 
 namespace DataAcquisition.DAL
 {
 
-    public abstract class MeasurementDataFileBase : IMeasDataFile
+    public abstract class MeasurementDataFileBase : IFileReader, IFileWriter
     {
+        public abstract bool WriteFile<T>(T obj, string fileNameAndPath);
+
+        public abstract T ReadFile<T>(string fileNameAndPath, string toolName = null);
+
+
+
         public bool CanRead(string fileNameAndPath)
         {
             if (!string.IsNullOrEmpty(fileNameAndPath))
@@ -25,9 +30,6 @@ namespace DataAcquisition.DAL
         {
             return File.Exists(fileNameAndPath);
         }
-
-
-        public abstract IToolMeasurementData ReadFile(string fileNameAndPath, string toolName);
 
     }
 

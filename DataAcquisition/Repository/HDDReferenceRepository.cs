@@ -1,12 +1,9 @@
-﻿using DataStructures.ReferenceSample;
-using Interfaces;
-using Interfaces.ReferenceSample;
+﻿using Interfaces.ReferenceSample;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 
 namespace DataAcquisition.Repository
 {
@@ -30,18 +27,12 @@ namespace DataAcquisition.Repository
 
                 List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
                 List<IReferenceSample> fileContentDictionary = new List<IReferenceSample>(fileNameList.Count);
-                //List<XmlDocument> documents = new List<XmlDocument>();
 
                 foreach (string fileName in fileNameList)
                 {
-                    ReferenceSampleOnHDD referenceSampleOnHDD = new ReferenceSampleOnHDD();
+                    IReferenceSample refSampl = _parameters.HDDReaderWriter.ReadFile<IReferenceSample>(fileName);
 
-                    XmlDocument currentXmlDocument = new XmlDocument();
-                    currentXmlDocument.LoadXml(fileName);
-
-                    _parameters.XmlParser.ParseDocument(referenceSampleOnHDD, currentXmlDocument);
-
-                    fileContentDictionary.Add(new ReferenceSample(fileName, referenceSampleOnHDD, SampleOrientation.Orientation_0));
+                    fileContentDictionary.Add(refSampl);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {

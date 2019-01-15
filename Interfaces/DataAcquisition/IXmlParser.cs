@@ -1,10 +1,8 @@
-﻿using System.Xml;
-
-namespace Interfaces.DataAcquisition
+﻿namespace Interfaces.DataAcquisition
 {
-    public interface IXmlParser
-    {
-        bool ParseDocument(object obj, XmlDocument document);
+    //public interface IXmlParser
+    //{
+    //    bool ParseDocument(object obj, XmlDocument document);
 
-    }
+    //}
 }

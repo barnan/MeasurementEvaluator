@@ -1,5 +1,4 @@
-﻿using DataStructures.ReferenceSample;
-using Interfaces;
+﻿using Interfaces;
 using Interfaces.ReferenceSample;
 using Miscellaneous;
 using NLog;
@@ -10,30 +9,31 @@ using IReferenceValue = Interfaces.ReferenceSample.IReferenceValue;
 namespace DataAcquisition
 {
     //[Serializable]
-    public class ReferenceSample : IReferenceSample
+    public class ReferenceSample : IReferenceSampleOnHDDHandler
     {
-        private readonly ReferenceSampleOnHDD _referenceSampleOnHDD;
         private readonly ILogger _logger;
 
 
-        public string FullNameOnHDD { get; }
+        public string SampleID { get; set; }
 
 
-        public string SampleID { get; }
-
-
-        public IReadOnlyList<IReferenceValue> ReferenceValues => _referenceSampleOnHDD.ReferenceValues;
-
-
-        public SampleOrientation SampleOrientation { get; }
-
-
-        public ReferenceSample(string name, ReferenceSampleOnHDD refsampl, SampleOrientation orientation)
+        private List<IReferenceValue> _referenceValues;
+        public IReadOnlyList<IReferenceValue> ReferenceValues
         {
-            SampleID = name;
-            SampleOrientation = orientation;
+            get { return _referenceValues.AsReadOnly(); }
+            set { _referenceValues = (List<IReferenceValue>)value; }
+        }
 
-            _referenceSampleOnHDD = refsampl;
+
+        public string FullNameOnHDD { get; set; }
+
+
+        public SampleOrientation SampleOrientation { get; set; }
+
+
+        public ReferenceSample()
+        {
+            _logger = LogManager.GetCurrentClassLogger();
 
             _logger.MethodInfo($"{SampleID} reference sample created.");
         }
@@ -45,7 +45,6 @@ namespace DataAcquisition
         {
             try
             {
-
                 if (ReferenceEquals(this, other))
                 {
                     return 0;
@@ -96,8 +95,6 @@ namespace DataAcquisition
                 _logger.MethodError($"Exception occured: {ex}");
                 return 0;
             }
-
-
 
         }
 

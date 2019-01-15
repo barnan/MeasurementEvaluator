@@ -20,7 +20,7 @@ namespace Interfaces.ToolSpecifications
     }
 
 
-    public interface IToolSpecificationOnHDDHandler : IToolSpecification, IStoredDataOnHDDHandler
+    public interface IToolSpecificationHandler : IToolSpecification, IStoredDataOnHDDHandler
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool
