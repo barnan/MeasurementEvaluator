@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Interfaces.DataAcquisition;
+using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData
 {
-    public interface IToolMeasurementData
+    public interface IToolMeasurementData : IStoredDataOnHDD
     {
 
         /// <summary>

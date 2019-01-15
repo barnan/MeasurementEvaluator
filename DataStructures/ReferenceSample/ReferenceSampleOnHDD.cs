@@ -1,8 +1,7 @@
-﻿using Interfaces;
+﻿using Interfaces.ReferenceSample;
 using System.Collections.Generic;
-using IReferenceValue = Interfaces.ReferenceSample.IReferenceValue;
 
-namespace DataAcquisition
+namespace DataStructures.ReferenceSample
 {
     //[Serializable]
     public class ReferenceSampleOnHDD
@@ -10,20 +9,7 @@ namespace DataAcquisition
         public string SampleID { get; }
 
 
-        public List<IReferenceValue> ReferenceValues { get; private set; }
-
-
-        public SampleOrientation SampleOrientation { get; }
-
-
-
-        public ReferenceSampleOnHDD(string name, List<IReferenceValue> refv, SampleOrientation orientation)
-        {
-            SampleID = name;
-            ReferenceValues = refv;
-            SampleOrientation = orientation;
-        }
-
+        public List<IReferenceValue> ReferenceValues { get; }
 
 
 
@@ -102,6 +88,7 @@ namespace DataAcquisition
         //    }
 
         //}
+
 
 
     }

@@ -1,14 +1,9 @@
-﻿using Interfaces.MeasuredData;
+﻿using Interfaces.DataAcquisition;
+using Interfaces.MeasuredData;
 using System.IO;
 
 namespace DataAcquisition.DAL
 {
-    public interface IMeasDataFile
-    {
-        IToolMeasurementData ReadFile(string fileNameAndPath, string toolName);
-        bool CanRead(string fileNameAndPath);
-    }
-
 
     public abstract class MeasurementDataFileBase : IMeasDataFile
     {
@@ -25,12 +20,15 @@ namespace DataAcquisition.DAL
             return false;
         }
 
+
         protected bool CheckFilePath(string fileNameAndPath)
         {
             return File.Exists(fileNameAndPath);
         }
 
+
         public abstract IToolMeasurementData ReadFile(string fileNameAndPath, string toolName);
+
     }
 
 

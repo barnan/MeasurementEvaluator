@@ -29,7 +29,7 @@ namespace DataAcquisition.DAL
             }
 
 
-            return new ToolMeasurementData();
+            return new ToolMeasurementData(toolname, null);
 
         }
     }

@@ -12,7 +12,7 @@ namespace DataAcquisition.Repository
     class HDDSpecificationRepository : HDDRepository<IToolSpecification>
     {
 
-        public HDDSpecificationRepository(SpecificationRepositoryParameter parameters)
+        public HDDSpecificationRepository(SpecificationRepositoryParameters parameters)
             : base(parameters)
         {
         }
@@ -72,7 +72,7 @@ namespace DataAcquisition.Repository
 
 
 
-    public class SpecificationRepositoryParameter : SimpleHDDRepositoryParameter
+    public class SpecificationRepositoryParameters : SimpleHDDRepositoryParameters
     {
     }
 

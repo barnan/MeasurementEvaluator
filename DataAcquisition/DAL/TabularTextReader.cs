@@ -1,5 +1,7 @@
 ﻿using DataStructures.MeasuredData;
 using Interfaces.MeasuredData;
+using Miscellaneous;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,11 +10,12 @@ namespace DataAcquisition.DAL
 {
     public class TabularTextReader : MeasurementDataFileBase
     {
-        private char _separator;
+        private readonly TabularTextReaderParameters _parameters;
 
-        public TabularTextReader(char separator = ';')
+
+        public TabularTextReader(TabularTextReaderParameters parameter)
         {
-            _separator = separator;
+            _parameters = parameter;
         }
 
 
@@ -26,58 +29,67 @@ namespace DataAcquisition.DAL
 
             try
             {
-                if (CheckFilePath(fileNameAndPath) && CanRead(fileNameAndPath))
+                if (!CheckFilePath(fileNameAndPath))
                 {
-                    toolMeasData = new ToolMeasurementData(toolName, new List<IMeasurementSerie>());
+                    _parameters.Logger.MethodError($"File does not exists: {fileNameAndPath}");
+                    return null;
+                }
 
-                    using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
+                if (!CanRead(fileNameAndPath))
+                {
+                    _parameters.Logger.MethodError($"File is not readable: {fileNameAndPath}");
+                    return null;
+                }
+
+                toolMeasData = new ToolMeasurementData(toolName, new List<IMeasurementSerie>());
+
+                using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
+                {
+                    bool firstLine = true;
+                    while (!reader.EndOfStream)
                     {
-                        bool firstLine = true;
-                        while (!reader.EndOfStream)
+                        string line = reader.ReadLine();
+
+                        if (line == null)
                         {
-                            string line = reader.ReadLine();
+                            continue;
+                        }
 
-                            if (line == null)
+                        string[] elements = line.Split(_parameters.Separator);
+
+                        if (firstLine)
+                        {
+                            int emptycounter = 0;
+
+                            foreach (string str in elements)
                             {
-                                continue;
+                                if (string.IsNullOrEmpty(str))
+                                {
+                                    toolMeasData.Results.Add(new MeasurementSerie("Empty_" + emptycounter, new List<IUniqueMeasurementResult>()));
+                                }
+                                else
+                                {
+                                    toolMeasData.Results.Add(new MeasurementSerie(str, new List<IUniqueMeasurementResult>()));
+                                }
                             }
 
-                            string[] elements = line.Split(_separator);
-
-                            if (firstLine)
+                            firstLine = false;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < elements.Length; i++)
                             {
-                                int emptycounter = 0;
-
-                                foreach (string str in elements)
+                                double szam;
+                                try
                                 {
-                                    if (string.IsNullOrEmpty(str))
-                                    {
-                                        toolMeasData.Results.Add(new MeasurementSerie("Empty_" + emptycounter, new List<IUniqueMeasurementResult>()));
-                                    }
-                                    else
-                                    {
-                                        toolMeasData.Results.Add(new MeasurementSerie(str, new List<IUniqueMeasurementResult>()));
-                                    }
+                                    szam = Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture);
+                                }
+                                catch (FormatException ex)
+                                {
+                                    szam = 0.0;
                                 }
 
-                                firstLine = false;
-                            }
-                            else
-                            {
-                                for (int i = 0; i < elements.Length; i++)
-                                {
-                                    double szam;
-                                    try
-                                    {
-                                        szam = Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture);
-                                    }
-                                    catch (FormatException ex)
-                                    {
-                                        szam = 0.0;
-                                    }
-
-                                    toolMeasData.Results[i].MeasData.Add(new UniqueMeasurementResult<double>(szam));
-                                }
+                                toolMeasData.Results[i].MeasData.Add(new UniqueMeasurementResult<double>(szam));
                             }
                         }
                     }
@@ -85,7 +97,7 @@ namespace DataAcquisition.DAL
             }
             catch (Exception ex)
             {
-                // TODO: error in file read
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
                 return toolMeasData;
             }
 
@@ -93,4 +105,13 @@ namespace DataAcquisition.DAL
         }
 
     }
+
+    public class TabularTextReaderParameters
+    {
+        public char Separator { get; set; }
+        public ILogger Logger { get; set; }
+    }
+
+
+
 }

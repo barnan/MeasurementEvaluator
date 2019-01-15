@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MeasuredData\MeasurementSerie.cs" />
+    <Compile Include="MeasuredData\ToolMeasurementDataOnHDD.cs" />
     <Compile Include="MeasuredData\ToolMeasurementData.cs" />
     <Compile Include="MeasuredData\UniqueMeasurementResult.cs" />
     <Compile Include="ReferenceSample\ReferenceSampleOnHDD.cs" />

@@ -7,10 +7,16 @@ namespace DataStructures.ToolSpecifications
 
     public class ToolSpecificationOnHDD
     {
+        internal List<IQuantitySpecification> Specifications { get; private set; }
 
-        public List<IQuantitySpecification> Specifications { get; private set; }
+        internal ToolNames ToolName { get; private set; }
 
-        public ToolNames ToolName { get; set; }
+
+        internal void SetToolName(ToolNames toolName)
+        {
+            ToolName = toolName;
+        }
+
 
 
         //    public string ToolName { set; get; }

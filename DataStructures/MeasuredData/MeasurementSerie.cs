@@ -23,10 +23,7 @@ namespace DataStructures.MeasuredData
 
         public IUniqueMeasurementResult this[int i]
         {
-            get
-            {
-                return MeasData[i];
-            }
+            get { return MeasData[i]; }
         }
 
     }

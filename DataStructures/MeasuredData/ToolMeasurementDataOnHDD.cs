@@ -3,15 +3,16 @@ using System.Collections.Generic;
 
 namespace DataStructures.MeasuredData
 {
-    public class ToolMeasurementDataOnHDD
+    public class ToolMeasurementData : IToolMeasurementData
     {
         public string ToolName { get; }
 
         public List<IMeasurementSerie> Results { get; }
 
+        public string FullNameOnHDD { get; }
 
 
-        public ToolMeasurementDataOnHDD(string toolName, List<IMeasurementSerie> results)
+        public ToolMeasurementData(string toolName, List<IMeasurementSerie> results)
         {
             ToolName = toolName;
             Results = results;

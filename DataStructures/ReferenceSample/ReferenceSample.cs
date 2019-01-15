@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using DataStructures.ReferenceSample;
+using Interfaces;
 using Interfaces.ReferenceSample;
 using Miscellaneous;
 using NLog;

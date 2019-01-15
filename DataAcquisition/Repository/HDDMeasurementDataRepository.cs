@@ -1,24 +1,17 @@
-﻿using DataStructures.ReferenceSample;
-using Interfaces;
-using Interfaces.ReferenceSample;
-using Miscellaneous;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml;
+﻿using Interfaces.MeasuredData;
 
 namespace DataAcquisition.Repository
 {
-    class HDDReferenceRepository : HDDRepository<IReferenceSample>
+    class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>
     {
-        public HDDReferenceRepository(SimpleHDDRepositoryParameters parameters)
+
+        public HDDMeasurementDataRepository(SpecificationRepositoryParameters parameters)
             : base(parameters)
         {
         }
 
 
-        protected override List<IReferenceSample> GetItemList(string fullPath)
+        protected override List<IToolMeasurementData> GetItemList(string fullPath)
         {
             try
             {
@@ -29,19 +22,19 @@ namespace DataAcquisition.Repository
                 }
 
                 List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
-                List<IReferenceSample> fileContentDictionary = new List<IReferenceSample>(fileNameList.Count);
+                List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
                 //List<XmlDocument> documents = new List<XmlDocument>();
 
                 foreach (string fileName in fileNameList)
                 {
-                    ReferenceSampleOnHDD referenceSampleOnHDD = new ReferenceSampleOnHDD();
+                    ToolSpecificationOnHDD specOnHDD = new ToolSpecificationOnHDD();
 
                     XmlDocument currentXmlDocument = new XmlDocument();
                     currentXmlDocument.LoadXml(fileName);
 
-                    _parameters.XmlParser.ParseDocument(referenceSampleOnHDD, currentXmlDocument);
+                    _parameters.XmlParser.ParseDocument(specOnHDD, currentXmlDocument);
 
-                    fileContentDictionary.Add(new ReferenceSample(fileName, referenceSampleOnHDD, SampleOrientation.Orientation_0));
+                    fileContentDictionary.Add(new ToolSpecification(fileName, specOnHDD));
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
