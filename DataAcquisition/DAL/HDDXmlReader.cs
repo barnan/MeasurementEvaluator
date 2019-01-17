@@ -15,13 +15,13 @@ namespace DataAcquisition.DAL
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
 
-                T obj;
+                T tobj;
                 using (StreamReader sr = new StreamReader(filePath))
                 {
-                    obj = (T)serializer.Deserialize(sr);
+                    tobj = (T)serializer.Deserialize(sr);
                 }
 
-                return obj;
+                return tobj;
             }
             catch (Exception)
             {
@@ -31,7 +31,7 @@ namespace DataAcquisition.DAL
 
 
 
-        private bool SerializeObject<T>(T obj, string filePath)
+        private bool SerializeObject<T>(T tobj, string filePath)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace DataAcquisition.DAL
                 {
                     using (XmlWriter xw = XmlWriter.Create(sw, settings))
                     {
-                        serializer.Serialize(xw, obj);
+                        serializer.Serialize(xw, tobj);
                     }
                 }
 

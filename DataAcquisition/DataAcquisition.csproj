@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="DAL\InputDirContentManager.cs" />
     <Compile Include="DAL\MeasurementDataFileBase.cs" />
     <Compile Include="DAL\HDDTabularTextReader.cs" />
