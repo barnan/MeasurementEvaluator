@@ -127,6 +127,9 @@ namespace DI_Container_test
 
             builder.RegisterType<ConsoleOutput1>().As<IOutput>().UsingConstructor();
 
+            // így a interface-ként és ConsolOutputként is tudjuk resolve-olni:
+            builder.RegisterType<ConsoleOutput1>().AsSelf().As<IOutput>();
+
             // azzal a konstruktorral hívja, amibe a legtöbb paramétert be tudja injektálni
             //builder.RegisterType<TodayWriter1>().As<IDateWriter>();
 
