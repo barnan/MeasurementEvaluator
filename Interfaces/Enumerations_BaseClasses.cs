@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace Interfaces
 {
@@ -86,5 +87,16 @@ namespace Interfaces
         Cpk,
         GRAndR
     }
+
+
+    public class ResultEventArgs : EventArgs
+    {
+
+
+
+
+    }
+
+
 
 }

@@ -1,10 +1,14 @@
-﻿using Interfaces.MeasuredData;
+﻿using Interfaces.Misc;
+using Interfaces.Result;
+using System.Collections.Generic;
 
 namespace Interfaces.Calculations
 {
-    public interface ICalculation
+
+    public interface ICalculation : IInitializable, IResultProvider
     {
-        ICalculationResult DoCalculation(IMeasurementSerie input);
+        IReadOnlyList<CalculationTypes> AvailableCalculationTypes { get; }
+
     }
 
 

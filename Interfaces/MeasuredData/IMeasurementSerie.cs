@@ -7,7 +7,7 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// Name of the measured quantity
         /// </summary>
-        string Name { get; }
+        string MeasuredQuantityName { get; }
 
         /// <summary>
         /// List of measurement result

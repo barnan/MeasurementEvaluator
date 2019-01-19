@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.DataAcquisition
 {
-    public interface IStoredDataOnHDD
+    public interface IStoredDataOnHDD : IStoredData
     {
         /// <summary>
         /// full path and name of the data on the media

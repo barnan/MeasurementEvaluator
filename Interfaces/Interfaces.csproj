@@ -42,15 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculations\ICalculation.cs" />
-    <Compile Include="Calculations\ICalculationResult.cs" />
+    <Compile Include="Result\ICalculationResult.cs" />
     <Compile Include="DataAcquisition\IFileReaderWriter.cs" />
     <Compile Include="DataAcquisition\IRepository.cs" />
+    <Compile Include="DataAcquisition\IStoredData.cs" />
     <Compile Include="DataAcquisition\IStoredDataOnHDD.cs" />
     <Compile Include="DataAcquisition\IXmlParser.cs" />
     <Compile Include="DataAcquisition\IHDDXmlReader.cs" />
-    <Compile Include="Enumerations.cs" />
-    <Compile Include="Evaluation\IEvaluator.cs" />
+    <Compile Include="Enumerations_BaseClasses.cs" />
+    <Compile Include="Evaluation\IEvaluation.cs" />
     <Compile Include="MeasuredData\IUniqueMeasurementResult.cs" />
+    <Compile Include="Misc\IInitializable.cs" />
+    <Compile Include="Result\IEvaluatedToolSpecification.cs" />
+    <Compile Include="Result\IResult.cs" />
     <Compile Include="ToolSpecifications\ICondition.cs" />
     <Compile Include="ToolSpecifications\IQCellsCondition.cs" />
     <Compile Include="MeasuredData\IMeasurementSerie.cs" />

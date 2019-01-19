@@ -1,6 +1,8 @@
 ﻿namespace Interfaces.DataAcquisition
 {
 
+
+
     public interface IFileReader
     {
         T ReadFile<T>(string fileNameAndPath, string toolName = null);
@@ -9,10 +11,13 @@
     }
 
 
+
+
     public interface IFileWriter
     {
         bool WriteFile<T>(T obj, string fileNameAndPath);
     }
+
 
 
 
