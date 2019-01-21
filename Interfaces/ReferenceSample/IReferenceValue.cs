@@ -33,7 +33,7 @@ namespace Interfaces.ReferenceSample
         new Units Dimension { get; set; }
     }
 
-    public interface IReferenceValueHandler<T> : IReferenceValue<T> where T : struct
+    public interface IReferenceValueHandler<T> : IReferenceValueHandler, IReferenceValue<T> where T : struct
     {
         /// <summary>
         /// number value

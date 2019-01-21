@@ -16,10 +16,6 @@ namespace Interfaces.ToolSpecifications
         /// </summary>
         CalculationTypes CalculationType { get; }
 
-        /// <summary>
-        /// Relation in the condition       e.g.   <   >   ==   >=   <=
-        /// </summary>
-        Relations ConditionRelation { get; }
 
         /// <summary>
         /// Validity of the condition -> if false, the condition does not work
@@ -30,6 +26,12 @@ namespace Interfaces.ToolSpecifications
 
     public interface ICondition<T> : ICondition where T : struct
     {
+
+        /// <summary>
+        /// Relation in the condition       e.g.   <   >   ==   >=   <=
+        /// </summary>
+        Relations ConditionRelation { get; }
+
         /// <summary>
         /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
