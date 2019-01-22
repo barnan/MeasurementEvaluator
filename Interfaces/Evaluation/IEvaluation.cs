@@ -7,8 +7,5 @@ namespace Interfaces.Evaluation
 
     public interface IEvaluation : IInitializable, IResultProvider
     {
-
-
-
     }
 }

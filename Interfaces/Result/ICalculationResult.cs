@@ -1,22 +1,37 @@
 ﻿using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Interfaces.Result
 {
 
-    public interface ICalculationResult : IResult
+
+    public interface IConditionCalculationResult : IResult
     {
         IToolMeasurementData MeasurementData { get; }
 
-        IToolSpecification Specifiaction { get; }
+        ICondition Condition { get; }
+
+        IReferenceSample ReferenceSample { get; }
+
     }
 
+    // TODO: hash identification for the condition?
 
 
-    public interface ICalculationResult<T> : ICalculationResult where T : struct
+    public interface IConditionCalculationResult<out T> : IConditionCalculationResult where T : struct
     {
-        // TODO: possible development -> use NameData
-        ArrayList Results { get; }
+        T Results { get; }
+
+        bool ConditionIsMet { get; }
     }
+
+
+    public interface ICalculationResult : IResult
+    {
+        IReadOnlyList<IConditionCalculationResult> CalculationResult { get; }
+
+    }
+
 }

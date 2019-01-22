@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData
 {
+    /// <summary>
+    /// interface that describes the measurement result of one tool, only Geters
+    /// </summary>
     public interface IToolMeasurementData : IStoredDataOnHDD, IComparable<IToolMeasurementData>
     {
 
@@ -20,7 +23,9 @@ namespace Interfaces.MeasuredData
     }
 
 
-
+    /// <summary>
+    /// interface that describes the measurement result of one tool, Setters added
+    /// </summary>
     public interface IToolMeasurementDataHandler : IToolMeasurementData, IStoredDataOnHDDHandler
     {
 
@@ -28,6 +33,17 @@ namespace Interfaces.MeasuredData
 
         List<IMeasurementSerie> Results { get; set; }
     }
+
+
+
+    /// <summary>
+    /// interface that describes the measurement result of more than one tools
+    /// </summary>
+    public interface IMeasurementDatas
+    {
+        IReadOnlyList<IToolMeasurementData> MeasurementDatas { get; }
+    }
+
 
 
 }

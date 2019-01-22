@@ -96,16 +96,19 @@ namespace DataAcquisition.DAL
                         for (int i = 0; i < elements.Length; i++)
                         {
                             double szam;
+                            bool valid;
                             try
                             {
                                 szam = Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture);
+                                valid = true;
                             }
                             catch (FormatException ex)
                             {
                                 szam = 0.0;
+                                valid = false;
                             }
 
-                            toolMeasData.Results[i].MeasData.Add(new UniqueMeasurementResult<double>(szam));
+                            toolMeasData.Results[i].MeasData.Add(new UniqueMeasurementResult<double>(szam, valid));
                         }
                     }
                 }

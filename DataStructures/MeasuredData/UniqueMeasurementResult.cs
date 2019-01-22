@@ -5,11 +5,15 @@ namespace DataStructures.MeasuredData
 {
     public class UniqueMeasurementResult<T> : IUniqueMeasurementResult<T> where T : struct
     {
-        public T Result { get; set; }
+        public T Result { get; }
 
-        public UniqueMeasurementResult(T result)
+        public bool Valid { get; }
+
+
+        public UniqueMeasurementResult(T result, bool valid)
         {
             Result = result;
+            Valid = valid;
         }
 
     }
@@ -17,14 +21,12 @@ namespace DataStructures.MeasuredData
 
     public class TimedUniqueMeasurementResult<T> : UniqueMeasurementResult<T>, ITimedUniqueMeasurementResult<T> where T : struct
     {
-        public DateTime MeasurementTime { get; set; }
+        public DateTime MeasurementTime { get; }
 
 
-        public TimedUniqueMeasurementResult(T result, DateTime measurementTime)
-            : base(result)
+        public TimedUniqueMeasurementResult(T result, bool valid, DateTime measurementTime)
+            : base(result, valid)
         {
-
-            Result = result;
             MeasurementTime = measurementTime;
         }
 

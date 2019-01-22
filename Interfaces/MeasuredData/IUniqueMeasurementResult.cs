@@ -8,7 +8,7 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// it shows whether the measured data point is valid or not
         /// </summary>
-        bool valid { get; }
+        bool Valid { get; }
     }
 
 

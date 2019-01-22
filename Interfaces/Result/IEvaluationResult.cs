@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.Result
 {
-    interface IQuantityResult
+    interface IEvaluationResult : IResult
     {
     }
 }

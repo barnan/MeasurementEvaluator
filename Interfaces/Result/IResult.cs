@@ -21,12 +21,12 @@ namespace Interfaces.Result
         /// <summary>
         /// Contains start time of the calculation 
         /// </summary>
-        DateTime CalculationStartTime { get; }
+        DateTime StartTime { get; }
 
         /// <summary>
         /// Contains the calculation end time
         /// </summary>
-        DateTime CalculationEndTime { get; }
+        DateTime EndTime { get; }
 
 
         /// <summary>

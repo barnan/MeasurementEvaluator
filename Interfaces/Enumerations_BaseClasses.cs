@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces.Result;
+using System;
 using System.ComponentModel;
 
 namespace Interfaces
@@ -89,14 +90,17 @@ namespace Interfaces
     }
 
 
+
+
     public class ResultEventArgs : EventArgs
     {
+        private IResult Result { get; }
 
-
-
+        public ResultEventArgs(IResult result)
+        {
+            Result = result;
+        }
 
     }
-
-
 
 }
