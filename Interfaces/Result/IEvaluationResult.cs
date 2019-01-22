@@ -2,5 +2,8 @@
 {
     interface IEvaluationResult : IResult
     {
+        ICalculationResult EvaluatedCalculationResult { get; }
+
+        IReferenceSample
     }
 }

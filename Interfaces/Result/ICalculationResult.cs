@@ -14,7 +14,6 @@ namespace Interfaces.Result
         ICondition Condition { get; }
 
         IReferenceSample ReferenceSample { get; }
-
     }
 
     // TODO: hash identification for the condition?
