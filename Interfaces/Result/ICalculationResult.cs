@@ -1,5 +1,4 @@
 ﻿using Interfaces.MeasuredData;
-using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 
@@ -12,8 +11,6 @@ namespace Interfaces.Result
         IToolMeasurementData MeasurementData { get; }
 
         ICondition Condition { get; }
-
-        IReferenceSample ReferenceSample { get; }
     }
 
     // TODO: hash identification for the condition?
@@ -29,7 +26,7 @@ namespace Interfaces.Result
 
     public interface ICalculationResult : IResult
     {
-        IReadOnlyList<IConditionCalculationResult> CalculationResult { get; }
+        IReadOnlyList<IConditionCalculationResult> CalculationResults { get; }
 
     }
 

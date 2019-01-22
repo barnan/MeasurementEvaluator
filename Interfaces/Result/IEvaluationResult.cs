@@ -1,9 +1,11 @@
-﻿namespace Interfaces.Result
+﻿using Interfaces.ReferenceSample;
+
+namespace Interfaces.Result
 {
     interface IEvaluationResult : IResult
     {
         ICalculationResult EvaluatedCalculationResult { get; }
 
-        IReferenceSample
+        IReferenceSample ReferenceSample { get; }
     }
 }

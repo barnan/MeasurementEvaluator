@@ -35,5 +35,58 @@ namespace Miscellaneous
             logger.Fatal($"{callermember}-{message}");
         }
 
+
+
+
+        public static void LogTrace(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        {
+            if (logger.IsTraceEnabled)
+            {
+                logger.Trace($"{callermember}-{message}");
+            }
+        }
+
+        public static void LogDebug(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        {
+            if (logger.IsDebugEnabled)
+            {
+                logger.Debug($"{callermember}-{message}");
+            }
+        }
+
+        public static void LogInfo(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        {
+            if (logger.IsInfoEnabled)
+            {
+                logger.Info($"{callermember}-{message}");
+            }
+        }
+
+        public static void LogWarning(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        {
+            if (logger.IsWarnEnabled)
+            {
+                logger.Warn($"{callermember}-{message}");
+            }
+        }
+
+        public static void LogError(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        {
+            if (logger.IsErrorEnabled)
+            {
+                logger.Error($"{callermember}-{message}");
+            }
+        }
+
+        public static void LogFatal(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        {
+            if (logger.IsFatalEnabled)
+            {
+                logger.Fatal($"{callermember}-{message}");
+            }
+        }
+
+
+
     }
 }

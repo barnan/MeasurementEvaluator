@@ -94,7 +94,7 @@ namespace Interfaces
 
     public class ResultEventArgs : EventArgs
     {
-        private IResult Result { get; }
+        public IResult Result { get; }
 
         public ResultEventArgs(IResult result)
         {
