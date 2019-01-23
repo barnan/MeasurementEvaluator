@@ -57,11 +57,14 @@ namespace DataAcquisition.DAL
 
         private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, string toolName)
         {
-            ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = new List<IMeasurementSerie>(), FullNameOnHDD = fileNameAndPath };
+            List<IMeasurementSerie> results = new List<IMeasurementSerie>();
 
             using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
             {
                 bool firstLine = true;
+                List<string> headers = new List<string>();
+                List<List<IUniqueMeasurementResult>> uniqueResult = new List<List<IUniqueMeasurementResult>>();
+
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
@@ -79,14 +82,8 @@ namespace DataAcquisition.DAL
 
                         foreach (string str in elements)
                         {
-                            if (string.IsNullOrEmpty(str))
-                            {
-                                toolMeasData.Results.Add(new MeasurementSerie("Empty_" + emptycounter, new List<IUniqueMeasurementResult>()));
-                            }
-                            else
-                            {
-                                toolMeasData.Results.Add(new MeasurementSerie(str, new List<IUniqueMeasurementResult>()));
-                            }
+                            headers.Add(string.IsNullOrEmpty(str) ? "Empty_" + emptycounter : str);
+                            uniqueResult.Add(new List<IUniqueMeasurementResult>());
                         }
 
                         firstLine = false;
@@ -108,11 +105,33 @@ namespace DataAcquisition.DAL
                                 valid = false;
                             }
 
-                            toolMeasData.Results[i].MeasData.Add(new UniqueMeasurementResult<double>(szam, valid));
+                            if (i >= uniqueResult.Count)
+                            {
+                                _parameters.Logger.LogError($"Index ({i}) is higher than the length of the list ({uniqueResult.Count}). Element can not be stored.");
+                                continue;
+                            }
+
+                            uniqueResult[i].Add(new UniqueMeasurementResult<double>(szam, valid));
+                        }
+
+                        if (elements.Length < headers.Count)
+                        {
+                            for (int i = elements.Length; i < headers.Count; i++)
+                            {
+                                uniqueResult[i].Add(new UniqueMeasurementResult<double>(0, false));
+                                _parameters.Logger.LogTrace($"Zero element added in the {i}th element");
+                            }
                         }
                     }
                 }
+
+                for (int i = 0; i < headers.Count; i++)
+                {
+                    results.Add(new MeasurementSerie(headers[i], uniqueResult[i]));
+                }
             }
+
+            ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, FullNameOnHDD = fileNameAndPath };
 
             return toolMeasData;
         }

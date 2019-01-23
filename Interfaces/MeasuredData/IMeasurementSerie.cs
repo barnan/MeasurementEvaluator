@@ -12,7 +12,7 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// List of measurement result
         /// </summary>
-        List<IUniqueMeasurementResult> MeasData { get; }
+        IReadOnlyList<IUniqueMeasurementResult> MeasData { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index

@@ -8,7 +8,7 @@ namespace DataStructures.MeasuredData
     {
         public string MeasuredQuantityName { get; }
 
-        public List<IUniqueMeasurementResult> MeasData { get; }
+        public IReadOnlyList<IUniqueMeasurementResult> MeasData { get; }
 
         public Units Dimension { get; }
 
@@ -21,10 +21,6 @@ namespace DataStructures.MeasuredData
         }
 
 
-        public IUniqueMeasurementResult this[int i]
-        {
-            get { return MeasData[i]; }
-        }
-
+        public IUniqueMeasurementResult this[int i] => MeasData[i];
     }
 }

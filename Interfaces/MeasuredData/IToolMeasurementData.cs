@@ -19,7 +19,7 @@ namespace Interfaces.MeasuredData
         /// collection of measurement result of a given tool 
         /// (etc -> thickness, resistivity, sawmark are results of TTR)
         /// </summary>
-        List<IMeasurementSerie> Results { get; }
+        IReadOnlyList<IMeasurementSerie> Results { get; }
     }
 
 
@@ -31,7 +31,7 @@ namespace Interfaces.MeasuredData
 
         string ToolName { get; set; }
 
-        List<IMeasurementSerie> Results { get; set; }
+        IReadOnlyList<IMeasurementSerie> Results { get; set; }
     }
 
 

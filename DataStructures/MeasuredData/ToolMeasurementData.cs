@@ -8,7 +8,7 @@ namespace DataStructures.MeasuredData
     {
         public string ToolName { get; set; }
 
-        public List<IMeasurementSerie> Results { get; set; }
+        public IReadOnlyList<IMeasurementSerie> Results { get; set; }
 
         public string FullNameOnHDD { get; set; }
 

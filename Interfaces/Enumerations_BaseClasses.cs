@@ -52,7 +52,7 @@ namespace Interfaces
 
 
     // type safe enum pattern:
-    public sealed class ToolNames
+    public sealed class ToolNames : IFormattable
     {
         private readonly string _name;
         private readonly int _value;
@@ -76,6 +76,11 @@ namespace Interfaces
         public override string ToString()
         {
             return _name;
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            throw new NotImplementedException();
         }
     }
 

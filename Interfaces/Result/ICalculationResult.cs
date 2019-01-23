@@ -5,10 +5,9 @@ using System.Collections.Generic;
 namespace Interfaces.Result
 {
 
-
     public interface IConditionCalculationResult : IResult
     {
-        IToolMeasurementData MeasurementData { get; }
+        IMeasurementSerie MeasurementSerieData { get; }
 
         ICondition Condition { get; }
     }
@@ -19,14 +18,18 @@ namespace Interfaces.Result
     public interface IConditionCalculationResult<out T> : IConditionCalculationResult where T : struct
     {
         T Results { get; }
+    }
 
-        bool ConditionIsMet { get; }
+
+    public interface IQuantityCalculationResult
+    {
+        IReadOnlyList<IConditionCalculationResult> ConditionCalculationResults { get; }
     }
 
 
     public interface ICalculationResult : IResult
     {
-        IReadOnlyList<IConditionCalculationResult> CalculationResults { get; }
+        IReadOnlyList<IQuantityCalculationResult> CalculationResults { get; }
 
     }
 
