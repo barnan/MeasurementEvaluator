@@ -6,6 +6,6 @@ namespace Interfaces.Calculation
     {
         ICalculation GetCalculation(CalculationTypes calculationType);
 
-        IReadOnlyList<ICalculation> AvailableCalculatons { get; }
+        IReadOnlyList<CalculationTypes> AvailableCalculatons { get; }
     }
 }
