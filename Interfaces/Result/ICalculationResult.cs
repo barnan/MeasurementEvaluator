@@ -1,36 +1,18 @@
-﻿using Interfaces.MeasuredData;
-using Interfaces.ToolSpecifications;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Interfaces.Result
 {
 
-    public interface IConditionCalculationResult : IResult
+    public interface ICalculationResult
     {
-        IMeasurementSerie MeasurementSerieData { get; }
-
-        ICondition Condition { get; }
+        DateTime CreationTime { get; }
     }
 
-    // TODO: hash identification for the condition?
-
-
-    public interface IConditionCalculationResult<out T> : IConditionCalculationResult where T : struct
+    public interface ISimpleCalculationResult : ICalculationResult
     {
-        T Results { get; }
+        double Result { get; }
     }
 
 
-    public interface IQuantityCalculationResult
-    {
-        IReadOnlyList<IConditionCalculationResult> ConditionCalculationResults { get; }
-    }
-
-
-    public interface ICalculationResult : IResult
-    {
-        IReadOnlyList<IQuantityCalculationResult> CalculationResults { get; }
-
-    }
 
 }

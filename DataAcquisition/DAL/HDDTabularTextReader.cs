@@ -63,7 +63,7 @@ namespace DataAcquisition.DAL
             {
                 bool firstLine = true;
                 List<string> headers = new List<string>();
-                List<List<IUniqueMeasurementResult>> uniqueResult = new List<List<IUniqueMeasurementResult>>();
+                List<List<IMeasurementPoint>> uniqueResult = new List<List<IMeasurementPoint>>();
 
                 while (!reader.EndOfStream)
                 {
@@ -83,7 +83,7 @@ namespace DataAcquisition.DAL
                         foreach (string str in elements)
                         {
                             headers.Add(string.IsNullOrEmpty(str) ? "Empty_" + emptycounter : str);
-                            uniqueResult.Add(new List<IUniqueMeasurementResult>());
+                            uniqueResult.Add(new List<IMeasurementPoint>());
                         }
 
                         firstLine = false;
@@ -111,14 +111,14 @@ namespace DataAcquisition.DAL
                                 continue;
                             }
 
-                            uniqueResult[i].Add(new UniqueMeasurementResult<double>(szam, valid));
+                            uniqueResult[i].Add(new MeasurementPoint(szam, valid));
                         }
 
                         if (elements.Length < headers.Count)
                         {
                             for (int i = elements.Length; i < headers.Count; i++)
                             {
-                                uniqueResult[i].Add(new UniqueMeasurementResult<double>(0, false));
+                                uniqueResult[i].Add(new MeasurementPoint(0, false));
                                 _parameters.Logger.LogTrace($"Zero element added in the {i}th element");
                             }
                         }

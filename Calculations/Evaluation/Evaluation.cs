@@ -45,7 +45,7 @@ namespace Calculations.Evaluation
                     return;
                 }
 
-                _parameters.Calculation.ResultReadyEvent -= Calculation_ResultReadyEvent;
+                //_parameters.Calculation.ResultReadyEvent -= Calculation_ResultReadyEvent;
 
                 IsInitialized = false;
 
@@ -69,7 +69,7 @@ namespace Calculations.Evaluation
                     return true;
                 }
 
-                _parameters.Calculation.ResultReadyEvent += Calculation_ResultReadyEvent;
+                //_parameters.Calculation.ResultReadyEvent += Calculation_ResultReadyEvent;
 
                 IsInitialized = true;
 
@@ -93,23 +93,23 @@ namespace Calculations.Evaluation
 
             ICalculationResult calculationResult = e.Result as ICalculationResult;
 
-            if (calculationResult?.CalculationResults == null || calculationResult.CalculationResults.Count == 0)
-            {
-                _parameters.Logger.LogError($"Arrived result event args is not {nameof(ICalculationResult)} or its {nameof(calculationResult.CalculationResults)} field is empty");
-                return;
-            }
+            //if (calculationResult?.CalculationResults == null || calculationResult.CalculationResults.Count == 0)
+            //{
+            //    _parameters.Logger.LogError($"Arrived result event args is not {nameof(ICalculationResult)} or its {nameof(calculationResult.CalculationResults)} field is empty");
+            //    return;
+            //}
 
-            foreach (IConditionCalculationResult<double> item in calculationResult.CalculationResults)
-            {
-                if (!item.Condition.Enabled)
-                {
-                    _parameters.Logger.LogTrace($"{item.Condition.Name} is not enabled condition.");
-                    continue;
-                }
+            //foreach (IConditionCalculationResult<double> item in calculationResult.CalculationResults)
+            //{
+            //    if (!item.Condition.Enabled)
+            //    {
+            //        _parameters.Logger.LogTrace($"{item.Condition.Name} is not enabled condition.");
+            //        continue;
+            //    }
 
 
 
-            }
+            //}
 
         }
 

@@ -1,28 +1,35 @@
 ﻿using Interfaces;
 using Interfaces.Calculation;
+using Interfaces.MeasuredData;
+using Interfaces.Result;
 using Miscellaneous;
 using System;
-using System.Collections.Generic;
 
 namespace Calculations.Calculation
 {
     internal abstract class CalculationBase : ICalculation
     {
+
         private readonly object _lockObj = new object();
         private readonly CalculationParameters _parameters;
 
-        public IReadOnlyList<CalculationTypes> AvailableCalculationTypes { get; }
 
-        public event EventHandler<ResultEventArgs> ResultReadyEvent;
+        #region ICalculation
 
+        public abstract CalculationTypes CalculationType { get; }
 
-
-        public CalculationBase(CalculationParameters parameters)
+        public ICalculationResult Calculate(IMeasurementSerie measurementSerieData)
         {
-            _parameters = parameters;
+            if (!IsInitialized)
+            {
+                _parameters.Logger.LogError("Not initilaized yet.");
+                return null;
+            }
 
-            _parameters.Logger.MethodError($"Instantiated.");
+            return InternalCalculation(measurementSerieData);
         }
+
+        #endregion
 
 
         #region IInitialized
@@ -50,9 +57,7 @@ namespace Calculations.Calculation
 
                 IsInitialized = false;
 
-                _parameters.Logger.MethodError($"Closed.");
-
-                return;
+                _parameters.Logger.MethodError("Closed.");
             }
         }
 
@@ -72,7 +77,7 @@ namespace Calculations.Calculation
 
                 IsInitialized = true;
 
-                _parameters.Logger.MethodError($"Instantiated.");
+                _parameters.Logger.MethodError("Initialized.");
 
                 return IsInitialized;
             }
@@ -80,6 +85,17 @@ namespace Calculations.Calculation
         }
 
         #endregion
+
+
+        public CalculationBase(CalculationParameters parameters)
+        {
+            _parameters = parameters;
+
+            _parameters.Logger.MethodError("Instantiated.");
+        }
+
+
+        protected abstract ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData);
 
     }
 }

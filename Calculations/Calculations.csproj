@@ -49,6 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculation\StdCalculation1D.cs" />
+    <Compile Include="Calculation\AverageCalculation1D.cs" />
+    <Compile Include="Calculation\CalculationContainer.cs" />
+    <Compile Include="Calculation\CalculationContainerParameters.cs" />
     <Compile Include="Calculation\CalculationParameters.cs" />
     <Compile Include="Calculation\Simple1DStaisticsCalculation\BasicStatisticsCalculationBase_1D.cs" />
     <Compile Include="Calculation\Simple1DStaisticsCalculation\BasicStatisticsCalculation_1D.cs" />
@@ -59,6 +63,7 @@
     <Compile Include="Calculation\QcellsStatisticsCalculation\IQCellsStrictStatisticsCalculation_1D_Data.cs" />
     <Compile Include="Calculation\QcellsStatisticsCalculation\QCellsStrictStatisticsCalculationBase_1D.cs" />
     <Compile Include="Calculation\QcellsStatisticsCalculation\QCellsStrictStatisticsCalculation_1D.cs" />
+    <Compile Include="Calculation\SimpleCalculationResult.cs" />
     <Compile Include="Evaluation\Evaluation.cs" />
     <Compile Include="Evaluation\EvaluationParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

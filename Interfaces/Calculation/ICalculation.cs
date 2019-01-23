@@ -1,24 +1,17 @@
 ﻿using Interfaces.MeasuredData;
 using Interfaces.Misc;
-using Interfaces.ReferenceSample;
 using Interfaces.Result;
-using Interfaces.ToolSpecifications;
-using System.Collections.Generic;
 
 namespace Interfaces.Calculation
 {
 
-    public interface ICalculation : IInitializable, IResultProvider
+    public interface ICalculation : IInitializable
     {
-        IReadOnlyList<CalculationTypes> AvailableCalculationTypes { get; }
-    }
 
-
-    public interface IConditionCalculation : IResultProvider
-    {
-        bool Calculate(IToolMeasurementData measurementdata, ICondition condition, IReferenceSample referencesample);
+        ICalculationResult Calculate(IMeasurementSerie measurementSerieData);
 
         CalculationTypes CalculationType { get; }
+
     }
 
 }

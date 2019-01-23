@@ -12,14 +12,14 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// List of measurement result
         /// </summary>
-        IReadOnlyList<IUniqueMeasurementResult> MeasData { get; }
+        IReadOnlyList<IMeasurementPoint> MeasData { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        IUniqueMeasurementResult this[int i] { get; }
+        IMeasurementPoint this[int i] { get; }
 
         /// <summary>
         /// Unit of the measurement

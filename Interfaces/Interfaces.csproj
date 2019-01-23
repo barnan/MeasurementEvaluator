@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculation\ICalculation.cs" />
+    <Compile Include="Calculation\ICalculationContainer.cs" />
     <Compile Include="DataAcquisition\IDataCollector.cs" />
     <Compile Include="Result\ICalculationResult.cs" />
     <Compile Include="DataAcquisition\IFileReaderWriter.cs" />
@@ -51,7 +52,7 @@
     <Compile Include="DataAcquisition\IHDDXmlReader.cs" />
     <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IEvaluation.cs" />
-    <Compile Include="MeasuredData\IUniqueMeasurementResult.cs" />
+    <Compile Include="MeasuredData\IMeasurementPoint.cs" />
     <Compile Include="Misc\IInitializable.cs" />
     <Compile Include="Result\IEvaluationResult.cs" />
     <Compile Include="Result\IResult.cs" />
