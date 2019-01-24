@@ -66,7 +66,7 @@ namespace Calculations.Calculation
 
                 IsInitialized = false;
 
-                _parameters.Logger.MethodError("Closed.");
+                _parameters.Logger.MethodInfo("Closed.");
             }
         }
 
@@ -86,7 +86,7 @@ namespace Calculations.Calculation
 
                 IsInitialized = true;
 
-                _parameters.Logger.MethodError("Initialized.");
+                _parameters.Logger.MethodInfo("Initialized.");
 
                 return IsInitialized;
             }

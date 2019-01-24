@@ -1,4 +1,4 @@
-﻿using Interfaces.MeasuredData;
+﻿using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -7,16 +7,16 @@ using System.Linq;
 
 namespace DataAcquisition.Repository
 {
-    public class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>
+    internal class HDDSpecificationRepository : HDDRepository<IToolSpecification>
     {
 
-        public HDDMeasurementDataRepository(SpecificationRepositoryParameters parameters)
+        public HDDSpecificationRepository(SpecificationRepositoryParameters parameters)
             : base(parameters)
         {
         }
 
 
-        protected override List<IToolMeasurementData> GetItemList(string fullPath)
+        protected override List<IToolSpecification> GetItemList(string fullPath)
         {
             try
             {
@@ -27,13 +27,14 @@ namespace DataAcquisition.Repository
                 }
 
                 List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
-                List<IToolMeasurementData> fileContentDictionary = new List<IToolMeasurementData>(fileNameList.Count);
+                List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
 
                 foreach (string fileName in fileNameList)
                 {
-                    IToolMeasurementData data = _parameters.HDDReaderWriter.ReadFile<IToolMeasurementData>(fileName);
 
-                    fileContentDictionary.Add(data);
+                    IToolSpecification spec = _parameters.HDDReaderWriter.ReadFile<IToolSpecification>(fileName);
+
+                    fileContentDictionary.Add(spec);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
@@ -58,6 +59,14 @@ namespace DataAcquisition.Repository
             }
         }
 
-
     }
+
+
+
+
+
+    internal class SpecificationRepositoryParameters : HDDRepositoryParameters
+    {
+    }
+
 }

@@ -4,7 +4,6 @@ using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.Result;
 using Miscellaneous;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,7 +28,7 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}.");
 
-            return new SimpleCalculationResult(DateTime.Now, std);
+            return new SimpleCalculationResult(_parameters.DateTimeProvider.GetDateTime(), std);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Interfaces.Calculation;
+using Interfaces.Misc;
+using Miscellaneous;
 using NLog;
 
 namespace Calculations.Calculation
@@ -9,6 +11,8 @@ namespace Calculations.Calculation
 
         public ICalculationContainer CalculationContainer { get; }
 
+        public IDateTimeProvider DateTimeProvider { get; }
+
 
 
         public CalculationParameters()
@@ -16,6 +20,8 @@ namespace Calculations.Calculation
             Logger = LogManager.GetCurrentClassLogger();
 
             CalculationContainer = new CalculationContainer(new CalculationContainerParameters());
+
+            DateTimeProvider = new StandardDateTimeProvider(new StandardDateTimeProviderParameter());
         }
 
     }

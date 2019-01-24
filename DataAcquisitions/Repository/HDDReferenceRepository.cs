@@ -9,7 +9,7 @@ namespace DataAcquisition.Repository
 {
     class HDDReferenceRepository : HDDRepository<IReferenceSample>
     {
-        public HDDReferenceRepository(SimpleHDDRepositoryParameters parameters)
+        public HDDReferenceRepository(HDDRepositoryParameters parameters)
             : base(parameters)
         {
         }

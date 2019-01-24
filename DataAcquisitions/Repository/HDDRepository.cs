@@ -7,18 +7,76 @@ using System.IO;
 
 namespace DataAcquisition.Repository
 {
-    public abstract class HDDRepository<T> : IRepository<T>
+    internal abstract class HDDRepository<T> : IRepository<T>
         where T : class, IStoredDataOnHDD, IComparable<T>
     {
-        protected readonly SimpleHDDRepositoryParameters _parameters;
+        protected readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
+
+
         // TODO: use locking
 
 
-        protected HDDRepository(SimpleHDDRepositoryParameters parameters)
+        protected HDDRepository(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }
+
+
+
+        #region IInitializable
+
+        public bool Initiailze()
+        {
+            if (IsInitialized)
+            {
+                return true;
+            }
+
+            lock (_lockObject)
+            {
+                if (IsInitialized)
+                {
+                    return true;
+                }
+
+                IsInitialized = true;
+
+                _parameters.Logger.MethodInfo("Initialized.");
+
+                return IsInitialized;
+            }
+        }
+
+        public void Close()
+        {
+            if (!IsInitialized)
+            {
+                return;
+            }
+
+            lock (_lockObject)
+            {
+                if (!IsInitialized)
+                {
+                    return;
+                }
+
+
+
+                IsInitialized = false;
+
+                _parameters.Logger.MethodInfo("Closed.");
+            }
+        }
+
+        public event EventHandler<EventArgs> Initialized;
+        public event EventHandler<EventArgs> Closed;
+
+        public bool IsInitialized { get; private set; }
+
+        #endregion
+
 
         #region IRepository<T>
 
@@ -223,15 +281,20 @@ namespace DataAcquisition.Repository
 
         protected abstract List<T> GetItemList(string fullPath);
 
+
     }
 
 
-    public class SimpleHDDRepositoryParameters
+    internal class HDDRepositoryParameters
     {
-        public string RepositoryFullDirectoryPath { get; set; }
-        public string FileExtensionFilter { get; set; }
-        public ILogger Logger { get; set; }
-        public IFileReaderWriter HDDReaderWriter { get; set; }
+        internal string RepositoryFullDirectoryPath { get; set; }
+        internal string FileExtensionFilter { get; set; }
+        internal ILogger Logger { get; set; }
+        internal IFileReaderWriter HDDReaderWriter { get; set; }
+
+
+
+
     }
 
 }

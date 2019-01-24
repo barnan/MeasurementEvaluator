@@ -42,7 +42,7 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
 
-            return new QCellsCalculationResult(DateTime.Now, cpk, usl, lsl);
+            return new QCellsCalculationResult(_parameters.DateTimeProvider.GetDateTime(), cpk, usl, lsl);
         }
     }
 }

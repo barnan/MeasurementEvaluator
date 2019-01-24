@@ -1,6 +1,10 @@
-﻿namespace Interfaces.DataAcquisition
+﻿using Interfaces.Misc;
+using Interfaces.Result;
+
+namespace Interfaces.DataAcquisition
 {
-    interface IDataCollector
+    public interface IDataCollector : IInitializable, IResultProvider
     {
+        void Gather();
     }
 }

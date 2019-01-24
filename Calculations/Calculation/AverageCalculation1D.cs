@@ -4,7 +4,6 @@ using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.Result;
 using Miscellaneous;
-using System;
 using System.Collections.Generic;
 
 namespace Calculations.Calculation
@@ -28,7 +27,7 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated average: {average}.");
 
-            return new SimpleCalculationResult(DateTime.Now, average);
+            return new SimpleCalculationResult(_parameters.DateTimeProvider.GetDateTime(), average);
         }
 
     }
