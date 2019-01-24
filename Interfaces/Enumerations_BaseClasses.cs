@@ -90,6 +90,7 @@ namespace Interfaces
         Unknown = 0,
         Average,
         StandardDeviation,
+        Cp,
         Cpk,
         GRAndR
     }

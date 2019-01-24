@@ -1,46 +1,35 @@
 ﻿using DataStructures.Calculation;
 using Interfaces;
+using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.Result;
+using Miscellaneous;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Calculations.Calculation
 {
-    class StdCalculation1D : CalculationBase
+    class AverageCalculation1D : CalculationBase
     {
 
-        public StdCalculation1D(CalculationParameters parameters)
+        public AverageCalculation1D(CalculationParameters parameters)
             : base(parameters)
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.StandardDeviation;
+        public override CalculationTypes CalculationType => CalculationTypes.Average;
 
 
-        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
         {
-            if (measurementSerieData?.MeasData == null)
-            {
-                return null;
-            }
+            List<double> validElementList = GetValidElementList(measurementSerieData);
 
-            List<double> validElementList = measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).ToList();
+            double average = GetAverage(validElementList);
 
-            double average = validElementList.Average();
+            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated average: {average}.");
 
-            double sumOfDerivation = 0;
-
-            foreach (double value in validElementList)
-            {
-                sumOfDerivation += (value) * (value);
-            }
-            double sumOfDerivationAverage = sumOfDerivation / (validElementList.Count - 1);
-
-            double std = Math.Sqrt(sumOfDerivationAverage - (average * average));
-
-            return new SimpleCalculationResult(DateTime.Now, std);
+            return new SimpleCalculationResult(DateTime.Now, average);
         }
+
     }
 }

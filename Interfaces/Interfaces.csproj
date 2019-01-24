@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Calculation\ICalculation.cs" />
     <Compile Include="Calculation\ICalculationContainer.cs" />
+    <Compile Include="Calculation\ICalculationSettings.cs" />
     <Compile Include="DataAcquisition\IDataCollector.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />
     <Compile Include="Result\ICalculationResult.cs" />

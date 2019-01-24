@@ -10,6 +10,7 @@ namespace DataStructures.Calculation
         public double Result { get; }
 
 
+        // TODO: time provider?
         public SimpleCalculationResult(DateTime creationTime, double result)
         {
             CreationTime = creationTime;

@@ -1,33 +1,35 @@
 ﻿using DataStructures.Calculation;
 using Interfaces;
+using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.Result;
+using Miscellaneous;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Calculations.Calculation
 {
-    class AverageCalculation1D : CalculationBase
+    class StdCalculation1D : CalculationBase
     {
 
-        public AverageCalculation1D(CalculationParameters parameters)
+        public StdCalculation1D(CalculationParameters parameters)
             : base(parameters)
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.Average;
+        public override CalculationTypes CalculationType => CalculationTypes.StandardDeviation;
 
 
-        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
         {
-            if (measurementSerieData?.MeasData == null)
-            {
-                return null;
-            }
+            List<double> validElementList = measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).ToList();
 
-            double average = measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).Average();
+            double std = GetStandardDeviation(validElementList);
 
-            return new SimpleCalculationResult(DateTime.Now, average);
+            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}.");
+
+            return new SimpleCalculationResult(DateTime.Now, std);
         }
     }
 }
