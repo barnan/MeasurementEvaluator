@@ -14,8 +14,6 @@ namespace DataAcquisition.Repository
         private readonly object _lockObject = new object();
 
 
-        // TODO: use locking
-
 
         protected HDDRepository(HDDRepositoryParameters parameters)
         {
@@ -278,22 +276,25 @@ namespace DataAcquisition.Repository
             return true;
         }
 
-
         protected abstract List<T> GetItemList(string fullPath);
-
-
     }
 
 
     internal class HDDRepositoryParameters
     {
-        internal string RepositoryFullDirectoryPath { get; set; }
-        internal string FileExtensionFilter { get; set; }
-        internal ILogger Logger { get; set; }
-        internal IFileReaderWriter HDDReaderWriter { get; set; }
+        internal string RepositoryFullDirectoryPath { get; }
+        internal string FileExtensionFilter { get; }
+        internal ILogger Logger { get; }
+        internal IFileReaderWriter HDDReaderWriter { get; }
 
 
-
+        public HDDRepositoryParameters(string repostoryDirectoryPath, string fileExtensionFilter, IFileReaderWriter fileReaderWriter)
+        {
+            ILogger Logger = LogManager.GetCurrentClassLogger();
+            RepositoryFullDirectoryPath = repostoryDirectoryPath;
+            FileExtensionFilter = fileExtensionFilter;
+            HDDReaderWriter = fileReaderWriter;
+        }
 
     }
 

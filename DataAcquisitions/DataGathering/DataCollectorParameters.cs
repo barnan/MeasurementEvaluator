@@ -1,12 +1,13 @@
 ﻿using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
+using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using NLog;
 
 namespace DataAcquisitions.DataGathering
 {
-    internal class DataGatheringParameters
+    internal class DataCollectorParameters
     {
 
         internal IRepository<IToolSpecification> SpecificationRepository { get; }
@@ -17,8 +18,10 @@ namespace DataAcquisitions.DataGathering
 
         internal ILogger Logger { get; }
 
+        internal IDateTimeProvider DateTimeProvider { get; }
 
-        public DataGatheringParameters(IRepository<IToolMeasurementData> measurementRepository, IRepository<IReferenceSample> referenceRepository, IRepository<IToolSpecification> specificationRepository)
+
+        public DataCollectorParameters(IRepository<IToolMeasurementData> measurementRepository, IRepository<IReferenceSample> referenceRepository, IRepository<IToolSpecification> specificationRepository)
         {
             Logger = LogManager.GetCurrentClassLogger();
 

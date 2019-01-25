@@ -3,7 +3,7 @@ using System;
 
 namespace Miscellaneous
 {
-    public class StandardDateTimeProvider : IDateTimeProvider
+    public sealed class StandardDateTimeProvider : IDateTimeProvider
     {
         public DateTime GetDateTime()
         {
@@ -15,7 +15,7 @@ namespace Miscellaneous
         }
     }
 
-    public class StandardDateTimeProviderParameter
+    public sealed class StandardDateTimeProviderParameter
     {
 
     }
@@ -23,7 +23,7 @@ namespace Miscellaneous
 
 
 
-    public class SimulatedDateTimeProvider : IDateTimeProvider
+    public sealed class SimulatedDateTimeProvider : IDateTimeProvider
     {
         SimulatedDateTimeProviderParameter _parameter;
 
@@ -41,7 +41,7 @@ namespace Miscellaneous
     }
 
 
-    public class SimulatedDateTimeProviderParameter
+    public sealed class SimulatedDateTimeProviderParameter
     {
         public DateTime DateTimeToUse { get; }
     }

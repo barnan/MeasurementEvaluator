@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Interfaces.DataAcquisition
 {
-    public interface IDataGathering : IInitializable, IResultProvider
+    public interface IDataCollector : IInitializable, IResultProvider
     {
         void Gather(string specifactionName, List<string> measurementDataFileNames, string referenceName = null);
 

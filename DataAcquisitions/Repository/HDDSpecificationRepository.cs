@@ -1,4 +1,5 @@
-﻿using Interfaces.ToolSpecifications;
+﻿using Interfaces.DataAcquisition;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -62,11 +63,14 @@ namespace DataAcquisition.Repository
     }
 
 
-
-
-
     internal class SpecificationRepositoryParameters : HDDRepositoryParameters
     {
+
+        public SpecificationRepositoryParameters(string repostoryDirectoryPath, string fileExtensionFilter, IFileReaderWriter fileReaderWriter)
+            : base(repostoryDirectoryPath, fileExtensionFilter, fileReaderWriter)
+        {
+        }
+
     }
 
 }

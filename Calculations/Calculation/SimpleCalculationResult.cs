@@ -1,5 +1,6 @@
 ﻿using Interfaces.Result;
 using System;
+using System.Xml.Linq;
 
 namespace DataStructures.Calculation
 {
@@ -9,12 +10,31 @@ namespace DataStructures.Calculation
 
         public double Result { get; }
 
+        public DateTime StartTime => throw new NotImplementedException();
 
-        // TODO: time provider?
+        public DateTime EndTime => throw new NotImplementedException();
+
+        public bool SuccessfulCalculation => throw new NotImplementedException();
+
+
         public SimpleCalculationResult(DateTime creationTime, double result)
         {
             CreationTime = creationTime;
             Result = result;
+        }
+
+
+        // TODO: 
+        public XElement Save()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+        public bool Load(XElement input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

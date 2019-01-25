@@ -1,19 +1,24 @@
 ﻿using Interfaces;
 using Interfaces.Evaluation;
+using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
+using System.Collections.Generic;
 
 namespace Calculations.Evaluation
 {
-    class Evaluation : IEvaluation
+    internal class Evaluation : IEvaluation
     {
         private readonly object _lockObj = new object();
         private readonly EvaluationParameters _parameters;
-
+        private Queue<QueueElement> _processQueue;
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
 
+        // TODO: finish queue processing
 
 
         public Evaluation(EvaluationParameters parameters)
@@ -31,6 +36,7 @@ namespace Calculations.Evaluation
         public event EventHandler<EventArgs> Initialized;
         public event EventHandler<EventArgs> Closed;
 
+
         public void Close()
         {
             if (!IsInitialized)
@@ -45,7 +51,7 @@ namespace Calculations.Evaluation
                     return;
                 }
 
-                //_parameters.Calculation.ResultReadyEvent -= Calculation_ResultReadyEvent;
+                _parameters.DataCollector.ResultReadyEvent -= DataCollector_ResultReadyEvent;
 
                 IsInitialized = false;
 
@@ -54,6 +60,7 @@ namespace Calculations.Evaluation
                 return;
             }
         }
+
 
         public bool Initiailze()
         {
@@ -69,7 +76,7 @@ namespace Calculations.Evaluation
                     return true;
                 }
 
-                //_parameters.Calculation.ResultReadyEvent += Calculation_ResultReadyEvent;
+                _parameters.DataCollector.ResultReadyEvent += DataCollector_ResultReadyEvent;
 
                 IsInitialized = true;
 
@@ -83,7 +90,7 @@ namespace Calculations.Evaluation
         #endregion
 
 
-        private void Calculation_ResultReadyEvent(object sender, ResultEventArgs e)
+        private void DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
         {
             if (e?.Result == null)
             {
@@ -114,4 +121,15 @@ namespace Calculations.Evaluation
         }
 
     }
+
+
+
+    internal class QueueElement
+    {
+        IMeasurementSerie MeasurementSerieData { get; }
+        ICondition Condition { get; }
+        IReferenceValue ReferenceValue { get; }
+    }
+
+
 }

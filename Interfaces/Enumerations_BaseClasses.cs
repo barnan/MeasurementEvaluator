@@ -32,8 +32,10 @@ namespace Interfaces
 
     public enum Units : byte
     {
+        [Description("ADU")]
         ADU = 0,
 
+        [Description("count")]
         count,
 
         [Description("mm")]
@@ -52,7 +54,7 @@ namespace Interfaces
 
 
     // type safe enum pattern:
-    public sealed class ToolNames : IFormattable
+    public sealed class ToolNames
     {
         private readonly string _name;
         private readonly int _value;
@@ -76,11 +78,6 @@ namespace Interfaces
         public override string ToString()
         {
             return _name;
-        }
-
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-            throw new NotImplementedException();
         }
     }
 

@@ -1,5 +1,8 @@
 ﻿using Interfaces;
 using Interfaces.DataAcquisition;
+using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -7,14 +10,14 @@ using System.Linq;
 
 namespace DataAcquisitions.DataGathering
 {
-    internal class DataGathering : IDataGathering
+    internal class DataCollector : IDataCollector
     {
 
-        private readonly DataGatheringParameters _parameters;
+        private readonly DataCollectorParameters _parameters;
         private readonly object _lockObj = new object();
 
 
-        public DataGathering(DataGatheringParameters dataGatheringParameters)
+        public DataCollector(DataCollectorParameters dataGatheringParameters)
         {
             _parameters = dataGatheringParameters;
         }
@@ -66,6 +69,7 @@ namespace DataAcquisitions.DataGathering
                 }
             }
         }
+
 
         public bool Initiailze()
         {
@@ -122,7 +126,7 @@ namespace DataAcquisitions.DataGathering
 
         #region IDataGathering
 
-        public void Gather(string specifactionName, List<string> measurementDataFileNames, string referenceName = null)
+        public void Gather(string specificationName, List<string> measurementDataFileNames, string referenceName = null)
         {
             lock (_lockObj)
             {
@@ -134,12 +138,44 @@ namespace DataAcquisitions.DataGathering
                         return;
                     }
 
-                    var specifications = _parameters.SpecificationRepository.GetAll();
-                    var references = _parameters.ReferenceRepository.GetAll();
-                    var measurementDatas = _parameters.MeasurementDataRepository.GetAll();
+                    DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
+
+                    List<IToolSpecification> specification = _parameters.SpecificationRepository.GetAll().Where(p => string.Equals(p.FullNameOnHDD, specificationName)).ToList();
+                    List<IToolMeasurementData> measurementDatas = _parameters.MeasurementDataRepository.GetAll().Where(p => measurementDataFileNames.Contains(p.FullNameOnHDD)).ToList();
+
+                    IReferenceSample referenceToSend = null;
+                    List<IReferenceSample> references = _parameters.ReferenceRepository.GetAll().Where(p => string.Equals(p.FullNameOnHDD, referenceName)).ToList();
+
+                    if (specification.Count != 1)
+                    {
+                        _parameters.Logger.LogError("Number of specification files that meet the condition is not acceptable.");
+                        return;
+                    }
+
+                    if (measurementDatas.Count < 1)
+                    {
+                        _parameters.Logger.LogError("Number of measurement data files that meet the condition is not acceptable.");
+                        return;
+                    }
+
+                    if ((references?.Count ?? 0) == 0)
+                    {
+                        _parameters.Logger.LogInfo("There are no reference files with the given nam, or no reference name arrived.");
+                    }
+                    else
+                    {
+                        referenceToSend = references[0];
+                    }
 
 
-
+                    // TODO: send invalid result
+                    var resultreadyevent = ResultReadyEvent;
+                    resultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
+                        _parameters.DateTimeProvider.GetDateTime(),
+                        true,
+                        specification[0],
+                        measurementDatas,
+                        referenceToSend)));
 
                 }
                 catch (Exception ex)
@@ -147,8 +183,8 @@ namespace DataAcquisitions.DataGathering
                     _parameters.Logger.LogError($"Exception occured: {ex}");
                 }
             }
-
         }
+
 
         public IReadOnlyList<string> GetAllSpecificationNames()
         {
@@ -174,6 +210,7 @@ namespace DataAcquisitions.DataGathering
             }
         }
 
+
         public IReadOnlyList<string> GetAllRferenceSampleNames()
         {
             lock (_lockObj)
@@ -197,6 +234,7 @@ namespace DataAcquisitions.DataGathering
                 }
             }
         }
+
 
         public IReadOnlyList<string> GetAllMeasurementFileNames()
         {
@@ -222,6 +260,7 @@ namespace DataAcquisitions.DataGathering
             }
         }
 
+
         #endregion
 
 
@@ -231,6 +270,7 @@ namespace DataAcquisitions.DataGathering
 
             initialized?.Invoke(this, new EventArgs());
         }
+
 
         private void OnClosed()
         {

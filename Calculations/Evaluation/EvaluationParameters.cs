@@ -1,17 +1,27 @@
 ﻿using Interfaces.Calculation;
+using Interfaces.DataAcquisition;
+using Interfaces.Misc;
 using NLog;
 
 namespace Calculations.Evaluation
 {
-    class EvaluationParameters
+    internal class EvaluationParameters
     {
-        public ILogger Logger { get; private set; }
-        public ICalculationContainer CalculationContainer { get; }
+        internal ILogger Logger { get; private set; }
+
+        internal ICalculationContainer CalculationContainer { get; }
+
+        internal IDataCollector DataCollector { get; }
+
+        internal IDateTimeProvider DateTimeProvider { get; }
 
 
-        public EvaluationParameters()
+        internal EvaluationParameters(ICalculationContainer calculationContainer, IDataCollector dataCollector, IDateTimeProvider datetimeProvider)
         {
             Logger = LogManager.GetCurrentClassLogger();
+            CalculationContainer = calculationContainer;
+            DataCollector = dataCollector;
+            DateTimeProvider = datetimeProvider;
         }
 
     }
