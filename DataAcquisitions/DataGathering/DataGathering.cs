@@ -2,12 +2,15 @@
 using Interfaces.DataAcquisition;
 using Miscellaneous;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DataAcquisitions.DataGathering
 {
-    internal class DataGathering : IDataCollector
+    internal class DataGathering : IDataGathering
     {
-        private DataGatheringParameters _parameters;
+
+        private readonly DataGatheringParameters _parameters;
         private readonly object _lockObj = new object();
 
 
@@ -40,18 +43,27 @@ namespace DataAcquisitions.DataGathering
 
             lock (_lockObj)
             {
-                if (!IsInitialized)
+                try
                 {
-                    return;
+                    if (!IsInitialized)
+                    {
+                        return;
+                    }
+
+                    _parameters.SpecificationRepository.Close();
+                    _parameters.ReferenceRepository.Close();
+                    _parameters.MeasurementDataRepository.Close();
+
+                    IsInitialized = false;
+
+                    OnClosed();
+
+                    _parameters.Logger.MethodInfo("Closed.");
                 }
-
-                _parameters.SpecificationRepository.Close();
-                _parameters.ReferenceRepository.Close();
-                _parameters.MeasurementDataRepository.Close();
-
-                IsInitialized = false;
-
-                _parameters.Logger.MethodInfo("Closed.");
+                catch (Exception ex)
+                {
+                    _parameters.Logger.LogError($"Exception occured: {ex}");
+                }
             }
         }
 
@@ -64,49 +76,168 @@ namespace DataAcquisitions.DataGathering
 
             lock (_lockObj)
             {
-                if (IsInitialized)
+                try
                 {
-                    return true;
-                }
+                    if (IsInitialized)
+                    {
+                        return true;
+                    }
 
-                if (!_parameters.SpecificationRepository.Initiailze())
+                    if (!_parameters.SpecificationRepository.Initiailze())
+                    {
+                        _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
+
+                        return false;
+                    }
+
+                    if (!_parameters.ReferenceRepository.Initiailze())
+                    {
+                        _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
+                        return false;
+                    }
+
+                    if (!_parameters.MeasurementDataRepository.Initiailze())
+                    {
+                        _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
+                        return false;
+                    }
+
+                    IsInitialized = true;
+
+                    OnInitialized();
+
+                    _parameters.Logger.MethodInfo("Initialized.");
+
+                    return IsInitialized;
+                }
+                catch (Exception ex)
                 {
-                    _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
-
-                    return false;
+                    _parameters.Logger.LogError($"Exception occured: {ex}");
+                    return IsInitialized = false;
                 }
-
-                if (!_parameters.ReferenceRepository.Initiailze())
-                {
-                    _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
-                    return false;
-                }
-
-                if (!_parameters.MeasurementDataRepository.Initiailze())
-                {
-                    _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
-                    return false;
-                }
-
-                IsInitialized = true;
-
-                _parameters.Logger.MethodInfo("Initialized.");
-
-                return IsInitialized;
             }
         }
 
         #endregion
 
-        #region IDataCollector
+        #region IDataGathering
 
-        public void Gather()
+        public void Gather(string specifactionName, List<string> measurementDataFileNames, string referenceName = null)
         {
+            lock (_lockObj)
+            {
+                try
+                {
+                    if (!IsInitialized)
+                    {
+                        _parameters.Logger.LogError("Not initialized yet.");
+                        return;
+                    }
+
+                    var specifications = _parameters.SpecificationRepository.GetAll();
+                    var references = _parameters.ReferenceRepository.GetAll();
+                    var measurementDatas = _parameters.MeasurementDataRepository.GetAll();
 
 
+
+
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.LogError($"Exception occured: {ex}");
+                }
+            }
 
         }
 
+        public IReadOnlyList<string> GetAllSpecificationNames()
+        {
+            lock (_lockObj)
+            {
+                try
+                {
+                    if (!IsInitialized)
+                    {
+                        _parameters.Logger.LogError("Not initialized yet.");
+                        return null;
+                    }
+
+                    var result = _parameters.SpecificationRepository.GetAll().Select(p => p.SpecificationName.ToString()).ToList();
+
+                    return result.AsReadOnly();
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.LogError($"Exception occured: {ex}");
+                    return null;
+                }
+            }
+        }
+
+        public IReadOnlyList<string> GetAllRferenceSampleNames()
+        {
+            lock (_lockObj)
+            {
+                try
+                {
+                    if (!IsInitialized)
+                    {
+                        _parameters.Logger.LogError("Not initialized yet.");
+                        return null;
+                    }
+
+                    var result = _parameters.ReferenceRepository.GetAll().Select(p => p.SampleID.ToString()).ToList();
+
+                    return result.AsReadOnly();
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.LogError($"Exception occured: {ex}");
+                    return null;
+                }
+            }
+        }
+
+        public IReadOnlyList<string> GetAllMeasurementFileNames()
+        {
+            lock (_lockObj)
+            {
+                try
+                {
+                    if (!IsInitialized)
+                    {
+                        _parameters.Logger.LogError("Not initialized yet.");
+                        return null;
+                    }
+
+                    var result = _parameters.MeasurementDataRepository.GetAll().Select(p => p.FullNameOnHDD.ToString()).ToList();
+
+                    return result.AsReadOnly();
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.LogError($"Exception occured: {ex}");
+                    return null;
+                }
+            }
+        }
+
         #endregion
+
+
+        private void OnInitialized()
+        {
+            var initialized = Initialized;
+
+            initialized?.Invoke(this, new EventArgs());
+        }
+
+        private void OnClosed()
+        {
+            var closed = Closed;
+
+            closed?.Invoke(this, new EventArgs());
+        }
+
     }
 }

@@ -6,19 +6,6 @@ namespace Interfaces.Result
     public interface IResult
     {
         /// <summary>
-        /// Save the result content into an XElement
-        /// </summary>
-        /// <returns></returns>
-        XElement Save();
-
-        /// <summary>
-        /// Load the necessry data from an XElement
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        bool Load(XElement input);
-
-        /// <summary>
         /// Contains start time of the calculation 
         /// </summary>
         DateTime StartTime { get; }
@@ -35,6 +22,24 @@ namespace Interfaces.Result
         bool SuccessfulCalculation { get; }
 
     }
+
+
+    public interface ISaveableResult : IResult
+    {
+        /// <summary>
+        /// Save the result content into an XElement
+        /// </summary>
+        /// <returns></returns>
+        XElement Save();
+
+        /// <summary>
+        /// Load the necessry data from an XElement
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        bool Load(XElement input);
+    }
+
 
 
     public interface IResultProvider

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Interfaces.Result
 {
 
-    public interface IConditionEvaluationResult : IResult
+    public interface IConditionEvaluationResult : ISaveableResult
     {
         IMeasurementSerie MeasurementSerieData { get; }
 

@@ -15,7 +15,7 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// Name of the tool
         /// </summary>
-        ToolNames ToolName { get; }
+        ToolNames SpecificationName { get; }
 
     }
 
@@ -30,7 +30,7 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// Name of the tool
         /// </summary>
-        ToolNames ToolName { get; set; }
+        ToolNames SpecificationName { get; set; }
 
     }
 }

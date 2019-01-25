@@ -3,7 +3,7 @@
 namespace Interfaces.Result
 {
 
-    public interface ICalculationResult
+    public interface ICalculationResult : ISaveableResult
     {
         DateTime CreationTime { get; }
     }

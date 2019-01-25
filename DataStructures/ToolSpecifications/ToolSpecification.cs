@@ -21,7 +21,7 @@ namespace DataStructures.ToolSpecifications
             set { _specifications = (List<IQuantitySpecification>)value; }
         }
 
-        public ToolNames ToolName { get; set; }
+        public ToolNames SpecificationName { get; set; }
 
 
         public string FullNameOnHDD { get; set; }
@@ -31,7 +31,7 @@ namespace DataStructures.ToolSpecifications
         public ToolSpecification(string fileName)
         {
             _logger = LogManager.GetCurrentClassLogger();
-            _logger.MethodInfo($"{ToolName} specification created.");
+            _logger.MethodInfo($"{SpecificationName} specification created.");
         }
 
         #region IFormattable
@@ -39,7 +39,7 @@ namespace DataStructures.ToolSpecifications
         public string ToString(string format, IFormatProvider formatProvider = null)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(ToolName.ToString());
+            sb.AppendLine(SpecificationName.ToString());
 
             foreach (var item in Specifications)
             {
@@ -68,14 +68,14 @@ namespace DataStructures.ToolSpecifications
                     return 1;
                 }
 
-                if (other.ToolName == null)
+                if (other.SpecificationName == null)
                 {
                     _logger.Error("Tool Name is null in Arrived data.");
                     return 0;
                 }
 
-                string toolName1 = ToolName.ToString();
-                string toolName2 = other.ToolName.ToString();
+                string toolName1 = SpecificationName.ToString();
+                string toolName2 = other.SpecificationName.ToString();
 
                 int toolNameComparisonResult = string.Compare(toolName1, toolName2, StringComparison.OrdinalIgnoreCase);
 
