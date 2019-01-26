@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculation\AverageCalculation1D.cs" />
+    <Compile Include="Calculation\CalculationResult.cs" />
     <Compile Include="Calculation\CpkCalculation1D.cs" />
     <Compile Include="Calculation\CpCalculation1D.cs" />
     <Compile Include="Calculation\QCellsCalculationResult.cs" />

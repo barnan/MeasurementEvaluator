@@ -106,15 +106,18 @@ namespace Calculations.Calculation
 
         protected abstract ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings);
 
+
         protected virtual List<double> GetValidElementList(IMeasurementSerie measurementSerieData)
         {
             return measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).ToList();
         }
 
+
         protected virtual double GetAverage(List<double> inputData)
         {
             return inputData.Average();
         }
+
 
         protected virtual double GetStandardDeviation(List<double> inputData)
         {

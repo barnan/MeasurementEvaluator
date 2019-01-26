@@ -7,6 +7,7 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Calculations.Evaluation
 {
@@ -15,6 +16,8 @@ namespace Calculations.Evaluation
         private readonly object _lockObj = new object();
         private readonly EvaluationParameters _parameters;
         private Queue<QueueElement> _processQueue;
+        private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
+        private CancellationTokenSource _tokenSource;
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
 
@@ -51,7 +54,11 @@ namespace Calculations.Evaluation
                     return;
                 }
 
+                _tokenSource.Cancel();
+                _processQueue.Clear();
+
                 _parameters.DataCollector.ResultReadyEvent -= DataCollector_ResultReadyEvent;
+                _parameters.DataCollector.Close();
 
                 IsInitialized = false;
 
@@ -75,8 +82,21 @@ namespace Calculations.Evaluation
                 {
                     return true;
                 }
-
+                if (!_parameters.DataCollector.Initiailze())
+                {
+                    _parameters.Logger.LogError($"{nameof(_parameters.DataCollector)} could not been initialized.");
+                    return false;
+                }
                 _parameters.DataCollector.ResultReadyEvent += DataCollector_ResultReadyEvent;
+
+                _processQueue = new Queue<QueueElement>();
+                _tokenSource = new CancellationTokenSource();
+                Thread th = new Thread(CalculatorThread)
+                {
+                    IsBackground = true,
+                    Name = "CalculatorThread"
+                };
+                th.Start(_tokenSource);
 
                 IsInitialized = true;
 
@@ -89,6 +109,7 @@ namespace Calculations.Evaluation
 
         #endregion
 
+        #region private
 
         private void DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
         {
@@ -98,27 +119,54 @@ namespace Calculations.Evaluation
                 return;
             }
 
-            ICalculationResult calculationResult = e.Result as ICalculationResult;
+            IDataCollectorResult collectedData = e.Result as IDataCollectorResult;
 
-            //if (calculationResult?.CalculationResults == null || calculationResult.CalculationResults.Count == 0)
-            //{
-            //    _parameters.Logger.LogError($"Arrived result event args is not {nameof(ICalculationResult)} or its {nameof(calculationResult.CalculationResults)} field is empty");
-            //    return;
-            //}
+            if (collectedData == null)
+            {
+                _parameters.Logger.LogError($"Arrived result event args is not {nameof(IDataCollectorResult)}");
+                return;
+            }
 
-            //foreach (IConditionCalculationResult<double> item in calculationResult.CalculationResults)
-            //{
-            //    if (!item.Condition.Enabled)
-            //    {
-            //        _parameters.Logger.LogTrace($"{item.Condition.Name} is not enabled condition.");
-            //        continue;
-            //    }
+            IToolSpecification specification = collectedData.Specification;
+            IReadOnlyList<IToolMeasurementData> measurementDatas = collectedData.MeasurementData;
+            IReferenceSample referenceSample = collectedData.Reference;
+
+            if (specification == null)
+            {
+                _parameters.Logger.LogError($"Arrived specification is null.");
+                return;
+            }
+
+            if (measurementDatas == null)
+            {
+                _parameters.Logger.LogError($"Arrived measurement data is null.");
+                return;
+            }
 
 
-
-            //}
 
         }
+
+
+        private void CalculatorThread(object obj)
+        {
+            CancellationToken token = (CancellationToken)obj;
+
+            while (true)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    _parameters.Logger.LogError($"Thread: {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId}) cancelled.");
+                    break;
+                }
+
+
+
+
+            }
+        }
+
+        #endregion
 
     }
 
@@ -130,6 +178,5 @@ namespace Calculations.Evaluation
         ICondition Condition { get; }
         IReferenceValue ReferenceValue { get; }
     }
-
 
 }

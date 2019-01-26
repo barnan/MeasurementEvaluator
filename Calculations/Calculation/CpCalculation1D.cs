@@ -3,6 +3,7 @@ using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.Result;
 using Miscellaneous;
+using System;
 using System.Collections.Generic;
 
 namespace Calculations.Calculation
@@ -21,6 +22,8 @@ namespace Calculations.Calculation
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
         {
+            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
+
             ICpCalculationSettings cpSettings = settings as ICpCalculationSettings;
 
             if (cpSettings == null)
@@ -43,7 +46,12 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}.");
 
-            return new QCellsCalculationResult(_parameters.DateTimeProvider.GetDateTime(), cp, usl, lsl);
+            return new QCellsCalculationResult(cp,
+                                                usl,
+                                                lsl,
+                                                startTime,
+                                                _parameters.DateTimeProvider.GetDateTime(),
+                                                true);
         }
 
 

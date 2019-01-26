@@ -1,40 +1,19 @@
 ﻿using Interfaces.Result;
 using System;
-using System.Xml.Linq;
 
-namespace DataStructures.Calculation
+namespace Calculations.Calculation
 {
-    public class SimpleCalculationResult : ISimpleCalculationResult
+    internal class SimpleCalculationResult : CalculationResult, ISimpleCalculationResult
     {
-        public DateTime CreationTime { get; }
-
         public double Result { get; }
 
-        public DateTime StartTime => throw new NotImplementedException();
 
-        public DateTime EndTime => throw new NotImplementedException();
-
-        public bool SuccessfulCalculation => throw new NotImplementedException();
-
-
-        public SimpleCalculationResult(DateTime creationTime, double result)
+        public SimpleCalculationResult(double result, DateTime startTime, DateTime endTime, bool successful)
+            : base(startTime, endTime, successful)
         {
-            CreationTime = creationTime;
             Result = result;
         }
 
 
-        // TODO: 
-        public XElement Save()
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-        public bool Load(XElement input)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -19,6 +19,7 @@ namespace Calculations.Calculation
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
         {
+            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
 
             ICpkCalculationSettings cpkSettings = settings as ICpkCalculationSettings;
 
@@ -42,7 +43,12 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
 
-            return new QCellsCalculationResult(_parameters.DateTimeProvider.GetDateTime(), cpk, usl, lsl);
+            return new QCellsCalculationResult(cpk,
+                                               usl,
+                                               lsl,
+                                               startTime,
+                                               _parameters.DateTimeProvider.GetDateTime(),
+                                               true);
         }
     }
 }

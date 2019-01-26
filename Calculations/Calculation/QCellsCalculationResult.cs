@@ -3,10 +3,8 @@ using System;
 
 namespace Calculations.Calculation
 {
-    internal class QCellsCalculationResult : IQCellsCalculationResult
+    internal class QCellsCalculationResult : CalculationResult, IQCellsCalculationResult
     {
-        public DateTime CreationTime { get; }
-
         public double Result { get; }
 
         public double USL { get; }
@@ -14,12 +12,14 @@ namespace Calculations.Calculation
         public double LSL { get; }
 
 
-        public QCellsCalculationResult(DateTime creationTime, double result, double usl, double lsl)
+        public QCellsCalculationResult(double result, double usl, double lsl,
+                                        DateTime startTime, DateTime endTime, bool successful)
+            : base(startTime, endTime, successful)
         {
-            CreationTime = creationTime;
             Result = result;
             USL = usl;
             LSL = lsl;
         }
+
     }
 }

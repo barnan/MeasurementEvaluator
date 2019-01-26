@@ -1,14 +1,8 @@
-﻿using System;
-
-namespace Interfaces.Result
+﻿namespace Interfaces.Result
 {
 
     public interface ICalculationResult : ISaveableResult
     {
-        /// <summary>
-        /// creation time of the result
-        /// </summary>
-        DateTime CreationTime { get; }
     }
 
 
