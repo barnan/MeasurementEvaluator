@@ -8,7 +8,7 @@ namespace Interfaces.Calculation
     public interface ICalculation : IInitializable
     {
 
-        ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICalculationSettings settings);
+        ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICalculationSettings settings = null);
 
         CalculationTypes CalculationType { get; }
 

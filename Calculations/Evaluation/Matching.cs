@@ -11,8 +11,8 @@ namespace Calculations.Evaluation
 
         private readonly object _lockObj = new object();
         private readonly MathchingParameters _parameters;
-        private List<KeyValuePairs> _measDataSpecificationPairs;
-        private List<KeyValuePairs> _measDataReferencePairs;
+        private List<SimpleKeyValuePairs> _measDataSpecificationPairs;
+        private List<SimpleKeyValuePairs> _measDataReferencePairs;
 
 
         public Matching(MathchingParameters parameters)
@@ -49,8 +49,8 @@ namespace Calculations.Evaluation
 
                 //TODO: read xml data
 
-                _measDataSpecificationPairs = _parameters.XmlReader.DeserializeObject<List<KeyValuePairs>>(_parameters.MeasurementDataSpecificationFilePath);
-                _measDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<KeyValuePairs>>(_parameters.MeasurementDataReferenceFilePath);
+                _measDataSpecificationPairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.MeasurementDataSpecificationFilePath);
+                _measDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.MeasurementDataReferenceFilePath);
 
                 IsInitialized = true;
 
@@ -86,21 +86,43 @@ namespace Calculations.Evaluation
         public event EventHandler<EventArgs> Closed;
 
 
+        // TODO: xml reading
         // TODO : szálvédelem
-        public IEnumerable<string> GetSpecification(string measuredDataName)
+        public string GetSpecification(string measuredDataName)
         {
+            var result = _measDataSpecificationPairs.Where(p => p.Values.Contains(measuredDataName)).Select(p => p.Key).ToList();
 
-            var result = _measDataSpecificationPairs.Where(p => p.Key == measuredDataName).SelectMany(p => p.Values);
+            if (result.Count == 0)
+            {
+                _parameters.Logger.LogError("No matching specification was found.");
+                return null;
+            }
 
-            return result;
+            if (result.Count > 1)
+            {
+                _parameters.Logger.LogError("More than 1 matching specification was found -> probably wrong matching xml");
+                return null;
+            }
+
+            return result[0];
         }
 
-        public IEnumerable<string> Getreference(string measuredDataName)
+        public string Getreference(string measuredDataName)
         {
-            var result = _measDataReferencePairs.Where(p => p.Key == measuredDataName).SelectMany(p => p.Values);
+            var result = _measDataReferencePairs.Where(p => p.Key == measuredDataName).Select(p => p.Key).ToList();
+            if (result.Count == 0)
+            {
+                _parameters.Logger.LogError("No matching reference was found.");
+                return null;
+            }
 
+            if (result.Count > 1)
+            {
+                _parameters.Logger.LogError("More than 1 matching reference was found -> probably wrong matching xml");
+                return null;
+            }
 
-            return result;
+            return result[0];
         }
 
 

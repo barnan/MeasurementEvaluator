@@ -22,5 +22,6 @@ namespace DataStructures.MeasuredData
 
 
         public IMeasurementPoint this[int i] => MeasData[i];
+
     }
 }

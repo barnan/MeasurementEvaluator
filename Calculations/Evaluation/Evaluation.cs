@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using DataStructures.MeasuredData;
+using Interfaces;
 using Interfaces.Evaluation;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
@@ -7,6 +8,7 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Calculations.Evaluation
 {
@@ -126,8 +128,70 @@ namespace Calculations.Evaluation
                 return;
             }
 
+            IEvaluationResult evaluationresultResult = new EvaluationRe
+
+            foreach (IQuantitySpecification quantitySpec in specification.Specifications)
+            {
+                foreach (ICondition condition in quantitySpec.Conditions)
+                {
+                    var calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
+                    string quantityName = quantitySpec.QuantityName;
 
 
+                    List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
+                    foreach (var item in measurementDatas)
+                    {
+                        coherentMeasurementData.AddRange(item.Results.Where(p =>
+                        {
+                            string specificationNameOfMeasData = _parameters.Matcher.GetSpecification(p.MeasuredQuantityName);
+                            if (specificationNameOfMeasData == null)
+                            {
+                                return false;
+                            }
+
+                            return quantityName == specificationNameOfMeasData;
+                        }));
+                    }
+
+                    if (coherentMeasurementData.Count == 0)
+                    {
+                        _parameters.Logger.LogError("No coherent measurement data was found!");
+                        return;
+                    }
+
+                    IMeasurementSerie calculationInputData;
+                    if (coherentMeasurementData.Count == 1)
+                    {
+                        calculationInputData = coherentMeasurementData[0];
+                    }
+                    else
+                    {
+                        List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
+                        foreach (IMeasurementSerie serie in coherentMeasurementData)
+                        {
+                            measPointList.AddRange(serie.MeasData);
+                        }
+                        calculationInputData = new MeasurementSerie(coherentMeasurementData[0].MeasuredQuantityName, measPointList, coherentMeasurementData[0].Dimension);
+                    }
+
+                    DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
+                    ICalculationResult calcResult = calculation.Calculate(calculationInputData);
+                    IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(startTime, _parameters.DateTimeProvider.GetDateTime(), calcResult.SuccessfulCalculation, calculationInputData, condition,  )
+
+                }
+            }
+
+
+
+
+            foreach (IToolMeasurementData data in measurementDatas)
+            {
+                foreach (IMeasurementSerie measSerie in data.Results)
+                {
+                    measSerie.MeasData
+                }
+
+            }
 
 
         }

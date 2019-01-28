@@ -26,4 +26,5 @@ namespace Interfaces.MeasuredData
         /// </summary>
         Units Dimension { get; }
     }
+
 }
