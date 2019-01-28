@@ -7,14 +7,18 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
-namespace DataAcquisitions.DataGathering
+namespace DataAcquisitions.DataCollector
 {
     internal class DataCollector : IDataCollector
     {
 
         private readonly DataCollectorParameters _parameters;
         private readonly object _lockObj = new object();
+        private Queue<QueueElement> _processQueue;
+        private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
+        private CancellationTokenSource _tokenSource;
 
 
         public DataCollector(DataCollectorParameters dataGatheringParameters)
@@ -52,6 +56,9 @@ namespace DataAcquisitions.DataGathering
                     {
                         return;
                     }
+
+                    _tokenSource.Cancel();
+                    _processQueue.Clear();
 
                     _parameters.SpecificationRepository.Close();
                     _parameters.ReferenceRepository.Close();
@@ -106,6 +113,15 @@ namespace DataAcquisitions.DataGathering
                         return false;
                     }
 
+                    _processQueue = new Queue<QueueElement>();
+                    _tokenSource = new CancellationTokenSource();
+                    Thread th = new Thread(CalculatorThread)
+                    {
+                        IsBackground = true,
+                        Name = "CalculatorThread"
+                    };
+                    th.Start(_tokenSource);
+
                     IsInitialized = true;
 
                     OnInitialized();
@@ -124,7 +140,7 @@ namespace DataAcquisitions.DataGathering
 
         #endregion
 
-        #region IDataGathering
+        #region IDataCollector
 
         public void Gather(string specificationName, List<string> measurementDataFileNames, string referenceName = null)
         {
@@ -264,6 +280,8 @@ namespace DataAcquisitions.DataGathering
         #endregion
 
 
+        #region private
+
         private void OnInitialized()
         {
             var initialized = Initialized;
@@ -279,5 +297,36 @@ namespace DataAcquisitions.DataGathering
             closed?.Invoke(this, new EventArgs());
         }
 
+
+        private void CalculatorThread(object obj)
+        {
+            CancellationToken token = (CancellationToken)obj;
+
+            while (true)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    _parameters.Logger.LogError($"Thread: {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId}) cancelled.");
+                    break;
+                }
+
+
+
+
+            }
+        }
+
+        #endregion
+
     }
+
+
+
+    internal class QueueElement
+    {
+        IMeasurementSerie MeasurementSerieData { get; }
+        ICondition Condition { get; }
+        IReferenceValue ReferenceValue { get; }
+    }
+
 }

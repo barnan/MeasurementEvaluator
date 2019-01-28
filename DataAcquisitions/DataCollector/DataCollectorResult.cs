@@ -5,7 +5,7 @@ using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.DataGathering
+namespace DataAcquisitions.DataCollector
 {
     internal class DataCollectorResult : IDataCollectorResult
     {

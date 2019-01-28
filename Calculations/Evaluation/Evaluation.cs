@@ -7,7 +7,6 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Calculations.Evaluation
 {
@@ -15,9 +14,7 @@ namespace Calculations.Evaluation
     {
         private readonly object _lockObj = new object();
         private readonly EvaluationParameters _parameters;
-        private Queue<QueueElement> _processQueue;
-        private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
-        private CancellationTokenSource _tokenSource;
+
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
 
@@ -28,7 +25,7 @@ namespace Calculations.Evaluation
         {
             _parameters = parameters;
 
-            _parameters.Logger.MethodError($"Instantiated.");
+            _parameters.Logger.MethodError("Instantiated.");
         }
 
 
@@ -54,17 +51,12 @@ namespace Calculations.Evaluation
                     return;
                 }
 
-                _tokenSource.Cancel();
-                _processQueue.Clear();
-
                 _parameters.DataCollector.ResultReadyEvent -= DataCollector_ResultReadyEvent;
                 _parameters.DataCollector.Close();
 
                 IsInitialized = false;
 
-                _parameters.Logger.MethodError($"Closed.");
-
-                return;
+                _parameters.Logger.MethodError("Closed.");
             }
         }
 
@@ -89,18 +81,9 @@ namespace Calculations.Evaluation
                 }
                 _parameters.DataCollector.ResultReadyEvent += DataCollector_ResultReadyEvent;
 
-                _processQueue = new Queue<QueueElement>();
-                _tokenSource = new CancellationTokenSource();
-                Thread th = new Thread(CalculatorThread)
-                {
-                    IsBackground = true,
-                    Name = "CalculatorThread"
-                };
-                th.Start(_tokenSource);
-
                 IsInitialized = true;
 
-                _parameters.Logger.MethodError($"Instantiated.");
+                _parameters.Logger.MethodError("Initialized.");
 
                 return IsInitialized;
             }
@@ -133,50 +116,26 @@ namespace Calculations.Evaluation
 
             if (specification == null)
             {
-                _parameters.Logger.LogError($"Arrived specification is null.");
+                _parameters.Logger.LogError("Arrived specification is null.");
                 return;
             }
 
             if (measurementDatas == null)
             {
-                _parameters.Logger.LogError($"Arrived measurement data is null.");
+                _parameters.Logger.LogError("Arrived measurement data is null.");
                 return;
             }
 
 
 
+
+
         }
 
-
-        private void CalculatorThread(object obj)
-        {
-            CancellationToken token = (CancellationToken)obj;
-
-            while (true)
-            {
-                if (token.IsCancellationRequested)
-                {
-                    _parameters.Logger.LogError($"Thread: {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId}) cancelled.");
-                    break;
-                }
-
-
-
-
-            }
-        }
 
         #endregion
 
     }
 
-
-
-    internal class QueueElement
-    {
-        IMeasurementSerie MeasurementSerieData { get; }
-        ICondition Condition { get; }
-        IReferenceValue ReferenceValue { get; }
-    }
 
 }

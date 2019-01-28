@@ -7,7 +7,7 @@ namespace Calculations.Evaluation
 {
     internal class EvaluationParameters
     {
-        internal ILogger Logger { get; private set; }
+        internal ILogger Logger { get; }
 
         internal ICalculationContainer CalculationContainer { get; }
 

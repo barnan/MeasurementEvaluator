@@ -5,7 +5,7 @@ using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using NLog;
 
-namespace DataAcquisitions.DataGathering
+namespace DataAcquisitions.DataCollector
 {
     internal class DataCollectorParameters
     {

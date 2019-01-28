@@ -62,6 +62,9 @@
     <Compile Include="Calculation\SimpleCalculationResult.cs" />
     <Compile Include="Evaluation\Evaluation.cs" />
     <Compile Include="Evaluation\EvaluationParameters.cs" />
+    <Compile Include="Evaluation\KeyValuePairs.cs" />
+    <Compile Include="Evaluation\Matching.cs" />
+    <Compile Include="Evaluation\MathchingParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
