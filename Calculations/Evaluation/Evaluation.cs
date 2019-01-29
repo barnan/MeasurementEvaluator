@@ -128,17 +128,27 @@ namespace Calculations.Evaluation
                 return;
             }
 
-            //IEvaluationResult evaluationresultResult = new EvaluationRe
-
             foreach (IQuantitySpecification quantitySpec in specification.Specifications)
             {
                 foreach (ICondition condition in quantitySpec.Conditions)
                 {
-                    var calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
+                    if (!(condition is ISimpleCondition simpleCondition))
+                    {
+                        _parameters.Logger.Info($"{quantitySpec.QuantityName} {condition.Name} is not simplecondition");
+                        continue;
+                    }
+
+                    if (!simpleCondition.Enabled)
+                    {
+                        _parameters.Logger.Info($"{quantitySpec.QuantityName} {simpleCondition.Name} is not enabled -> skipped.");
+                        continue;
+                    }
+
+                    var calculation = _parameters.CalculationContainer.GetCalculation(simpleCondition.CalculationType);
 
                     // find measurement data associated with the specification name from mathing
                     List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
-                    IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(condition.Name);
+                    IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(simpleCondition.Name);
 
                     foreach (var item in measurementDatas)
                     {
@@ -167,7 +177,7 @@ namespace Calculations.Evaluation
                     }
 
                     // find reference associated with the specification
-                    string referenceName = _parameters.Matcher.GetreferenceName(condition.Name);
+                    string referenceName = _parameters.Matcher.GetreferenceName(simpleCondition.Name);
                     IReferenceValue referenceValue = referenceSample.ReferenceValues.FirstOrDefault(p => string.Equals(p.Name, referenceName));
 
                     // perform calculation:
@@ -178,9 +188,9 @@ namespace Calculations.Evaluation
                         _parameters.DateTimeProvider.GetDateTime(),
                         calcResult.SuccessfulCalculation,
                         calculationInputData,
-                        condition,
+                        simpleCondition,
                         referenceValue,
-                        true,
+                        simpleCondition.Compare(calcResult),
                         calcResult);
 
 
