@@ -128,35 +128,27 @@ namespace Calculations.Evaluation
                 return;
             }
 
-            IEvaluationResult evaluationresultResult = new EvaluationRe
+            //IEvaluationResult evaluationresultResult = new EvaluationRe
 
             foreach (IQuantitySpecification quantitySpec in specification.Specifications)
             {
                 foreach (ICondition condition in quantitySpec.Conditions)
                 {
                     var calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
-                    string quantityName = quantitySpec.QuantityName;
 
-
+                    // find measurement data associated with the specification name from mathing
                     List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
+                    IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(condition.Name);
+
                     foreach (var item in measurementDatas)
                     {
-                        coherentMeasurementData.AddRange(item.Results.Where(p =>
-                        {
-                            string specificationNameOfMeasData = _parameters.Matcher.GetSpecification(p.MeasuredQuantityName);
-                            if (specificationNameOfMeasData == null)
-                            {
-                                return false;
-                            }
-
-                            return quantityName == specificationNameOfMeasData;
-                        }));
+                        coherentMeasurementData.AddRange(item.Results.Where(p => coherentMeasurementDataNames.Contains(p.MeasuredQuantityName)));
                     }
 
                     if (coherentMeasurementData.Count == 0)
                     {
-                        _parameters.Logger.LogError("No coherent measurement data was found!");
-                        return;
+                        _parameters.Logger.LogError("No coherent measurement data was found in ");
+                        continue;
                     }
 
                     IMeasurementSerie calculationInputData;
@@ -164,7 +156,7 @@ namespace Calculations.Evaluation
                     {
                         calculationInputData = coherentMeasurementData[0];
                     }
-                    else
+                    else  // if more result were found with the same name -> they will be linked together, unless their name is different
                     {
                         List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
                         foreach (IMeasurementSerie serie in coherentMeasurementData)
@@ -174,23 +166,27 @@ namespace Calculations.Evaluation
                         calculationInputData = new MeasurementSerie(coherentMeasurementData[0].MeasuredQuantityName, measPointList, coherentMeasurementData[0].Dimension);
                     }
 
+                    // find reference associated with the specification
+                    string referenceName = _parameters.Matcher.GetreferenceName(condition.Name);
+                    IReferenceValue referenceValue = referenceSample.ReferenceValues.FirstOrDefault(p => string.Equals(p.Name, referenceName));
+
+                    // perform calculation:
                     DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
                     ICalculationResult calcResult = calculation.Calculate(calculationInputData);
-                    IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(startTime, _parameters.DateTimeProvider.GetDateTime(), calcResult.SuccessfulCalculation, calculationInputData, condition,  )
+                    IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
+                        startTime,
+                        _parameters.DateTimeProvider.GetDateTime(),
+                        calcResult.SuccessfulCalculation,
+                        calculationInputData,
+                        condition,
+                        referenceValue,
+                        true,
+                        calcResult);
+
+
+                    // TODO : condition check
 
                 }
-            }
-
-
-
-
-            foreach (IToolMeasurementData data in measurementDatas)
-            {
-                foreach (IMeasurementSerie measSerie in data.Results)
-                {
-                    measSerie.MeasData
-                }
-
             }
 
 

@@ -11,8 +11,7 @@ namespace Calculations.Evaluation
 
         private readonly object _lockObj = new object();
         private readonly MathchingParameters _parameters;
-        private List<SimpleKeyValuePairs> _measDataSpecificationPairs;
-        private List<SimpleKeyValuePairs> _measDataReferencePairs;
+        private List<SimpleKeyValuePairs> _SpecificationMeasDataReferencePairs;
 
 
         public Matching(MathchingParameters parameters)
@@ -44,13 +43,9 @@ namespace Calculations.Evaluation
                 //    return false;
                 //}
 
-                //_measDataSpecificationPairs = new List<KeyValuePairs>();
-                //_measDataReferencePairs = new List<KeyValuePairs>();
-
                 //TODO: read xml data
 
-                _measDataSpecificationPairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.MeasurementDataSpecificationFilePath);
-                _measDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.MeasurementDataReferenceFilePath);
+                _SpecificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.MeasurementDataSpecificationReferenceFilePath);
 
                 IsInitialized = true;
 
@@ -86,45 +81,37 @@ namespace Calculations.Evaluation
         public event EventHandler<EventArgs> Closed;
 
 
-        // TODO: xml reading
-        // TODO : szálvédelem
-        public string GetSpecification(string measuredDataName)
+        // TODO : xml reading
+
+
+
+        public IEnumerable<string> GetMeasDataNames(string specificationName)
         {
-            var result = _measDataSpecificationPairs.Where(p => p.Values.Contains(measuredDataName)).Select(p => p.Key).ToList();
-
-            if (result.Count == 0)
+            lock (_lockObj)
             {
-                _parameters.Logger.LogError("No matching specification was found.");
-                return null;
+                if (!IsInitialized)
+                {
+                    _parameters.Logger.LogError("Not initialized yet.");
+                    return null;
+                }
+                var result = _SpecificationMeasDataReferencePairs.Where(p => p.Key.Contains(specificationName)).SelectMany(p => p.Values);
+                return result;
             }
-
-            if (result.Count > 1)
-            {
-                _parameters.Logger.LogError("More than 1 matching specification was found -> probably wrong matching xml");
-                return null;
-            }
-
-            return result[0];
         }
 
-        public string Getreference(string measuredDataName)
+        public string GetreferenceName(string specificationName)
         {
-            var result = _measDataReferencePairs.Where(p => p.Key == measuredDataName).Select(p => p.Key).ToList();
-            if (result.Count == 0)
+            lock (_lockObj)
             {
-                _parameters.Logger.LogError("No matching reference was found.");
-                return null;
+                if (!IsInitialized)
+                {
+                    _parameters.Logger.LogError("Not initialized yet.");
+                    return null;
+                }
+                var result = _SpecificationMeasDataReferencePairs.FirstOrDefault(p => p.Key.Contains(specificationName))?.ReferenceName;
+                return result;
             }
-
-            if (result.Count > 1)
-            {
-                _parameters.Logger.LogError("More than 1 matching reference was found -> probably wrong matching xml");
-                return null;
-            }
-
-            return result[0];
         }
-
 
         #endregion
 

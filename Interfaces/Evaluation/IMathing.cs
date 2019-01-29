@@ -1,13 +1,14 @@
 ﻿using Interfaces.Misc;
+using System.Collections.Generic;
 
 namespace Interfaces.Evaluation
 {
     public interface IMathing : IInitializable
     {
 
-        string GetSpecification(string measuredDataName);
+        IEnumerable<string> GetMeasDataNames(string specificationName);
 
-        string Getreference(string measuredDataName);
+        string GetreferenceName(string specificationName);
 
     }
 }
