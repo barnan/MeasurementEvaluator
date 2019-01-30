@@ -126,18 +126,27 @@ namespace Calculations.Evaluation
                 return;
             }
 
+            List<IQuantityEvaluationResult> quantityEvaluationList = new List<IQuantityEvaluationResult>();
+            DateTime fullStartTime = _parameters.DateTimeProvider.GetDateTime();
+
             foreach (IQuantitySpecification quantitySpec in specification.Specifications)
             {
+                List<IConditionEvaluationResult> conditionResultList = new List<IConditionEvaluationResult>(quantitySpec.Conditions.Count);
+
                 foreach (ICondition condition in quantitySpec.Conditions)
                 {
                     try
                     {
+                        DateTime conditionEvaluationStartTime = _parameters.DateTimeProvider.GetDateTime();
+
                         if (condition == null)
                         {
                             _parameters.Logger.Info("Arrived condition is null");
+                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
+                        // skipp condition if not enabled:
                         if (!condition.Enabled)
                         {
                             _parameters.Logger.Info($"{quantitySpec.QuantityName} {condition.Name} is not enabled -> condition check skipped.");
@@ -158,6 +167,7 @@ namespace Calculations.Evaluation
                         if (coherentMeasurementData.Count == 0)
                         {
                             _parameters.Logger.LogError("No coherent measurement data was found in measurement data files");
+                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
@@ -182,30 +192,27 @@ namespace Calculations.Evaluation
                         IReferenceValue referenceValue = referenceSample.ReferenceValues.FirstOrDefault(p => string.Equals(p.Name, referenceName));
 
                         // perform calculation:
-                        DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
                         ICalculationResult calcResult = calculation.Calculate(calculationInputData);
 
                         if (!calcResult.SuccessfulCalculation)
                         {
-                            // TODO: add to result
-                            CreateNOTSuccessfulConditionResult();
+                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
-                        bool evaluationResult = condition.Compare(calcResult);
+                        bool conditionEvaluationResult = condition.Compare(calcResult);
 
                         IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
-                            startTime,
+                            conditionEvaluationStartTime,
                             _parameters.DateTimeProvider.GetDateTime(),
                             calcResult.SuccessfulCalculation,
                             calculationInputData,
                             condition,
                             referenceValue,
-                            evaluationResult,
+                            conditionEvaluationResult,
                             calcResult);
 
-                        // TODO: add to result
-
+                        conditionResultList.Add(conditionResult);
 
                         if (_parameters.Logger.IsTraceEnabled)
                         {
@@ -216,21 +223,24 @@ namespace Calculations.Evaluation
                             _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.MeasuredQuantityName} number of measurement points: {calculationInputData.MeasData.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");
-                            _parameters.Logger.MethodTrace($"   The result is {(evaluationResult ? "" : "NOT")} acceptable.");
+                            _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult ? "" : "NOT")} acceptable.");
                         }
-
                     }
                     catch (Exception ex)
                     {
                         _parameters.Logger.LogError($"Exception occured: {ex}");
-
-                        CreateNOTSuccessfulConditionResult();
+                        conditionResultList.Add(CreateNOTSuccessfulConditionResult());
 
                     }
                 }
+
+                IQuantityEvaluationResult quantityResult = new QuantityEvaluationResult(conditionResultList);
+
             }
 
+            IEvaluationResult evaluationResult = new EvaluationResult(fullStartTime, _parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList);
 
+            // TODO: fire event
         }
 
 
