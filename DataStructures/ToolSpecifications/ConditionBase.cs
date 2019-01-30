@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 namespace DataStructures.ToolSpecifications
 {
 
-    public class ConditionBase : ICondition
+    public abstract class ConditionBase : ICondition
     {
         public string Name { get; }
         public CalculationTypes CalculationType { get; }
@@ -26,6 +27,24 @@ namespace DataStructures.ToolSpecifications
             Enabled = enabled;
         }
 
+
+        #region ICondition
+
+        public bool Compare(ICalculationResult calculationResult)
+        {
+            if (calculationResult == null)
+            {
+                return false;
+            }
+
+            return Evaluate(calculationResult);
+        }
+
+
+        protected abstract bool Evaluate(ICalculationResult calculationResult);
+
+        #endregion
+
         #region IFormattable
 
         public virtual string ToString(string format, IFormatProvider formatProvider)
@@ -38,10 +57,9 @@ namespace DataStructures.ToolSpecifications
 
 
 
-    public class ConditionBase<T> : ConditionBase, ICondition<T> where T : struct
+    public abstract class ConditionBase<T> : ConditionBase, ICondition<T> where T : struct
     {
         public T Value { get; }
-
 
         public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled)
             : base(name, calculationtype, relation, enabled)
@@ -56,7 +74,7 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public virtual bool Compare(T leftValue)
+        protected bool Compare(T leftValue)
         {
             bool equality = EqualityComparer<T>.Default.Equals(leftValue, Value);
             int compResult = Comparer<T>.Default.Compare(leftValue, Value);
@@ -75,6 +93,32 @@ namespace DataStructures.ToolSpecifications
                     return equality;
                 case Relations.NOTEQUAL:
                     return equality;
+            }
+            return false;
+        }
+
+
+        protected bool CheckCalculationType(ICalculationResult calculationResult, CalculationTypes calculationType)
+        {
+            if (calculationType == CalculationTypes.Average)
+            {
+                return calculationResult is ISimpleCalculationResult;
+            }
+            if (calculationType == CalculationTypes.StandardDeviation)
+            {
+                return calculationResult is ISimpleCalculationResult;
+            }
+            if (calculationType == CalculationTypes.Cp)
+            {
+                return calculationResult is IQCellsCalculationResult;
+            }
+            if (calculationType == CalculationTypes.Cpk)
+            {
+                return calculationResult is IQCellsCalculationResult;
+            }
+            if (calculationType == CalculationTypes.Unknown)
+            {
+                return false;
             }
             return false;
         }

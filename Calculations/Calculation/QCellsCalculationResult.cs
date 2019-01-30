@@ -12,8 +12,7 @@ namespace Calculations.Calculation
         public double LSL { get; }
 
 
-        public QCellsCalculationResult(double result, double usl, double lsl,
-                                        DateTime startTime, DateTime endTime, bool successful)
+        public QCellsCalculationResult(double result, double usl, double lsl, DateTime startTime, DateTime endTime, bool successful)
             : base(startTime, endTime, successful)
         {
             Result = result;

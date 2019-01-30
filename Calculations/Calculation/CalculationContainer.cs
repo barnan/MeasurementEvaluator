@@ -21,26 +21,26 @@ namespace Calculations.Calculation
         }
 
 
-        public ICalculation GetCalculation(CalculationTypes calculationType)
+        public ICalculation GetCalculation(CalculationTypes requiredCalculationType)
         {
-            _parameters.Logger.LogInfo($"Request for {calculationType} typed calculation.");
+            _parameters.Logger.LogInfo($"Request for {requiredCalculationType} typed calculation.");
 
             if ((_parameters.AvailableCalculations?.Count ?? 0) == 0)
             {
                 _parameters.Logger.LogError($"{nameof(_parameters.AvailableCalculations)} is null or empty.");
             }
 
-            List<ICalculation> calcList = _parameters.AvailableCalculations.Where(p => p.CalculationType == calculationType).ToList();
+            List<ICalculation> calcList = _parameters.AvailableCalculations.Where(p => p.CalculationType == requiredCalculationType).ToList();
 
             if (calcList.Count == 0)
             {
-                _parameters.Logger.LogError($"The available calculations list does not contain element: {calculationType}");
+                _parameters.Logger.LogError($"The available calculations list does not contain element: {requiredCalculationType}");
                 return null;
             }
 
             if (calcList.Count > 1)
             {
-                _parameters.Logger.LogError($"The available calculations list contains more element of: {calculationType}");
+                _parameters.Logger.LogError($"The available calculations list contains more element of: {requiredCalculationType}");
                 return null;
             }
 

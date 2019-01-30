@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 
@@ -24,6 +25,21 @@ namespace DataStructures.ToolSpecifications
         {
             ValidIf = validIf;
             ValidIf_Value = validIf_Value;
+        }
+
+        protected override bool Evaluate(ICalculationResult calculationResult)
+        {
+            if (!CheckCalculationType(calculationResult, CalculationType))
+            {
+                return false;
+            }
+
+            if (!(calculationResult is ISimpleCalculationResult simpleResult))
+            {
+                return false;
+            }
+
+            return Compare(simpleResult.Result);
         }
 
 

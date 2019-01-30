@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 
@@ -34,6 +35,20 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
+        protected override bool Evaluate(ICalculationResult calculationResult)
+        {
+            if (!CheckCalculationType(calculationResult, CalculationType))
+            {
+                return false;
+            }
+
+            if (!(calculationResult is IQCellsCalculationResult qcellsResult))
+            {
+                return false;
+            }
+
+            return Compare(qcellsResult.Result);
+        }
 
     }
 

@@ -4,7 +4,7 @@ namespace Interfaces.Calculation
 {
     public interface ICalculationContainer
     {
-        ICalculation GetCalculation(CalculationTypes calculationType);
+        ICalculation GetCalculation(CalculationTypes requiredCalculationType);
 
         IReadOnlyList<CalculationTypes> AvailableCalculatons { get; }
     }

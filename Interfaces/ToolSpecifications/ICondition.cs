@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces.Result;
+using System;
 
 namespace Interfaces.ToolSpecifications
 {
@@ -21,6 +22,13 @@ namespace Interfaces.ToolSpecifications
         /// Validity of the condition -> if false, the condition does not work
         /// </summary>
         bool Enabled { get; }
+
+        /// <summary>
+        /// Checks the condition. The calculatin result contains the approppriate result
+        /// </summary>
+        /// <param name="calculationResult">the calculation result which will be used in the condition comparison</param>
+        /// <returns></returns>
+        bool Compare(ICalculationResult calculationResult);
     }
 
 
@@ -36,14 +44,6 @@ namespace Interfaces.ToolSpecifications
         /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
         T Value { get; }
-
-
-        /// <summary>
-        /// Checks the condition. The RIGHT value and the relation is stored in the condition
-        /// </summary>
-        /// <param name="value">LEFT value of the comparison</param>
-        /// <returns></returns>
-        bool Compare(T value);
     }
 
 }

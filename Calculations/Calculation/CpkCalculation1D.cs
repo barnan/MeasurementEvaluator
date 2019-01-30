@@ -17,13 +17,12 @@ namespace Calculations.Calculation
 
         public override CalculationTypes CalculationType => CalculationTypes.Cpk;
 
+
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
         {
             DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
 
-            ICpkCalculationSettings cpkSettings = settings as ICpkCalculationSettings;
-
-            if (cpkSettings == null)
+            if (!(settings is ICpkCalculationSettings cpkSettings))
             {
                 _parameters.Logger.LogError($"Arrived settings is null or it is not {nameof(ICpkCalculationSettings)}");
                 return null;

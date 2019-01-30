@@ -8,8 +8,6 @@ namespace Calculations.Calculation
     {
         public ILogger Logger { get; }
 
-        //public ICalculationContainer CalculationContainer { get; }
-
         public IDateTimeProvider DateTimeProvider { get; }
 
 
@@ -17,8 +15,6 @@ namespace Calculations.Calculation
         public CalculationParameters()
         {
             Logger = LogManager.GetCurrentClassLogger();
-
-            //CalculationContainer = new CalculationContainer(new CalculationContainerParameters());
 
             DateTimeProvider = new StandardDateTimeProvider(new StandardDateTimeProviderParameter());
         }
