@@ -9,13 +9,18 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Calculations.Evaluation
 {
     internal class Evaluation : IEvaluation
     {
         private readonly object _lockObj = new object();
+        private readonly object _queueLock = new object();
         private readonly EvaluationParameters _parameters;
+        private readonly AutoResetEvent _queueHandle = new AutoResetEvent(false);
+        private Queue<QueueElement> _processorQueue;
+        private CancellationTokenSource _tokenSource;
 
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
@@ -54,6 +59,11 @@ namespace Calculations.Evaluation
                 }
 
                 _parameters.DataCollector.ResultReadyEvent -= DataCollector_ResultReadyEvent;
+
+                _tokenSource.Cancel();
+                _queueHandle.Reset();
+                _processorQueue.Clear();
+
                 _parameters.DataCollector.Close();
 
                 IsInitialized = false;
@@ -82,6 +92,15 @@ namespace Calculations.Evaluation
                     return false;
                 }
                 _parameters.DataCollector.ResultReadyEvent += DataCollector_ResultReadyEvent;
+                _processorQueue = new Queue<QueueElement>();
+                _tokenSource = new CancellationTokenSource();
+
+                Thread th = new Thread(Process)
+                {
+                    Name = "EvaluatorThread",
+                    IsBackground = false
+                };
+                th.Start(_tokenSource.Token);
 
                 IsInitialized = true;
 
@@ -98,6 +117,7 @@ namespace Calculations.Evaluation
 
         private void DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
         {
+
             if (e?.Result == null)
             {
                 _parameters.Logger.MethodError("Arrived result event args is null.");
@@ -110,6 +130,74 @@ namespace Calculations.Evaluation
                 return;
             }
 
+            Monitor.Enter(_queueLock);
+            try
+            {
+                _processorQueue.Enqueue(new QueueElement(collectedData));
+                _queueHandle.Set();
+            }
+            finally
+            {
+                Monitor.Exit(_queueLock);
+            }
+
+        }
+
+
+
+        private void Process(object obj)
+        {
+            _parameters.Logger.LogInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
+
+            CancellationToken token;
+            try
+            {
+                token = (CancellationToken)obj;
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.LogError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+            }
+
+            while (true)
+            {
+                _queueHandle.WaitOne();
+
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                QueueElement item = null;
+
+                Monitor.Enter(_queueLock);
+                try
+                {
+                    if (_processorQueue.Count > 0)
+                    {
+                        _parameters.Logger.LogTrace("New queue element arrived!");
+
+                        item = _processorQueue.Dequeue();
+                    }
+                }
+                finally
+                {
+                    Monitor.Exit(_queueLock);
+                }
+
+                if (item == null)
+                {
+                    continue;
+                }
+
+                Evaluate(item.Result);
+
+            }
+        }
+
+
+        private void Evaluate(IDataCollectorResult collectedData)
+        {
             IToolSpecification specification = collectedData.Specification;
             IReadOnlyList<IToolMeasurementData> measurementDatas = collectedData.MeasurementData;
             IReferenceSample referenceSample = collectedData.Reference;
@@ -232,16 +320,15 @@ namespace Calculations.Evaluation
                         conditionResultList.Add(CreateNOTSuccessfulConditionResult());
 
                     }
+
                 }
 
-                IQuantityEvaluationResult quantityResult = new QuantityEvaluationResult(conditionResultList);
-
+                quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList));
             }
-
             IEvaluationResult evaluationResult = new EvaluationResult(fullStartTime, _parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList);
-
-            // TODO: fire event
+            ResultReadyEvent?.Invoke(this, new ResultEventArgs(evaluationResult));
         }
+
 
 
         private IConditionEvaluationResult CreateNOTSuccessfulConditionResult()
@@ -251,6 +338,18 @@ namespace Calculations.Evaluation
 
 
         #endregion
+
+
+        class QueueElement
+        {
+            public IDataCollectorResult Result { get; }
+
+            public QueueElement(IDataCollectorResult result)
+            {
+                Result = result;
+            }
+        }
+
 
     }
 
