@@ -14,6 +14,9 @@ namespace Calculations.Evaluation
         private List<SimpleKeyValuePairs> _SpecificationMeasDataReferencePairs;
 
 
+        // TODO: finish with xml reader
+
+
         public Matching(MathchingParameters parameters)
         {
             _parameters = parameters;
@@ -45,7 +48,7 @@ namespace Calculations.Evaluation
 
                 //TODO: read xml data
 
-                _SpecificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.MeasurementDataSpecificationReferenceFilePath);
+                _SpecificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
 
                 IsInitialized = true;
 

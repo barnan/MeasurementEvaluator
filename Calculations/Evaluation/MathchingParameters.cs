@@ -9,15 +9,15 @@ namespace Calculations.Evaluation
 
         internal IHDDXmlReader XmlReader { get; }
 
-        internal string MeasurementDataSpecificationReferenceFilePath { get; }
+        internal string NameBindingFilePath { get; }
 
 
 
-        public MathchingParameters(IHDDXmlReader xmlReader, string measurementDataSpecificationReferenceFilePath)
+        public MathchingParameters(IHDDXmlReader xmlReader, string nameBindingFilePath)
         {
             Logger = LogManager.GetCurrentClassLogger();
             XmlReader = xmlReader;
-            MeasurementDataSpecificationReferenceFilePath = measurementDataSpecificationReferenceFilePath;
+            NameBindingFilePath = nameBindingFilePath;
         }
 
     }
