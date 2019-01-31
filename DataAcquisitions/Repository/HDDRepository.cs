@@ -40,6 +40,8 @@ namespace DataAcquisition.Repository
 
                 IsInitialized = true;
 
+                OnInitialized();
+
                 _parameters.Logger.MethodInfo("Initialized.");
 
                 return IsInitialized;
@@ -60,9 +62,9 @@ namespace DataAcquisition.Repository
                     return;
                 }
 
-
-
                 IsInitialized = false;
+
+                OnClosed();
 
                 _parameters.Logger.MethodInfo("Closed.");
             }
@@ -72,6 +74,22 @@ namespace DataAcquisition.Repository
         public event EventHandler<EventArgs> Closed;
 
         public bool IsInitialized { get; private set; }
+
+
+        private void OnInitialized()
+        {
+            var initialized = Initialized;
+
+            initialized?.Invoke(this, new EventArgs());
+        }
+
+
+        private void OnClosed()
+        {
+            var closed = Closed;
+
+            closed?.Invoke(this, new EventArgs());
+        }
 
         #endregion
 

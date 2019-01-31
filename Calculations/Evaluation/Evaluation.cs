@@ -66,6 +66,8 @@ namespace Calculations.Evaluation
 
                 IsInitialized = false;
 
+                OnClosed();
+
                 _parameters.Logger.MethodError("Closed.");
             }
         }
@@ -102,12 +104,30 @@ namespace Calculations.Evaluation
 
                 IsInitialized = true;
 
+                OnInitialized();
+
                 _parameters.Logger.MethodError("Initialized.");
 
                 return IsInitialized;
             }
 
         }
+
+        private void OnInitialized()
+        {
+            var initialized = Initialized;
+
+            initialized?.Invoke(this, new EventArgs());
+        }
+
+
+        private void OnClosed()
+        {
+            var closed = Closed;
+
+            closed?.Invoke(this, new EventArgs());
+        }
+
 
         #endregion
 

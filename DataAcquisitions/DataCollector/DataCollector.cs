@@ -7,7 +7,6 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace DataAcquisitions.DataCollector
 {
@@ -16,9 +15,9 @@ namespace DataAcquisitions.DataCollector
 
         private readonly DataCollectorParameters _parameters;
         private readonly object _lockObj = new object();
-        private Queue<QueueElement> _processQueue;
-        private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
-        private CancellationTokenSource _tokenSource;
+        //private Queue<QueueElement> _processQueue;
+        //private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
+        //private CancellationTokenSource _tokenSource;
 
 
         public DataCollector(DataCollectorParameters dataGatheringParameters)
@@ -57,8 +56,8 @@ namespace DataAcquisitions.DataCollector
                         return;
                     }
 
-                    _tokenSource.Cancel();
-                    _processQueue.Clear();
+                    //_tokenSource.Cancel();
+                    //_processQueue.Clear();
 
                     _parameters.SpecificationRepository.Close();
                     _parameters.ReferenceRepository.Close();
@@ -113,15 +112,6 @@ namespace DataAcquisitions.DataCollector
                         return false;
                     }
 
-                    _processQueue = new Queue<QueueElement>();
-                    _tokenSource = new CancellationTokenSource();
-                    Thread th = new Thread(CalculatorThread)
-                    {
-                        IsBackground = true,
-                        Name = "CalculatorThread"
-                    };
-                    th.Start(_tokenSource);
-
                     IsInitialized = true;
 
                     OnInitialized();
@@ -164,19 +154,19 @@ namespace DataAcquisitions.DataCollector
 
                     if (specification.Count != 1)
                     {
-                        _parameters.Logger.LogError("Number of specification files that meet the condition is not acceptable.");
+                        _parameters.Logger.LogError($"Number of specification files that meet the condition ({specification.Count}) is not acceptable.");
                         return;
                     }
 
                     if (measurementDatas.Count < 1)
                     {
-                        _parameters.Logger.LogError("Number of measurement data files that meet the condition is not acceptable.");
+                        _parameters.Logger.LogError($"Number of measurement data files that meet the condition ({measurementDatas.Count}) is not acceptable.");
                         return;
                     }
 
                     if ((references?.Count ?? 0) == 0)
                     {
-                        _parameters.Logger.LogInfo("There are no reference files with the given nam, or no reference name arrived.");
+                        _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
                     }
                     else
                     {
@@ -298,23 +288,23 @@ namespace DataAcquisitions.DataCollector
         }
 
 
-        private void CalculatorThread(object obj)
-        {
-            CancellationToken token = (CancellationToken)obj;
+        //private void CalculatorThread(object obj)
+        //{
+        //    CancellationToken token = (CancellationToken)obj;
 
-            while (true)
-            {
-                if (token.IsCancellationRequested)
-                {
-                    _parameters.Logger.LogError($"Thread: {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId}) cancelled.");
-                    break;
-                }
-
-
+        //    while (true)
+        //    {
+        //        if (token.IsCancellationRequested)
+        //        {
+        //            _parameters.Logger.LogError($"Thread: {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId}) cancelled.");
+        //            break;
+        //        }
 
 
-            }
-        }
+
+
+        //    }
+        //}
 
         #endregion
 
@@ -322,11 +312,11 @@ namespace DataAcquisitions.DataCollector
 
 
 
-    internal class QueueElement
-    {
-        IMeasurementSerie MeasurementSerieData { get; }
-        ICondition Condition { get; }
-        IReferenceValue ReferenceValue { get; }
-    }
+    //internal class QueueElement
+    //{
+    //    IMeasurementSerie MeasurementSerieData { get; }
+    //    ICondition Condition { get; }
+    //    IReferenceValue ReferenceValue { get; }
+    //}
 
 }

@@ -52,6 +52,8 @@ namespace Calculations.Evaluation
 
                 IsInitialized = true;
 
+                OnInitialized();
+
                 _parameters.Logger.MethodError("Initialized.");
 
                 return IsInitialized;
@@ -76,6 +78,8 @@ namespace Calculations.Evaluation
 
                 IsInitialized = false;
 
+                OnClosed();
+
                 _parameters.Logger.MethodError("Closed.");
             }
         }
@@ -84,8 +88,25 @@ namespace Calculations.Evaluation
         public event EventHandler<EventArgs> Closed;
 
 
-        // TODO : xml reading
+        private void OnInitialized()
+        {
+            var initialized = Initialized;
 
+            initialized?.Invoke(this, new EventArgs());
+        }
+
+
+        private void OnClosed()
+        {
+            var closed = Closed;
+
+            closed?.Invoke(this, new EventArgs());
+        }
+
+        #endregion
+
+
+        // TODO : xml reading
 
 
         public IEnumerable<string> GetMeasDataNames(string specificationName)
@@ -116,7 +137,7 @@ namespace Calculations.Evaluation
             }
         }
 
-        #endregion
+
 
     }
 }

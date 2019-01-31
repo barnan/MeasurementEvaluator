@@ -62,9 +62,9 @@ namespace Calculations.Calculation
                     return;
                 }
 
-
-
                 IsInitialized = false;
+
+                OnClosed();
 
                 _parameters.Logger.MethodInfo("Closed.");
             }
@@ -86,12 +86,31 @@ namespace Calculations.Calculation
 
                 IsInitialized = true;
 
+                OnInitialized();
+
                 _parameters.Logger.MethodInfo("Initialized.");
 
                 return IsInitialized;
             }
 
         }
+
+
+        private void OnInitialized()
+        {
+            var initialized = Initialized;
+
+            initialized?.Invoke(this, new EventArgs());
+        }
+
+
+        private void OnClosed()
+        {
+            var closed = Closed;
+
+            closed?.Invoke(this, new EventArgs());
+        }
+
 
         #endregion
 
