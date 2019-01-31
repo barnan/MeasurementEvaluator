@@ -25,8 +25,6 @@ namespace Calculations.Evaluation
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
 
-        // TODO: finish queue processing
-
 
         public Evaluation(EvaluationParameters parameters)
         {
@@ -157,6 +155,7 @@ namespace Calculations.Evaluation
             catch (Exception ex)
             {
                 _parameters.Logger.LogError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+                return;
             }
 
             while (true)
@@ -214,13 +213,23 @@ namespace Calculations.Evaluation
                 return;
             }
 
+            _parameters.Logger.LogInfo($"Started to evaluate arrived collectiondata: Specification name: {specification.SpecificationName}");
+            _parameters.Logger.LogInfo($"Reference name: {referenceSample?.SampleID ?? "No reference arrived"}.");
+            _parameters.Logger.LogInfo("Measurement data: ");
+            foreach (IToolMeasurementData measurementData in measurementDatas)
+            {
+                _parameters.Logger.LogInfo(measurementData.FullNameOnHDD);
+            }
+
             List<IQuantityEvaluationResult> quantityEvaluationList = new List<IQuantityEvaluationResult>();
             DateTime fullStartTime = _parameters.DateTimeProvider.GetDateTime();
 
+            // go through all quantity specifications:
             foreach (IQuantitySpecification quantitySpec in specification.Specifications)
             {
                 List<IConditionEvaluationResult> conditionResultList = new List<IConditionEvaluationResult>(quantitySpec.Conditions.Count);
 
+                // go through all conditions in one quantity specification
                 foreach (ICondition condition in quantitySpec.Conditions)
                 {
                     try
@@ -243,7 +252,7 @@ namespace Calculations.Evaluation
 
                         var calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
 
-                        // find measurement data associated with the specification name from mather:
+                        // find measurement data associated with the specification name from the matcher:
                         List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
                         IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(condition.Name);
 
@@ -259,12 +268,14 @@ namespace Calculations.Evaluation
                             continue;
                         }
 
-                        IMeasurementSerie calculationInputData;     // the coherent measurement datas will be summarized into this
+                        // if more result were found with the same name -> they will be linked together, unless their name is different
+                        // the coherent measurement datas will be summarized into one measurement data
+                        IMeasurementSerie calculationInputData;
                         if (coherentMeasurementData.Count == 1)
                         {
                             calculationInputData = coherentMeasurementData[0];
                         }
-                        else // if more result were found with the same name -> they will be linked together, unless their name is different
+                        else
                         {
                             List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
                             foreach (IMeasurementSerie serie in coherentMeasurementData)
@@ -318,9 +329,7 @@ namespace Calculations.Evaluation
                     {
                         _parameters.Logger.LogError($"Exception occured: {ex}");
                         conditionResultList.Add(CreateNOTSuccessfulConditionResult());
-
                     }
-
                 }
 
                 quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList));
