@@ -7,6 +7,7 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace DataAcquisitions.DataCollector
 {
@@ -15,9 +16,9 @@ namespace DataAcquisitions.DataCollector
 
         private readonly DataCollectorParameters _parameters;
         private readonly object _lockObj = new object();
-        //private Queue<QueueElement> _processQueue;
-        //private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
-        //private CancellationTokenSource _tokenSource;
+        private Queue<QueueElement> _processQueue;
+        private AutoResetEvent _calculationResetEvent = new AutoResetEvent(false);
+        private CancellationTokenSource _tokenSource;
 
 
         public DataCollector(DataCollectorParameters dataGatheringParameters)
@@ -56,8 +57,8 @@ namespace DataAcquisitions.DataCollector
                         return;
                     }
 
-                    //_tokenSource.Cancel();
-                    //_processQueue.Clear();
+                    _tokenSource.Cancel();
+                    _processQueue.Clear();
 
                     _parameters.SpecificationRepository.Close();
                     _parameters.ReferenceRepository.Close();
@@ -174,7 +175,7 @@ namespace DataAcquisitions.DataCollector
                     }
 
 
-                    // TODO: send invalid result
+                    // TODO: send invalid result??
                     var resultreadyevent = ResultReadyEvent;
                     resultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
                         _parameters.DateTimeProvider.GetDateTime(),
@@ -269,7 +270,6 @@ namespace DataAcquisitions.DataCollector
 
         #endregion
 
-
         #region private
 
         private void OnInitialized()
@@ -288,35 +288,17 @@ namespace DataAcquisitions.DataCollector
         }
 
 
-        //private void CalculatorThread(object obj)
-        //{
-        //    CancellationToken token = (CancellationToken)obj;
-
-        //    while (true)
-        //    {
-        //        if (token.IsCancellationRequested)
-        //        {
-        //            _parameters.Logger.LogError($"Thread: {Thread.CurrentThread.Name} ({Thread.CurrentThread.ManagedThreadId}) cancelled.");
-        //            break;
-        //        }
-
-
-
-
-        //    }
-        //}
-
         #endregion
 
     }
 
 
 
-    //internal class QueueElement
-    //{
-    //    IMeasurementSerie MeasurementSerieData { get; }
-    //    ICondition Condition { get; }
-    //    IReferenceValue ReferenceValue { get; }
-    //}
+    internal class QueueElement
+    {
+        IMeasurementSerie MeasurementSerieData { get; }
+        ICondition Condition { get; }
+        IReferenceValue ReferenceValue { get; }
+    }
 
 }

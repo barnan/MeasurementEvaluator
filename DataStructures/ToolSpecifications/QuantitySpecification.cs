@@ -1,6 +1,5 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,9 +21,9 @@ namespace DataStructures.ToolSpecifications
             QuantityName = quantityName;
         }
 
-        #region IFormattable
+        #region object.ToString()
 
-        public string ToString(string format, IFormatProvider formatProvider)
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(QuantityName);

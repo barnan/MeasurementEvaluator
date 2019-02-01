@@ -1,10 +1,9 @@
 ﻿using Interfaces.Result;
-using System;
 
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition : IFormattable
+    public interface ICondition
     {
 
         /// <summary>
@@ -19,7 +18,7 @@ namespace Interfaces.ToolSpecifications
 
 
         /// <summary>
-        /// Validity of the condition -> if false, the condition does not work
+        /// Validity of the condition -> if false, the condition is switched off
         /// </summary>
         bool Enabled { get; }
 

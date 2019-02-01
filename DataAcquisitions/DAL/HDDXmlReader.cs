@@ -7,9 +7,9 @@ using System.Xml.Serialization;
 
 namespace DataAcquisition.DAL
 {
-    public class HDDdXmlReader : MeasurementDataFileBase, IHDDXmlReader
+    public class HDDdXmlReader : IHDDXmlReader
     {
-        private T DeserializeObject<T>(string filePath)
+        public T DeserializeObject<T>(string filePath)
         {
             try
             {
@@ -30,8 +30,7 @@ namespace DataAcquisition.DAL
         }
 
 
-
-        private bool SerializeObject<T>(T tobj, string filePath)
+        public bool SerializeObject<T>(T tobj, string filePath)
         {
             try
             {
@@ -57,18 +56,5 @@ namespace DataAcquisition.DAL
                 return false;
             }
         }
-
-        public override T ReadFile<T>(string fileNameAndPath, string toolName = null)
-        {
-            return DeserializeObject<T>(fileNameAndPath);
-        }
-
-
-        public override bool WriteFile<T>(T obj, string fileNameAndPath)
-        {
-            return SerializeObject(obj, fileNameAndPath);
-        }
-
-
     }
 }

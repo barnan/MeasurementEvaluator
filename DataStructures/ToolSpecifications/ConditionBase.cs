@@ -45,9 +45,9 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
-        #region IFormattable
+        #region object.ToString()
 
-        public virtual string ToString(string format, IFormatProvider formatProvider)
+        public override string ToString()
         {
             return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}";
         }
@@ -124,9 +124,9 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        #region IFormattable
+        #region object.ToString()
 
-        public override string ToString(string format, IFormatProvider formatProvider)
+        public override string ToString()
         {
             return $"{base.ToString()}{Environment.NewLine}True, if {ConditionRelation} than {Value}";
         }

@@ -38,7 +38,7 @@ namespace Interfaces.ReferenceSample
         /// <summary>
         /// number value
         /// </summary>
-        T Value { get; set; }
+        new T Value { get; set; }
     }
 
 

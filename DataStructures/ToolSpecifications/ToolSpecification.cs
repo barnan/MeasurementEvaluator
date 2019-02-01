@@ -34,9 +34,9 @@ namespace DataStructures.ToolSpecifications
             _logger.MethodInfo($"{SpecificationName} specification created.");
         }
 
-        #region IFormattable
+        #region onject.toString()
 
-        public string ToString(string format, IFormatProvider formatProvider = null)
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(SpecificationName.ToString());

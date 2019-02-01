@@ -60,7 +60,6 @@
     <Compile Include="ToolSpecifications\QuantitySpecification.cs" />
     <Compile Include="ToolSpecifications\SimpleCondition.cs" />
     <Compile Include="ToolSpecifications\ToolSpecification.cs" />
-    <Compile Include="ToolSpecifications\ValueComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">

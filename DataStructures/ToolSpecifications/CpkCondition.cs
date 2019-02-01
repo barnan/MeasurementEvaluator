@@ -26,9 +26,9 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        #region IFormattable
+        #region object.ToString()
 
-        public override string ToString(string format, IFormatProvider formatProvider)
+        public override string ToString()
         {
             return $"{base.ToString()}{Environment.NewLine}HalfTolerance: {HalfTolerance}{Environment.NewLine}{RelOrAbs}";
         }
