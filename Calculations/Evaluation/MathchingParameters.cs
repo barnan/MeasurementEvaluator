@@ -12,7 +12,6 @@ namespace Calculations.Evaluation
         internal string NameBindingFilePath { get; }
 
 
-
         public MathchingParameters(IHDDXmlReader xmlReader, string nameBindingFilePath)
         {
             Logger = LogManager.GetCurrentClassLogger();

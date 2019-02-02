@@ -11,10 +11,7 @@ namespace Calculations.Evaluation
 
         private readonly object _lockObj = new object();
         private readonly MathchingParameters _parameters;
-        private List<SimpleKeyValuePairs> _SpecificationMeasDataReferencePairs;
-
-
-        // TODO: finish with xml reader
+        private List<SimpleKeyValuePairs> _specificationMeasDataReferencePairs;
 
 
         public Matching(MathchingParameters parameters)
@@ -40,20 +37,21 @@ namespace Calculations.Evaluation
                 {
                     return true;
                 }
-                //if (!_parameters.XmlReader.Initiailze())
-                //{
-                //    _parameters.Logger.LogError($"{nameof(_parameters.XmlReader)} could not been initialized.");
-                //    return false;
-                //}
+                if (_parameters.XmlReader == null)
+                {
+                    _parameters.Logger.LogError($"{nameof(_parameters.XmlReader)} is null");
+                    return false;
+                }
 
-                //TODO: read xml data
+                _specificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
 
-                _SpecificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
+                if (_specificationMeasDataReferencePairs == null)
+                {
+                    _parameters.Logger.LogError($"Deserialization of {nameof(SimpleKeyValuePairs)} was not successful from: {_parameters.NameBindingFilePath}");
+                }
 
                 IsInitialized = true;
-
                 OnInitialized();
-
                 _parameters.Logger.MethodError("Initialized.");
 
                 return IsInitialized;
@@ -77,9 +75,7 @@ namespace Calculations.Evaluation
                 }
 
                 IsInitialized = false;
-
                 OnClosed();
-
                 _parameters.Logger.MethodError("Closed.");
             }
         }
@@ -106,9 +102,6 @@ namespace Calculations.Evaluation
         #endregion
 
 
-        // TODO : xml reading
-
-
         public IEnumerable<string> GetMeasDataNames(string specificationName)
         {
             lock (_lockObj)
@@ -118,7 +111,7 @@ namespace Calculations.Evaluation
                     _parameters.Logger.LogError("Not initialized yet.");
                     return null;
                 }
-                var result = _SpecificationMeasDataReferencePairs.Where(p => p.Key.Contains(specificationName)).SelectMany(p => p.Values);
+                var result = _specificationMeasDataReferencePairs.Where(p => p.Key.Contains(specificationName)).SelectMany(p => p.Values);
                 return result;
             }
         }
@@ -132,12 +125,10 @@ namespace Calculations.Evaluation
                     _parameters.Logger.LogError("Not initialized yet.");
                     return null;
                 }
-                var result = _SpecificationMeasDataReferencePairs.FirstOrDefault(p => p.Key.Contains(specificationName))?.ReferenceName;
+                var result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.Key.Contains(specificationName))?.ReferenceName;
                 return result;
             }
         }
-
-
 
     }
 }
