@@ -1,5 +1,6 @@
 ﻿using Interfaces.Result;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Interfaces
@@ -98,12 +99,25 @@ namespace Interfaces
     public class ResultEventArgs : EventArgs
     {
         public IResult Result { get; }
-
         public ResultEventArgs(IResult result)
         {
             Result = result;
         }
+    }
 
+
+    public class DataCollectorResultEventArgs : EventArgs
+    {
+        List<string> SpecificationName { get; }
+        List<string> MeasurementDataFileNames { get; }
+        List<string> ReferenceName { get; }
+
+        public DataCollectorResultEventArgs(List<string> specificationName, List<string> measurementDataFileNames, List<string> referenceName)
+        {
+            SpecificationName = specificationName;
+            MeasurementDataFileNames = measurementDataFileNames;
+            ReferenceName = referenceName;
+        }
     }
 
 }

@@ -1,17 +1,17 @@
 ﻿using Interfaces.Misc;
 using Interfaces.Result;
+using System;
 using System.Collections.Generic;
 
 namespace Interfaces.DataAcquisition
 {
     public interface IDataCollector : IInitializable, IResultProvider
     {
-        void Gather(string specifactionName, List<string> measurementDataFileNames, string referenceName = null);
+        void GatherData(string specifactionName, List<string> measurementDataFileNames, string referenceName = null);
 
-        IReadOnlyList<string> GetAllSpecificationNames();
+        void GatherNames();
 
-        IReadOnlyList<string> GetAllMeasurementFileNames();
+        event EventHandler<DataCollectorResultEventArgs> FileNamesReadyEvent;
 
-        IReadOnlyList<string> GetAllRferenceSampleNames();
     }
 }

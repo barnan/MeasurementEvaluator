@@ -16,14 +16,19 @@ namespace Calculations.Evaluation
     internal class Evaluation : IEvaluation
     {
         private readonly object _lockObj = new object();
-        private readonly object _queueLock = new object();
         private readonly EvaluationParameters _parameters;
         private readonly AutoResetEvent _queueHandle = new AutoResetEvent(false);
         private Queue<QueueElement> _processorQueue;
         private CancellationTokenSource _tokenSource;
+        private const int WAITHANDLE_CYCLETIME_MS = 100;
 
+
+
+        #region IResultProvider
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
+
+        #endregion
 
 
         public Evaluation(EvaluationParameters parameters)
@@ -65,9 +70,7 @@ namespace Calculations.Evaluation
                 _parameters.DataCollector.Close();
 
                 IsInitialized = false;
-
                 OnClosed();
-
                 _parameters.Logger.MethodError("Closed.");
             }
         }
@@ -88,7 +91,7 @@ namespace Calculations.Evaluation
                 }
                 if (!_parameters.DataCollector.Initiailze())
                 {
-                    _parameters.Logger.LogError($"{nameof(_parameters.DataCollector)} could not been initialized.");
+                    _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");
                     return false;
                 }
                 _parameters.DataCollector.ResultReadyEvent += DataCollector_ResultReadyEvent;
@@ -103,11 +106,8 @@ namespace Calculations.Evaluation
                 th.Start(_tokenSource.Token);
 
                 IsInitialized = true;
-
                 OnInitialized();
-
                 _parameters.Logger.MethodError("Initialized.");
-
                 return IsInitialized;
             }
 
@@ -116,7 +116,6 @@ namespace Calculations.Evaluation
         private void OnInitialized()
         {
             var initialized = Initialized;
-
             initialized?.Invoke(this, new EventArgs());
         }
 
@@ -124,7 +123,6 @@ namespace Calculations.Evaluation
         private void OnClosed()
         {
             var closed = Closed;
-
             closed?.Invoke(this, new EventArgs());
         }
 
@@ -135,7 +133,6 @@ namespace Calculations.Evaluation
 
         private void DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
         {
-
             if (e?.Result == null)
             {
                 _parameters.Logger.MethodError("Arrived result event args is null.");
@@ -144,28 +141,21 @@ namespace Calculations.Evaluation
 
             if (!(e.Result is IDataCollectorResult collectedData))
             {
-                _parameters.Logger.LogError($"Arrived result event args is not {nameof(IDataCollectorResult)}");
+                _parameters.Logger.MethodError($"Arrived result event args is not {nameof(IDataCollectorResult)}");
                 return;
             }
 
-            Monitor.Enter(_queueLock);
-            try
+            lock (_lockObj)
             {
                 _processorQueue.Enqueue(new QueueElement(collectedData));
                 _queueHandle.Set();
             }
-            finally
-            {
-                Monitor.Exit(_queueLock);
-            }
-
         }
-
 
 
         private void Process(object obj)
         {
-            _parameters.Logger.LogInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
+            _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
 
             CancellationToken token;
             try
@@ -174,43 +164,51 @@ namespace Calculations.Evaluation
             }
             catch (Exception ex)
             {
-                _parameters.Logger.LogError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+                _parameters.Logger.MethodError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
                 return;
             }
 
             while (true)
             {
-                _queueHandle.WaitOne();
+                if (_queueHandle.WaitOne(WAITHANDLE_CYCLETIME_MS))
+                {
+                    while (true)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                            break;
+                        }
+
+                        QueueElement item = null;
+                        lock (_lockObj)
+                        {
+                            if (_processorQueue.Count > 0)
+                            {
+                                _parameters.Logger.LogTrace("New queue element arrived!");
+                                item = _processorQueue.Dequeue();
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        if (item == null)
+                        {
+                            _parameters.Logger.MethodError("Started to process item, but it is null");
+                            continue;
+                        }
+
+                        Evaluate(item.DataCollectorResult);
+                    }
+                }
 
                 if (token.IsCancellationRequested)
                 {
+                    _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                     break;
                 }
-
-                QueueElement item = null;
-
-                Monitor.Enter(_queueLock);
-                try
-                {
-                    if (_processorQueue.Count > 0)
-                    {
-                        _parameters.Logger.LogTrace("New queue element arrived!");
-
-                        item = _processorQueue.Dequeue();
-                    }
-                }
-                finally
-                {
-                    Monitor.Exit(_queueLock);
-                }
-
-                if (item == null)
-                {
-                    continue;
-                }
-
-                Evaluate(item.Result);
-
             }
         }
 
@@ -223,22 +221,22 @@ namespace Calculations.Evaluation
 
             if (specification == null)
             {
-                _parameters.Logger.LogError("Arrived specification is null.");
+                _parameters.Logger.MethodError("Arrived specification is null.");
                 return;
             }
 
             if (measurementDatas == null)
             {
-                _parameters.Logger.LogError("Arrived measurement data is null.");
+                _parameters.Logger.MethodError("Arrived measurement data is null.");
                 return;
             }
 
-            _parameters.Logger.LogInfo($"Started to evaluate arrived collectiondata: Specification name: {specification.SpecificationName}");
-            _parameters.Logger.LogInfo($"Reference name: {referenceSample?.SampleID ?? "No reference arrived"}.");
-            _parameters.Logger.LogInfo("Measurement data: ");
+            _parameters.Logger.MethodInfo($"Started to evaluate arrived collectiondata: Specification name: {specification.SpecificationName}");
+            _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.SampleID ?? "No reference arrived"}.");
+            _parameters.Logger.MethodInfo("Measurement data: ");
             foreach (IToolMeasurementData measurementData in measurementDatas)
             {
-                _parameters.Logger.LogInfo(measurementData.FullNameOnHDD);
+                _parameters.Logger.MethodInfo(measurementData.FullNameOnHDD);
             }
 
             List<IQuantityEvaluationResult> quantityEvaluationList = new List<IQuantityEvaluationResult>();
@@ -258,7 +256,7 @@ namespace Calculations.Evaluation
 
                         if (condition == null)
                         {
-                            _parameters.Logger.Info("Arrived condition is null");
+                            _parameters.Logger.MethodInfo("Arrived condition is null");
                             conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
@@ -266,7 +264,7 @@ namespace Calculations.Evaluation
                         // skipp condition if not enabled:
                         if (!condition.Enabled)
                         {
-                            _parameters.Logger.Info($"{quantitySpec.QuantityName} {condition.Name} is not enabled -> condition check skipped.");
+                            _parameters.Logger.MethodInfo($"{quantitySpec.QuantityName} {condition.Name} is not enabled -> condition check skipped.");
                             continue;
                         }
 
@@ -283,7 +281,7 @@ namespace Calculations.Evaluation
 
                         if (coherentMeasurementData.Count == 0)
                         {
-                            _parameters.Logger.LogError("No coherent measurement data was found in measurement data files");
+                            _parameters.Logger.MethodError("No coherent measurement data was found in measurement data files");
                             conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
@@ -333,6 +331,8 @@ namespace Calculations.Evaluation
 
                         conditionResultList.Add(conditionResult);
 
+
+                        #region logging
                         if (_parameters.Logger.IsTraceEnabled)
                         {
                             _parameters.Logger.MethodTrace("The evaluation result:");
@@ -344,10 +344,11 @@ namespace Calculations.Evaluation
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");
                             _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult ? "" : "NOT")} acceptable.");
                         }
+                        #endregion
                     }
                     catch (Exception ex)
                     {
-                        _parameters.Logger.LogError($"Exception occured: {ex}");
+                        _parameters.Logger.MethodError($"Exception occured: {ex}");
                         conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                     }
                 }
@@ -371,16 +372,12 @@ namespace Calculations.Evaluation
 
         class QueueElement
         {
-            public IDataCollectorResult Result { get; }
+            public IDataCollectorResult DataCollectorResult { get; }
 
             public QueueElement(IDataCollectorResult result)
             {
-                Result = result;
+                DataCollectorResult = result;
             }
         }
-
-
     }
-
-
 }

@@ -14,7 +14,7 @@ namespace Calculations.Evaluation
         /// <summary>
         /// assignable measurement data names
         /// </summary>
-        public IEnumerable<string> Values { get; }
+        public IList<string> Values { get; }
 
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Calculations.Evaluation
         }
 
 
-        public SimpleKeyValuePairs(string key, IEnumerable<string> values, string referenceName)
+        public SimpleKeyValuePairs(string key, IList<string> values, string referenceName)
         {
             Key = key;
             Values = values;

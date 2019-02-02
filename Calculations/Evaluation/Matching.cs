@@ -44,7 +44,6 @@ namespace Calculations.Evaluation
                 }
 
                 _specificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
-
                 if (_specificationMeasDataReferencePairs == null)
                 {
                     _parameters.Logger.LogError($"Deserialization of {nameof(SimpleKeyValuePairs)} was not successful from: {_parameters.NameBindingFilePath}");
@@ -53,7 +52,6 @@ namespace Calculations.Evaluation
                 IsInitialized = true;
                 OnInitialized();
                 _parameters.Logger.MethodError("Initialized.");
-
                 return IsInitialized;
             }
         }
