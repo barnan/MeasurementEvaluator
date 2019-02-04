@@ -66,10 +66,6 @@
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Measurement_Evaluator\Measurement_Evaluator.csproj">
-      <Project>{55295552-024E-452E-B30D-E6A1CFDD63AB}</Project>
-      <Name>Measurement_Evaluator</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miscellaneous\Miscellaneous.csproj">
       <Project>{7f91e183-4b11-47d2-b51f-8c9be7b20256}</Project>
       <Name>Miscellaneous</Name>

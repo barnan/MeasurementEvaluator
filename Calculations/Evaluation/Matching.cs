@@ -11,7 +11,7 @@ namespace Calculations.Evaluation
 
         private readonly object _lockObj = new object();
         private readonly MathchingParameters _parameters;
-        private List<SimpleKeyValuePairs> _specificationMeasDataReferencePairs;
+        private List<MatchingKeyValuePairs> _specificationMeasDataReferencePairs;
 
 
         public Matching(MathchingParameters parameters)
@@ -43,10 +43,10 @@ namespace Calculations.Evaluation
                     return false;
                 }
 
-                _specificationMeasDataReferencePairs = _parameters.XmlSerializator.ReadFromFile<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
+                _specificationMeasDataReferencePairs = _parameters.XmlSerializator.ReadFromFile<List<MatchingKeyValuePairs>>(_parameters.NameBindingFilePath);
                 if (_specificationMeasDataReferencePairs == null)
                 {
-                    _parameters.Logger.LogError($"Deserialization of {nameof(SimpleKeyValuePairs)} was not successful from: {_parameters.NameBindingFilePath}");
+                    _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.NameBindingFilePath}");
                 }
 
                 IsInitialized = true;

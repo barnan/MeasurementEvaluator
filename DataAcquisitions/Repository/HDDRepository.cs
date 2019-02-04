@@ -11,7 +11,6 @@ namespace DataAcquisitions.Repository
         where T : class, IStoredDataOnHDD, IComparable<T>
     {
 
-
         protected readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
 
@@ -21,7 +20,6 @@ namespace DataAcquisitions.Repository
         {
             _parameters = parameters;
         }
-
 
 
         #region IInitializable

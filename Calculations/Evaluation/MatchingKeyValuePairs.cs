@@ -2,7 +2,7 @@
 
 namespace Calculations.Evaluation
 {
-    public class SimpleKeyValuePairs
+    public class MatchingKeyValuePairs
     {
 
         /// <summary>
@@ -24,12 +24,12 @@ namespace Calculations.Evaluation
 
 
 
-        public SimpleKeyValuePairs()
+        public MatchingKeyValuePairs()
         {
         }
 
 
-        public SimpleKeyValuePairs(string key, IList<string> values, string referenceName)
+        public MatchingKeyValuePairs(string key, IList<string> values, string referenceName)
         {
             Key = key;
             Values = values;

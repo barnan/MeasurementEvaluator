@@ -63,7 +63,7 @@
     <Compile Include="Evaluation\Evaluation.cs" />
     <Compile Include="Evaluation\EvaluationParameters.cs" />
     <Compile Include="Evaluation\EvaluationResult.cs" />
-    <Compile Include="Evaluation\SimpleKeyValuePairs.cs" />
+    <Compile Include="Evaluation\MatchingKeyValuePairs.cs" />
     <Compile Include="Evaluation\Matching.cs" />
     <Compile Include="Evaluation\MathchingParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

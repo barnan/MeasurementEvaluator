@@ -60,12 +60,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Measurement_Evaluator\Measurement_Evaluator.csproj">
-      <Project>{55295552-024e-452e-b30d-e6a1cfdd63ab}</Project>
-      <Name>Measurement_Evaluator</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
