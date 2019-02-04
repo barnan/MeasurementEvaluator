@@ -7,15 +7,15 @@ namespace Calculations.Evaluation
     {
         internal ILogger Logger { get; }
 
-        internal IHDDXmlReader XmlReader { get; }
+        internal IHDDXmlSerializator XmlSerializator { get; }
 
         internal string NameBindingFilePath { get; }
 
 
-        public MathchingParameters(IHDDXmlReader xmlReader, string nameBindingFilePath)
+        public MathchingParameters(IHDDXmlSerializator xmlSerializator, string nameBindingFilePath)
         {
             Logger = LogManager.GetCurrentClassLogger();
-            XmlReader = xmlReader;
+            XmlSerializator = xmlSerializator;
             NameBindingFilePath = nameBindingFilePath;
         }
 

@@ -49,10 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\HDDTabularTextReader.cs" />
-    <Compile Include="DAL\HDDXmlReader.cs" />
+    <Compile Include="DAL\HDDTabularFileReaderWriter.cs" />
+    <Compile Include="DAL\HDDXmlReaderWriter.cs" />
     <Compile Include="DAL\InputDirContentManager.cs" />
-    <Compile Include="DAL\MeasurementDataFileBase.cs" />
+    <Compile Include="DAL\HDDFileReaderWriterBase.cs" />
     <Compile Include="DAL\ToolMeasDataReader.cs" />
     <Compile Include="DataCollector\DataCollector.cs" />
     <Compile Include="DataCollector\DataCollectorParameters.cs" />
@@ -61,6 +61,7 @@
     <Compile Include="Repository\HDDMeasurementDataRepository.cs" />
     <Compile Include="Repository\HDDReferenceRepository.cs" />
     <Compile Include="Repository\HDDRepository.cs" />
+    <Compile Include="Repository\HDDRepositoryParameters.cs" />
     <Compile Include="Repository\HDDSpecificationRepository.cs" />
   </ItemGroup>
   <ItemGroup />

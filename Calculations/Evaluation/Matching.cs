@@ -37,13 +37,13 @@ namespace Calculations.Evaluation
                 {
                     return true;
                 }
-                if (_parameters.XmlReader == null)
+                if (_parameters.XmlSerializator == null)
                 {
-                    _parameters.Logger.LogError($"{nameof(_parameters.XmlReader)} is null");
+                    _parameters.Logger.LogError($"{nameof(_parameters.XmlSerializator)} is null");
                     return false;
                 }
 
-                _specificationMeasDataReferencePairs = _parameters.XmlReader.DeserializeObject<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
+                _specificationMeasDataReferencePairs = _parameters.XmlSerializator.ReadFromFile<List<SimpleKeyValuePairs>>(_parameters.NameBindingFilePath);
                 if (_specificationMeasDataReferencePairs == null)
                 {
                     _parameters.Logger.LogError($"Deserialization of {nameof(SimpleKeyValuePairs)} was not successful from: {_parameters.NameBindingFilePath}");

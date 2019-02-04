@@ -1,5 +1,4 @@
-﻿using Interfaces.DataAcquisition;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -7,16 +6,18 @@ using System.Xml.Serialization;
 
 namespace DataAcquisition.DAL
 {
-    public class HDDdXmlReader : IHDDXmlReader
+    public class HdDdXmlSerializator : HDDFileReaderWriterBase
     {
-        public T DeserializeObject<T>(string filePath)
+
+
+        public override T ReadFromFile<T>(string fileNameAndPath, string toolName = null)
         {
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
 
                 T tobj;
-                using (StreamReader sr = new StreamReader(filePath))
+                using (StreamReader sr = new StreamReader(fileNameAndPath))
                 {
                     tobj = (T)serializer.Deserialize(sr);
                 }
@@ -30,7 +31,8 @@ namespace DataAcquisition.DAL
         }
 
 
-        public bool SerializeObject<T>(T tobj, string filePath)
+
+        public override bool WriteToFile<T>(T tobj, string fileNameAndPath)
         {
             try
             {
@@ -41,7 +43,7 @@ namespace DataAcquisition.DAL
                 settings.OmitXmlDeclaration = false;
                 settings.Encoding = new UnicodeEncoding(true, true);
 
-                using (StreamWriter sw = new StreamWriter(filePath))
+                using (StreamWriter sw = new StreamWriter(fileNameAndPath))
                 {
                     using (XmlWriter xw = XmlWriter.Create(sw, settings))
                     {

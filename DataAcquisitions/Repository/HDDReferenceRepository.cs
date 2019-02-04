@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DataAcquisition.Repository
+namespace DataAcquisitions.Repository
 {
     class HDDReferenceRepository : HDDRepository<IReferenceSample>
     {
@@ -30,7 +30,7 @@ namespace DataAcquisition.Repository
 
                 foreach (string fileName in fileNameList)
                 {
-                    IReferenceSample refSampl = _parameters.HDDReaderWriter.ReadFile<IReferenceSample>(fileName);
+                    IReferenceSample refSampl = _parameters.HDDReaderWriter.ReadFromFile<IReferenceSample>(fileName);
 
                     fileContentDictionary.Add(refSampl);
 

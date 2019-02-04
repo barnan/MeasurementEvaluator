@@ -10,7 +10,9 @@ namespace Interfaces.DataAcquisition
 
         T Get(int index, IComparer<T> comparer = null);
 
-        IEnumerable<T> GetAll();
+        T Get(string name);
+
+        IEnumerable<string> GetAllNames();
 
         IEnumerable<T> Find(Predicate<T> predicate);
 

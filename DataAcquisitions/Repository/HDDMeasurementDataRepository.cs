@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DataAcquisition.Repository
+namespace DataAcquisitions.Repository
 {
     internal class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>
     {
@@ -31,7 +31,7 @@ namespace DataAcquisition.Repository
 
                 foreach (string fileName in fileNameList)
                 {
-                    IToolMeasurementData data = _parameters.HDDReaderWriter.ReadFile<IToolMeasurementData>(fileName);
+                    IToolMeasurementData data = _parameters.HDDReaderWriter.ReadFromFile<IToolMeasurementData>(fileName);
 
                     fileContentDictionary.Add(data);
 

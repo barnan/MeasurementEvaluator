@@ -1,12 +1,11 @@
-﻿using Interfaces.DataAcquisition;
-using Interfaces.ToolSpecifications;
+﻿using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DataAcquisition.Repository
+namespace DataAcquisitions.Repository
 {
     internal class HDDSpecificationRepository : HDDRepository<IToolSpecification>
     {
@@ -33,7 +32,7 @@ namespace DataAcquisition.Repository
                 foreach (string fileName in fileNameList)
                 {
 
-                    IToolSpecification spec = _parameters.HDDReaderWriter.ReadFile<IToolSpecification>(fileName);
+                    IToolSpecification spec = _parameters.HDDReaderWriter.ReadFromFile<IToolSpecification>(fileName);
 
                     fileContentDictionary.Add(spec);
 
@@ -63,14 +62,6 @@ namespace DataAcquisition.Repository
     }
 
 
-    internal class SpecificationRepositoryParameters : HDDRepositoryParameters
-    {
 
-        public SpecificationRepositoryParameters(string repostoryDirectoryPath, string fileExtensionFilter, IFileReaderWriter fileReaderWriter)
-            : base(repostoryDirectoryPath, fileExtensionFilter, fileReaderWriter)
-        {
-        }
-
-    }
 
 }

@@ -184,41 +184,39 @@ namespace DataAcquisitions.DataCollector
                         {
                             DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
 
-                            List<IToolSpecification> specification = _parameters.SpecificationRepository.GetAll().Where(p => string.Equals(p.FullNameOnHDD, specName)).ToList();
-                            List<IToolMeasurementData> measurementDatas = _parameters.MeasurementDataRepository.GetAll().Where(p => measurementfilenames.Contains(p.FullNameOnHDD)).ToList();
-
-                            IReferenceSample referenceToSend = null;
-                            List<IReferenceSample> references = _parameters.ReferenceRepository.GetAll().Where(p => string.Equals(p.FullNameOnHDD, refname)).ToList();
-
-                            if (specification.Count != 1)
+                            IToolSpecification specification = _parameters.SpecificationRepository.Get(specName);
+                            if (specification == null)
                             {
-                                _parameters.Logger.LogError($"Number of specification files that meet the condition ({specification.Count}) is not acceptable.");
+                                _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
                                 return;
                             }
 
+                            List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
+                            foreach (string name in measurementfilenames)
+                            {
+                                measurementDatas.Add(_parameters.MeasurementDataRepository.Get(name));
+                            }
                             if (measurementDatas.Count < 1)
                             {
                                 _parameters.Logger.LogError($"Number of measurement data files that meet the condition ({measurementDatas.Count}) is not acceptable.");
                                 return;
                             }
 
-                            if ((references?.Count ?? 0) == 0)
+                            IReferenceSample reference = _parameters.ReferenceRepository.Get(refname);
+                            if (reference == null)
                             {
                                 _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
                             }
-                            else
-                            {
-                                referenceToSend = references[0];
-                            }
+
+
 
                             var resultreadyevent = ResultReadyEvent;
                             resultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
-                                _parameters.DateTimeProvider.GetDateTime(),
-                                true,
-                                specification[0],
-                                measurementDatas,
-                                referenceToSend)));
-
+                                                                                                        _parameters.DateTimeProvider.GetDateTime(),
+                                                                                                        true,
+                                                                                                        specification,
+                                                                                                        measurementDatas,
+                                                                                                        reference)));
                         }
                     });
 
@@ -247,9 +245,9 @@ namespace DataAcquisitions.DataCollector
                     {
                         Process = delegate ()
                                              {
-                                                 List<string> specificationcresult = _parameters.SpecificationRepository.GetAll().Select(p => p.SpecificationName.ToString()).ToList();
-                                                 List<string> referenceresult = _parameters.ReferenceRepository.GetAll().Select(p => p.SampleID.ToString()).ToList();
-                                                 List<string> measurementdata = _parameters.MeasurementDataRepository.GetAll().Select(p => p.FullNameOnHDD.ToString()).ToList();
+                                                 List<string> specificationcresult = _parameters.SpecificationRepository.GetAllNames().ToList();
+                                                 List<string> referenceresult = _parameters.ReferenceRepository.GetAllNames().ToList();
+                                                 List<string> measurementdata = _parameters.MeasurementDataRepository.GetAllNames().ToList();
 
                                                  if ((specificationcresult?.Count ?? 0) == 0)
                                                  {

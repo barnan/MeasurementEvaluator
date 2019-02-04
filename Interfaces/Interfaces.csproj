@@ -52,7 +52,7 @@
     <Compile Include="DataAcquisition\IRepository.cs" />
     <Compile Include="DataAcquisition\IStoredData.cs" />
     <Compile Include="DataAcquisition\IXmlParser.cs" />
-    <Compile Include="DataAcquisition\IHDDXmlReader.cs" />
+    <Compile Include="DataAcquisition\IHDDXmlSerializator.cs" />
     <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IEvaluation.cs" />
     <Compile Include="MeasuredData\IMeasurementPoint.cs" />

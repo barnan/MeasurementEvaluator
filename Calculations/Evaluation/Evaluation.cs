@@ -27,7 +27,7 @@ namespace Calculations.Evaluation
 
         #region IResultProvider
 
-        public event EventHandler<ResultEventArgs> ResultReadyEvent;
+        private event EventHandler<ResultEventArgs> ResultReadyEvent;
 
 
         public void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
@@ -370,7 +370,9 @@ namespace Calculations.Evaluation
                 quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList));
             }
             IEvaluationResult evaluationResult = new EvaluationResult(fullStartTime, _parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList);
-            ResultReadyEvent?.Invoke(this, new ResultEventArgs(evaluationResult));
+
+            var resultreadyevent = ResultReadyEvent;
+            resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
         }
 
 

@@ -5,7 +5,7 @@
 
     public interface IFileReader
     {
-        T ReadFile<T>(string fileNameAndPath, string toolName = null);
+        T ReadFromFile<T>(string fileNameAndPath, string toolName = null);
 
         bool CanRead(string fileNameAndPath);
     }
@@ -15,15 +15,15 @@
 
     public interface IFileWriter
     {
-        bool WriteFile<T>(T obj, string fileNameAndPath);
+        bool WriteToFile<T>(T obj, string fileNameAndPath);
     }
-
 
 
 
     public interface IFileReaderWriter : IFileReader, IFileWriter
     {
     }
+
 
 
 }

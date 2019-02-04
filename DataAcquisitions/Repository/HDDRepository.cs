@@ -1,11 +1,11 @@
 ﻿using Interfaces.DataAcquisition;
 using Miscellaneous;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
-namespace DataAcquisition.Repository
+namespace DataAcquisitions.Repository
 {
     internal abstract class HDDRepository<T> : IRepository<T>
         where T : class, IStoredDataOnHDD, IComparable<T>
@@ -162,6 +162,43 @@ namespace DataAcquisition.Repository
             }
         }
 
+        public virtual T Get(string name)
+        {
+            lock (_lockObject)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        _parameters.Logger.MethodError("The arrived name is null or empty.");
+                        return null;
+                    }
+
+                    List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath).Where(p => p.FullNameOnHDD == name).ToList();
+
+                    if (itemList.Count == 0)
+                    {
+                        _parameters.Logger.MethodError($"No element was found with the given name: {name}.");
+                        return null;
+                    }
+
+                    if (itemList.Count > 1)
+                    {
+                        _parameters.Logger.MethodError($"More elements were found with the given name: {name}.");
+                        return null;
+                    }
+
+                    return itemList[0];
+
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.MethodError($"Exception occured: {ex}");
+                    return null;
+                }
+            }
+        }
+
 
         public virtual bool Add(T item)
         {
@@ -209,11 +246,11 @@ namespace DataAcquisition.Repository
         }
 
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual IEnumerable<string> GetAllNames()
         {
             lock (_lockObject)
             {
-                return GetItemList(_parameters.RepositoryFullDirectoryPath);
+                return GetItemList(_parameters.RepositoryFullDirectoryPath).Select(p => p.ToString()).ToList();
             }
         }
 
@@ -295,24 +332,7 @@ namespace DataAcquisition.Repository
         }
 
         protected abstract List<T> GetItemList(string fullPath);
-    }
 
-
-    internal class HDDRepositoryParameters
-    {
-        internal string RepositoryFullDirectoryPath { get; }
-        internal string FileExtensionFilter { get; }
-        internal ILogger Logger { get; }
-        internal IFileReaderWriter HDDReaderWriter { get; }
-
-
-        public HDDRepositoryParameters(string repostoryDirectoryPath, string fileExtensionFilter, IFileReaderWriter fileReaderWriter)
-        {
-            ILogger Logger = LogManager.GetCurrentClassLogger();
-            RepositoryFullDirectoryPath = repostoryDirectoryPath;
-            FileExtensionFilter = fileExtensionFilter;
-            HDDReaderWriter = fileReaderWriter;
-        }
 
     }
 

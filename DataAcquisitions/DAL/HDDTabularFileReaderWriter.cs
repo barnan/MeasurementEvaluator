@@ -8,26 +8,29 @@ using System.IO;
 
 namespace DataAcquisition.DAL
 {
-    public class HDDTabularTextReader : MeasurementDataFileBase
+    public class HDDTabularFileReaderWriter : HDDFileReaderWriterBase
     {
+
         private readonly TabularTextReaderParameters _parameters;
 
 
-        public HDDTabularTextReader(TabularTextReaderParameters parameter)
+        public HDDTabularFileReaderWriter(TabularTextReaderParameters parameter)
         {
             _parameters = parameter;
         }
 
 
-        public override bool WriteFile<T>(T obj, string fileNameAndPath)
+
+        public override bool WriteToFile<T>(T obj, string fileNameAndPath)
         {
             throw new NotImplementedException();
         }
 
 
-        public override T ReadFile<T>(string fileNameAndPath, string toolName = null)
+
+        public override T ReadFromFile<T>(string fileNameAndPath, string toolName = null)
         {
-            T toolMeasData;
+            T data;
 
             try
             {
@@ -43,7 +46,7 @@ namespace DataAcquisition.DAL
                     return default(T);
                 }
 
-                toolMeasData = (T)ReadTabularDataFile(fileNameAndPath, toolName);
+                data = (T)ReadTabularDataFile(fileNameAndPath, toolName);
             }
             catch (Exception ex)
             {
@@ -51,8 +54,9 @@ namespace DataAcquisition.DAL
                 return default(T);
             }
 
-            return toolMeasData;
+            return data;
         }
+
 
 
         private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, string toolName)
@@ -132,13 +136,11 @@ namespace DataAcquisition.DAL
             }
 
             ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, FullNameOnHDD = fileNameAndPath };
-
             return toolMeasData;
         }
-
-
-
     }
+
+
 
     public class TabularTextReaderParameters
     {
