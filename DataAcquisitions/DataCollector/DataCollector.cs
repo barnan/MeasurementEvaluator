@@ -7,6 +7,7 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace DataAcquisitions.DataCollector
@@ -31,7 +32,20 @@ namespace DataAcquisitions.DataCollector
 
         #region IResultProvider
 
-        public event EventHandler<ResultEventArgs> ResultReadyEvent;
+        private event EventHandler<ResultEventArgs> ResultReadyEvent;
+
+        public void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
+        {
+            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
+            ResultReadyEvent += method;
+        }
+
+        public void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
+        {
+            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
+            ResultReadyEvent -= method;
+        }
+
 
         #endregion
 

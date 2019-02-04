@@ -44,10 +44,20 @@ namespace Interfaces.Result
 
     public interface IResultProvider
     {
+
+        //event EventHandler<ResultEventArgs> ResultReadyEvent;
+
         /// <summary>
-        /// ResultReadyEvent eventhandler is fired when the calculation is finished
+        /// Subscribe to ResultReadyEvent. ResultReadyEventHandler is fired when the calculation is finished
         /// </summary>
-        event EventHandler<ResultEventArgs> ResultReadyEvent;
+        void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
+
+
+        /// <summary>
+        /// Un-Subscribe to ResultReadyEvent. 
+        /// </summary>
+        void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
+
     }
 
 

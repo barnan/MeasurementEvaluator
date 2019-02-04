@@ -9,6 +9,7 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace Calculations.Evaluation
@@ -27,6 +28,19 @@ namespace Calculations.Evaluation
         #region IResultProvider
 
         public event EventHandler<ResultEventArgs> ResultReadyEvent;
+
+
+        public void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
+        {
+            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
+            ResultReadyEvent += method;
+        }
+
+        public void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
+        {
+            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
+            ResultReadyEvent -= method;
+        }
 
         #endregion
 
@@ -60,8 +74,7 @@ namespace Calculations.Evaluation
                 {
                     return;
                 }
-
-                _parameters.DataCollector.ResultReadyEvent -= DataCollector_ResultReadyEvent;
+                _parameters.DataCollector.UnSubscribeToResultReadyEvent(DataCollector_ResultReadyEvent);
 
                 _tokenSource.Cancel();
                 _queueHandle.Reset();
@@ -94,7 +107,8 @@ namespace Calculations.Evaluation
                     _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");
                     return false;
                 }
-                _parameters.DataCollector.ResultReadyEvent += DataCollector_ResultReadyEvent;
+                _parameters.DataCollector.SubscribeToResultReadyEvent(DataCollector_ResultReadyEvent);
+
                 _processorQueue = new Queue<QueueElement>();
                 _tokenSource = new CancellationTokenSource();
 
