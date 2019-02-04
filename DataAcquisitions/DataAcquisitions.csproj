@@ -51,9 +51,7 @@
   <ItemGroup>
     <Compile Include="DAL\HDDTabularFileReaderWriter.cs" />
     <Compile Include="DAL\HDDXmlReaderWriter.cs" />
-    <Compile Include="DAL\InputDirContentManager.cs" />
     <Compile Include="DAL\HDDFileReaderWriterBase.cs" />
-    <Compile Include="DAL\ToolMeasDataReader.cs" />
     <Compile Include="DataCollector\DataCollector.cs" />
     <Compile Include="DataCollector\DataCollectorParameters.cs" />
     <Compile Include="DataCollector\DataCollectorResult.cs" />

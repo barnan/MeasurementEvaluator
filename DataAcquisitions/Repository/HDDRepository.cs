@@ -10,6 +10,8 @@ namespace DataAcquisitions.Repository
     internal abstract class HDDRepository<T> : IRepository<T>
         where T : class, IStoredDataOnHDD, IComparable<T>
     {
+
+
         protected readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
 
@@ -151,6 +153,8 @@ namespace DataAcquisitions.Repository
                         itemList.Sort(comparer);
                     }
 
+                    _parameters.Logger.MethodInfo($"Element with index: {index} was given back.");
+
                     return itemList[index];
 
                 }
@@ -188,6 +192,8 @@ namespace DataAcquisitions.Repository
                         return null;
                     }
 
+                    _parameters.Logger.MethodInfo($"Element with name: {name} was given back.");
+
                     return itemList[0];
 
                 }
@@ -212,18 +218,20 @@ namespace DataAcquisitions.Repository
                         return false;
                     }
 
+                    // TODO : name with path arrives or not?
+                    string fullName = Path.Combine(_parameters.RepositoryFullDirectoryPath, item.FullNameOnHDD);
+
                     if (File.Exists(item.FullNameOnHDD))
                     {
                         _parameters.Logger.MethodError($"The given file: {item.FullNameOnHDD} already exists.");
                         return false;
                     }
 
-                    // TODO
-                    //item.Save();
+                    _parameters.HDDReaderWriter.WriteToFile(item, fullName);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace("Item added.");
+                        _parameters.Logger.MethodTrace($"Item added: {item.FullNameOnHDD}");
                     }
 
                     return true;
@@ -277,7 +285,7 @@ namespace DataAcquisitions.Repository
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace("Item removed.");
+                        _parameters.Logger.MethodTrace($"Item removed: {item.FullNameOnHDD}");
                     }
 
                     return true;

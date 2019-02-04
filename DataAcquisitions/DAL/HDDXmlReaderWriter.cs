@@ -58,5 +58,6 @@ namespace DataAcquisition.DAL
                 return false;
             }
         }
+
     }
 }
