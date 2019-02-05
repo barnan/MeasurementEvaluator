@@ -57,13 +57,13 @@ namespace Interfaces
     // type safe enum pattern:
     public sealed class ToolNames
     {
-        private readonly string _name;
-        private readonly int _value;
+        public string Name { get; }
+        public int Value { get; }
 
         public ToolNames(string name, int value)
         {
-            _name = name;
-            _value = value;
+            Name = name;
+            Value = value;
         }
 
         public static ToolNames Unknown = new ToolNames(nameof(Unknown), 0);
@@ -78,7 +78,7 @@ namespace Interfaces
 
         public override string ToString()
         {
-            return _name;
+            return Name;
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Interfaces.DataAcquisition;
+using Interfaces.Misc;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 namespace DataAcquisitions.Repository
 {
     internal abstract class HDDRepository<T> : IRepository<T>
-        where T : class, IStoredDataOnHDD, IComparable<T>
+        where T : class, INamedObject, IComparable<T>
     {
 
         protected readonly HDDRepositoryParameters _parameters;
@@ -36,6 +37,12 @@ namespace DataAcquisitions.Repository
                 if (IsInitialized)
                 {
                     return true;
+                }
+
+                if (!Directory.Exists(_parameters.RepositoryFullDirectoryPath))
+                {
+                    _parameters.Logger.MethodError($"The given directory ({_parameters.RepositoryFullDirectoryPath}) does not exists.");
+                    return IsInitialized = false;
                 }
 
                 IsInitialized = true;
@@ -176,7 +183,7 @@ namespace DataAcquisitions.Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath).Where(p => p.FullNameOnHDD == name).ToList();
+                    List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath).Where(p => p.Name == name).ToList();
 
                     if (itemList.Count == 0)
                     {
@@ -210,18 +217,16 @@ namespace DataAcquisitions.Repository
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(item?.FullNameOnHDD))
+                    if (string.IsNullOrEmpty(item?.Name))
                     {
                         _parameters.Logger.MethodError("Arrived specification is null or its filename is null or empty.");
                         return false;
                     }
 
-                    // TODO : name with path arrives or not?
-                    string fullName = Path.Combine(_parameters.RepositoryFullDirectoryPath, item.FullNameOnHDD);
-
-                    if (File.Exists(item.FullNameOnHDD))
+                    string fullName = Path.Combine(_parameters.RepositoryFullDirectoryPath, item.Name);
+                    if (File.Exists(fullName))
                     {
-                        _parameters.Logger.MethodError($"The given file: {item.FullNameOnHDD} already exists.");
+                        _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
                         return false;
                     }
 
@@ -229,7 +234,7 @@ namespace DataAcquisitions.Repository
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"Item added: {item.FullNameOnHDD}");
+                        _parameters.Logger.MethodTrace($"Item added: {fullName}");
                     }
 
                     return true;
@@ -267,23 +272,25 @@ namespace DataAcquisitions.Repository
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(item?.FullNameOnHDD))
+                    if (string.IsNullOrEmpty(item?.Name))
                     {
                         _parameters.Logger.MethodError("Arrived specification is null or its filename is null or empty.");
                         return false;
                     }
 
-                    if (!File.Exists(item.FullNameOnHDD))
+
+                    string fullName = Path.Combine(_parameters.RepositoryFullDirectoryPath, item.Name);
+                    if (File.Exists(fullName))
                     {
-                        _parameters.Logger.MethodError($"The given file: {item.FullNameOnHDD} does not exist.");
+                        _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
                         return false;
                     }
 
-                    File.Delete(item.FullNameOnHDD);
+                    File.Delete(fullName);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"Item removed: {item.FullNameOnHDD}");
+                        _parameters.Logger.MethodTrace($"Item removed: {fullName}");
                     }
 
                     return true;

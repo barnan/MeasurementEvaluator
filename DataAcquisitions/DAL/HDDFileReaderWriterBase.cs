@@ -1,4 +1,5 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Interfaces;
+using Interfaces.DataAcquisition;
 using System.IO;
 
 namespace DataAcquisition.DAL
@@ -9,7 +10,7 @@ namespace DataAcquisition.DAL
 
         public abstract bool WriteToFile<T>(T obj, string fileNameAndPath);
 
-        public abstract T ReadFromFile<T>(string fileNameAndPath, string toolName = null);
+        public abstract T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null);
 
 
 

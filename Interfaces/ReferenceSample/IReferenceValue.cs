@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Interfaces.Misc;
+using System;
 
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceValue : IComparable<IReferenceValue>
+    public interface IReferenceValue : IComparable<IReferenceValue>, INamedObject
     {
-        /// <summary>
-        /// value name
-        /// </summary>
-        string Name { get; }
-
         /// <summary>
         /// Dimension of the Value
         /// </summary>
@@ -26,10 +22,8 @@ namespace Interfaces.ReferenceSample
 
 
 
-    public interface IReferenceValueHandler : IReferenceValue
+    public interface IReferenceValueHandler : IReferenceValue, INamedObjectHandler
     {
-        new string Name { get; set; }
-
         new Units Dimension { get; set; }
     }
 

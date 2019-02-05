@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Interfaces.Misc;
+using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData
 {
-    public interface IMeasurementSerie
+    public interface IMeasurementSerie : INamedObject
     {
-        /// <summary>
-        /// Name of the measured quantity
-        /// </summary>
-        string MeasuredQuantityName { get; }
-
         /// <summary>
         /// List of measurement result
         /// </summary>

@@ -6,16 +6,15 @@ namespace DataStructures.MeasuredData
 {
     public class MeasurementSerie : IMeasurementSerie
     {
-        public string MeasuredQuantityName { get; }
-
         public IReadOnlyList<IMeasurementPoint> MeasData { get; }
 
         public Units Dimension { get; }
 
+        public string Name { get; }
 
         public MeasurementSerie(string measuredquantityname, List<IMeasurementPoint> measData, Units dimension = Units.ADU)
         {
-            MeasuredQuantityName = measuredquantityname;
+            Name = measuredquantityname;
             MeasData = measData;
             Dimension = dimension;
         }

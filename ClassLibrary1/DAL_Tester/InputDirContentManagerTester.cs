@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Measurement_Evaluator.DAL;
 using NUnit.Framework;
 
 namespace ClassLibrary1.DAL_Tester

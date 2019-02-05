@@ -1,4 +1,4 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Interfaces.Misc;
 using System;
 using System.Collections.Generic;
 
@@ -7,13 +7,13 @@ namespace Interfaces.MeasuredData
     /// <summary>
     /// interface that describes the measurement result of one tool, only Geters
     /// </summary>
-    public interface IToolMeasurementData : IStoredDataOnHDD, IComparable<IToolMeasurementData>
+    public interface IToolMeasurementData : IComparable<IToolMeasurementData>, INamedObject
     {
 
         /// <summary>
         /// Name of the tool, which was used to prepare the measurement data
         /// </summary>
-        string ToolName { get; }
+        ToolNames ToolName { get; }
 
         /// <summary>
         /// collection of measurement result of a given tool 
@@ -26,12 +26,12 @@ namespace Interfaces.MeasuredData
     /// <summary>
     /// interface that describes the measurement result of one tool, Setters added
     /// </summary>
-    public interface IToolMeasurementDataHandler : IToolMeasurementData, IStoredDataOnHDDHandler
+    public interface IToolMeasurementDataHandler : IToolMeasurementData, INamedObjectHandler
     {
 
-        string ToolName { get; set; }
+        new ToolNames ToolName { get; set; }
 
-        IReadOnlyList<IMeasurementSerie> Results { get; set; }
+        new IReadOnlyList<IMeasurementSerie> Results { get; set; }
     }
 
 

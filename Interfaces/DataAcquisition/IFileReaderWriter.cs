@@ -5,7 +5,7 @@
 
     public interface IFileReader
     {
-        T ReadFromFile<T>(string fileNameAndPath, string toolName = null);
+        T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null);
 
         bool CanRead(string fileNameAndPath);
     }

@@ -1,4 +1,5 @@
 ﻿using DataStructures.MeasuredData;
+using Interfaces;
 using Interfaces.MeasuredData;
 using Miscellaneous;
 using NLog;
@@ -28,7 +29,7 @@ namespace DataAcquisition.DAL
 
 
 
-        public override T ReadFromFile<T>(string fileNameAndPath, string toolName = null)
+        public override T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
         {
             T data;
 
@@ -59,7 +60,7 @@ namespace DataAcquisition.DAL
 
 
 
-        private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, string toolName)
+        private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, ToolNames toolName)
         {
             List<IMeasurementSerie> results = new List<IMeasurementSerie>();
 
@@ -135,7 +136,7 @@ namespace DataAcquisition.DAL
                 }
             }
 
-            ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, FullNameOnHDD = fileNameAndPath };
+            ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, Name = fileNameAndPath };
             return toolMeasData;
         }
     }

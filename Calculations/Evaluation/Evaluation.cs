@@ -245,12 +245,12 @@ namespace Calculations.Evaluation
                 return;
             }
 
-            _parameters.Logger.MethodInfo($"Started to evaluate arrived collectiondata: Specification name: {specification.SpecificationName}");
-            _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.SampleID ?? "No reference arrived"}.");
+            _parameters.Logger.MethodInfo($"Started to evaluate arrived collectiondata: Specification name: {specification.Name}");
+            _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.Name ?? "No reference arrived"}.");
             _parameters.Logger.MethodInfo("Measurement data: ");
             foreach (IToolMeasurementData measurementData in measurementDatas)
             {
-                _parameters.Logger.MethodInfo(measurementData.FullNameOnHDD);
+                _parameters.Logger.MethodInfo(measurementData.Name);
             }
 
             List<IQuantityEvaluationResult> quantityEvaluationList = new List<IQuantityEvaluationResult>();
@@ -290,7 +290,7 @@ namespace Calculations.Evaluation
 
                         foreach (var item in measurementDatas)
                         {
-                            coherentMeasurementData.AddRange(item.Results.Where(p => coherentMeasurementDataNames.Contains(p.MeasuredQuantityName)));
+                            coherentMeasurementData.AddRange(item.Results.Where(p => coherentMeasurementDataNames.Contains(p.Name)));
                         }
 
                         if (coherentMeasurementData.Count == 0)
@@ -315,7 +315,7 @@ namespace Calculations.Evaluation
                                 measPointList.AddRange(serie.MeasData);
                             }
 
-                            calculationInputData = new MeasurementSerie(coherentMeasurementData[0].MeasuredQuantityName, measPointList, coherentMeasurementData[0].Dimension);
+                            calculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
                         }
 
                         // find reference associated with the specification
@@ -353,7 +353,7 @@ namespace Calculations.Evaluation
                             _parameters.Logger.MethodTrace($"   Start time: {conditionResult.StartTime}");
                             _parameters.Logger.MethodTrace($"   End time: {conditionResult.EndTime}");
                             _parameters.Logger.MethodTrace($"   The calculation was {(conditionResult.SuccessfulCalculation ? "" : "NOT")} successful.");
-                            _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.MeasuredQuantityName} number of measurement points: {calculationInputData.MeasData.Count}");
+                            _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasData.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");
                             _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult ? "" : "NOT")} acceptable.");

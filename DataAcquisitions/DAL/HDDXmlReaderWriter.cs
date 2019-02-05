@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -10,7 +11,7 @@ namespace DataAcquisition.DAL
     {
 
 
-        public override T ReadFromFile<T>(string fileNameAndPath, string toolName = null)
+        public override T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
         {
             try
             {

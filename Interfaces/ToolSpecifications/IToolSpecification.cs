@@ -1,11 +1,11 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Interfaces.Misc;
 using System;
 using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface IToolSpecification : IStoredDataOnHDD, IComparable<IToolSpecification>
+    public interface IToolSpecification : IComparable<IToolSpecification>, INamedObject
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool
@@ -15,22 +15,21 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// Name of the tool
         /// </summary>
-        ToolNames SpecificationName { get; }
-
+        ToolNames ToolName { get; }
     }
 
 
-    public interface IToolSpecificationHandler : IToolSpecification, IStoredDataOnHDDHandler
+    public interface IToolSpecificationHandler : IToolSpecification, INamedObjectHandler
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool
         /// </summary>
-        IReadOnlyList<IQuantitySpecification> Specifications { get; set; }
+        new IReadOnlyList<IQuantitySpecification> Specifications { get; set; }
 
         /// <summary>
         /// Name of the tool
         /// </summary>
-        ToolNames SpecificationName { get; set; }
+        new ToolNames ToolName { get; set; }
 
     }
 }

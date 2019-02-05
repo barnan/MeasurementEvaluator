@@ -1,17 +1,12 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Interfaces.Misc;
 using System;
 using System.Collections.Generic;
 
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceSample : IComparable<IReferenceSample>, IStoredDataOnHDD
+    public interface IReferenceSample : IComparable<IReferenceSample>, INamedObject
     {
-        /// <summary>
-        /// name or ID of the sample
-        /// </summary>
-        string SampleID { get; }
-
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>
@@ -26,13 +21,8 @@ namespace Interfaces.ReferenceSample
 
 
 
-    public interface IReferenceSampleOnHDDHandler : IReferenceSample, IStoredDataOnHDDHandler
+    public interface IReferenceSampleOnHDDHandler : IReferenceSample, INamedObjectHandler
     {
-        /// <summary>
-        /// name or ID of the sample
-        /// </summary>
-        string SampleID { get; set; }
-
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>

@@ -26,7 +26,7 @@ namespace DataAcquisitions.Repository
                     return null;
                 }
 
-                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilter}").ToList();
+                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilters}").ToList();
                 List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
 
                 foreach (string fileName in fileNameList)

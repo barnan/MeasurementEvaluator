@@ -1,21 +1,22 @@
 ﻿using Interfaces.DataAcquisition;
 using NLog;
+using System.Collections.Generic;
 
 namespace DataAcquisitions.Repository
 {
     internal class HDDRepositoryParameters
     {
-        internal string RepositoryFullDirectoryPath { get; }
-        internal string FileExtensionFilter { get; }
+        internal string RepositoryFullDirectoryPath { get; set; }
+        internal List<string> FileExtensionFilters { get; }
         internal ILogger Logger { get; }
         internal IFileReaderWriter HDDReaderWriter { get; }
 
 
-        internal HDDRepositoryParameters(string repostoryDirectoryPath, string fileExtensionFilter, IFileReaderWriter fileReaderWriter)
+        internal HDDRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IFileReaderWriter fileReaderWriter)
         {
             ILogger Logger = LogManager.GetCurrentClassLogger();
             RepositoryFullDirectoryPath = repostoryDirectoryPath;
-            FileExtensionFilter = fileExtensionFilter;
+            FileExtensionFilters = fileExtensionFilter;
             HDDReaderWriter = fileReaderWriter;
         }
     }
@@ -25,7 +26,7 @@ namespace DataAcquisitions.Repository
     internal class SpecificationRepositoryParameters : HDDRepositoryParameters
     {
 
-        public SpecificationRepositoryParameters(string repostoryDirectoryPath, string fileExtensionFilter, IFileReaderWriter fileReaderWriter)
+        public SpecificationRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IFileReaderWriter fileReaderWriter)
             : base(repostoryDirectoryPath, fileExtensionFilter, fileReaderWriter)
         {
         }

@@ -21,17 +21,18 @@ namespace DataStructures.ToolSpecifications
             set { _specifications = (List<IQuantitySpecification>)value; }
         }
 
-        public ToolNames SpecificationName { get; set; }
+        public ToolNames ToolName { get; set; }
 
 
-        public string FullNameOnHDD { get; set; }
+        public string Name { get; set; }
 
 
 
-        public ToolSpecification(string fileName)
+        public ToolSpecification()
         {
             _logger = LogManager.GetCurrentClassLogger();
-            _logger.MethodInfo($"{SpecificationName} specification created.");
+
+            _logger.MethodInfo($"{Name} specification created for {ToolName}");
         }
 
         #region onject.toString()
@@ -39,14 +40,14 @@ namespace DataStructures.ToolSpecifications
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(SpecificationName.ToString());
+            sb.AppendLine($"Name: {Name}");
+            sb.AppendLine($"Tool: {ToolName}");
 
             foreach (var item in Specifications)
             {
                 sb.Append(item);
                 sb.AppendLine();
             }
-
             return sb.ToString();
         }
 
@@ -68,20 +69,26 @@ namespace DataStructures.ToolSpecifications
                     return 1;
                 }
 
-                if (other.SpecificationName == null)
+                if (other.ToolName == null)
                 {
                     _logger.Error("Tool Name is null in Arrived data.");
                     return 0;
                 }
 
-                string toolName1 = SpecificationName.ToString();
-                string toolName2 = other.SpecificationName.ToString();
-
+                string toolName1 = ToolName.ToString();
+                string toolName2 = other.ToolName.ToString();
                 int toolNameComparisonResult = string.Compare(toolName1, toolName2, StringComparison.OrdinalIgnoreCase);
-
                 if (toolNameComparisonResult != 0)
                 {
                     return toolNameComparisonResult;
+                }
+
+                string name1 = Name.ToString();
+                string name2 = other.Name.ToString();
+                int nameComparisonResult = string.Compare(name1, name2, StringComparison.OrdinalIgnoreCase);
+                if (nameComparisonResult != 0)
+                {
+                    return nameComparisonResult;
                 }
 
                 if (Specifications.Count != other.Specifications.Count)

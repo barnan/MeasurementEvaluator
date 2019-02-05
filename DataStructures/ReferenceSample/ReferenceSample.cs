@@ -8,13 +8,12 @@ using IReferenceValue = Interfaces.ReferenceSample.IReferenceValue;
 
 namespace DataAcquisition
 {
-    //[Serializable]
     public class ReferenceSample : IReferenceSampleOnHDDHandler
     {
         private readonly ILogger _logger;
 
 
-        public string SampleID { get; set; }
+        public string Name { get; set; }
 
 
         private List<IReferenceValue> _referenceValues;
@@ -25,9 +24,6 @@ namespace DataAcquisition
         }
 
 
-        public string FullNameOnHDD { get; set; }
-
-
         public SampleOrientation SampleOrientation { get; set; }
 
 
@@ -35,7 +31,7 @@ namespace DataAcquisition
         {
             _logger = LogManager.GetCurrentClassLogger();
 
-            _logger.MethodInfo($"{SampleID} reference sample created.");
+            _logger.MethodInfo($"{Name} reference sample created.");
         }
 
 
@@ -56,17 +52,15 @@ namespace DataAcquisition
                 }
 
 
-                if (other.SampleID == null)
+                if (other.Name == null)
                 {
                     _logger.Error("Sample ID is null in Arrived data.");
                     return 0;
                 }
 
-                string toolName1 = SampleID;
-                string toolName2 = other.SampleID;
-
+                string toolName1 = Name;
+                string toolName2 = other.Name;
                 int toolNameComparisonResult = string.Compare(toolName1, toolName2, StringComparison.OrdinalIgnoreCase);
-
                 if (toolNameComparisonResult != 0)
                 {
                     return toolNameComparisonResult;
