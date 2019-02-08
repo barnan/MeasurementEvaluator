@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace DataAcquisition.DAL
 {
-    public class HdDdXmlSerializator : HDDFileReaderWriterBase
+    public class HDDXmlSerializator : HDDFileReaderWriterBase
     {
 
 

@@ -49,7 +49,6 @@ namespace DataAcquisitions.DataCollector
 
         #endregion
 
-
         #region IInitializable
 
         public bool IsInitialized { get; private set; }

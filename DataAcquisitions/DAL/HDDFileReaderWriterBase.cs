@@ -21,7 +21,9 @@ namespace DataAcquisition.DAL
                 using (FileStream fstream = new FileStream(fileNameAndPath, FileMode.Open, FileAccess.Read))
                 {
                     if (fstream.CanRead)
+                    {
                         return true;
+                    }
                 }
             }
             return false;

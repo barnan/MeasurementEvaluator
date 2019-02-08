@@ -1,4 +1,7 @@
-﻿using Interfaces.Calculation;
+﻿
+
+
+using Interfaces.Calculation;
 using NLog;
 using System.Collections.Generic;
 

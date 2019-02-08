@@ -17,8 +17,7 @@ namespace Calculations.Evaluation
         public Matching(MathchingParameters parameters)
         {
             _parameters = parameters;
-
-            _parameters.Logger.MethodError("Instantiated.");
+            _parameters.Logger.MethodError($"{nameof(Matching)} Instantiated.");
         }
 
 
@@ -85,7 +84,6 @@ namespace Calculations.Evaluation
         private void OnInitialized()
         {
             var initialized = Initialized;
-
             initialized?.Invoke(this, new EventArgs());
         }
 
@@ -93,7 +91,6 @@ namespace Calculations.Evaluation
         private void OnClosed()
         {
             var closed = Closed;
-
             closed?.Invoke(this, new EventArgs());
         }
 
