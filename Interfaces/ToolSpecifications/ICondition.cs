@@ -1,15 +1,11 @@
-﻿using Interfaces.Result;
+﻿using Interfaces.Misc;
+using Interfaces.Result;
 
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition
+    public interface ICondition : INamedObject
     {
-
-        /// <summary>
-        /// Name of the condition
-        /// </summary>
-        string Name { get; }
 
         /// <summary>
         /// type of the calculation that is required by this condition 

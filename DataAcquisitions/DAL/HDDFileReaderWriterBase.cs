@@ -2,11 +2,15 @@
 using Interfaces.DataAcquisition;
 using System.IO;
 
-namespace DataAcquisition.DAL
+namespace DataAcquisitions.DAL
 {
 
-    public abstract class HDDFileReaderWriterBase : IFileReader, IFileWriter
+    public abstract class HDDFileReaderWriterBase : IHDDFileReader, IHDDFileWriter
     {
+
+        protected readonly object _lockObject = new object();
+
+
 
         public abstract bool WriteToFile<T>(T obj, string fileNameAndPath);
 
@@ -34,8 +38,5 @@ namespace DataAcquisition.DAL
         {
             return File.Exists(fileNameAndPath);
         }
-
     }
-
-
 }

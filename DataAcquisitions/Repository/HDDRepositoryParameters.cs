@@ -9,29 +9,16 @@ namespace DataAcquisitions.Repository
         internal string RepositoryFullDirectoryPath { get; set; }
         internal List<string> FileExtensionFilters { get; }
         internal ILogger Logger { get; }
-        internal IFileReaderWriter HDDReaderWriter { get; }
+        internal IHDDFileReaderWriter IHDDReaderWriter { get; }
 
 
-        internal HDDRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IFileReaderWriter fileReaderWriter)
+        internal HDDRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IHDDFileReaderWriter ihddFileReaderWriter)
         {
-            ILogger Logger = LogManager.GetCurrentClassLogger();
+            Logger = LogManager.GetCurrentClassLogger();
             RepositoryFullDirectoryPath = repostoryDirectoryPath;
             FileExtensionFilters = fileExtensionFilter;
-            HDDReaderWriter = fileReaderWriter;
+            IHDDReaderWriter = ihddFileReaderWriter;
         }
     }
-
-
-
-    internal class SpecificationRepositoryParameters : HDDRepositoryParameters
-    {
-
-        public SpecificationRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IFileReaderWriter fileReaderWriter)
-            : base(repostoryDirectoryPath, fileExtensionFilter, fileReaderWriter)
-        {
-        }
-
-    }
-
 
 }

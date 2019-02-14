@@ -1,33 +1,50 @@
 ﻿using Interfaces;
+using Miscellaneous;
+using NLog;
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace DataAcquisition.DAL
+namespace DataAcquisitions.DAL
 {
     public class HDDXmlSerializator : HDDFileReaderWriterBase
     {
 
+        private readonly HDDXmlSerializatorParameters _parameters;
+
+
+        public HDDXmlSerializator(HDDXmlSerializatorParameters parameter)
+        {
+            _parameters = parameter;
+        }
+
+
 
         public override T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
         {
-            try
+            lock (_lockObject)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(T));
-
-                T tobj;
-                using (StreamReader sr = new StreamReader(fileNameAndPath))
+                try
                 {
-                    tobj = (T)serializer.Deserialize(sr);
-                }
+                    if (!CheckFilePath(fileNameAndPath))
+                    {
+                        _parameters.Logger.MethodError($"File does not exists: {fileNameAndPath}");
+                        return default(T);
+                    }
 
-                return tobj;
-            }
-            catch (Exception)
-            {
-                return default(T);
+                    XmlSerializer serializer = new XmlSerializer(typeof(T));
+
+                    using (StreamReader sr = new StreamReader(fileNameAndPath))
+                    {
+                        return (T)serializer.Deserialize(sr);
+                    }
+                }
+                catch (Exception)
+                {
+                    return default(T);
+                }
             }
         }
 
@@ -35,30 +52,41 @@ namespace DataAcquisition.DAL
 
         public override bool WriteToFile<T>(T tobj, string fileNameAndPath)
         {
-            try
+            lock (_lockObject)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(T));
-
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Indent = true;
-                settings.OmitXmlDeclaration = false;
-                settings.Encoding = new UnicodeEncoding(true, true);
-
-                using (StreamWriter sw = new StreamWriter(fileNameAndPath))
+                try
                 {
-                    using (XmlWriter xw = XmlWriter.Create(sw, settings))
-                    {
-                        serializer.Serialize(xw, tobj);
-                    }
-                }
+                    XmlSerializer serializer = new XmlSerializer(typeof(T));
 
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
+                    XmlWriterSettings settings = new XmlWriterSettings();
+                    settings.Indent = true;
+                    settings.OmitXmlDeclaration = false;
+                    settings.Encoding = new UnicodeEncoding(true, true);
+
+                    using (StreamWriter sw = new StreamWriter(fileNameAndPath))
+                    {
+                        using (XmlWriter xw = XmlWriter.Create(sw, settings))
+                        {
+                            serializer.Serialize(xw, tobj);
+                        }
+                    }
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
         }
 
     }
+
+
+    public class HDDXmlSerializatorParameters
+    {
+        public ILogger Logger { get; set; }
+    }
+
+
 }

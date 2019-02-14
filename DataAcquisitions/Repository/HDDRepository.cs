@@ -8,16 +8,16 @@ using System.Linq;
 
 namespace DataAcquisitions.Repository
 {
-    internal abstract class HDDRepository<T> : IRepository<T>
+    internal abstract class HDDRepositoryBase<T> : IRepository<T>
         where T : class, INamedObject, IComparable<T>
     {
 
-        protected readonly HDDRepositoryParameters _parameters;
+        private readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
 
 
 
-        protected HDDRepository(HDDRepositoryParameters parameters)
+        protected HDDRepositoryBase(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }
@@ -230,7 +230,7 @@ namespace DataAcquisitions.Repository
                         return false;
                     }
 
-                    _parameters.HDDReaderWriter.WriteToFile(item, fullName);
+                    _parameters.IHDDReaderWriter.WriteToFile(item, fullName);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
@@ -316,7 +316,7 @@ namespace DataAcquisitions.Repository
         #endregion
 
 
-        protected bool CheckFolder(string fullPath)
+        private bool CheckFolder(string fullPath)
         {
             if (string.IsNullOrEmpty(fullPath))
             {
@@ -344,7 +344,48 @@ namespace DataAcquisitions.Repository
             return true;
         }
 
-        protected abstract List<T> GetItemList(string fullPath);
+        private List<T> GetItemList(string fullPath)
+        {
+            try
+            {
+                if (!CheckFolder(fullPath))
+                {
+                    _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
+                    return null;
+                }
+
+                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilters}").ToList();
+                List<T> fileContentDictionary = new List<T>(fileNameList.Count);
+
+                foreach (string fileName in fileNameList)
+                {
+
+                    T spec = _parameters.IHDDReaderWriter.ReadFromFile<T>(fileName);
+
+                    fileContentDictionary.Add(spec);
+
+                    if (_parameters.Logger.IsTraceEnabled)
+                    {
+                        _parameters.Logger.MethodTrace($"File read: {fileName}");
+                    }
+                }
+
+                if (_parameters.Logger.IsTraceEnabled)
+                {
+                    foreach (var item in fileContentDictionary)
+                    {
+                        _parameters.Logger.MethodTrace($"Items: {item}");
+                    }
+                }
+
+                return fileContentDictionary;
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
+                return null;
+            }
+        }
 
 
     }

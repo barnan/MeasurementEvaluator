@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.DataAcquisition
 {
-    public interface IHDDXmlSerializator : IFileReaderWriter
+    public interface IHDDXmlSerializator : IHDDFileReaderWriter
     {
     }
 }

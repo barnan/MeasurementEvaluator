@@ -3,7 +3,7 @@
 
 
 
-    public interface IFileReader
+    public interface IHDDFileReader
     {
         T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null);
 
@@ -13,14 +13,14 @@
 
 
 
-    public interface IFileWriter
+    public interface IHDDFileWriter
     {
         bool WriteToFile<T>(T obj, string fileNameAndPath);
     }
 
 
 
-    public interface IFileReaderWriter : IFileReader, IFileWriter
+    public interface IHDDFileReaderWriter : IHDDFileReader, IHDDFileWriter
     {
     }
 
