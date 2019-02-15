@@ -1,4 +1,5 @@
 ﻿using MeasurementEvaluatorUI;
+using NLog;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -8,12 +9,17 @@ namespace MeasurementEvaluator
 {
     class Program
     {
+        private static ILogger _logger;
         private static ManualResetEvent _uiFinished = new ManualResetEvent(false);
 
         static void Main(string[] args)
         {
             try
             {
+
+                _logger = LogManager.GetCurrentClassLogger();
+
+
                 Thread appThread = new Thread(() =>
                 {
                     Application application = new Application();
@@ -37,11 +43,7 @@ namespace MeasurementEvaluator
             }
             catch (Exception ex)
             {
-
-            }
-            finally
-            {
-
+                _logger.Error($"Exception occured: {ex}");
             }
 
         }
