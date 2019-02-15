@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miscellaneous", "Miscellane
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAcquisitions", "DataAcquisitions\DataAcquisitions.csproj", "{5E98E58E-5E99-43BB-9288-610EDB9C2316}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluatorUI", "MeasurementEvaluatorUI\MeasurementEvaluatorUI.csproj", "{26F70B15-0BE9-487A-BCBC-729C4F9802BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluator", "MeasurementEvaluator\MeasurementEvaluator.csproj", "{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
