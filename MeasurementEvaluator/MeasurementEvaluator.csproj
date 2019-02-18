@@ -63,9 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MeasurementEvaluatorUI\MeasurementEvaluatorUI.csproj">
+    <ProjectReference Include="..\MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj">
       <Project>{26f70b15-0be9-487a-bcbc-729c4f9802bf}</Project>
-      <Name>MeasurementEvaluatorUI</Name>
+      <Name>MeasurementEvaluatorUIWPF</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

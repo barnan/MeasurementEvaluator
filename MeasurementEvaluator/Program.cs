@@ -24,7 +24,7 @@ namespace MeasurementEvaluator
                 {
                     Application application = new Application();
 
-                    MainWindow mainWindow = new MainWindow { Title = "Measurement Evaluator UI" };
+                    MainWindow mainWindow = new MainWindow { Title = "Measurement Evaluator" };
                     mainWindow.Closed += MainWindow_OnClosed;
 
                     System.Windows.Application.Current.MainWindow = mainWindow;

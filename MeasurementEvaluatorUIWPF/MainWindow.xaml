@@ -14,7 +14,7 @@
             </TabItem>
             <TabItem Header="Specification-file Editor" />
             <TabItem Header="Reference-file Editor" />
-            <TabItem Header="Skew calculation" />
+            <TabItem Header="Skew Calculation" />
         </TabControl>
 
 </Window>
