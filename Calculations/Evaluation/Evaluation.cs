@@ -278,7 +278,7 @@ namespace Calculations.Evaluation
                         // skipp condition if not enabled:
                         if (!condition.Enabled)
                         {
-                            _parameters.Logger.MethodInfo($"{quantitySpec.QuantityName} {condition.Name} is not enabled -> condition check skipped.");
+                            _parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name} {condition.Name} is not enabled -> condition check skipped.");
                             continue;
                         }
 
