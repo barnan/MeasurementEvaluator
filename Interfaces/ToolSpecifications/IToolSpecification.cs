@@ -19,7 +19,7 @@ namespace Interfaces.ToolSpecifications
     }
 
 
-    public interface IToolSpecificationHandler : IToolSpecification, INamedObjectHandler
+    public interface IToolSpecificationHandler : IToolSpecification, INamedHandler
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool

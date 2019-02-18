@@ -4,9 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeasurementEvaluatorUI"
+        xmlns:datacolector="clr-namespace:MeasurementEvaluatorUI.DataCollectorUIWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="450" Width="800" MinWidth="800">
+
+        <TabControl>
+            <TabItem Header="Evaluation">
+                <Label Content="Content goes here..." />
+            </TabItem>
+            <TabItem Header="Specification-file Editor" />
+            <TabItem Header="Reference-file Editor" />
+            <TabItem Header="Skew calculation" />
+        </TabControl>
+
 </Window>
+    

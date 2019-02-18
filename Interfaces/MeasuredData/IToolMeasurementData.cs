@@ -26,7 +26,7 @@ namespace Interfaces.MeasuredData
     /// <summary>
     /// interface that describes the measurement result of one tool, Setters added
     /// </summary>
-    public interface IToolMeasurementDataHandler : IToolMeasurementData, INamedObjectHandler
+    public interface IToolMeasurementDataHandler : IToolMeasurementData, INamedHandler
     {
 
         new ToolNames ToolName { get; set; }

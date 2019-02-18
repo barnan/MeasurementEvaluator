@@ -4,11 +4,11 @@ using Miscellaneous;
 using NLog;
 using System;
 using System.Collections.Generic;
-using IReferenceValue = Interfaces.ReferenceSample.IReferenceValue;
 
-namespace DataAcquisition
+
+namespace DataStructures.ReferenceSample
 {
-    public class ReferenceSample : IReferenceSampleOnHDDHandler
+    public class ReferenceSample : IReferenceSampleHandler
     {
         private readonly ILogger _logger;
 

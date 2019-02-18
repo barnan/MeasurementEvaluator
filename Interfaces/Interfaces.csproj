@@ -49,6 +49,7 @@
     <Compile Include="Misc\IComponent.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />
     <Compile Include="Misc\INamed.cs" />
+    <Compile Include="ReferenceSample\IRotatable.cs" />
     <Compile Include="Result\ICalculationResult.cs" />
     <Compile Include="DataAcquisition\IHDDFileReaderWriter.cs" />
     <Compile Include="DataAcquisition\IRepository.cs" />

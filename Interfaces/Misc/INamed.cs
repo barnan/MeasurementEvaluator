@@ -6,7 +6,7 @@
     }
 
 
-    public interface INamedObjectHandler : INamed
+    public interface INamedHandler : INamed
     {
         new string Name { get; set; }
     }

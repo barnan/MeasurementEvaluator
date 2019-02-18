@@ -22,7 +22,7 @@ namespace Interfaces.ReferenceSample
 
 
 
-    public interface IReferenceValueHandler : IReferenceValue, INamedObjectHandler
+    public interface IReferenceValueHandler : IReferenceValue, INamedHandler
     {
         new Units Dimension { get; set; }
     }

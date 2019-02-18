@@ -13,11 +13,14 @@
         <Grid>
             
             <Grid.Resources>
+                <Style x:Key="MarginStyle" TargetType="Control">
+                    <Setter Property="Margin" Value="5 0 5 0"/>
+                </Style>
                 <Style x:Key="TopMarginStyle" TargetType="Control">
-                    <Setter Property="Margin" Value="0 10 0 0"/>
+                    <Setter Property="Margin" Value="5 10 5 0"/>
                 </Style>
                 <Style x:Key="BottomMarginStyle" TargetType="Control">
-                    <Setter Property="Margin" Value="0 0 0 10"/>
+                    <Setter Property="Margin" Value="5 0 5 10"/>
                 </Style>
             </Grid.Resources>
                
@@ -30,11 +33,12 @@
             </Grid.RowDefinitions>
             
             <!--0 degree-->
-            <RadioButton Grid.Row="0" GroupName="SampleDegree" Content="0°" Visibility="{Binding Is_0_DegreeVisible}" Style="{StaticResource TopMarginStyle}"/>
+            <RadioButton Grid.Row="0" GroupName="SampleDegree" Content="0°" Visibility="{Binding Is_0_DegreeVisible}" Style="{StaticResource TopMarginStyle}">
+            </RadioButton>
             <!--90 degree-->
-            <RadioButton Grid.Row="1" GroupName="SampleDegree" Content="90°" Visibility="{Binding Is_90_Degreevisible}"/>
+            <RadioButton Grid.Row="1" GroupName="SampleDegree" Content="90°" Visibility="{Binding Is_90_Degreevisible}" Style="{StaticResource MarginStyle}"/>
             <!--180 degree-->
-            <RadioButton Grid.Row="2" GroupName="SampleDegree" Content="180°" Visibility="{Binding Is_180_Degreevisible}"/>
+            <RadioButton Grid.Row="2" GroupName="SampleDegree" Content="180°" Visibility="{Binding Is_180_Degreevisible}" Style="{StaticResource MarginStyle}"/>
             <!--270 degree-->
             <RadioButton Grid.Row="3" GroupName="SampleDegree" Content="270°" Visibility="{Binding Is_270_DegreeVisible}" Style="{StaticResource BottomMarginStyle}"/>
 

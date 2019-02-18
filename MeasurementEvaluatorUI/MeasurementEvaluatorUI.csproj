@@ -67,6 +67,13 @@
     <Compile Include="Base\NotifyPropertyChanged.cs" />
     <Compile Include="Base\UserControlBase.cs" />
     <Compile Include="Base\ViewModelBase.cs" />
+    <Compile Include="Pages\EvaluationPageUIWPF.xaml.cs">
+      <DependentUpon>EvaluationPageUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SpecificationEditorPageUIWPF.xaml.cs">
+      <DependentUpon>SpecificationEditorPageUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SampleOrientationUIWPF\SampleOrientationParameters.cs" />
     <Compile Include="SampleOrientationUIWPF\SampleOrientationUIWPF.xaml.cs">
       <DependentUpon>SampleOrientationUIWPF.xaml</DependentUpon>
     </Compile>
@@ -88,6 +95,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Base\StyleDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EvaluationPageUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SpecificationEditorPageUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

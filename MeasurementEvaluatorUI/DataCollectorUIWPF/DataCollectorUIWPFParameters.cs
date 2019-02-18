@@ -2,14 +2,15 @@
 
 namespace MeasurementEvaluatorUI.DataCollectorUIWpf
 {
+
     internal class DataCollectorUIWPFParameters
     {
         internal IDataCollector DataCollector { get; }
 
 
-        public DataCollectorUIWPFParameters()
+        public DataCollectorUIWPFParameters(IDataCollector dataCollector)
         {
-
+            DataCollector = dataCollector;
         }
 
     }

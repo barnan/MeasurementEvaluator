@@ -3,6 +3,16 @@ using System.Windows.Input;
 
 namespace MeasurementEvaluatorUI.Commands
 {
+
+
+
+    /// <summary>
+    /// 
+    ///  NOT READY YET
+    /// </summary>
+
+
+
     class NormalCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;

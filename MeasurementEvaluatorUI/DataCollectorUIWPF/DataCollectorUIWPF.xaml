@@ -6,12 +6,12 @@
              xmlns:local="clr-namespace:MeasurementEvaluatorUI.DataCollectorUIWpf"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="500" MinWidth="400">
     <Grid>
         
         <Grid.Resources>
             <Style x:Key="MarginStyle" TargetType="Control">
-                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Margin" Value="10"/>
         </Style>
 
         </Grid.Resources>
@@ -39,7 +39,7 @@
 
         
         <!--Tool Selection combo box-->
-        <ComboBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Style="{StaticResource MarginStyle}">
+        <ComboBox Grid.Column="0" Grid.Row="0" Style="{StaticResource MarginStyle}">
 
         </ComboBox>
         
@@ -54,13 +54,17 @@
 
         </ComboBox>
 
-        <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Width="Auto"  Style="{StaticResource MarginStyle}"/>
-        <Button Grid.Column="3" Grid.Row="4" Style="{StaticResource MarginStyle}" Command="{Binding BrowseMeasurementDataCommand}"/>
+        <!--Collect measurement data-->
+        <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Grid.RowSpan="2"  Width="Auto"  Style="{StaticResource MarginStyle}"/>
+
+        <Button Grid.Column="3" Grid.Row="4" Content="Browse" Command="{Binding BrowseMeasurementDataCommand}" 
+                Style="{StaticResource MarginStyle}" Width =" 80"/>
 
         <!--calculate-->
-        <Button Grid.Column="0" Grid.Row="6" Style="{StaticResource MarginStyle}" Command="{Binding CalculateCommand}"/>
+        <Button Grid.Column="0" Grid.Row="6" Content="Calculate" Command="{Binding CalculateCommand}" 
+                Style="{StaticResource MarginStyle}" Width="80"/>
 
-
+        <!--image control to show the rotation-->
         <Image Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Margin="10" >
 
         </Image>

@@ -16,12 +16,11 @@ namespace Interfaces.ReferenceSample
         /// orientation of the sample, when its reference values were measured
         /// </summary>
         SampleOrientation SampleOrientation { get; }
-
     }
 
 
 
-    public interface IReferenceSampleOnHDDHandler : IReferenceSample, INamedObjectHandler
+    public interface IReferenceSampleHandler : IReferenceSample, INamedHandler
     {
         /// <summary>
         /// reference values, which characterise the sample
@@ -34,6 +33,5 @@ namespace Interfaces.ReferenceSample
         SampleOrientation SampleOrientation { get; set; }
 
     }
-
 
 }
