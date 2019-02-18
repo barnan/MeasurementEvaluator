@@ -1,6 +1,6 @@
 ﻿using Interfaces.DataAcquisition;
 
-namespace MeasurementEvaluatorUI.DataCollectorUIWPF
+namespace MeasurementEvaluatorUI.DataCollectorUIWpf
 {
     internal class DataCollectorUIWPFParameters
     {

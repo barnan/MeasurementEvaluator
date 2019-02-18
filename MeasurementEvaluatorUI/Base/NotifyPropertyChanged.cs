@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace MeasurementEvaluatorUI.Base
 {
-    internal class NotifyPropertyChanged : INotifyPropertyChanged
+    public class NotifyPropertyChanged : INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;

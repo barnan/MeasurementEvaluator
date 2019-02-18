@@ -1,14 +1,13 @@
-﻿using MeasurementEvaluatorUI.DataCollectorUIWPF;
-using System.Windows.Controls;
+﻿using MeasurementEvaluatorUI.Base;
 
 namespace MeasurementEvaluatorUI.DataCollectorUIWpf
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class UserControl1 : UserControl
+    public partial class DataCollectorUIWPF : UserControlBase
     {
-        public UserControl1()
+        public DataCollectorUIWPF()
         {
             InitializeComponent();
 
