@@ -19,6 +19,7 @@ namespace DataStructures.ToolSpecifications
         {
         }
 
+
         public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled)
         {
             Name = name;

@@ -77,7 +77,5 @@ namespace MeasurementEvaluatorUI.Commands
 
         #endregion
 
-
-
     }
 }

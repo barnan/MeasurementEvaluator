@@ -5,15 +5,7 @@ namespace Interfaces.ToolSpecifications
 {
     public interface IQuantitySpecification : IComparable<IQuantitySpecification>
     {
-        /// <summary>
-        /// Name of this quantity
-        /// </summary>
-        string QuantityName { get; }
-
-        /// <summary>
-        /// unit of quantity
-        /// </summary>
-        Units Dimension { get; }
+        IQuantity Quantity { get; }
 
         /// <summary>
         /// Condition set which is realted to this quantity
@@ -21,4 +13,17 @@ namespace Interfaces.ToolSpecifications
         IReadOnlyList<ICondition> Conditions { get; }
 
     }
+
+
+    public interface IQuantitySpecificationHandler : IQuantitySpecification
+    {
+        new IQuantity Quantity { get; set; }
+
+        /// <summary>
+        /// Condition set which is realted to this quantity
+        /// </summary>
+        new IReadOnlyList<ICondition> Conditions { get; set; }
+
+    }
+
 }

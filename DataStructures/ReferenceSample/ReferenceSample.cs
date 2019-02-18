@@ -12,9 +12,12 @@ namespace DataStructures.ReferenceSample
     {
         private readonly ILogger _logger;
 
+        #region INamed
 
-        public string Name { get; set; }
+        public string Name
+        { get; set; }
 
+        #endregion
 
         private List<IReferenceValue> _referenceValues;
         public IReadOnlyList<IReferenceValue> ReferenceValues

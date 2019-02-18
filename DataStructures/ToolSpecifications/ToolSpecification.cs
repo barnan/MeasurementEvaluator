@@ -13,6 +13,7 @@ namespace DataStructures.ToolSpecifications
     {
         private readonly ILogger _logger;
 
+        #region IToolspecificationHandler
 
         private List<IQuantitySpecification> _specifications;
         public IReadOnlyList<IQuantitySpecification> Specifications
@@ -23,10 +24,11 @@ namespace DataStructures.ToolSpecifications
 
         public ToolNames ToolName { get; set; }
 
-
         public string Name { get; set; }
 
+        #endregion
 
+        #region ctor
 
         public ToolSpecification()
         {
@@ -34,6 +36,8 @@ namespace DataStructures.ToolSpecifications
 
             _logger.MethodInfo($"{Name} specification created for {ToolName}");
         }
+
+        #endregion
 
         #region onject.toString()
 

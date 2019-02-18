@@ -1,33 +1,44 @@
-﻿using Interfaces;
-using Interfaces.ToolSpecifications;
+﻿using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DataStructures.ToolSpecifications
 {
 
-    public class QuantitySpecification : IQuantitySpecification
+    public class QuantitySpecification : IQuantitySpecificationHandler
     {
-        public string QuantityName { get; }
-        public Units Dimension { get; }
-        public IReadOnlyList<ICondition> Conditions { get; }
+        #region ctor
 
-
-
-        public QuantitySpecification(IReadOnlyList<ICondition> conditions, Units dimension, string quantityName)
+        public QuantitySpecification(IReadOnlyList<ICondition> conditions, IQuantity quantity)
         {
             Conditions = conditions;
-            Dimension = dimension;
-            QuantityName = quantityName;
+            Quantity = quantity;
         }
+
+        #endregion
+
+
+        #region IQuantitySpecification
+
+        public IReadOnlyList<ICondition> Conditions { get; set; }
+
+        private IQuantity _quantity;
+        public IQuantity Quantity
+        {
+            get { return _quantity; }
+            set { _quantity = value; }
+        }
+
+        #endregion
+
 
         #region object.ToString()
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(QuantityName);
-            sb.AppendLine(Dimension.ToString());
+            sb.AppendLine(Quantity.Name);
+            sb.AppendLine(Quantity.Dimension.ToString());
 
             foreach (var item in Conditions)
             {
@@ -38,6 +49,7 @@ namespace DataStructures.ToolSpecifications
         }
 
         #endregion
+
 
         #region IComparable
 
