@@ -9,7 +9,7 @@ using System.Linq;
 namespace DataAcquisitions.Repository
 {
     internal abstract class HDDRepositoryBase<T> : IRepository<T>
-        where T : class, INamedObject, IComparable<T>
+        where T : class, INamed, IComparable<T>
     {
 
         private readonly HDDRepositoryParameters _parameters;

@@ -7,7 +7,7 @@ namespace Interfaces.MeasuredData
     /// <summary>
     /// interface that describes the measurement result of one tool, only Geters
     /// </summary>
-    public interface IToolMeasurementData : IComparable<IToolMeasurementData>, INamedObject
+    public interface IToolMeasurementData : IComparable<IToolMeasurementData>, INamed
     {
 
         /// <summary>

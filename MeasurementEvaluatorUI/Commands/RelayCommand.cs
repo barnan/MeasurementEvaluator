@@ -1,11 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using MeasurementEvaluatorUI.Base;
+using System;
 using System.Windows.Input;
 
 namespace MeasurementEvaluatorUI.Commands
 {
-    class RelayCommand : ICommand, INotifyPropertyChanged
+    internal class RelayCommand : NotifyPropertyChanged, ICommand
     {
         #region fields
 
@@ -60,7 +59,7 @@ namespace MeasurementEvaluatorUI.Commands
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }       // ??????
+            add { CommandManager.RequerySuggested += value; }       // todo
             remove { CommandManager.RequerySuggested -= value; }
         }
 
@@ -78,15 +77,7 @@ namespace MeasurementEvaluatorUI.Commands
 
         #endregion
 
-        #region INotifyPropertyChanged
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }

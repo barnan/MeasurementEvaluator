@@ -4,7 +4,7 @@ using System;
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceValue : IComparable<IReferenceValue>, INamedObject
+    public interface IReferenceValue : IComparable<IReferenceValue>, INamed
     {
         /// <summary>
         /// Dimension of the Value

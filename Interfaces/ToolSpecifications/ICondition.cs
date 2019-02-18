@@ -4,7 +4,7 @@ using Interfaces.Result;
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition : INamedObject
+    public interface ICondition : INamed
     {
 
         /// <summary>

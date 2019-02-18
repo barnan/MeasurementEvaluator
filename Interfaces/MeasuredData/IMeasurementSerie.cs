@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData
 {
-    public interface IMeasurementSerie : INamedObject
+    public interface IMeasurementSerie : INamed
     {
         /// <summary>
         /// List of measurement result

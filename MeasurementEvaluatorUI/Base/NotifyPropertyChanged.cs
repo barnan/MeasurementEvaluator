@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace MeasurementEvaluatorUI
+namespace MeasurementEvaluatorUI.Base
 {
-    class ViewModelBase : INotifyPropertyChanged
+    internal class NotifyPropertyChanged : INotifyPropertyChanged
     {
+
         public event PropertyChangedEventHandler PropertyChanged;
 
 

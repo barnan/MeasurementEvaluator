@@ -1,12 +1,12 @@
 ﻿namespace Interfaces.Misc
 {
-    public interface INamedObject
+    public interface INamed
     {
         string Name { get; }
     }
 
 
-    public interface INamedObjectHandler : INamedObject
+    public interface INamedObjectHandler : INamed
     {
         new string Name { get; set; }
     }

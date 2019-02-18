@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,9 +57,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataCollectorUIWPF\DataCollectorUIWPFParameters.cs" />
     <Compile Include="Commands\NormalCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="DataCollectorUIWPF\DataCollectorUIWPF.xaml.cs">
+      <DependentUpon>DataCollectorUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DataCollectorUIWPF\DataCollectorViewModel.cs" />
+    <Compile Include="Base\NotifyPropertyChanged.cs" />
+    <Compile Include="Base\UserControlBase.cs" />
+    <Compile Include="Base\ViewModelBase.cs" />
+    <Page Include="DataCollectorUIWPF\DataCollectorUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,6 +83,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Base\StyleDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -96,6 +113,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
