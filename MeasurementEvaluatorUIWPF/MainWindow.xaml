@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeasurementEvaluatorUI"
+        xmlns:messageControlUiwpf="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MinWidth="800">
+        Title="MainWindow" Height="500" Width="800" MinHeight="500"  MinWidth="800">
 
     <Grid>
         
@@ -22,8 +23,10 @@
             <TabItem Header="Reference-file Editor" />
             <TabItem Header="Skew Calculation" />
         </TabControl>
-        
-        
+
+        <GroupBox Grid.Row="1" Header="Messages">
+            <messageControlUiwpf:MessageControlUIWPF />
+        </GroupBox>
 
     </Grid>
 
