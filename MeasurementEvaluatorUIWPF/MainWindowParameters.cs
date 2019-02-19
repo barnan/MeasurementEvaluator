@@ -4,6 +4,6 @@ namespace MeasurementEvaluatorUIWPF
 {
     public class MainWindowParameters
     {
-        MainPageUIWPF MainPageUIWPF { get; }
+        MainPageUIWPF MainPage { get; }
     }
 }

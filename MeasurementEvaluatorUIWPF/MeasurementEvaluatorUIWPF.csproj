@@ -69,6 +69,7 @@
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPFParameters.cs" />
     <Compile Include="Pages\EvaluationPage\EvaluationPageViewModel.cs" />
+    <Compile Include="Pages\MainPageUIWPF\Converters\TabPageNameConverter.cs" />
     <Compile Include="Pages\MainPageUIWPF\MainPageUIWPF.xaml.cs">
       <DependentUpon>MainPageUIWPF.xaml</DependentUpon>
     </Compile>

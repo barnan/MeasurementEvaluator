@@ -7,9 +7,11 @@ namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF
     /// </summary>
     public partial class MainPageUIWPF : Page
     {
-        public MainPageUIWPF()
+        public MainPageUIWPF(MainPageUIWPFParameters parameters)
         {
             InitializeComponent();
+
+            DataContext = new MainPageViewModel(parameters);
         }
     }
 }

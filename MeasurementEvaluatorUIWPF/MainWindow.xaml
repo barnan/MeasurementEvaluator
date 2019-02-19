@@ -7,9 +7,9 @@
         xmlns:mainpageuiwpf="clr-namespace:MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}"
-        Title="MainWindow" Height="500" Width="800" MinHeight="500"  MinWidth="800">
+        Title="MainWindow" Height="800" Width="1000" MinHeight="500"  MinWidth="800">
 
-    <ContentPresenter Content="{Binding Parameters.MainPageUIWPF}"/>
+    <ContentPresenter Content="{Binding Parameters.MainPage}"/>
 
 </Window>
     
