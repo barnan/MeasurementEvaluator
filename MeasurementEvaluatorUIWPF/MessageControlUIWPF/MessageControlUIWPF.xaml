@@ -5,9 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
+             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="100" d:DesignWidth="500"
+             d:DataContext="{d:DesignInstance local:MessageControl, IsDesignTimeCreatable=True}" >
+    
+    <ListView ItemsSource="{Binding Messages}">
+        
+        <ListView.Resources>
+            <converters:MessageToColorConverter x:Key="MessageToColorConverter" />
+            <converters:MessageToTextConverter x:Key="MessageToTextConverter" />
+        </ListView.Resources>
+        
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <TextBox Text="{Binding MessageText, Converter={StaticResource MessageToTextConverter}}" Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}"/>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+
 </base:UserControlBase>

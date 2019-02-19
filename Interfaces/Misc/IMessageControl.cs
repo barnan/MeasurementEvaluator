@@ -6,7 +6,7 @@ namespace Interfaces.Misc
     {
         void AddMessage(string message);
 
-        void AddMessage(string message, MessageLevels level);
+        void AddMessage(string message, MessageSeverityLevels severityLevel);
 
         event EventHandler MessageReceived;
 

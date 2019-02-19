@@ -142,7 +142,7 @@ namespace Interfaces
 
 
 
-    public enum MessageLevels
+    public enum MessageSeverityLevels
     {
         Trace,
         Info,

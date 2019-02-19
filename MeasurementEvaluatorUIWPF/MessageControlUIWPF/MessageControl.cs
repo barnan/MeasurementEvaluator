@@ -1,7 +1,8 @@
 ﻿using Interfaces;
 using Interfaces.Misc;
+using MeasurementEvaluatorUI.Base;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
 {
@@ -9,28 +10,28 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
     {
         public string MessageText { get; internal set; }
 
-        public MessageLevels MessageLevel { get; internal set; }
+        public MessageSeverityLevels MessageSeverityLevel { get; internal set; }
 
     }
 
 
 
-    public class MessageControl : IMessageControl
+    public class MessageControl : ViewModelBase, IMessageControl
     {
-        private List<Message> _messages = new List<Message>();
-        private object _lockObj = new object();
+
+        private readonly object _lockObj = new object();
 
 
         public void AddMessage(string message)
         {
-            AddMessage(message, MessageLevels.Trace);
+            AddMessage(message, MessageSeverityLevels.Trace);
         }
 
-        public void AddMessage(string message, MessageLevels level)
+        public void AddMessage(string message, MessageSeverityLevels severityLevel)
         {
             lock (_lockObj)
             {
-                Message msg = new Message { MessageText = message, MessageLevel = level };
+                Message msg = new Message { MessageText = message, MessageSeverityLevel = severityLevel };
 
                 _messages.Add(msg);
 
@@ -39,5 +40,18 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
         }
 
         public event EventHandler MessageReceived;
+
+        private ObservableCollection<Message> _messages;
+        public ObservableCollection<Message> Messages
+        {
+            get { return _messages; }
+            set
+            {
+                _messages = value;
+            }
+        }
+
+
+
     }
 }

@@ -11,7 +11,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
         {
             InitializeComponent();
 
-            DataContext = new MessageControlViewModel();
+            DataContext = new MessageControl();
 
         }
     }
