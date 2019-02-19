@@ -1,4 +1,4 @@
-﻿using MeasurementEvaluatorUI;
+﻿using MeasurementEvaluatorUIWPF;
 using NLog;
 using System;
 using System.Diagnostics;
@@ -24,7 +24,7 @@ namespace MeasurementEvaluator
                 {
                     Application application = new Application();
 
-                    MainWindow mainWindow = new MainWindow { Title = "Measurement Evaluator" };
+                    MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator" };
                     mainWindow.Closed += MainWindow_OnClosed;
 
                     System.Windows.Application.Current.MainWindow = mainWindow;

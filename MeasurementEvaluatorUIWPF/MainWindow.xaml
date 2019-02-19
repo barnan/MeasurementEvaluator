@@ -3,33 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MeasurementEvaluatorUI"
-        xmlns:messageControlUiwpf="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
-        xmlns:evaluationPage="clr-namespace:MeasurementEvaluatorUIWPF.Pages.EvaluationPage"
+        xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF"
+        xmlns:mainpageuiwpf="clr-namespace:MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="500" Width="800" MinHeight="500"  MinWidth="800">
 
-    <Grid>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <TabControl>
-            <TabItem Header="Evaluation">
-                <evaluationPage:EvaluationPageUIWPF/>
-            </TabItem>
-            <TabItem Header="Specification-file Editor" />
-            <TabItem Header="Reference-file Editor" />
-            <TabItem Header="Skew Calculation" />
-        </TabControl>
-
-        <GroupBox Grid.Row="1" Header="Messages">
-            <messageControlUiwpf:MessageControlUIWPF />
-        </GroupBox>
-
-    </Grid>
+    <ContentPresenter Content="{Binding Parameters.MainPageUIWPF}"/>
 
 </Window>
     

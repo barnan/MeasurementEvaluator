@@ -12,5 +12,9 @@ namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
 
         public ResultHandlingUIWPF ResultHandlingUIWPF { get; }
 
+
+
+
+
     }
 }

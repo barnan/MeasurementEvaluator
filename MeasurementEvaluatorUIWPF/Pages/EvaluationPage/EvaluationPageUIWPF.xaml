@@ -23,13 +23,13 @@
         <ContentPresenter Grid.Column="0" Grid.RowSpan="2" Content="Parameters.DataCollectorUIWPF" />
 
 
-        <!--<GroupBox Grid.Column="1" Grid.Row="0"  Header="Result">
-            <ContentPresenter Grid.Column="0" Grid.RowSpan="2" Content="Parameters.DataCollectorUIWPF"/>
+        <GroupBox Grid.Column="1" Grid.Row="0"  Header="Result">
+            <ContentPresenter Grid.Column="0" Grid.RowSpan="2" Content="Parameters.ResultGridUIWPF"/>
         </GroupBox>
 
         <GroupBox Grid.Column="1" Grid.Row="1" Header="">
-            <ContentPresenter Grid.Column="0" Grid.RowSpan="2" Content="Parameters.DataCollectorUIWPF"/>
-        </GroupBox>-->
+            <ContentPresenter Grid.Column="0" Grid.RowSpan="2" Content="Parameters.ResultHandlingUIWPF"/>
+        </GroupBox>
 
     </Grid>
 </Page>

@@ -65,8 +65,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainWindowParameters.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPFParameters.cs" />
     <Compile Include="Pages\EvaluationPage\EvaluationPageViewModel.cs" />
+    <Compile Include="Pages\MainPageUIWPF\MainPageUIWPF.xaml.cs">
+      <DependentUpon>MainPageUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MainPageUIWPF\MainPageUIWPFParameters.cs" />
+    <Compile Include="Pages\MainPageUIWPF\MainPageViewModel.cs" />
     <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPFParameters.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPF.xaml.cs">
@@ -104,6 +111,10 @@
       <DependentUpon>SampleOrientationUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
+    <Page Include="Pages\MainPageUIWPF\MainPageUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
