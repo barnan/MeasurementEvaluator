@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
 
-namespace MeasurementEvaluatorUI
+namespace MeasurementEvaluatorUIWPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

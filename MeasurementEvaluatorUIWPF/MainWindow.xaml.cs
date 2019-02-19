@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace MeasurementEvaluatorUI
+namespace MeasurementEvaluatorUIWPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
