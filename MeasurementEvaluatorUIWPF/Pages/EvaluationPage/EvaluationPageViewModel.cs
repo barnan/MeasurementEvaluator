@@ -9,9 +9,9 @@ namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
 
 
 
-        public EvaluationPageViewModel(EvaluationPageUIWPFParameters parameters)
+        public EvaluationPageViewModel()
         {
-            _parameters = parameters;
+            // _parameters = parameters;
         }
     }
 }

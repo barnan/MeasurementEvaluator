@@ -11,7 +11,7 @@ namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
         {
             InitializeComponent();
 
-            DataContext = new EvaluationPageViewModel(parameters);
+            DataContext = new EvaluationPageViewModel();
         }
     }
 }
