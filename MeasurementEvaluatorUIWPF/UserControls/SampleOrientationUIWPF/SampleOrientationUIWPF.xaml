@@ -1,9 +1,9 @@
-﻿<base:UserControlBase x:Class="MeasurementEvaluatorUI.SampleOrientationUIWPF.SampleOrientationUIWPF"
+﻿<base:UserControlBase x:Class="MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF.SampleOrientationUIWPF"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MeasurementEvaluatorUI.SampleOrientationUIWPF"
+             xmlns:local="clr-namespace:MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
              mc:Ignorable="d" 
              d:DesignHeight="130" d:DesignWidth="200" MinWidth="200" MinHeight="130">

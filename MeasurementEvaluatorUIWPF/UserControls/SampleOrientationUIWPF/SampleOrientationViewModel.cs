@@ -1,6 +1,6 @@
 ﻿using MeasurementEvaluatorUI.Base;
 
-namespace MeasurementEvaluatorUI.SampleOrientationUIWPF
+namespace MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF
 {
     class SampleOrientationViewModel : ViewModelBase
     {

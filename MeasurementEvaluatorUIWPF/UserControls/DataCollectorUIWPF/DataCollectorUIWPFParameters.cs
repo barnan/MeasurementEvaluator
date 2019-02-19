@@ -1,9 +1,9 @@
 ﻿using Interfaces.DataAcquisition;
 
-namespace MeasurementEvaluatorUI.DataCollectorUIWPF
+namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 {
 
-    internal class DataCollectorUIWPFParameters
+    public class DataCollectorUIWPFParameters
     {
         internal IDataCollector DataCollector { get; }
 

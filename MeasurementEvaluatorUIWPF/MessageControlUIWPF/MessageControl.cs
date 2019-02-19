@@ -1,24 +1,16 @@
 ﻿using Interfaces;
 using Interfaces.Misc;
 using MeasurementEvaluatorUI.Base;
+using NLog;
 using System;
 using System.Collections.ObjectModel;
 
 namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
 {
-    public class Message
-    {
-        public string MessageText { get; internal set; }
-
-        public MessageSeverityLevels MessageSeverityLevel { get; internal set; }
-
-    }
-
-
 
     public class MessageControl : ViewModelBase, IMessageControl
     {
-
+        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private readonly object _lockObj = new object();
 
 
@@ -35,7 +27,12 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
 
                 _messages.Add(msg);
 
-                MessageReceived?.Invoke(this, new EventArg<Message>(msg));
+                MessageReceived?.Invoke(this, new CustomEventArg<Message>(msg));
+
+                if (_logger.IsTraceEnabled)
+                {
+                    _logger.Trace($"Message arrived. Text: {msg.MessageText}, Severity level: {msg.MessageSeverityLevel}");
+                }
             }
         }
 
@@ -45,13 +42,18 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
-            set
-            {
-                _messages = value;
-            }
+            set { _messages = value; }
         }
-
-
-
     }
+
+
+
+    public class Message
+    {
+        public string MessageText { get; internal set; }
+
+        public MessageSeverityLevels MessageSeverityLevel { get; internal set; }
+    }
+
+
 }

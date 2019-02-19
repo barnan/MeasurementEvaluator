@@ -1,6 +1,6 @@
 ﻿using MeasurementEvaluatorUI.Base;
 
-namespace MeasurementEvaluatorUI.SampleOrientationUIWPF
+namespace MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF
 {
     /// <summary>
     /// Interaction logic for SampleOrientationUIWPF.xaml

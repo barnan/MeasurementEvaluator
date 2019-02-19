@@ -35,9 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,13 +65,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DataCollectorUIWPF\DataCollectorUIWPFParameters.cs" />
-    <Compile Include="Commands\NormalCommand.cs" />
+    <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPFParameters.cs" />
+    <Compile Include="Pages\EvaluationPage\EvaluationPageViewModel.cs" />
+    <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPFParameters.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="DataCollectorUIWPF\DataCollectorUIWPF.xaml.cs">
+    <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPF.xaml.cs">
       <DependentUpon>DataCollectorUIWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataCollectorUIWPF\DataCollectorViewModel.cs" />
+    <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorViewModel.cs" />
     <Compile Include="Base\NotifyPropertyChanged.cs" />
     <Compile Include="Base\UserControlBase.cs" />
     <Compile Include="Base\ViewModelBase.cs" />
@@ -73,18 +82,29 @@
     <Compile Include="MessageControlUIWPF\MessageControlUIWPF.xaml.cs">
       <DependentUpon>MessageControlUIWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EvaluationPageUIWPF.xaml.cs">
+    <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPF.xaml.cs">
       <DependentUpon>EvaluationPageUIWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SpecificationEditorPageUIWPF.xaml.cs">
+    <Compile Include="Pages\SpecificationEditorPage\SpecificationEditorPageUIWPF.xaml.cs">
       <DependentUpon>SpecificationEditorPageUIWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SampleOrientationUIWPF\SampleOrientationParameters.cs" />
-    <Compile Include="SampleOrientationUIWPF\SampleOrientationUIWPF.xaml.cs">
+    <Compile Include="UserControls\ResultChartUIWPF\ResultChartUIWPF.xaml.cs">
+      <DependentUpon>ResultChartUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ResultGridUIWPF\ResultGridUIWPF.xaml.cs">
+      <DependentUpon>ResultGridUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ResultGridUIWPF\ResultGridViewModel.cs" />
+    <Compile Include="UserControls\ResultHandlingUIWPF\ResultHandlingUIWPF.xaml.cs">
+      <DependentUpon>ResultHandlingUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ResultHandlingUIWPF\ResultHandlingViewModel.cs" />
+    <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationParameters.cs" />
+    <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationUIWPF.xaml.cs">
       <DependentUpon>SampleOrientationUIWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
-    <Page Include="DataCollectorUIWPF\DataCollectorUIWPF.xaml">
+    <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
+    <Page Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,15 +128,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\EvaluationPageUIWPF.xaml">
+    <Page Include="Pages\EvaluationPage\EvaluationPageUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SpecificationEditorPageUIWPF.xaml">
+    <Page Include="Pages\SpecificationEditorPage\SpecificationEditorPageUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SampleOrientationUIWPF\SampleOrientationUIWPF.xaml">
+    <Page Include="UserControls\ResultChartUIWPF\ResultChartUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ResultGridUIWPF\ResultGridUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ResultHandlingUIWPF\ResultHandlingUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SampleOrientationUIWPF\SampleOrientationUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,6 +171,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

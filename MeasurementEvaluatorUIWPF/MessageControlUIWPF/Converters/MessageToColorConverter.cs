@@ -28,7 +28,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters
             switch (msg.MessageSeverityLevel)
             {
                 case MessageSeverityLevels.Trace:
-                    return Colors.DarkGray;
+                    return Colors.White;
                 case MessageSeverityLevels.Info:
                     return Colors.Black;
 

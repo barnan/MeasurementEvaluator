@@ -1,13 +1,22 @@
 ﻿using MeasurementEvaluatorUI.Base;
 using System.Windows.Input;
 
-namespace MeasurementEvaluatorUI.DataCollectorUIWPF
+namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 {
     internal class DataCollectorViewModel : ViewModelBase
     {
         #region fields
 
         private DataCollectorUIWPFParameters _parameters;
+
+        #endregion
+
+        #region ctor
+
+        public DataCollectorViewModel(DataCollectorUIWPFParameters parameters)
+        {
+            _parameters = parameters;
+        }
 
         #endregion
 
@@ -29,11 +38,6 @@ namespace MeasurementEvaluatorUI.DataCollectorUIWPF
             set { _browseMeasurementDataCommand = value; }
         }
 
-
-
-
-
         #endregion
-
     }
 }

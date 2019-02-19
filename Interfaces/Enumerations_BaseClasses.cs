@@ -122,22 +122,16 @@ namespace Interfaces
 
 
 
-    public class EventArg<T> : EventArgs
+    public class CustomEventArg<T> : EventArgs
     {
-        // Property variable
-        private readonly T p_EventData;
+        private readonly T data;
 
-        // Constructor
-        public EventArg(T data)
+        public CustomEventArg(T data)
         {
-            p_EventData = data;
+            this.data = data;
         }
 
-        // Property for EventArgs argument
-        public T Data
-        {
-            get { return p_EventData; }
-        }
+        public T Data => data;
     }
 
 
