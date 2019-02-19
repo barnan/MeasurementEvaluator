@@ -67,6 +67,11 @@
     <Compile Include="Base\NotifyPropertyChanged.cs" />
     <Compile Include="Base\UserControlBase.cs" />
     <Compile Include="Base\ViewModelBase.cs" />
+    <Compile Include="MessageControlUIWPF\MessageControl.cs" />
+    <Compile Include="MessageControlUIWPF\MessageControlUIWPF.xaml.cs">
+      <DependentUpon>MessageControlUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MessageControlUIWPF\MessageControlViewModel.cs" />
     <Compile Include="Pages\EvaluationPageUIWPF.xaml.cs">
       <DependentUpon>EvaluationPageUIWPF.xaml</DependentUpon>
     </Compile>
@@ -95,6 +100,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Base\StyleDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MessageControlUIWPF\MessageControlUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -142,6 +151,9 @@
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MessageControlUIWPF\Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

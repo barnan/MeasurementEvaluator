@@ -1,7 +1,7 @@
 ﻿using MeasurementEvaluatorUI.Base;
 using System.Windows.Input;
 
-namespace MeasurementEvaluatorUI.DataCollectorUIWpf
+namespace MeasurementEvaluatorUI.DataCollectorUIWPF
 {
     internal class DataCollectorViewModel : ViewModelBase
     {

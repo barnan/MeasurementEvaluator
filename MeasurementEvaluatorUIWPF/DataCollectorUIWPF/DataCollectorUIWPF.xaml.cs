@@ -1,6 +1,7 @@
 ﻿using MeasurementEvaluatorUI.Base;
+using MeasurementEvaluatorUI.DataCollectorUIWPF;
 
-namespace MeasurementEvaluatorUI.DataCollectorUIWpf
+namespace MeasurementEvaluatorUIWPF.DataCollectorUIWPF
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml
