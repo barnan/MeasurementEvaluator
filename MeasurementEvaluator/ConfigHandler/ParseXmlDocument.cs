@@ -18,7 +18,8 @@ namespace MeasurementEvaluator.ConfigHandler
                 return false;
             }
 
-            foreach (var item in xmlDocument.ChildNodes)
+            XmlNodeList sectionNodes = xmlDocument.DocumentElement.ChildNodes;
+            foreach (var section in sectionNodes)
             {
 
             }
