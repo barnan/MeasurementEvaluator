@@ -55,6 +55,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigHandler\ConfigurationAttribute.cs" />
+    <Compile Include="ConfigHandler\ParseXmlDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

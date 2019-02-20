@@ -19,7 +19,7 @@
         /// <summary>
         /// full path and name of the data on the media
         /// </summary>
-        string FullNameOnHDD { get; set; }
+        new string FullNameOnHDD { get; set; }
     }
 
 

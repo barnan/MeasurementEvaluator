@@ -25,12 +25,12 @@ namespace Interfaces.ReferenceSample
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>
-        IReadOnlyList<IReferenceValue> ReferenceValues { get; set; }
+        new IReadOnlyList<IReferenceValue> ReferenceValues { get; set; }
 
         /// <summary>
         /// orientation of the sample, when its reference values were measured
         /// </summary>
-        SampleOrientation SampleOrientation { get; set; }
+        new SampleOrientation SampleOrientation { get; set; }
 
     }
 

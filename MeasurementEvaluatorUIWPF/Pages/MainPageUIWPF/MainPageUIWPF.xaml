@@ -30,6 +30,9 @@
                     <TextBlock Text="{Binding ., Converter={StaticResource TabPageNameConverter} }"/>
                 </DataTemplate>
             </TabControl.ItemTemplate>
+            
+            
+            
             <!--<TabItem Header="Evaluation">
                 <evaluationPage:EvaluationPageUIWPF/>
             </TabItem>

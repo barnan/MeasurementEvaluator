@@ -113,7 +113,7 @@ namespace DataAcquisitions.DAL
                                 szam = Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture);
                                 valid = true;
                             }
-                            catch (FormatException ex)
+                            catch (FormatException)
                             {
                                 szam = 0.0;
                                 valid = false;
