@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Calculations.Evaluation
+namespace Calculations.Matching
 {
     internal class Matching : IMathing
     {

@@ -63,9 +63,11 @@
     <Compile Include="Evaluation\Evaluation.cs" />
     <Compile Include="Evaluation\EvaluationParameters.cs" />
     <Compile Include="Evaluation\EvaluationResult.cs" />
-    <Compile Include="Evaluation\MatchingKeyValuePairs.cs" />
-    <Compile Include="Evaluation\Matching.cs" />
-    <Compile Include="Evaluation\MathchingParameters.cs" />
+    <Compile Include="Evaluation\Factory.cs" />
+    <Compile Include="Matching\Factory.cs" />
+    <Compile Include="Matching\MatchingKeyValuePairs.cs" />
+    <Compile Include="Matching\Matching.cs" />
+    <Compile Include="Matching\MathchingParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

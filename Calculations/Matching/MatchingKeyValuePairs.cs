@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Calculations.Evaluation
+namespace Calculations.Matching
 {
     public class MatchingKeyValuePairs
     {

@@ -1,7 +1,7 @@
 ﻿using Interfaces.DataAcquisition;
 using NLog;
 
-namespace Calculations.Evaluation
+namespace Calculations.Matching
 {
     internal class MathchingParameters
     {

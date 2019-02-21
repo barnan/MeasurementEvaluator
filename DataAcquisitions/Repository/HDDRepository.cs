@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DataAcquisitions.Repository
 {
-    internal abstract class HDDRepositoryBase<T> : IRepository<T>
+    internal class HDDRepository<T> : IRepository<T>
         where T : class, INamed, IComparable<T>
     {
 
@@ -17,7 +17,7 @@ namespace DataAcquisitions.Repository
 
 
 
-        protected HDDRepositoryBase(HDDRepositoryParameters parameters)
+        protected HDDRepository(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }

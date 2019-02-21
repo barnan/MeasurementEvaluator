@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAcquisitions.DataCollector
+namespace Calculations.Evaluation
 {
-    class DataCollectorFactory
+    class Factory
     {
     }
 }

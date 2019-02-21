@@ -2,6 +2,7 @@
 using Interfaces.DataAcquisition;
 using Interfaces.Evaluation;
 using Interfaces.Misc;
+using Miscellaneous;
 using NLog;
 
 namespace Calculations.Evaluation
@@ -10,13 +11,37 @@ namespace Calculations.Evaluation
     {
         internal ILogger Logger { get; }
 
-        internal ICalculationContainer CalculationContainer { get; }
+        [Configuration("Contains the possible calculation", Name = "Name of Calculation Container Component", LoadComponent = true)]
+        private ICalculationContainer _calculationContainer;
+        internal ICalculationContainer CalculationContainer
+        {
+            get => _calculationContainer;
+            private set => _calculationContainer = value;
+        }
 
-        internal IDataCollector DataCollector { get; }
+        [Configuration("Data Collection", Name = "Name of Data collector Component", LoadComponent = true)]
+        private IDataCollector _dataCollector;
+        internal IDataCollector DataCollector
+        {
+            get => _dataCollector;
+            private set => _dataCollector = value;
+        }
 
-        internal IDateTimeProvider DateTimeProvider { get; }
+        [Configuration("Date and time provider", Name = "Name of the DateTimeProvider Component", LoadComponent = true)]
+        private IDateTimeProvider _dateTimeProvider;
+        internal IDateTimeProvider DateTimeProvider
+        {
+            get => _dateTimeProvider;
+            private set => _dateTimeProvider = value;
+        }
 
-        internal IMathing Matcher { get; }
+        [Configuration("Data matching", Name = "Name of the Data matcher Component", LoadComponent = true)]
+        private IMathing _matcher;
+        internal IMathing Matcher
+        {
+            get => _matcher;
+            private set => _matcher = value;
+        }
 
         internal EvaluationParameters(ICalculationContainer calculationContainer, IDataCollector dataCollector, IDateTimeProvider datetimeProvider, IMathing mathing)
         {

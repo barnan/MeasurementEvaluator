@@ -53,7 +53,7 @@
     <Compile Include="DAL\HDDXmlReaderWriter.cs" />
     <Compile Include="DAL\HDDFileReaderWriterBase.cs" />
     <Compile Include="DataCollector\DataCollector.cs" />
-    <Compile Include="DataCollector\DataCollectorFactory.cs" />
+    <Compile Include="DataCollector\Factory.cs" />
     <Compile Include="DataCollector\DataCollectorParameters.cs" />
     <Compile Include="DataCollector\DataCollectorResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
