@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluator", "Mea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluatorUIWPF", "MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj", "{26F70B15-0BE9-487A-BCBC-729C4F9802BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLoader", "PluginLoader\PluginLoader.csproj", "{50FC5BE3-6190-42D7-B518-733947048D4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26F70B15-0BE9-487A-BCBC-729C4F9802BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50FC5BE3-6190-42D7-B518-733947048D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50FC5BE3-6190-42D7-B518-733947048D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50FC5BE3-6190-42D7-B518-733947048D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50FC5BE3-6190-42D7-B518-733947048D4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

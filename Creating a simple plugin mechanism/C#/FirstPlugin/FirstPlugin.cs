@@ -21,4 +21,13 @@ namespace FirstPlugin
 
 		#endregion
 	}
+
+    public class Factory
+    {
+        public object Create()
+        {
+            return new FirstPlugin();
+        }
+    }
+
 }

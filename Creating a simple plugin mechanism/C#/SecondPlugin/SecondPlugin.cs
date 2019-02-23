@@ -2,23 +2,32 @@
 
 namespace SecondPlugin
 {
-	public class SecondPlugin : IPlugin
-	{
-		#region IPlugin Members
+    public class SecondPlugin : IPlugin
+    {
+        #region IPlugin Members
 
-		public string Name
-		{
-			get
-			{
-				return "Second Plugin";
-			}
-		}
+        public string Name
+        {
+            get
+            {
+                return "Second Plugin";
+            }
+        }
 
-		public void Do()
-		{
-			System.Windows.MessageBox.Show("Do Something in Second Plugin");
-		}
+        public void Do()
+        {
+            System.Windows.MessageBox.Show("Do Something in Second Plugin");
+        }
 
-		#endregion
-	}
+        #endregion
+    }
+
+    public class Factory
+    {
+        public object Create()
+        {
+            return new SecondPlugin();
+        }
+    }
+
 }
