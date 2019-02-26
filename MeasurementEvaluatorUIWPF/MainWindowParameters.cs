@@ -12,5 +12,11 @@ namespace MeasurementEvaluatorUIWPF
             MainPage = mainPage;
         }
 
+
+        public MainWindowParameters()
+        {
+            MainPage = new MainPageUIWPF(new MainPageUIWPFParameters());
+        }
+
     }
 }

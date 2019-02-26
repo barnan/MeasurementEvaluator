@@ -29,9 +29,12 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AppConfig>MeasurementEvaluator.config</AppConfig>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -60,13 +63,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MeasurementEvaluator.config" />
+    <None Include="MeasurementEvaluator.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj">
       <Project>{26f70b15-0be9-487a-bcbc-729c4f9802bf}</Project>
       <Name>MeasurementEvaluatorUIWPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PluginLoader\PluginLoader.csproj">
+      <Project>{50fc5be3-6190-42d7-b518-733947048d4b}</Project>
+      <Name>PluginLoader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

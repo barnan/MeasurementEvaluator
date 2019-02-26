@@ -1,6 +1,4 @@
-﻿using DataAcquisitions.DAL;
-using DataAcquisitions.Repository;
-using Interfaces.DataAcquisition;
+﻿using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Interfaces.Misc;
 using Interfaces.ReferenceSample;
@@ -33,15 +31,15 @@ namespace DataAcquisitions.DataCollector
         }
 
 
-        public DataCollectorParameters()
+        public DataCollectorParameters(IRepository<IToolSpecification> specificationRepository, IRepository<IReferenceSample> referenceRepository, IRepository<IToolMeasurementData> measurementDataRepository, IDateTimeProvider dateTimeProvider)
         {
             Logger = LogManager.GetCurrentClassLogger();
 
-            SpecificationRepository = new HDDRepository<IToolSpecification>(new HDDRepositoryParameters("./Specification", "ToolSpecification", new HDDXmlSerializator()));
+            SpecificationRepository = specificationRepository;
             ReferenceRepository = referenceRepository;
-            MeasurementDataRepository = measurementRepository;
+            MeasurementDataRepository = measurementDataRepository;
+            DateTimeProvider = dateTimeProvider;
         }
-
 
     }
 }

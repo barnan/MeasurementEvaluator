@@ -1,6 +1,6 @@
-﻿namespace PluginLoader.Interfaces
+﻿namespace PluginLoading.Interfaces
 {
-    public interface PluginLoader
+    public interface PluginLoading
     {
 
         T CreateInstance<T>();

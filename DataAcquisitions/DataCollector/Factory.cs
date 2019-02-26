@@ -3,12 +3,10 @@
     class Factory
     {
 
-        public object CreateComponent()
-        {
-            DataCollectorParameters parameters = new DataCollectorParameters();
+        //public object CreateComponent()
+        //{
 
-            return new DataCollector(parameters);
-        }
+        //}
 
     }
 }
