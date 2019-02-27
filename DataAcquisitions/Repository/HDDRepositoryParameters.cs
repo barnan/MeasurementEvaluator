@@ -12,13 +12,13 @@ namespace DataAcquisitions.Repository
         internal IHDDFileReaderWriter IHDDReaderWriter { get; }
 
 
-        internal HDDRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IHDDFileReaderWriter ihddFileReaderWriter)
-        {
-            Logger = LogManager.GetCurrentClassLogger();
-            RepositoryFullDirectoryPath = repostoryDirectoryPath;
-            FileExtensionFilters = fileExtensionFilter;
-            IHDDReaderWriter = ihddFileReaderWriter;
-        }
+        //internal HDDRepositoryParameters(string repostoryDirectoryPath, List<string> fileExtensionFilter, IHDDFileReaderWriter ihddFileReaderWriter)
+        //{
+        //    Logger = LogManager.GetCurrentClassLogger();
+        //    RepositoryFullDirectoryPath = repostoryDirectoryPath;
+        //    FileExtensionFilters = fileExtensionFilter;
+        //    IHDDReaderWriter = ihddFileReaderWriter;
+        //}
     }
 
 }

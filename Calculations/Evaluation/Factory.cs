@@ -1,12 +1,37 @@
-﻿using System;
+﻿using PluginLoading.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Calculations.Evaluation
 {
-    class Factory
+    class Factory : IPluginFactory
     {
+
+        Dictionary<string, Evaluation> _dataCollectorDict = new Dictionary<string, Evaluation>();
+
+
+        public object Create(Type t, string name)
+        {
+            if (t.IsAssignableFrom(typeof(Evaluation)))
+            {
+                if (!_dataCollectorDict.ContainsKey(name))
+                {
+                    EvaluationParameters param = new EvaluationParameters();
+                    if (param.Load())
+                    {
+                        Evaluation instance = new Evaluation(param);
+                        _dataCollectorDict.Add(name, instance);
+                        return instance;
+                    }
+                }
+                else
+                {
+                    return _dataCollectorDict[name];
+                }
+            }
+            return null;
+        }
+
+
     }
 }

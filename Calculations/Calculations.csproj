@@ -84,6 +84,10 @@
       <Project>{7f91e183-4b11-47d2-b51f-8c9be7b20256}</Project>
       <Name>Miscellaneous</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PluginLoader\PluginLoader.csproj">
+      <Project>{50FC5BE3-6190-42D7-B518-733947048D4B}</Project>
+      <Name>PluginLoader</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

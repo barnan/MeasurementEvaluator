@@ -24,26 +24,28 @@ namespace DataAcquisitions.DataCollector
         //private IDateTimeProvider _dateTimeProvider;
         //internal IDateTimeProvider DateTimeProvider => _dateTimeProvider;
 
-        internal ILogger Logger { get; }
+        internal ILogger Logger { get; private set; }
 
         [Configuration("Date and time Provider", "Date and time Provider", true)]
         private string _dateTimeProvider;
-        internal IDateTimeProvider DateTimeProvider { get; }
+        internal IDateTimeProvider DateTimeProvider { get; private set; }
 
         [Configuration("Measurement Data Repository", "Measurement Data Repository", true)]
         private string _measurementDataRepository;
-        internal IRepository<IToolMeasurementData> MeasurementDataRepository { get; }
+        internal IRepository<IToolMeasurementData> MeasurementDataRepository { get; private set; }
 
         [Configuration("Reference Repository", "Reference Repository", true)]
         private string _referenceRepository;
-        internal IRepository<IReferenceSample> ReferenceRepository { get; }
+        internal IRepository<IReferenceSample> ReferenceRepository { get; private set; }
 
         [Configuration("Specification Repository", "Specification Repository", true)]
         private string _specificationRepository;
 
-        internal IRepository<IToolSpecification> SpecificationRepository { get; }
+        internal IRepository<IToolSpecification> SpecificationRepository { get; private set; }
 
-        public DataCollectorParameters()
+
+
+        public bool Load()
         {
             Logger = LogManager.GetCurrentClassLogger();
 
@@ -52,7 +54,9 @@ namespace DataAcquisitions.DataCollector
             MeasurementDataRepository = PluginLoader.CreateInstance<IRepository<IToolMeasurementData>>(_measurementDataRepository);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
 
+            return true;
         }
+
 
     }
 }
