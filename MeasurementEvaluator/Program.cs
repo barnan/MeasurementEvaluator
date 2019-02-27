@@ -1,6 +1,5 @@
 ﻿using MeasurementEvaluatorUIWPF;
 using NLog;
-using PluginLoading;
 using System;
 using System.Configuration;
 using System.Diagnostics;
@@ -33,8 +32,6 @@ namespace MeasurementEvaluator
         private static ILogger _logger;
         private static ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
-        public static string PluginFolderPath { get; private set; }
-
         public static string SpecificationFolderPath { get; private set; }
         public static string ReferenceFolderPath { get; private set; }
         public static string MeasurementDataFolderPath { get; private set; }
@@ -64,8 +61,6 @@ namespace MeasurementEvaluator
                 {
                     return;
                 }
-
-                PluginLoader pluginLoader = new PluginLoader();
 
                 Thread appThread = new Thread(() =>
                 {
@@ -103,16 +98,11 @@ namespace MeasurementEvaluator
         {
             try
             {
-                PluginFolderPath = System.Configuration.ConfigurationManager.AppSettings.Get("PluginFolder");
                 SpecificationFolderPath = System.Configuration.ConfigurationManager.AppSettings["SpecificationFolder"];
                 ReferenceFolderPath = System.Configuration.ConfigurationManager.AppSettings["ReferenceFolder"];
                 MeasurementDataFolderPath = System.Configuration.ConfigurationManager.AppSettings["MeasurementFolder"];
                 ResultFolderPath = System.Configuration.ConfigurationManager.AppSettings["ResultFolder"];
 
-                if (!CheckFolder(PluginFolderPath, nameof(PluginFolderPath)))
-                {
-                    return false;
-                }
                 if (!CheckFolder(SpecificationFolderPath, nameof(SpecificationFolderPath)))
                 {
                     return false;
@@ -132,7 +122,6 @@ namespace MeasurementEvaluator
 
                 if (_logger.IsTraceEnabled)
                 {
-                    _logger.Info($"{nameof(PluginFolderPath)}: {PluginFolderPath}");
                     _logger.Info($"{nameof(SpecificationFolderPath)}: {SpecificationFolderPath}");
                     _logger.Info($"{nameof(ReferenceFolderPath)}: {ReferenceFolderPath}");
                     _logger.Info($"{nameof(MeasurementDataFolderPath)}: {MeasurementDataFolderPath}");

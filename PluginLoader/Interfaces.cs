@@ -1,9 +1,16 @@
-﻿namespace PluginLoading.Interfaces
+﻿using System;
+
+namespace PluginLoading.Interfaces
 {
-    public interface PluginLoading
+
+    public interface IPluginFactory
     {
-
-        T CreateInstance<T>();
-
+        object Create(Type t);
     }
+
+    public interface IPluginLoading
+    {
+        T CreateInstance<T>();
+    }
+
 }
