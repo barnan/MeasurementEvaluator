@@ -17,6 +17,7 @@ namespace DataAcquisitions.DataCollector
                 if (!_dataCollectorDict.ContainsKey(name))
                 {
                     DataCollectorParameters param = new DataCollectorParameters();
+
                     if (param.Load())
                     {
                         DataCollector instance = new DataCollector(param);
