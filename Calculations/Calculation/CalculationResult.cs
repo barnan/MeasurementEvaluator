@@ -10,7 +10,7 @@ namespace Calculations.Calculation
 
         public DateTime EndTime { get; }
 
-        public bool SuccessfulCalculation { get; }
+        public bool Successful { get; }
 
 
 
@@ -18,7 +18,7 @@ namespace Calculations.Calculation
         {
             StartTime = startTime;
             EndTime = endTime;
-            SuccessfulCalculation = successful;
+            Successful = successful;
         }
 
 

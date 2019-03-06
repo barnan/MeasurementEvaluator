@@ -5,6 +5,8 @@ namespace Miscellaneous
 {
     public static class LoggerExtensions
     {
+        // -----------------------------------------------------
+        // Callermembername
         public static void MethodTrace(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             logger.Trace($"{callermember}-{message}");
@@ -36,9 +38,9 @@ namespace Miscellaneous
         }
 
 
-
-
-        public static void LogTrace(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        // -----------------------------------------------------
+        // checks the logging level + callermembername
+        public static void LogMethodTrace(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             if (logger.IsTraceEnabled)
             {
@@ -46,7 +48,7 @@ namespace Miscellaneous
             }
         }
 
-        public static void LogDebug(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        public static void LogMethodDebug(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             if (logger.IsDebugEnabled)
             {
@@ -54,7 +56,7 @@ namespace Miscellaneous
             }
         }
 
-        public static void LogInfo(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        public static void LogMethodInfo(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             if (logger.IsInfoEnabled)
             {
@@ -62,7 +64,7 @@ namespace Miscellaneous
             }
         }
 
-        public static void LogWarning(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        public static void LogMethodWarning(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             if (logger.IsWarnEnabled)
             {
@@ -70,7 +72,7 @@ namespace Miscellaneous
             }
         }
 
-        public static void LogError(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        public static void LogMethodError(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             if (logger.IsErrorEnabled)
             {
@@ -78,7 +80,7 @@ namespace Miscellaneous
             }
         }
 
-        public static void LogFatal(this ILogger logger, string message, [CallerMemberName] string callermember = null)
+        public static void LogMethodFatal(this ILogger logger, string message, [CallerMemberName] string callermember = null)
         {
             if (logger.IsFatalEnabled)
             {
@@ -87,6 +89,55 @@ namespace Miscellaneous
         }
 
 
+        // -----------------------------------------------------
+        //only checks the logging level, NO callermembername
+        public static void LogTrace(this ILogger logger, string message)
+        {
+            if (logger.IsTraceEnabled)
+            {
+                logger.Trace(message);
+            }
+        }
+
+        public static void LogDebug(this ILogger logger, string message)
+        {
+            if (logger.IsDebugEnabled)
+            {
+                logger.Debug(message);
+            }
+        }
+
+        public static void LogInfo(this ILogger logger, string message)
+        {
+            if (logger.IsInfoEnabled)
+            {
+                logger.Info(message);
+            }
+        }
+
+        public static void LogWarning(this ILogger logger, string message)
+        {
+            if (logger.IsWarnEnabled)
+            {
+                logger.Warn(message);
+            }
+        }
+
+        public static void LogError(this ILogger logger, string message)
+        {
+            if (logger.IsErrorEnabled)
+            {
+                logger.Error(message);
+            }
+        }
+
+        public static void LogFatal(this ILogger logger, string message)
+        {
+            if (logger.IsFatalEnabled)
+            {
+                logger.Fatal(message);
+            }
+        }
 
     }
 }

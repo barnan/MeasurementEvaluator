@@ -49,7 +49,7 @@
     <Compile Include="Evaluation\IMathing.cs" />
     <Compile Include="Misc\IComponent.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />
-    <Compile Include="Misc\IMessageControl.cs" />
+    <Compile Include="Misc\IUIMessageControl.cs" />
     <Compile Include="Misc\INamed.cs" />
     <Compile Include="ToolSpecifications\IRotatable.cs" />
     <Compile Include="Result\ICalculationResult.cs" />

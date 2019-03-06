@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace Interfaces
 {
 
-    public enum Relations : int
+    public enum Relations : byte
     {
         EQUAL = 0,
         NOTEQUAL = 1,
@@ -95,7 +95,6 @@ namespace Interfaces
 
 
 
-
     public class ResultEventArgs : EventArgs
     {
         public IResult Result { get; }
@@ -124,14 +123,14 @@ namespace Interfaces
 
     public class CustomEventArg<T> : EventArgs
     {
-        private readonly T data;
+        private readonly T _data;
 
         public CustomEventArg(T data)
         {
-            this.data = data;
+            _data = data;
         }
 
-        public T Data => data;
+        public T Data => _data;
     }
 
 

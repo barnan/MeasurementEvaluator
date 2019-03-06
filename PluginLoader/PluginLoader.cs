@@ -9,6 +9,7 @@ namespace PluginLoading
 {
     public static class PluginLoader
     {
+
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
 
@@ -20,6 +21,12 @@ namespace PluginLoading
 
         public static T CreateInstance<T>(string title)
         {
+            if (_factories == null)
+            {
+                _logger.Error("Factories are not created yet.");
+                return default(T);
+            }
+
             List<T> instances = new List<T>();
 
             foreach (var factory in _factories)
@@ -50,18 +57,17 @@ namespace PluginLoading
         }
 
 
-
         /// <summary>
         /// Load the available factories from the assemblies in the given folder
         /// </summary>
         /// <param name="path">path of the folder, where the factories are collected from</param>
         /// <returns>Collection of factories</returns>
-        public static ICollection<IPluginFactory> LoadPlugins(string path)
+        public static bool LoadPlugins(string path)
         {
             if (path == null)
             {
                 _logger.Error("Arrived path is null.");
-                return null;
+                return false;
             }
 
             if (!IsPathFolder(path))
@@ -114,13 +120,12 @@ namespace PluginLoading
                     }
                 }
 
-                return factories;
+                _factories = factories;
+                return true;
             }
 
-            return null;
+            return false;
         }
-
-
 
 
         #region private

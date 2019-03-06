@@ -13,7 +13,7 @@ namespace DataAcquisitions.DataCollector
 
         public DateTime EndTime { get; }
 
-        public bool SuccessfulCalculation { get; }
+        public bool Successful { get; }
 
         public IToolSpecification Specification { get; }
 
@@ -26,7 +26,7 @@ namespace DataAcquisitions.DataCollector
         {
             StartTime = startTime;
             EndTime = EndTime;
-            SuccessfulCalculation = successfulCalculation;
+            Successful = successfulCalculation;
             Specification = toolSpecification;
             Reference = referenceSample;
             MeasurementData = measurementData;

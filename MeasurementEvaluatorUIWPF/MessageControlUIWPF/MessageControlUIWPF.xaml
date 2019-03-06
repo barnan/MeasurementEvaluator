@@ -8,7 +8,7 @@
              xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="500"
-             d:DataContext="{d:DesignInstance local:MessageControl, IsDesignTimeCreatable=False}" >
+             d:DataContext="{d:DesignInstance local:IuiMessageControl, IsDesignTimeCreatable=False}" >
     
     <ListView ItemsSource="{Binding Messages}">
         

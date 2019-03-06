@@ -5,19 +5,18 @@ using System.Collections.Generic;
 namespace Interfaces.MeasuredData
 {
     /// <summary>
-    /// interface that describes the measurement result of one tool, only Geters
+    /// interface that describes the measurement result of one tool, only Getters
     /// </summary>
     public interface IToolMeasurementData : IComparable<IToolMeasurementData>, INamed
     {
-
         /// <summary>
-        /// Name of the tool, which was used to prepare the measurement data
+        /// Name of the tool, which was used to create the measurement data (e.g. TTR, WSI, etc))
         /// </summary>
         ToolNames ToolName { get; }
 
         /// <summary>
         /// collection of measurement result of a given tool 
-        /// (etc -> thickness, resistivity, sawmark are results of TTR)
+        /// (etc -> thickness, resistivity, sawmark are results of tool TTR)
         /// </summary>
         IReadOnlyList<IMeasurementSerie> Results { get; }
     }

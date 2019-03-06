@@ -8,7 +8,11 @@ namespace DataStructures.ToolSpecifications
     {
 
 
-        public IReadOnlyList<IReadOnlyList<IQuantity>> Rotations => throw new System.NotImplementedException();
+        public IReadOnlyList<IReadOnlyList<KeyValuePair<SampleOrientation, IQuantity>>> Rotations
+        {
+            get => throw new System.NotImplementedException();
+            set => throw new System.NotImplementedException();
+        }
 
 
 

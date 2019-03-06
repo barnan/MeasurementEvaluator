@@ -13,12 +13,12 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// indexer to get a data point with a given index
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="i">input index</param>
         /// <returns></returns>
         IMeasurementPoint this[int i] { get; }
 
         /// <summary>
-        /// Unit of the measurement
+        /// Unit of the measurement data
         /// </summary>
         Units Dimension { get; }
     }

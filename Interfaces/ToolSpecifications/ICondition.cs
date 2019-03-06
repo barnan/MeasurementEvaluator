@@ -27,11 +27,10 @@ namespace Interfaces.ToolSpecifications
     }
 
 
-    public interface ICondition<T> : ICondition where T : struct
+    public interface ICondition<out T> : ICondition where T : struct
     {
-
         /// <summary>
-        /// Relation in the condition       e.g.   <   >   ==   >=   <=
+        /// Relation in the condition    e.g.  <  >  ==  >=  <=
         /// </summary>
         Relations ConditionRelation { get; }
 

@@ -14,7 +14,7 @@ namespace Calculations.Evaluation
 
         public DateTime EndTime { get; }
 
-        public bool SuccessfulCalculation { get; }
+        public bool Successful { get; }
 
         public IReadOnlyList<IQuantityEvaluationResult> EvaluationResults { get; }
 
@@ -23,7 +23,7 @@ namespace Calculations.Evaluation
         {
             StartTime = startTime;
             EndTime = endTime;
-            SuccessfulCalculation = successfulCalculation;
+            Successful = successfulCalculation;
             EvaluationResults = evaluationResults;
         }
 
@@ -48,7 +48,7 @@ namespace Calculations.Evaluation
 
         public DateTime EndTime { get; }
 
-        public bool SuccessfulCalculation { get; }
+        public bool Successful { get; }
 
         public XElement Save()
         {
@@ -75,7 +75,7 @@ namespace Calculations.Evaluation
         {
             StartTime = startTime;
             EndTime = endTime;
-            SuccessfulCalculation = successfulCalculation;
+            Successful = successfulCalculation;
             MeasurementSerieData = measurementSerieData;
             Condition = condition;
             ReferenceValue = referenceValue;

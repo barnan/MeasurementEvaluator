@@ -1,6 +1,7 @@
 ﻿using PluginLoading.Interfaces;
 using System;
 using System.Collections.Generic;
+using PluginLoading;
 
 namespace DataAcquisitions.DataCollector
 {

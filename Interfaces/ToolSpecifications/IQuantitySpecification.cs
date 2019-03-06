@@ -5,10 +5,13 @@ namespace Interfaces.ToolSpecifications
 {
     public interface IQuantitySpecification : IComparable<IQuantitySpecification>
     {
+        /// <summary>
+        /// the quantity which the condition is related
+        /// </summary>
         IQuantity Quantity { get; }
 
         /// <summary>
-        /// Condition set which is realted to this quantity
+        /// Condition set which is realted to the quantity
         /// </summary>
         IReadOnlyList<ICondition> Conditions { get; }
 
@@ -19,9 +22,6 @@ namespace Interfaces.ToolSpecifications
     {
         new IQuantity Quantity { get; set; }
 
-        /// <summary>
-        /// Condition set which is realted to this quantity
-        /// </summary>
         new IReadOnlyList<ICondition> Conditions { get; set; }
 
     }

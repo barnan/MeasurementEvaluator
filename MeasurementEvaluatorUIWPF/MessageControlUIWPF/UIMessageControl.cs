@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
 {
 
-    public class MessageControl : ViewModelBase, IMessageControl
+    public class UIMessageControl : ViewModelBase, IUIMessageControl
     {
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private readonly object _lockObj = new object();

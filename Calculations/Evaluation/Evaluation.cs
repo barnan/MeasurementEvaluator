@@ -325,7 +325,7 @@ namespace Calculations.Evaluation
                         // perform calculation:
                         ICalculationResult calcResult = calculation.Calculate(calculationInputData);
 
-                        if (!calcResult.SuccessfulCalculation)
+                        if (!calcResult.Successful)
                         {
                             conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
@@ -336,7 +336,7 @@ namespace Calculations.Evaluation
                         IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
                             conditionEvaluationStartTime,
                             _parameters.DateTimeProvider.GetDateTime(),
-                            calcResult.SuccessfulCalculation,
+                            calcResult.Successful,
                             calculationInputData,
                             condition,
                             referenceValue,
@@ -352,7 +352,7 @@ namespace Calculations.Evaluation
                             _parameters.Logger.MethodTrace("The evaluation result:");
                             _parameters.Logger.MethodTrace($"   Start time: {conditionResult.StartTime}");
                             _parameters.Logger.MethodTrace($"   End time: {conditionResult.EndTime}");
-                            _parameters.Logger.MethodTrace($"   The calculation was {(conditionResult.SuccessfulCalculation ? "" : "NOT")} successful.");
+                            _parameters.Logger.MethodTrace($"   The calculation was {(conditionResult.Successful ? "" : "NOT")} successful.");
                             _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasData.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");

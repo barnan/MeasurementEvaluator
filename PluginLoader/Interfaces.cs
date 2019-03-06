@@ -8,10 +8,4 @@ namespace PluginLoading.Interfaces
         object Create(Type t, string name);
     }
 
-
-    public interface IPluginLoading
-    {
-        T CreateInstance<T>();
-    }
-
 }
