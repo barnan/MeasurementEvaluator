@@ -7,18 +7,12 @@ using System.Collections.Generic;
 namespace DataStructures.ToolSpecifications
 {
 
-    public abstract class ConditionBase : ICondition
+    public abstract class ConditionBase : IConditionHandler
     {
-        public string Name { get; }
-        public CalculationTypes CalculationType { get; }
-        public Relations ConditionRelation { get; }
-        public bool Enabled { get; }
-
 
         public ConditionBase()
         {
         }
-
 
         public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled)
         {
@@ -28,8 +22,17 @@ namespace DataStructures.ToolSpecifications
             Enabled = enabled;
         }
 
+        #region INamed
+
+        public string Name { get; set; }
+
+        #endregion
 
         #region ICondition
+
+        public CalculationTypes CalculationType { get; set; }
+        public Relations ConditionRelation { get; set; }
+        public bool Enabled { get; set; }
 
         public bool Compare(ICalculationResult calculationResult)
         {
@@ -37,16 +40,14 @@ namespace DataStructures.ToolSpecifications
             {
                 return false;
             }
-
-            return Evaluate(calculationResult);
+            return EvaluateCondition(calculationResult);
         }
 
-
-        protected abstract bool Evaluate(ICalculationResult calculationResult);
+        protected abstract bool EvaluateCondition(ICalculationResult calculationResult);
 
         #endregion
 
-        #region object.ToString()
+        #region object.ToString() override
 
         public override string ToString()
         {
@@ -58,9 +59,10 @@ namespace DataStructures.ToolSpecifications
 
 
 
-    public abstract class ConditionBase<T> : ConditionBase, ICondition<T> where T : struct
+    public abstract class ConditionBase<T> : ConditionBase, IConditionHandler<T> where T : struct
     {
-        public T Value { get; }
+        public T Value { get; set; }
+
 
         public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled)
             : base(name, calculationtype, relation, enabled)
@@ -75,6 +77,7 @@ namespace DataStructures.ToolSpecifications
         }
 
 
+        // evaluation calls it from derived classes:
         protected bool Compare(T leftValue)
         {
             bool equality = EqualityComparer<T>.Default.Equals(leftValue, Value);
@@ -101,27 +104,23 @@ namespace DataStructures.ToolSpecifications
 
         protected bool CheckCalculationType(ICalculationResult calculationResult, CalculationTypes calculationType)
         {
-            if (calculationType == CalculationTypes.Average)
+            switch (calculationType)
             {
-                return calculationResult is ISimpleCalculationResult;
+                case CalculationTypes.Unknown:
+                    return false;
+                case CalculationTypes.Average:
+                    return calculationResult is ISimpleCalculationResult;
+                case CalculationTypes.StandardDeviation:
+                    return calculationResult is ISimpleCalculationResult;
+                case CalculationTypes.Cp:
+                    return calculationResult is IQCellsCalculationResult;
+                case CalculationTypes.Cpk:
+                    return calculationResult is IQCellsCalculationResult;
+                case CalculationTypes.GRAndR:
+                    return calculationResult is IGRAndRCalculationResult;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(calculationType), calculationType, null);
             }
-            if (calculationType == CalculationTypes.StandardDeviation)
-            {
-                return calculationResult is ISimpleCalculationResult;
-            }
-            if (calculationType == CalculationTypes.Cp)
-            {
-                return calculationResult is IQCellsCalculationResult;
-            }
-            if (calculationType == CalculationTypes.Cpk)
-            {
-                return calculationResult is IQCellsCalculationResult;
-            }
-            if (calculationType == CalculationTypes.Unknown)
-            {
-                return false;
-            }
-            return false;
         }
 
 

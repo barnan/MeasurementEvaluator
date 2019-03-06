@@ -7,7 +7,6 @@ namespace DataStructures.ToolSpecifications
     public class RotatableToolSpecification : ToolSpecification, IRotatableToolSpecificationHandler
     {
 
-
         public IReadOnlyList<IReadOnlyList<KeyValuePair<SampleOrientation, IQuantity>>> Rotations
         {
             get => throw new System.NotImplementedException();

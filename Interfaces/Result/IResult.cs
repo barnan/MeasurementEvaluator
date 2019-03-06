@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Xml.Linq;
+using System.Xml;
 
 namespace Interfaces.Result
 {
@@ -21,25 +21,20 @@ namespace Interfaces.Result
         /// </summary>
         bool Successful { get; }
 
-    }
 
-
-    public interface ISaveableResult : IResult
-    {
         /// <summary>
         /// Save the result content into an XElement
         /// </summary>
         /// <returns></returns>
-        XElement Save();
+        XmlElement Save(XmlElement input);
 
         /// <summary>
         /// Load the necessry data from an XElement
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        bool Load(XElement input);
+        bool Load(XmlElement input);
     }
-
 
 
     public interface IResultProvider

@@ -14,8 +14,7 @@ namespace DataStructures.ReferenceSample
 
         #region INamed
 
-        public string Name
-        { get; set; }
+        public string Name { get; set; }
 
         #endregion
 
@@ -92,7 +91,6 @@ namespace DataStructures.ReferenceSample
                 _logger.MethodError($"Exception occured: {ex}");
                 return 0;
             }
-
         }
 
         #endregion

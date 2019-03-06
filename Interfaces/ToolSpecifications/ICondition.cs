@@ -40,4 +40,22 @@ namespace Interfaces.ToolSpecifications
         T Value { get; }
     }
 
+
+
+
+    public interface IConditionHandler : ICondition
+    {
+        new CalculationTypes CalculationType { get; set; }
+
+        new bool Enabled { get; set; }
+    }
+
+
+    public interface IConditionHandler<T> : ICondition<T> where T : struct
+    {
+        new Relations ConditionRelation { get; set; }
+
+        new T Value { get; set; }
+    }
+
 }

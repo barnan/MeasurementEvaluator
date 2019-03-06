@@ -1,11 +1,11 @@
 ﻿using Interfaces.MeasuredData;
-using Interfaces.Misc;
 using Interfaces.Result;
+
 
 namespace Interfaces.Calculation
 {
 
-    public interface ICalculation : IInitializable
+    public interface ICalculation
     {
         /// <summary>
         /// Performs calculation

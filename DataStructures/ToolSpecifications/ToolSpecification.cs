@@ -13,13 +13,17 @@ namespace DataStructures.ToolSpecifications
     {
         private readonly ILogger _logger;
 
+
         #region IToolspecificationHandler
 
         private List<IQuantitySpecification> _specifications;
         public IReadOnlyList<IQuantitySpecification> Specifications
         {
             get { return _specifications.AsReadOnly(); }
-            set { _specifications = (List<IQuantitySpecification>)value; }
+            set
+            {
+                _specifications = (List<IQuantitySpecification>)value;
+            }
         }
 
         public ToolNames ToolName { get; set; }
@@ -34,7 +38,7 @@ namespace DataStructures.ToolSpecifications
         {
             _logger = LogManager.GetCurrentClassLogger();
 
-            _logger.MethodInfo($"{Name} specification created for {ToolName}");
+            _logger.MethodInfo($"Specification created.");
         }
 
         #endregion
@@ -122,5 +126,4 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
     }
-
 }

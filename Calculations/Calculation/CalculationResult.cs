@@ -1,10 +1,10 @@
 ﻿using Interfaces.Result;
+using Miscellaneous;
 using System;
-using System.Xml.Linq;
 
 namespace Calculations.Calculation
 {
-    class CalculationResult : ICalculationResult
+    class CalculationResult : ResultBase, ICalculationResult
     {
         public DateTime StartTime { get; }
 
@@ -21,16 +21,5 @@ namespace Calculations.Calculation
             Successful = successful;
         }
 
-
-
-        public bool Load(XElement input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public XElement Save()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

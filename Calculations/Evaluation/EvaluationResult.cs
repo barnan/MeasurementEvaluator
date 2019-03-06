@@ -2,13 +2,14 @@
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace Calculations.Evaluation
 {
-    internal class EvaluationResult : IEvaluationResult
+    internal class EvaluationResult : ResultBase, IEvaluationResult
     {
         public DateTime StartTime { get; }
 
@@ -42,7 +43,7 @@ namespace Calculations.Evaluation
     }
 
 
-    internal class ConditionEvaluaitonResult : IConditionEvaluationResult
+    internal class ConditionEvaluaitonResult : ResultBase, IConditionEvaluationResult
     {
         public DateTime StartTime { get; }
 

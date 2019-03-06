@@ -4,11 +4,11 @@ using System;
 
 namespace DataStructures.ReferenceSample
 {
-    public class ReferenceValue : IReferenceValue
+    public class ReferenceValue : IReferenceValueHandler
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public Units Dimension { get; }
+        public Units Dimension { get; set; }
 
 
         public ReferenceValue()

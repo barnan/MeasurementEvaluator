@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Interfaces.Result
 {
 
-    public interface IConditionEvaluationResult : ISaveableResult
+    public interface IConditionEvaluationResult : IResult
     {
         /// <summary>
         /// the result is calculated from this measuremnt series data

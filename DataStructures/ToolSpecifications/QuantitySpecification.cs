@@ -22,12 +22,7 @@ namespace DataStructures.ToolSpecifications
 
         public IReadOnlyList<ICondition> Conditions { get; set; }
 
-        private IQuantity _quantity;
-        public IQuantity Quantity
-        {
-            get { return _quantity; }
-            set { _quantity = value; }
-        }
+        public IQuantity Quantity { get; set; }
 
         #endregion
 

@@ -5,11 +5,11 @@ using System;
 
 namespace DataStructures.ToolSpecifications
 {
-    public class SimpleCondition : ConditionBase<double>, ISimpleCondition
+    public class SimpleCondition : ConditionBase<double>, ISimpleConditionHandler
     {
-        public Relations ValidIf { get; }
+        public Relations ValidIf { get; set; }
 
-        public double ValidIf_Value { get; }
+        public double ValidIf_Value { get; set; }
 
 
         public SimpleCondition()
@@ -27,7 +27,7 @@ namespace DataStructures.ToolSpecifications
             ValidIf_Value = validIf_Value;
         }
 
-        protected override bool Evaluate(ICalculationResult calculationResult)
+        protected override bool EvaluateCondition(ICalculationResult calculationResult)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {

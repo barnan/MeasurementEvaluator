@@ -46,6 +46,7 @@
     <Compile Include="Calculation\ICalculationContainer.cs" />
     <Compile Include="Calculation\ICalculationSettings.cs" />
     <Compile Include="DataAcquisition\IDataCollector.cs" />
+    <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IMathing.cs" />
     <Compile Include="Misc\IComponent.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />
@@ -57,7 +58,6 @@
     <Compile Include="DataAcquisition\IRepository.cs" />
     <Compile Include="DataAcquisition\IStoredData.cs" />
     <Compile Include="DataAcquisition\IHDDXmlSerializator.cs" />
-    <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IEvaluation.cs" />
     <Compile Include="MeasuredData\IMeasurementPoint.cs" />
     <Compile Include="Misc\IInitializable.cs" />
@@ -78,6 +78,5 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolSpecifications\IQuantity.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

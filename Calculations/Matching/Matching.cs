@@ -17,7 +17,7 @@ namespace Calculations.Matching
         public Matching(MathchingParameters parameters)
         {
             _parameters = parameters;
-            _parameters.Logger.MethodError($"{nameof(Matching)} Instantiated.");
+            _parameters.Logger.Info($"{nameof(Matching)} Instantiated.");
         }
 
 

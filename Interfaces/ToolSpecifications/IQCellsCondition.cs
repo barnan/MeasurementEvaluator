@@ -12,4 +12,14 @@
         /// </summary>
         RELATIVEORABSOLUTE RelOrAbs { get; }
     }
+
+
+
+    public interface ICpkConditionHandler : ICpkCondition
+    {
+        new double HalfTolerance { get; set; }
+
+        new RELATIVEORABSOLUTE RelOrAbs { get; set; }
+    }
+
 }

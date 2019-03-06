@@ -5,13 +5,13 @@ using Interfaces.Calculation;
 using NLog;
 using System.Collections.Generic;
 
-namespace Calculations.Calculation
+namespace Calculations.Calculation.CalculationContainer
 {
     internal class CalculationContainerParameters
     {
         private List<ICalculation> _availableCalculations = new List<ICalculation> { new AverageCalculation1D(new CalculationParameters()),
                                                                                      new StdCalculation1D(new CalculationParameters()) };
-        public List<ICalculation> AvailableCalculations => _availableCalculations;
+        public IReadOnlyList<ICalculation> AvailableCalculations => _availableCalculations;
 
 
         public ILogger Logger { get; }

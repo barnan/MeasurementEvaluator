@@ -55,9 +55,9 @@
     <Compile Include="MeasuredData\MeasurementPoint.cs" />
     <Compile Include="ReferenceSample\ReferenceSample.cs" />
     <Compile Include="ReferenceSample\ReferenceValue.cs" />
+    <Compile Include="ResultBase.cs" />
     <Compile Include="ToolSpecifications\Quantity.cs" />
     <Compile Include="ToolSpecifications\RotatableToolSpecification.cs" />
-    <Compile Include="ToolSpecifications\RotationCycle.cs" />
     <Compile Include="ToolSpecifications\ConditionBase.cs" />
     <Compile Include="ToolSpecifications\CpkCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

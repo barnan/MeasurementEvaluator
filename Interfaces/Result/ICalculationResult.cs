@@ -1,7 +1,7 @@
 ﻿namespace Interfaces.Result
 {
 
-    public interface ICalculationResult : ISaveableResult
+    public interface ICalculationResult : IResult
     {
     }
 
@@ -36,5 +36,9 @@
     }
 
 
+
+    public interface IGRAndRCalculationResult : ICalculationResult
+    {
+    }
 
 }

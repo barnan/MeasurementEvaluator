@@ -4,17 +4,17 @@ using Miscellaneous;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Calculations.Calculation
+namespace Calculations.Calculation.CalculationContainer
 {
     internal class CalculationContainer : ICalculationContainer
     {
-        CalculationContainerParameters _parameters;
+        private CalculationContainerParameters _parameters;
 
         public IReadOnlyList<CalculationTypes> AvailableCalculatons
         {
             get
             {
-                _parameters.Logger.LogInfo("AvilableCalculations request arrived.");
+                _parameters.Logger.LogInfo($"{nameof(AvailableCalculatons)} request arrived.");
 
                 return _parameters.AvailableCalculations.Select(p => p.CalculationType).ToList().AsReadOnly();
             }

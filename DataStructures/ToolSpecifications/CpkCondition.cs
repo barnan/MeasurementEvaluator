@@ -5,10 +5,11 @@ using System;
 
 namespace DataStructures.ToolSpecifications
 {
-    public class CpkCondition : ConditionBase<double>, ICpkCondition
+    public class CpkCondition : ConditionBase<double>, ICpkConditionHandler
     {
-        public double HalfTolerance { get; }
-        public RELATIVEORABSOLUTE RelOrAbs { get; }
+        public double HalfTolerance { get; set; }
+        public RELATIVEORABSOLUTE RelOrAbs { get; set; }
+
 
         public CpkCondition()
             : base()
@@ -35,7 +36,9 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
-        protected override bool Evaluate(ICalculationResult calculationResult)
+        #region protected
+
+        protected override bool EvaluateCondition(ICalculationResult calculationResult)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {
@@ -50,7 +53,8 @@ namespace DataStructures.ToolSpecifications
             return Compare(qcellsResult.Result);
         }
 
-    }
+        #endregion
 
+    }
 
 }

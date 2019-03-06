@@ -2,12 +2,13 @@
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System;
 using System.Collections.Generic;
 
 namespace DataAcquisitions.DataCollector
 {
-    internal class DataCollectorResult : IDataCollectorResult
+    internal class DataCollectorResult : ResultBase, IDataCollectorResult
     {
         public DateTime StartTime { get; }
 
