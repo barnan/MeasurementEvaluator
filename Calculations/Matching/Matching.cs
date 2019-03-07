@@ -36,16 +36,16 @@ namespace Calculations.Matching
                 {
                     return true;
                 }
-                if (_parameters.XmlSerializator == null)
+                if (_parameters.MatchingFileReader == null)
                 {
-                    _parameters.Logger.LogError($"{nameof(_parameters.XmlSerializator)} is null");
+                    _parameters.Logger.LogError($"{nameof(_parameters.MatchingFileReader)} is null");
                     return false;
                 }
 
-                _specificationMeasDataReferencePairs = _parameters.XmlSerializator.ReadFromFile<List<MatchingKeyValuePairs>>(_parameters.NameBindingFilePath);
+                _specificationMeasDataReferencePairs = _parameters.MatchingFileReader.ReadFromFile<List<MatchingKeyValuePairs>>(_parameters.BindingFilePath);
                 if (_specificationMeasDataReferencePairs == null)
                 {
-                    _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.NameBindingFilePath}");
+                    _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.BindingFilePath}");
                 }
 
                 IsInitialized = true;

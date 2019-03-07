@@ -31,7 +31,5 @@ namespace Calculations.Evaluation
             }
             return null;
         }
-
-
     }
 }

@@ -5,11 +5,10 @@ using System.IO;
 namespace DataAcquisitions.DAL
 {
 
-    public abstract class HDDFileReaderWriterBase : IHDDFileReader, IHDDFileWriter
+    public abstract class HDDFileReaderWriterBase : IHDDFileReaderWriter
     {
 
         protected readonly object _lockObject = new object();
-
 
 
         public abstract bool WriteToFile<T>(T obj, string fileNameAndPath);

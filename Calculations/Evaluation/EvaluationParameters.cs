@@ -62,8 +62,6 @@ namespace Calculations.Evaluation
         internal IMathing Matcher { get; private set; }
 
 
-
-
         public bool Load()
         {
             Logger = LogManager.GetCurrentClassLogger();
@@ -73,9 +71,31 @@ namespace Calculations.Evaluation
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
             Matcher = PluginLoader.CreateInstance<IMathing>(_matcher);
 
-            return true;
+            return CheckComponents();
         }
 
+        private bool CheckComponents()
+        {
+            if (CalculationContainer == null)
+            {
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(CalculationContainer)} is null.");
+                return false;
+            }
 
+            if (DateTimeProvider == null)
+            {
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
+                return false;
+            }
+
+
+            if (Matcher == null)
+            {
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(Matcher)} is null.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }
