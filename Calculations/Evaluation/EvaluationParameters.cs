@@ -71,14 +71,20 @@ namespace Calculations.Evaluation
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
             Matcher = PluginLoader.CreateInstance<IMathing>(_matcher);
 
-            return CheckComponents();
+            return CheckComponent();
         }
 
-        private bool CheckComponents()
+        private bool CheckComponent()
         {
             if (CalculationContainer == null)
             {
                 Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(CalculationContainer)} is null.");
+                return false;
+            }
+
+            if (DataCollector == null)
+            {
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(DataCollector)} is null.");
                 return false;
             }
 
@@ -87,7 +93,6 @@ namespace Calculations.Evaluation
                 Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
                 return false;
             }
-
 
             if (Matcher == null)
             {

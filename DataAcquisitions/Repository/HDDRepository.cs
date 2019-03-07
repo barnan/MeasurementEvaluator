@@ -39,9 +39,9 @@ namespace DataAcquisitions.Repository
                     return true;
                 }
 
-                if (!Directory.Exists(_parameters.RepositoryFullDirectoryPath))
+                if (!Directory.Exists(_parameters.RepositoryDirectoryPath))
                 {
-                    _parameters.Logger.MethodError($"The given directory ({_parameters.RepositoryFullDirectoryPath}) does not exists.");
+                    _parameters.Logger.MethodError($"The given directory ({_parameters.RepositoryDirectoryPath}) does not exists.");
                     return IsInitialized = false;
                 }
 
@@ -113,7 +113,7 @@ namespace DataAcquisitions.Repository
                     return null;
                 }
 
-                List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath);
+                List<T> itemList = GetItemList(_parameters.RepositoryDirectoryPath);
                 List<T> hitList = new List<T>();
 
                 foreach (T item in itemList)
@@ -141,7 +141,7 @@ namespace DataAcquisitions.Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath);
+                    List<T> itemList = GetItemList(_parameters.RepositoryDirectoryPath);
 
                     if (index > itemList.Count)
                     {
@@ -183,7 +183,7 @@ namespace DataAcquisitions.Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_parameters.RepositoryFullDirectoryPath).Where(p => p.Name == name).ToList();
+                    List<T> itemList = GetItemList(_parameters.RepositoryDirectoryPath).Where(p => p.Name == name).ToList();
 
                     if (itemList.Count == 0)
                     {
@@ -223,14 +223,14 @@ namespace DataAcquisitions.Repository
                         return false;
                     }
 
-                    string fullName = Path.Combine(_parameters.RepositoryFullDirectoryPath, item.Name);
+                    string fullName = Path.Combine(_parameters.RepositoryDirectoryPath, item.Name);
                     if (File.Exists(fullName))
                     {
                         _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
                         return false;
                     }
 
-                    _parameters.IHDDReaderWriter.WriteToFile(item, fullName);
+                    _parameters.HDDReaderWriter.WriteToFile(item, fullName);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
@@ -261,7 +261,7 @@ namespace DataAcquisitions.Repository
         {
             lock (_lockObject)
             {
-                return GetItemList(_parameters.RepositoryFullDirectoryPath).Select(p => p.ToString()).ToList();
+                return GetItemList(_parameters.RepositoryDirectoryPath).Select(p => p.ToString()).ToList();
             }
         }
 
@@ -279,7 +279,7 @@ namespace DataAcquisitions.Repository
                     }
 
 
-                    string fullName = Path.Combine(_parameters.RepositoryFullDirectoryPath, item.Name);
+                    string fullName = Path.Combine(_parameters.RepositoryDirectoryPath, item.Name);
                     if (File.Exists(fullName))
                     {
                         _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
@@ -360,7 +360,7 @@ namespace DataAcquisitions.Repository
                 foreach (string fileName in fileNameList)
                 {
 
-                    T spec = _parameters.IHDDReaderWriter.ReadFromFile<T>(fileName);
+                    T spec = _parameters.HDDReaderWriter.ReadFromFile<T>(fileName);
 
                     fileContentDictionary.Add(spec);
 

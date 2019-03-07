@@ -22,11 +22,11 @@ namespace Calculations.Matching
             Logger = LogManager.GetCurrentClassLogger();
             MatchingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_matchingFileReader);
 
-            return CheckComponents();
+            return CheckComponent();
         }
 
 
-        private bool CheckComponents()
+        private bool CheckComponent()
         {
             if (MatchingFileReader == null)
             {

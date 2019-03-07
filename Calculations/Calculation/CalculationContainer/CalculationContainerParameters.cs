@@ -14,12 +14,14 @@ namespace Calculations.Calculation.CalculationContainer
         public IReadOnlyList<ICalculation> AvailableCalculations => _availableCalculations;
 
 
-        public ILogger Logger { get; }
+        public ILogger Logger { get; internal set; }
 
 
-        public CalculationContainerParameters()
+        internal bool Load()
         {
             Logger = LogManager.GetCurrentClassLogger();
+
+            return true;
         }
 
     }

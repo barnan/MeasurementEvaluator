@@ -8,7 +8,7 @@ namespace DataAcquisitions.Repository
     class RepositoryFactory<T> : IPluginFactory
         where T : class, INamed, IComparable<T>
     {
-        Dictionary<string, HDDRepository<T>> _dataCollectorDict = new Dictionary<string, HDDRepository<T>>();
+        Dictionary<string, HDDRepository<T>> _repositoryDictionary = new Dictionary<string, HDDRepository<T>>();
 
 
         public object Create(Type t, string name)

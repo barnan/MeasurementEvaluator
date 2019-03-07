@@ -26,26 +26,25 @@ namespace DataAcquisitions.DataCollector
 
         internal ILogger Logger { get; private set; }
 
-        [Configuration("Date and time Provider", "Date and time Provider", true)]
+        [Configuration("Name of date and time provider", "Date and time Provider", true)]
         private string _dateTimeProvider;
         internal IDateTimeProvider DateTimeProvider { get; private set; }
 
-        [Configuration("Measurement Data Repository", "Measurement Data Repository", true)]
+        [Configuration("Name of the measurement Data repository", Name = "Measurement Data Repository", LoadComponent = true)]
         private string _measurementDataRepository;
         internal IRepository<IToolMeasurementData> MeasurementDataRepository { get; private set; }
 
-        [Configuration("Reference Repository", "Reference Repository", true)]
+        [Configuration("Name of the reference repository", Name = "Reference Repository", LoadComponent = true)]
         private string _referenceRepository;
         internal IRepository<IReferenceSample> ReferenceRepository { get; private set; }
 
-        [Configuration("Specification Repository", "Specification Repository", true)]
+        [Configuration("Name of the specification repository", Name = "Specification Repository", LoadComponent = true)]
         private string _specificationRepository;
-
         internal IRepository<IToolSpecification> SpecificationRepository { get; private set; }
 
 
 
-        public bool Load()
+        internal bool Load()
         {
             Logger = LogManager.GetCurrentClassLogger();
 
@@ -54,9 +53,37 @@ namespace DataAcquisitions.DataCollector
             MeasurementDataRepository = PluginLoader.CreateInstance<IRepository<IToolMeasurementData>>(_measurementDataRepository);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
 
-            return true;
+            return CheckComponent();
         }
 
+        private bool CheckComponent()
+        {
+            if (SpecificationRepository == null)
+            {
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(SpecificationRepository)} is null.");
+                return false;
+            }
 
+            if (ReferenceRepository == null)
+            {
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(ReferenceRepository)} is null.");
+                return false;
+            }
+
+
+            if (MeasurementDataRepository == null)
+            {
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(MeasurementDataRepository)} is null.");
+                return false;
+            }
+
+            if (DateTimeProvider == null)
+            {
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }
