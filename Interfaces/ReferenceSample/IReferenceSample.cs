@@ -1,11 +1,11 @@
-﻿using Interfaces.Misc;
-using System;
+﻿using Interfaces.DataAcquisition;
+using Interfaces.Misc;
 using System.Collections.Generic;
 
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceSample : IComparable<IReferenceSample>, INamed
+    public interface IReferenceSample : IManagableFromRepository<IReferenceSample>
     {
         /// <summary>
         /// reference values, which characterise the sample

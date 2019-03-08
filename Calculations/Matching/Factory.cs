@@ -6,7 +6,7 @@ namespace Calculations.Matching
 {
     class Factory : IPluginFactory
     {
-        Dictionary<string, Matching> _matchingDict = new Dictionary<string, Matching>();
+        private Dictionary<string, Matching> _matchingDict = new Dictionary<string, Matching>();
 
 
         public object Create(Type t, string name)
@@ -20,15 +20,10 @@ namespace Calculations.Matching
                     {
                         Matching instance = new Matching(param);
                         _matchingDict.Add(name, instance);
-                        return instance;
                     }
                 }
-                else
-                {
-                    return _matchingDict[name];
-                }
+                return _matchingDict[name];
             }
-
             return null;
         }
     }

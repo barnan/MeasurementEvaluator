@@ -1,4 +1,4 @@
-﻿using Interfaces.Misc;
+﻿using Interfaces.DataAcquisition;
 using PluginLoading.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,29 +6,39 @@ using System.Collections.Generic;
 namespace DataAcquisitions.Repository
 {
     class RepositoryFactory<T> : IPluginFactory
-        where T : class, INamed, IComparable<T>
+        where T : class, IManagableFromRepository<T>
     {
-        Dictionary<string, HDDRepository<T>> _repositoryDictionary = new Dictionary<string, HDDRepository<T>>();
-
+        Dictionary<string, IRepository<T>> _repositoryDictionary = new Dictionary<string, IRepository<T>>();
 
         public object Create(Type t, string name)
         {
-            if (t.IsAssignableFrom(typeof(Evaluation)))
+            if (t.IsAssignableFrom(typeof(HDDSpecificationRepository)) || t.IsAssignableFrom(typeof(HDDMeasurementDataRepository)) || t.IsAssignableFrom(typeof(HDDReferenceRepository)))
             {
-                if (!_dataCollectorDict.ContainsKey(name))
+                if (!_repositoryDictionary.ContainsKey(name))
                 {
-                    HDDRepositoryParameters param = new HDDRepositoryParameters();
-                    if (param.Load())
+                    HDDRepositoryParameters parameters = new HDDRepositoryParameters();
+                    if (parameters.Load())
                     {
-                        Evaluation instance = new HDDRE(param);
-                        _dataCollectorDict.Add(name, instance);
-                        return instance;
+                        if (t.IsAssignableFrom(typeof(HDDSpecificationRepository)))
+                        {
+                            HDDSpecificationRepository instance = new HDDSpecificationRepository(parameters);
+                            _repositoryDictionary.Add(name, instance);
+                        }
+
+                        if (t.IsAssignableFrom(typeof(HDDReferenceRepository)))
+                        {
+                            HDDReferenceRepository instance = new HDDReferenceRepository(parameters);
+                            _repositoryDictionary.Add(name, instance);
+                        }
+
+                        if (t.IsAssignableFrom(typeof(HDDMeasurementDataRepository)))
+                        {
+                            HDDMeasurementDataRepository instance = new HDDMeasurementDataRepository(parameters);
+                            _repositoryDictionary.Add(name, instance);
+                        }
                     }
                 }
-                else
-                {
-                    return _dataCollectorDict[name];
-                }
+                return _repositoryDictionary[name];
             }
             return null;
         }

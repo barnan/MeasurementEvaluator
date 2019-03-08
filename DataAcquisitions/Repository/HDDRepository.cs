@@ -1,5 +1,4 @@
 ﻿using Interfaces.DataAcquisition;
-using Interfaces.Misc;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -8,8 +7,12 @@ using System.Linq;
 
 namespace DataAcquisitions.Repository
 {
+
+    // TODO: those elements which can be handled by a repository -> should implement an interface (IRepositoryElemnt for example) -> the instantiation would be easier??
+    // TODO: and maybe they should handle their own save/load??
+
     internal class HDDRepository<T> : IRepository<T>
-        where T : class, INamed, IComparable<T>
+        where T : class, IManagableFromRepository<T>
     {
 
         private readonly HDDRepositoryParameters _parameters;

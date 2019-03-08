@@ -1,14 +1,13 @@
 ﻿using PluginLoading.Interfaces;
 using System;
 using System.Collections.Generic;
-using PluginLoading;
 
 namespace DataAcquisitions.DataCollector
 {
     public class Factory : IPluginFactory
     {
 
-        Dictionary<string, DataCollector> _dataCollectorDict = new Dictionary<string, DataCollector>();
+        private Dictionary<string, DataCollector> _dataCollectorDict = new Dictionary<string, DataCollector>();
 
 
         public object Create(Type t, string name)
@@ -23,13 +22,9 @@ namespace DataAcquisitions.DataCollector
                     {
                         DataCollector instance = new DataCollector(param);
                         _dataCollectorDict.Add(name, instance);
-                        return instance;
                     }
                 }
-                else
-                {
-                    return _dataCollectorDict[name];
-                }
+                return _dataCollectorDict[name];
             }
             return null;
         }
