@@ -9,7 +9,6 @@ using System.Linq;
 namespace DataAcquisitions.Repository
 {
 
-    // TODO: those elements which can be handled by a repository -> should implement an interface (IRepositoryElemnt for example) -> the instantiation would be easier??
     // TODO: and maybe they should handle their own save/load??
 
     internal class HDDRepository<T> : IRepository<T>

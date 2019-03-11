@@ -59,7 +59,7 @@ namespace MeasurementEvaluatorUI.Commands
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }       // todo
+            add { CommandManager.RequerySuggested += value; }       // todo: look after -> what is CommandManager
             remove { CommandManager.RequerySuggested -= value; }
         }
 
