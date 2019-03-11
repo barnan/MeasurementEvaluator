@@ -76,6 +76,10 @@
       <Project>{6e851eb0-9af1-45ad-ad46-f84bdadd6689}</Project>
       <Name>DataStructures</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Frame\Frame.csproj">
+      <Project>{50FC5BE3-6190-42D7-B518-733947048D4B}</Project>
+      <Name>Frame</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
@@ -83,10 +87,6 @@
     <ProjectReference Include="..\Miscellaneous\Miscellaneous.csproj">
       <Project>{7f91e183-4b11-47d2-b51f-8c9be7b20256}</Project>
       <Name>Miscellaneous</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PluginLoader\PluginLoader.csproj">
-      <Project>{50FC5BE3-6190-42D7-B518-733947048D4B}</Project>
-      <Name>PluginLoader</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

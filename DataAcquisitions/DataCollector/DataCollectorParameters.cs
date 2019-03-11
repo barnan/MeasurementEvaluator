@@ -1,11 +1,11 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Frame.PluginLoader;
+using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using NLog;
-using PluginLoading;
 
 namespace DataAcquisitions.DataCollector
 {

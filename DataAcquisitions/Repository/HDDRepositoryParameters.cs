@@ -1,7 +1,7 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Frame.PluginLoader;
+using Interfaces.DataAcquisition;
 using Miscellaneous;
 using NLog;
-using PluginLoading;
 using System.Collections.Generic;
 
 namespace DataAcquisitions.Repository

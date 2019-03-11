@@ -76,10 +76,6 @@
       <Project>{26f70b15-0be9-487a-bcbc-729c4f9802bf}</Project>
       <Name>MeasurementEvaluatorUIWPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PluginLoader\PluginLoader.csproj">
-      <Project>{50fc5be3-6190-42d7-b518-733947048d4b}</Project>
-      <Name>PluginLoader</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

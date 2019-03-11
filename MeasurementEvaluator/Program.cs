@@ -48,14 +48,15 @@ namespace MeasurementEvaluator
             }
             catch (Exception)
             {
+                Console.WriteLine("Logger could not been created.");
                 return;
             }
 
             try
             {
                 CurrentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                _logger.Info($"Application started: {Assembly.GetExecutingAssembly().FullName}");
-                _logger.Info($"Application runtime folder: {CurrentExeFolder}");
+                SendToLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
+                SendToLogAndConsole($"Application runtime folder: {CurrentExeFolder}");
 
                 if (!ReadConfig())
                 {
@@ -98,7 +99,7 @@ namespace MeasurementEvaluator
         {
             try
             {
-                SpecificationFolderPath = System.Configuration.ConfigurationManager.AppSettings["SpecificationFolder"];
+                SpecificationFolderPath = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["SpecificationFolder"]);
                 ReferenceFolderPath = System.Configuration.ConfigurationManager.AppSettings["ReferenceFolder"];
                 MeasurementDataFolderPath = System.Configuration.ConfigurationManager.AppSettings["MeasurementFolder"];
                 ResultFolderPath = System.Configuration.ConfigurationManager.AppSettings["ResultFolder"];
@@ -122,10 +123,10 @@ namespace MeasurementEvaluator
 
                 if (_logger.IsTraceEnabled)
                 {
-                    _logger.Info($"{nameof(SpecificationFolderPath)}: {SpecificationFolderPath}");
-                    _logger.Info($"{nameof(ReferenceFolderPath)}: {ReferenceFolderPath}");
-                    _logger.Info($"{nameof(MeasurementDataFolderPath)}: {MeasurementDataFolderPath}");
-                    _logger.Info($"{nameof(ResultFolderPath)}: {ResultFolderPath}");
+                    SendToLogAndConsole($"{nameof(SpecificationFolderPath)}: {SpecificationFolderPath}");
+                    SendToLogAndConsole($"{nameof(ReferenceFolderPath)}: {ReferenceFolderPath}");
+                    SendToLogAndConsole($"{nameof(MeasurementDataFolderPath)}: {MeasurementDataFolderPath}");
+                    SendToLogAndConsole($"{nameof(ResultFolderPath)}: {ResultFolderPath}");
                 }
 
                 return true;
@@ -135,6 +136,11 @@ namespace MeasurementEvaluator
                 _logger.Error($"Problem during configuration loadin: {ex.Message}");
                 return false;
             }
+        }
+
+        private static string CreateFinalPath(string currentExeFolder, string appSetting)
+        {
+            if (CheckFolder())
         }
 
 
@@ -153,5 +159,12 @@ namespace MeasurementEvaluator
         {
             Task.Run(() => _uiFinishedEvent.Set());
         }
+
+        private static void SendToLogAndConsole(string message)
+        {
+            _logger.Info(message);
+            Console.WriteLine(message);
+        }
+
     }
 }

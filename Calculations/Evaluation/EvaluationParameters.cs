@@ -1,10 +1,10 @@
-﻿using Interfaces.Calculation;
+﻿using Frame.PluginLoader;
+using Interfaces.Calculation;
 using Interfaces.DataAcquisition;
 using Interfaces.Evaluation;
 using Interfaces.Misc;
 using Miscellaneous;
 using NLog;
-using PluginLoading;
 
 namespace Calculations.Evaluation
 {

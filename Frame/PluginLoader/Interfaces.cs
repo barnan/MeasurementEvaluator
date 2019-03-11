@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PluginLoading.Interfaces
+namespace Frame.PluginLoader.Interfaces
 {
 
     public interface IPluginFactory

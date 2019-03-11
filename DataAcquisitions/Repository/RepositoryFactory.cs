@@ -1,9 +1,9 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Frame.PluginLoader.Interfaces;
+using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
-using PluginLoading.Interfaces;
 using System;
 using System.Collections.Generic;
 

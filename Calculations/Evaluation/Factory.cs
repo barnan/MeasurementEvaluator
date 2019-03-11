@@ -1,4 +1,4 @@
-﻿using PluginLoading.Interfaces;
+﻿using Frame.PluginLoader.Interfaces;
 using System;
 using System.Collections.Generic;
 

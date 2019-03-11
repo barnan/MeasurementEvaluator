@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluator", "Mea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluatorUIWPF", "MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj", "{26F70B15-0BE9-487A-BCBC-729C4F9802BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginLoader", "PluginLoader\PluginLoader.csproj", "{50FC5BE3-6190-42D7-B518-733947048D4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frame", "Frame\Frame.csproj", "{50FC5BE3-6190-42D7-B518-733947048D4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

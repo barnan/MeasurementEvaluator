@@ -50,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigHandler\ConfigurationAttribute.cs" />
     <Compile Include="ConfigHandler\ParseXmlDocument.cs" />
     <Compile Include="LoggerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

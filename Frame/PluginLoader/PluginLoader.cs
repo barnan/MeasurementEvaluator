@@ -1,17 +1,17 @@
-﻿using NLog;
-using PluginLoading.Interfaces;
+﻿using Frame.PluginLoader.Interfaces;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace PluginLoading
+namespace Frame.PluginLoader
 {
     public static class PluginLoader
     {
-
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
+        private static string _path;
 
         static PluginLoader()
         {
@@ -19,10 +19,37 @@ namespace PluginLoading
         }
 
         /// <summary>
+        /// Sets the used pluginfolder to the given path
+        /// </summary>
+        /// <param name="path">path of the folder, where the factories are collected from</param>
+        /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
+        public static bool SetPluginFolder(string path)
+        {
+            if (path == null)
+            {
+                _logger.Error("Arrived path is null.");
+                return false;
+            }
+
+            if (!IsPathFolder(path))
+            {
+                _logger.Error($"Received path is not a directory path: {path}");
+                return false;
+            }
+
+            _path = path;
+
+            LoadPlugins();
+
+            return true;
+        }
+
+
+        /// <summary>
         /// creates the component with the given title
         /// </summary>
         /// <typeparam name="T">type of the required component</typeparam>
-        /// <param name="title of the required component"></param>
+        /// <param name="title">title of the required component</param>
         /// <returns>returns the instantiated component</returns>
         public static T CreateInstance<T>(string title)
         {
@@ -65,25 +92,14 @@ namespace PluginLoading
         /// <summary>
         /// Load the available factories from the assemblies in the given folder
         /// </summary>
-        /// <param name="path">path of the folder, where the factories are collected from</param>
+
         /// <returns>Collection of factories</returns>
-        public static bool LoadPlugins(string path)
+        public static bool LoadPlugins()
         {
-            if (path == null)
-            {
-                _logger.Error("Arrived path is null.");
-                return false;
-            }
-
-            if (!IsPathFolder(path))
-            {
-                _logger.Error($"Received path is not a directory path: {path}");
-            }
-
-            if (Directory.Exists(path))
+            if (Directory.Exists(_path))
             {
                 // gather all dll names:
-                string[] dllFileNames = Directory.GetFiles(path, "*.dll");
+                string[] dllFileNames = Directory.GetFiles(_path, "*.dll");
 
                 ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
                 foreach (string dllFile in dllFileNames)
