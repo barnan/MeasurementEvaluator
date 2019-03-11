@@ -1,11 +1,11 @@
-﻿using Interfaces.DataAcquisition;
-using Interfaces.Misc;
+﻿using Interfaces.Misc;
+using System;
 using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface IToolSpecification : IManagableFromRepository<IToolSpecification>
+    public interface IToolSpecification : IComparable<IToolSpecification>, INamed
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool

@@ -12,7 +12,8 @@ namespace Interfaces.ReferenceSample
         Units Dimension { get; }
     }
 
-    public interface IReferenceValue<T> : IReferenceValue where T : struct
+    public interface IReferenceValue<T> : IReferenceValue
+        where T : struct
     {
         /// <summary>
         /// number value
@@ -27,7 +28,8 @@ namespace Interfaces.ReferenceSample
         new Units Dimension { get; set; }
     }
 
-    public interface IReferenceValueHandler<T> : IReferenceValueHandler, IReferenceValue<T> where T : struct
+    public interface IReferenceValueHandler<T> : IReferenceValueHandler, IReferenceValue<T>
+        where T : struct
     {
         /// <summary>
         /// number value

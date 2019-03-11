@@ -1,4 +1,5 @@
 ﻿using Interfaces.DataAcquisition;
+using Interfaces.Misc;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace DataAcquisitions.Repository
     // TODO: and maybe they should handle their own save/load??
 
     internal class HDDRepository<T> : IRepository<T>
-        where T : class, IManagableFromRepository<T>
+        where T : class, IComparable<T>, INamed
     {
 
         private readonly HDDRepositoryParameters _parameters;

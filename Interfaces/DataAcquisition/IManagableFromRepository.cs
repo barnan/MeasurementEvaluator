@@ -1,9 +1,7 @@
-﻿using Interfaces.Misc;
-using System;
-
-namespace Interfaces.DataAcquisition
+﻿namespace Interfaces.DataAcquisition
 {
-    public interface IManagableFromRepository<T> : IComparable<T>, INamed
-    {
-    }
+    //public interface IManagableFromRepository<T> : IComparable<T>, INamed
+    //    where T : class
+    //{
+    //}
 }

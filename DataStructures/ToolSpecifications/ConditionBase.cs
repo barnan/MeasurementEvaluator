@@ -59,7 +59,8 @@ namespace DataStructures.ToolSpecifications
 
 
 
-    public abstract class ConditionBase<T> : ConditionBase, IConditionHandler<T> where T : struct
+    public abstract class ConditionBase<T> : ConditionBase, IConditionHandler<T>
+        where T : struct
     {
         public T Value { get; set; }
 

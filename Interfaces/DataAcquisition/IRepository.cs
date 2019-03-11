@@ -5,7 +5,8 @@ using System.Collections.Generic;
 namespace Interfaces.DataAcquisition
 {
 
-    public interface IRepository<T> : IInitializable where T : class
+    public interface IRepository<T> : IInitializable
+        where T : class
     {
 
         T Get(int index, IComparer<T> comparer = null);

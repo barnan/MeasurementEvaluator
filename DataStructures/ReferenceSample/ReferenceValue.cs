@@ -40,7 +40,8 @@ namespace DataStructures.ReferenceSample
     }
 
 
-    public class ReferenceValue<T> : ReferenceValue, IReferenceValue<T> where T : struct
+    public class ReferenceValue<T> : ReferenceValue, IReferenceValue<T>
+        where T : struct
     {
         public T Value { get; }
 

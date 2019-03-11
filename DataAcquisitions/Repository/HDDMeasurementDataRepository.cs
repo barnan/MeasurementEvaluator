@@ -6,7 +6,7 @@ namespace DataAcquisitions.Repository
     {
 
         public HDDMeasurementDataRepository(HDDRepositoryParameters parameters)
-            : base(parameters)
+        : base(parameters)
         {
         }
 

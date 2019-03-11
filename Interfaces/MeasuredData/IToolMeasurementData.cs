@@ -1,5 +1,5 @@
-﻿using Interfaces.DataAcquisition;
-using Interfaces.Misc;
+﻿using Interfaces.Misc;
+using System;
 using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData
@@ -7,7 +7,7 @@ namespace Interfaces.MeasuredData
     /// <summary>
     /// interface that describes the measurement result of one tool, only Getters
     /// </summary>
-    public interface IToolMeasurementData : IManagableFromRepository<IToolMeasurementData>, INamed
+    public interface IToolMeasurementData : IComparable<IToolMeasurementData>, INamed
     {
         /// <summary>
         /// Name of the tool, which was used to create the measurement data (e.g. TTR, WSI, etc))

@@ -27,7 +27,8 @@ namespace Interfaces.ToolSpecifications
     }
 
 
-    public interface ICondition<out T> : ICondition where T : struct
+    public interface ICondition<out T> : ICondition
+        where T : struct
     {
         /// <summary>
         /// Relation in the condition    e.g.  <  >  ==  >=  <=
@@ -51,7 +52,8 @@ namespace Interfaces.ToolSpecifications
     }
 
 
-    public interface IConditionHandler<T> : ICondition<T> where T : struct
+    public interface IConditionHandler<T> : ICondition<T>
+        where T : struct
     {
         new Relations ConditionRelation { get; set; }
 
