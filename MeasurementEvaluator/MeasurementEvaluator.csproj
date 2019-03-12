@@ -72,6 +72,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Frame\Frame.csproj">
+      <Project>{50fc5be3-6190-42d7-b518-733947048d4b}</Project>
+      <Name>Frame</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj">
       <Project>{26f70b15-0be9-487a-bcbc-729c4f9802bf}</Project>
       <Name>MeasurementEvaluatorUIWPF</Name>

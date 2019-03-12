@@ -12,18 +12,15 @@ using System.Windows;
 
 namespace MeasurementEvaluator
 {
-
-
-
-    public class Program
+    internal class Program
     {
 
         [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
+        internal static extern IntPtr GetConsoleWindow();
 
 
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
 
@@ -32,12 +29,12 @@ namespace MeasurementEvaluator
         private static ILogger _logger;
         private static ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
-        public static string SpecificationFolderPath { get; private set; }
-        public static string ReferenceFolderPath { get; private set; }
-        public static string MeasurementDataFolderPath { get; private set; }
-        public static string ResultFolderPath { get; private set; }
-        public static string CurrentExeFolder { get; private set; }
-
+        private static string SpecificationFolder { get; set; }
+        private static string ReferenceFolderPath { get; set; }
+        private static string MeasurementDataFolder { get; set; }
+        private static string ResultFolder { get; set; }
+        private static string PluginsFolder { get; set; }
+        private static string CurrentExeFolder { get; set; }
 
 
         static void Main(string[] args)
@@ -55,19 +52,28 @@ namespace MeasurementEvaluator
             try
             {
                 CurrentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                SendToLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
-                SendToLogAndConsole($"Application runtime folder: {CurrentExeFolder}");
+                SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
+                SendToInfoLogAndConsole($"Application runtime folder: {CurrentExeFolder}");
 
+                // read some data from App settings
                 if (!ReadConfig())
                 {
                     return;
                 }
 
+                // frame start:
+                if (!Frame.PluginLoader.PluginLoader.SetPluginFolder(PluginsFolder))
+                {
+                    SendToErrrorLogAndConsole("Frame setup was not successful.");
+                    return;
+                }
+
+                // Start UI:
                 Thread appThread = new Thread(() =>
                 {
                     Application application = new Application();
 
-                    MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator" };
+                    MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator UI" };
                     mainWindow.Closed += MainWindow_OnClosed;
 
                     System.Windows.Application.Current.MainWindow = mainWindow;
@@ -87,6 +93,7 @@ namespace MeasurementEvaluator
 
                 _uiFinishedEvent.WaitOne();
 
+                SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
             }
             catch (Exception ex)
             {
@@ -95,74 +102,123 @@ namespace MeasurementEvaluator
         }
 
 
+        private static void MainWindow_OnClosed(object sender, EventArgs eventArgs)
+        {
+            // todo: null mainwindow??
+            SendToInfoLogAndConsole("MainWindow closed.");
+
+            Task.Run(() => _uiFinishedEvent.Set());
+        }
+
+
         private static bool ReadConfig()
         {
             try
             {
-                SpecificationFolderPath = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["SpecificationFolder"]);
-                ReferenceFolderPath = System.Configuration.ConfigurationManager.AppSettings["ReferenceFolder"];
-                MeasurementDataFolderPath = System.Configuration.ConfigurationManager.AppSettings["MeasurementFolder"];
-                ResultFolderPath = System.Configuration.ConfigurationManager.AppSettings["ResultFolder"];
+                SpecificationFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["SpecificationFolder"], nameof(SpecificationFolder));
+                if (SpecificationFolder == null)
+                {
+                    return false;
+                }
 
-                if (!CheckFolder(SpecificationFolderPath, nameof(SpecificationFolderPath)))
+                ReferenceFolderPath = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["ReferenceFolder"], nameof(ReferenceFolderPath));
+                if (ReferenceFolderPath == null)
                 {
                     return false;
                 }
-                if (!CheckFolder(ReferenceFolderPath, nameof(ReferenceFolderPath)))
+
+                MeasurementDataFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["MeasurementFolder"], nameof(MeasurementDataFolder));
+                if (MeasurementDataFolder == null)
                 {
                     return false;
                 }
-                if (!CheckFolder(MeasurementDataFolderPath, nameof(MeasurementDataFolderPath)))
+
+                ResultFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["ResultFolder"], nameof(ResultFolder));
+                if (MeasurementDataFolder == null)
                 {
                     return false;
                 }
-                if (!CheckFolder(ResultFolderPath, nameof(ResultFolderPath)))
+
+                PluginsFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["PluginsFolder"], nameof(PluginsFolder));
+                if (PluginsFolder == null)
                 {
                     return false;
                 }
 
                 if (_logger.IsTraceEnabled)
                 {
-                    SendToLogAndConsole($"{nameof(SpecificationFolderPath)}: {SpecificationFolderPath}");
-                    SendToLogAndConsole($"{nameof(ReferenceFolderPath)}: {ReferenceFolderPath}");
-                    SendToLogAndConsole($"{nameof(MeasurementDataFolderPath)}: {MeasurementDataFolderPath}");
-                    SendToLogAndConsole($"{nameof(ResultFolderPath)}: {ResultFolderPath}");
+                    SendToInfoLogAndConsole($"{nameof(SpecificationFolder)}: {SpecificationFolder}");
+                    SendToInfoLogAndConsole($"{nameof(ReferenceFolderPath)}: {ReferenceFolderPath}");
+                    SendToInfoLogAndConsole($"{nameof(MeasurementDataFolder)}: {MeasurementDataFolder}");
+                    SendToInfoLogAndConsole($"{nameof(ResultFolder)}: {ResultFolder}");
+                    SendToInfoLogAndConsole($"{nameof(PluginsFolder)}: {PluginsFolder}");
                 }
 
                 return true;
             }
             catch (ConfigurationErrorsException ex)
             {
-                _logger.Error($"Problem during configuration loadin: {ex.Message}");
+                _logger.Error($"Problem during configuration folder loading from App settings: {ex.Message}");
                 return false;
             }
         }
 
-        private static string CreateFinalPath(string currentExeFolder, string appSetting)
+        private static string CreateFinalPath(string currentExeFolder, string specificationFolder, string name)
         {
-            if (CheckFolder())
-        }
-
-
-        private static bool CheckFolder(string content, string name)
-        {
-            if (string.IsNullOrEmpty(content))
+            try
             {
-                _logger.Error($"{name} is null.");
-                return false;
+                if (string.IsNullOrEmpty(currentExeFolder) || string.IsNullOrEmpty(name))
+                {
+                    SendToErrrorLogAndConsole("Received exefolder-path OR path-name is null.");
+                    return null;
+                }
+
+                if (string.IsNullOrEmpty(specificationFolder))
+                {
+                    SendToErrrorLogAndConsole($"{name} is null.");
+                    return null;
+                }
+
+                if (Path.IsPathRooted(specificationFolder))
+                {
+                    if (!Directory.Exists(specificationFolder))
+                    {
+                        Directory.CreateDirectory(specificationFolder);
+                        SendToInfoLogAndConsole($"{specificationFolder} created.");
+                    }
+
+                    SendToInfoLogAndConsole($"{name} ({specificationFolder}) wil be used.");
+                    return specificationFolder;
+                }
+
+                string combinedPath = Path.Combine(currentExeFolder, specificationFolder);
+
+                if (!Directory.Exists(combinedPath))
+                {
+                    SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) created.");
+                    Directory.CreateDirectory(combinedPath);
+                }
+
+                SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
+                return combinedPath;
             }
-            return true;
+            catch (Exception ex)
+            {
+                SendToErrrorLogAndConsole($"Problem during {name} check: {ex}");
+                return null;
+            }
         }
 
 
-        private static void MainWindow_OnClosed(object sender, EventArgs eventArgs)
-        {
-            Task.Run(() => _uiFinishedEvent.Set());
-        }
-
-        private static void SendToLogAndConsole(string message)
+        private static void SendToInfoLogAndConsole(string message)
         {
             _logger.Info(message);
+            Console.WriteLine(message);
+        }
+
+        private static void SendToErrrorLogAndConsole(string message)
+        {
+            _logger.Error(message);
             Console.WriteLine(message);
         }
 

@@ -39,9 +39,7 @@ namespace Frame.PluginLoader
 
             _path = path;
 
-            LoadPlugins();
-
-            return true;
+            return LoadPlugins();
         }
 
 
