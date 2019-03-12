@@ -58,12 +58,11 @@ namespace Start
                 }
 
                 // frame start:
-                if (!Frame.PluginLoader.PluginLoader.SetPluginFolder(PluginsFolder))
+                if (!Frame.PluginLoader.PluginLoader.SetFolders(PluginsFolder, SpecificationFolder, ReferenceFolderPath, MeasurementDataFolder, ResultFolder))
                 {
                     SendToErrrorLogAndConsole("Frame setup was not successful.");
                     return;
                 }
-
 
 
                 //// Start UI:

@@ -11,7 +11,14 @@ namespace Frame.PluginLoader
     {
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
-        private static string _path;
+
+
+        public static string SpecificationFolder { get; private set; }
+        public static string ReferenceFolder { get; private set; }
+        public static string MeasurementDataFolder { get; private set; }
+        public static string PluginsFolder { get; private set; }
+        public static string ResultFolder { get; private set; }
+
 
         static PluginLoader()
         {
@@ -23,24 +30,48 @@ namespace Frame.PluginLoader
         /// </summary>
         /// <param name="path">path of the folder, where the factories are collected from</param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public static bool SetPluginFolder(string path)
+        public static bool SetFolders(string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
         {
-            if (path == null)
+            if (!IsPathFolder(pluginsFolder))
             {
-                _logger.Error("Arrived path is null.");
                 return false;
             }
+            PluginsFolder = pluginsFolder;
 
-            if (!IsPathFolder(path))
+            if (!IsPathFolder(specificationFolder))
             {
-                _logger.Error($"Received path is not a directory path: {path}");
                 return false;
             }
+            SpecificationFolder = specificationFolder;
 
-            _path = path;
+            if (!IsPathFolder(referenceFolder))
+            {
+                return false;
+            }
+            ReferenceFolder = referenceFolder;
+
+            if (!IsPathFolder(measDataFolder))
+            {
+                return false;
+            }
+            MeasurementDataFolder = measDataFolder;
+
+            if (!IsPathFolder(resultFolder))
+            {
+                return false;
+            }
+            ResultFolder = resultFolder;
 
             return LoadPlugins();
         }
+
+
+        public static void Start()
+        {
+
+        }
+
+
 
 
         /// <summary>
@@ -94,10 +125,10 @@ namespace Frame.PluginLoader
         /// <returns>Collection of factories</returns>
         public static bool LoadPlugins()
         {
-            if (Directory.Exists(_path))
+            if (Directory.Exists(PluginsFolder))
             {
                 // gather all dll names:
-                string[] dllFileNames = Directory.GetFiles(_path, "*.dll");
+                string[] dllFileNames = Directory.GetFiles(PluginsFolder, "*.dll");
 
                 ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
                 foreach (string dllFile in dllFileNames)
@@ -158,6 +189,12 @@ namespace Frame.PluginLoader
         /// <returns>is it directory path or not</returns>
         private static bool IsPathFolder(string path)
         {
+            if (path == null)
+            {
+                _logger.Error("Arrived path is null.");
+                return false;
+            }
+
             FileAttributes attr = File.GetAttributes(path);
 
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
