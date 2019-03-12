@@ -1,15 +1,12 @@
 ﻿using NLog;
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 
-namespace MeasurementEvaluator
+namespace Start
 {
     internal class Program
     {
@@ -67,30 +64,32 @@ namespace MeasurementEvaluator
                     return;
                 }
 
-                // Start UI:
-                Thread appThread = new Thread(() =>
-                {
-                    Application application = new Application();
 
-                    MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator UI" };
-                    mainWindow.Closed += MainWindow_OnClosed;
 
-                    System.Windows.Application.Current.MainWindow = mainWindow;
-                    mainWindow.Show();
-                    application.Run(mainWindow);
+                //// Start UI:
+                //Thread appThread = new Thread(() =>
+                //{
+                //    Application application = new MediaTypeNames.Application();
 
-                });
-                Debug.Assert(appThread != null);
-                appThread.Name = "WpfThread";
-                appThread.SetApartmentState(ApartmentState.STA);
-                appThread.IsBackground = true;
-                appThread.Start();
+                //    MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator UI" };
+                //    mainWindow.Closed += MainWindow_OnClosed;
+
+                //    System.Windows.Application.Current.MainWindow = mainWindow;
+                //    mainWindow.Show();
+                //    application.Run(mainWindow);
+
+                //});
+                //Debug.Assert(appThread != null);
+                //appThread.Name = "WpfThread";
+                //appThread.SetApartmentState(ApartmentState.STA);
+                //appThread.IsBackground = true;
+                //appThread.Start();
 
 #if RELEASE
                 ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif               
 
-                _uiFinishedEvent.WaitOne();
+                //_uiFinishedEvent.WaitOne();
 
                 SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
             }
@@ -101,13 +100,13 @@ namespace MeasurementEvaluator
         }
 
 
-        private static void MainWindow_OnClosed(object sender, EventArgs eventArgs)
-        {
-            // todo: null mainwindow??
-            SendToInfoLogAndConsole("MainWindow closed.");
+        //private static void MainWindow_OnClosed(object sender, EventArgs eventArgs)
+        //{
+        //    // todo: null mainwindow??
+        //    SendToInfoLogAndConsole("MainWindow closed.");
 
-            Task.Run(() => _uiFinishedEvent.Set());
-        }
+        //    Task.Run(() => _uiFinishedEvent.Set());
+        //}
 
 
         private static bool ReadConfig()
@@ -220,6 +219,7 @@ namespace MeasurementEvaluator
             _logger.Error(message);
             Console.WriteLine(message + Environment.NewLine);
         }
+
 
     }
 }
