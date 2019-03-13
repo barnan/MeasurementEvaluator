@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using Interfaces.Misc;
+using NLog;
 using System;
 using System.Configuration;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using System.Windows;
 
 namespace MeasurementEvaluator
 {
-    internal class MeasurmentEvaluator
+    internal class MeasurmentEvaluator : IRunable
     {
 
         [DllImport("kernel32.dll")]
@@ -34,6 +35,14 @@ namespace MeasurementEvaluator
         private static string ResultFolder { get; set; }
         private static string PluginsFolder { get; set; }
         private static string CurrentExeFolder { get; set; }
+
+
+
+        public void Run()
+        {
+            throw new NotImplementedException();
+        }
+
 
 
         static void Main(string[] args)
@@ -220,6 +229,7 @@ namespace MeasurementEvaluator
             _logger.Error(message);
             Console.WriteLine(message + Environment.NewLine);
         }
+
 
     }
 }

@@ -71,6 +71,10 @@
       <Project>{50fc5be3-6190-42d7-b518-733947048d4b}</Project>
       <Name>Frame</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{6DCA4D70-0D2C-4A32-80BE-485667CEAC24}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

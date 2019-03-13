@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Frame.PluginLoader
 {
-    public static class PluginLoader
+    public class PluginLoader
     {
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
@@ -20,17 +20,22 @@ namespace Frame.PluginLoader
         public static string ResultFolder { get; private set; }
 
 
-        static PluginLoader()
+        public PluginLoader()
         {
             _logger = LogManager.GetCurrentClassLogger();
         }
 
+
         /// <summary>
         /// Sets the used pluginfolder to the given path
         /// </summary>
-        /// <param name="path">path of the folder, where the factories are collected from</param>
+        /// <param name="pluginsFolder"></param>
+        /// <param name="specificationFolder"></param>
+        /// <param name="referenceFolder"></param>
+        /// <param name="measDataFolder"></param>
+        /// <param name="resultFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public static bool SetFolders(string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
+        public bool SetFolders(string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
         {
             if (!IsPathFolder(pluginsFolder))
             {
@@ -70,7 +75,6 @@ namespace Frame.PluginLoader
         {
 
         }
-
 
 
 
@@ -118,12 +122,13 @@ namespace Frame.PluginLoader
         }
 
 
+        #region private
+
         /// <summary>
         /// Load the available factories from the assemblies in the given folder
         /// </summary>
-
         /// <returns>Collection of factories</returns>
-        public static bool LoadPlugins()
+        private bool LoadPlugins()
         {
             if (Directory.Exists(PluginsFolder))
             {
@@ -179,15 +184,12 @@ namespace Frame.PluginLoader
             return false;
         }
 
-
-        #region private
-
         /// <summary>
         /// Checks whether the received path string contains folder path or not
         /// </summary>
         /// <param name="path">the investigated path string</param>
         /// <returns>is it directory path or not</returns>
-        private static bool IsPathFolder(string path)
+        private bool IsPathFolder(string path)
         {
             if (path == null)
             {
@@ -206,7 +208,5 @@ namespace Frame.PluginLoader
         }
 
         #endregion
-
-
     }
 }

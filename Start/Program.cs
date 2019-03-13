@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using Frame.PluginLoader;
+using NLog;
 using System;
 using System.Configuration;
 using System.IO;
@@ -58,7 +59,8 @@ namespace Start
                 }
 
                 // frame start:
-                if (!Frame.PluginLoader.PluginLoader.SetFolders(PluginsFolder, SpecificationFolder, ReferenceFolderPath, MeasurementDataFolder, ResultFolder))
+                PluginLoader pluginLoader = new PluginLoader();
+                if (!pluginLoader.SetFolders(PluginsFolder, SpecificationFolder, ReferenceFolderPath, MeasurementDataFolder, ResultFolder))
                 {
                     SendToErrrorLogAndConsole("Frame setup was not successful.");
                     return;
@@ -84,9 +86,7 @@ namespace Start
                 //appThread.IsBackground = true;
                 //appThread.Start();
 
-#if RELEASE
                 ShowWindow(GetConsoleWindow(), SW_HIDE);
-#endif               
 
                 //_uiFinishedEvent.WaitOne();
 
