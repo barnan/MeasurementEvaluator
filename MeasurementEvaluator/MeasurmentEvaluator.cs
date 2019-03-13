@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace MeasurementEvaluator
 {
-    internal class Program
+    internal class MeasurmentEvaluator
     {
 
         [DllImport("kernel32.dll")]
