@@ -1,6 +1,6 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
-using Miscellaneous;
 using NLog;
 using System.Collections.Generic;
 
@@ -11,15 +11,15 @@ namespace DataAcquisitions.Repository
         internal ILogger Logger { get; private set; }
 
         [Configuration("Folder name of the repository.", "Repository folder", true)]
-        private string _repositoryDirectoryPath;
+        private string _repositoryDirectoryPath = "Path";
         internal string RepositoryDirectoryPath => _repositoryDirectoryPath;
 
         [Configuration("File extension of the files used in the given repository folder", "File Extension", true)]
-        private List<string> _fileExtensionFilters;
+        private List<string> _fileExtensionFilters = null;
         internal List<string> FileExtensionFilters => _fileExtensionFilters;
 
         [Configuration("Name of the reader writer component", "Name of the reader writer component", true)]
-        private string _hddDReaderWriter;
+        private string _hddDReaderWriter = null;
         internal IHDDFileReaderWriter HDDReaderWriter { get; private set; }
 
         public bool Load()

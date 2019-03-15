@@ -26,6 +26,7 @@ namespace Frame.PluginLoader
         public PluginLoader()
         {
             _logger = LogManager.GetCurrentClassLogger();
+            _iRunables = new List<KeyValuePair<Type, Assembly>>();
         }
 
 
@@ -43,8 +44,6 @@ namespace Frame.PluginLoader
         {
             lock (_lockObj)
             {
-
-
                 if (!IsPathFolder(currentExeFolder))
                 {
                     return false;
@@ -85,7 +84,6 @@ namespace Frame.PluginLoader
             }
         }
 
-        // TODO szálvédelem:
         public bool Start()
         {
             lock (_lockObj)
@@ -223,7 +221,7 @@ namespace Frame.PluginLoader
                     }
                 }
 
-                // go through all assmeblies and and check whether they implement IPluginFactory interface:
+                // go through all assemblies and and check whether they implement IPluginFactory interface:
 
                 ICollection<IPluginFactory> factories = new List<IPluginFactory>();
                 foreach (Assembly assembly in assemblies)

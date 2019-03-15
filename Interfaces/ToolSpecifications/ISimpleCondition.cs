@@ -16,9 +16,9 @@
 
     public interface ISimpleConditionHandler : ISimpleCondition
     {
-        Relations ValidIf { get; set; }
+        new Relations ValidIf { get; set; }
 
-        double ValidIf_Value { get; set; }
+        new double ValidIf_Value { get; set; }
     }
 
 }

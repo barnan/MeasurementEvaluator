@@ -1,9 +1,9 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
 using Interfaces.Calculation;
 using Interfaces.DataAcquisition;
 using Interfaces.Evaluation;
 using Interfaces.Misc;
-using Miscellaneous;
 using NLog;
 
 namespace Calculations.Evaluation
@@ -46,19 +46,19 @@ namespace Calculations.Evaluation
 
 
         [Configuration("Contains the possible calculation", Name = "Name of Calculation Container Component", LoadComponent = true)]
-        private string _calculationContainer;
+        private string _calculationContainer = null;
         internal ICalculationContainer CalculationContainer { get; private set; }
 
         [Configuration("Data Collection", Name = "Name of Data collector Component", LoadComponent = true)]
-        private string _dataCollector;
+        private string _dataCollector = null;
         internal IDataCollector DataCollector { get; private set; }
 
         [Configuration("Date and time provider", Name = "Name of the DateTimeProvider Component", LoadComponent = true)]
-        private string _dateTimeProvider;
+        private string _dateTimeProvider = null;
         internal IDateTimeProvider DateTimeProvider { get; private set; }
 
         [Configuration("Data matching", Name = "Name of the Data matcher Component", LoadComponent = true)]
-        private string _matcher;
+        private string _matcher = null;
         internal IMathing Matcher { get; private set; }
 
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Miscellaneous
+namespace Frame.ConfigHandler
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class ConfigurationAttribute : Attribute

@@ -1,6 +1,6 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
-using Miscellaneous;
 using NLog;
 
 namespace Calculations.Matching
@@ -10,11 +10,11 @@ namespace Calculations.Matching
         internal ILogger Logger { get; private set; }
 
         [Configuration("Handles the reading of the matching file.", Name = "Name of Matching Component", LoadComponent = true)]
-        private string _matchingFileReader;
+        private string _matchingFileReader = null;
         internal IHDDFileReader MatchingFileReader { get; private set; }
 
         [Configuration("Name of the matching file", Name = "Name of the matching file", LoadComponent = false)]
-        private string _bindingFilePath;
+        private string _bindingFilePath = "MatchingDictionary";
         internal string BindingFilePath => _bindingFilePath;
 
         internal bool Load()

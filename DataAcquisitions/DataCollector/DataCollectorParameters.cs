@@ -1,10 +1,10 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
-using Miscellaneous;
 using NLog;
 
 namespace DataAcquisitions.DataCollector
@@ -27,19 +27,19 @@ namespace DataAcquisitions.DataCollector
         internal ILogger Logger { get; private set; }
 
         [Configuration("Name of date and time provider", "Date and time Provider", true)]
-        private string _dateTimeProvider;
+        private string _dateTimeProvider = null;
         internal IDateTimeProvider DateTimeProvider { get; private set; }
 
         [Configuration("Name of the measurement Data repository", Name = "Measurement Data Repository", LoadComponent = true)]
-        private string _measurementDataRepository;
+        private string _measurementDataRepository = null;
         internal IRepository<IToolMeasurementData> MeasurementDataRepository { get; private set; }
 
         [Configuration("Name of the reference repository", Name = "Reference Repository", LoadComponent = true)]
-        private string _referenceRepository;
+        private string _referenceRepository = null;
         internal IRepository<IReferenceSample> ReferenceRepository { get; private set; }
 
         [Configuration("Name of the specification repository", Name = "Specification Repository", LoadComponent = true)]
-        private string _specificationRepository;
+        private string _specificationRepository = null;
         internal IRepository<IToolSpecification> SpecificationRepository { get; private set; }
 
 
