@@ -111,11 +111,11 @@ namespace Frame.PluginLoader
 
                 _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
 
-                bool iRunableStarted = runable.Run();
+                runable.Run();
 
-                _logger.Info($"{nameof(IRunable)} is {(iRunableStarted ? "" : "COULD NOT")} started.");
+                _logger.Info($"{nameof(IRunable)} started.");
 
-                return iRunableStarted;
+                return true;
             }
         }
 

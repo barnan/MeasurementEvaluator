@@ -11,7 +11,7 @@ namespace Frame.PluginLoader.Interfaces
 
     public interface IRunable
     {
-        bool Run();
+        void Run();
     }
 
 }
