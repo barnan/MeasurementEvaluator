@@ -60,7 +60,7 @@ namespace Start
 
                 // frame start:
                 PluginLoader pluginLoader = new PluginLoader();
-                if (!pluginLoader.SetFolders(PluginsFolder, SpecificationFolder, ReferenceFolderPath, MeasurementDataFolder, ResultFolder))
+                if (!pluginLoader.SetFolders(CurrentExeFolder, PluginsFolder, SpecificationFolder, ReferenceFolderPath, MeasurementDataFolder, ResultFolder))
                 {
                     SendToErrrorLogAndConsole("Frame setup was not successful.");
                     return;
@@ -160,7 +160,7 @@ namespace Start
             }
         }
 
-        private static string CreateFinalPath(string currentExeFolder, string specificationFolder, string name)
+        private static string CreateFinalPath(string currentExeFolder, string specialFolder, string name)
         {
             try
             {
@@ -170,25 +170,25 @@ namespace Start
                     return null;
                 }
 
-                if (string.IsNullOrEmpty(specificationFolder))
+                if (string.IsNullOrEmpty(specialFolder))
                 {
                     SendToErrrorLogAndConsole($"{name} is null.");
                     return null;
                 }
 
-                if (Path.IsPathRooted(specificationFolder))
+                if (Path.IsPathRooted(specialFolder))
                 {
-                    if (!Directory.Exists(specificationFolder))
+                    if (!Directory.Exists(specialFolder))
                     {
-                        Directory.CreateDirectory(specificationFolder);
-                        SendToInfoLogAndConsole($"{specificationFolder} created.");
+                        Directory.CreateDirectory(specialFolder);
+                        SendToInfoLogAndConsole($"{specialFolder} created.");
                     }
 
-                    SendToInfoLogAndConsole($"{name} ({specificationFolder}) wil be used.");
-                    return specificationFolder;
+                    SendToInfoLogAndConsole($"{name} ({specialFolder}) wil be used.");
+                    return specialFolder;
                 }
 
-                string combinedPath = Path.Combine(currentExeFolder, specificationFolder);
+                string combinedPath = Path.Combine(currentExeFolder, specialFolder);
 
                 if (!Directory.Exists(combinedPath))
                 {

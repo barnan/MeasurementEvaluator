@@ -8,4 +8,10 @@ namespace Frame.PluginLoader.Interfaces
         object Create(Type t, string name);
     }
 
+
+    public interface IRunable
+    {
+        bool Run();
+    }
+
 }

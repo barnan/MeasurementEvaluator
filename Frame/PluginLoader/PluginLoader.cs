@@ -11,8 +11,11 @@ namespace Frame.PluginLoader
     {
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
+        private static object _lockObj = new object();
 
+        private IList<KeyValuePair<Type, Assembly>> _iRunables;
 
+        public static string CurrentExeFolder { get; private set; }
         public static string SpecificationFolder { get; private set; }
         public static string ReferenceFolder { get; private set; }
         public static string MeasurementDataFolder { get; private set; }
@@ -29,53 +32,94 @@ namespace Frame.PluginLoader
         /// <summary>
         /// Sets the used pluginfolder to the given path
         /// </summary>
+        /// /// <param name="currentExeFolder"></param>
         /// <param name="pluginsFolder"></param>
         /// <param name="specificationFolder"></param>
         /// <param name="referenceFolder"></param>
         /// <param name="measDataFolder"></param>
         /// <param name="resultFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool SetFolders(string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
+        public bool SetFolders(string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
         {
-            if (!IsPathFolder(pluginsFolder))
+            lock (_lockObj)
             {
-                return false;
-            }
-            PluginsFolder = pluginsFolder;
 
-            if (!IsPathFolder(specificationFolder))
-            {
-                return false;
-            }
-            SpecificationFolder = specificationFolder;
 
-            if (!IsPathFolder(referenceFolder))
-            {
-                return false;
-            }
-            ReferenceFolder = referenceFolder;
+                if (!IsPathFolder(currentExeFolder))
+                {
+                    return false;
+                }
+                CurrentExeFolder = currentExeFolder;
 
-            if (!IsPathFolder(measDataFolder))
-            {
-                return false;
-            }
-            MeasurementDataFolder = measDataFolder;
+                if (!IsPathFolder(pluginsFolder))
+                {
+                    return false;
+                }
+                PluginsFolder = pluginsFolder;
 
-            if (!IsPathFolder(resultFolder))
-            {
-                return false;
-            }
-            ResultFolder = resultFolder;
+                if (!IsPathFolder(specificationFolder))
+                {
+                    return false;
+                }
+                SpecificationFolder = specificationFolder;
 
-            return LoadPlugins();
+                if (!IsPathFolder(referenceFolder))
+                {
+                    return false;
+                }
+                ReferenceFolder = referenceFolder;
+
+                if (!IsPathFolder(measDataFolder))
+                {
+                    return false;
+                }
+                MeasurementDataFolder = measDataFolder;
+
+                if (!IsPathFolder(resultFolder))
+                {
+                    return false;
+                }
+                ResultFolder = resultFolder;
+
+                return LoadPlugins();
+            }
         }
 
-
-        public static void Start()
+        // TODO szálvédelem:
+        public bool Start()
         {
+            lock (_lockObj)
+            {
+                if (_iRunables.Count == 0)
+                {
+                    _logger.Error($"No {nameof(IRunable)} was found in folder: {PluginsFolder}");
+                    return false;
+                }
 
+                if (_iRunables.Count > 1)
+                {
+                    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
+
+                    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
+                    {
+                        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                    }
+
+                    return false;
+                }
+
+                Type type = _iRunables[0].Key;
+                IRunable runable = (IRunable)Activator.CreateInstance(type);
+
+                _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
+
+                bool iRunableStarted = runable.Run();
+
+                _logger.Info($"{nameof(IRunable)} is {(iRunableStarted ? "" : "COULD NOT")} started.");
+
+                return iRunableStarted;
+            }
         }
-
 
 
         /// <summary>
@@ -86,39 +130,42 @@ namespace Frame.PluginLoader
         /// <returns>returns the instantiated component</returns>
         public static T CreateInstance<T>(string title)
         {
-            if (_factories == null)
+            lock (_lockObj)
             {
-                _logger.Error("Factories are not created yet.");
-                return default(T);
-            }
-
-            List<T> instances = new List<T>();
-
-            foreach (var factory in _factories)
-            {
-                T instance = (T)factory.Create(typeof(T), title);
-
-                if (instance == null)
+                if (_factories == null)
                 {
-                    continue;
+                    _logger.Error("Factories are not created yet.");
+                    return default(T);
                 }
 
-                instances.Add(instance);
-            }
+                List<T> instances = new List<T>();
 
-            if (instances.Count == 0)
-            {
-                _logger.Error($"No factory was found to create: {typeof(T)}");
-                return default(T);
-            }
+                foreach (var factory in _factories)
+                {
+                    T instance = (T)factory.Create(typeof(T), title);
 
-            if (instances.Count > 1)
-            {
-                _logger.Error($"More than one factories was found to create: {typeof(T)}");
-                return default(T);
-            }
+                    if (instance == null)
+                    {
+                        continue;
+                    }
 
-            return instances[0];
+                    instances.Add(instance);
+                }
+
+                if (instances.Count == 0)
+                {
+                    _logger.Error($"No factory was found to create: {typeof(T)}");
+                    return default(T);
+                }
+
+                if (instances.Count > 1)
+                {
+                    _logger.Error($"More than one factories was found to create: {typeof(T)}");
+                    return default(T);
+                }
+
+                return instances[0];
+            }
         }
 
 
@@ -144,6 +191,8 @@ namespace Frame.PluginLoader
                         AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
                         Assembly assembly = Assembly.Load(an);
                         assemblies.Add(assembly);
+
+                        _logger.Info($"{assembly.FullName} assembly loadded.");
                     }
                     catch (Exception ex)
                     {
@@ -151,7 +200,30 @@ namespace Frame.PluginLoader
                     }
                 }
 
-                // go through all assmeblies and and check whether they implement IPluginFactory interface
+                // go through all assemblies and look for IRunable component:
+
+                foreach (Assembly assembly in assemblies)
+                {
+                    try
+                    {
+                        Type[] types = assembly.GetTypes();
+
+                        foreach (Type type in types)
+                        {
+                            if (typeof(IRunable).IsAssignableFrom(type))
+                            {
+                                _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
+                                _logger.Info($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                    }
+                }
+
+                // go through all assmeblies and and check whether they implement IPluginFactory interface:
 
                 ICollection<IPluginFactory> factories = new List<IPluginFactory>();
                 foreach (Assembly assembly in assemblies)
@@ -167,9 +239,10 @@ namespace Frame.PluginLoader
                                 continue;
                             }
 
-                            if (type == typeof(IPluginFactory))
+                            if (typeof(IPluginFactory).IsAssignableFrom(type))
                             {
                                 factories.Add((IPluginFactory)Activator.CreateInstance(type));
+                                _logger.Info($"{type} added to plugin factories.");
                             }
                         }
                     }
@@ -191,17 +264,23 @@ namespace Frame.PluginLoader
         /// <returns>is it directory path or not</returns>
         private bool IsPathFolder(string path)
         {
-            if (path == null)
+            if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
             {
-                _logger.Error("Arrived path is null.");
+                _logger.Error("Arrived path is null, empty or whitespace.");
                 return false;
             }
 
-            FileAttributes attr = File.GetAttributes(path);
-
-            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            try
             {
-                return true;
+                FileAttributes attr = File.GetAttributes(path);
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Exception occured: {ex}");
             }
 
             return false;

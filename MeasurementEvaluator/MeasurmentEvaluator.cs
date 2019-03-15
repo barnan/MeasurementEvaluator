@@ -1,4 +1,4 @@
-﻿using Interfaces.Misc;
+﻿using Frame.PluginLoader.Interfaces;
 using NLog;
 using System;
 using System.Configuration;
@@ -38,7 +38,7 @@ namespace MeasurementEvaluator
 
 
 
-        public void Run()
+        public bool Run()
         {
             throw new NotImplementedException();
         }
@@ -70,23 +70,23 @@ namespace MeasurementEvaluator
                 }
 
                 // frame start:
-                if (!Frame.PluginLoader.PluginLoader.SetPluginFolder(PluginsFolder))
-                {
-                    SendToErrrorLogAndConsole("Frame setup was not successful.");
-                    return;
-                }
+                //if (!Frame.PluginLoader.PluginLoader)
+                //{
+                //    SendToErrrorLogAndConsole("Frame setup was not successful.");
+                //    return;
+                //}
 
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
                     Application application = new Application();
 
-                    MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator UI" };
-                    mainWindow.Closed += MainWindow_OnClosed;
+                    //MainWindow mainWindow = new MainWindow() { Title = "Measurement Evaluator UI" };
+                    //mainWindow.Closed += MainWindow_OnClosed;
 
-                    System.Windows.Application.Current.MainWindow = mainWindow;
-                    mainWindow.Show();
-                    application.Run(mainWindow);
+                    //System.Windows.Application.Current.MainWindow = mainWindow;
+                    //mainWindow.Show();
+                    //application.Run(mainWindow);
 
                 });
                 Debug.Assert(appThread != null);
