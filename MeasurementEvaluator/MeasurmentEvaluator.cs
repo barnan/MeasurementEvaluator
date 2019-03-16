@@ -40,6 +40,8 @@ namespace MeasurementEvaluator
         {
             try
             {
+                // TODO: load parameter
+
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {

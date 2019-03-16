@@ -208,6 +208,11 @@ namespace Frame.PluginLoader
 
                         foreach (Type type in types)
                         {
+                            if (type.IsInterface || type.IsAbstract)
+                            {
+                                continue;
+                            }
+
                             if (typeof(IRunable).IsAssignableFrom(type))
                             {
                                 _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));

@@ -63,6 +63,7 @@ namespace Start
                     SendToErrrorLogAndConsole("Frame setup was not successful.");
                     return;
                 }
+                pluginLoader.Start();
 
                 SendToInfoLogAndConsole("Frame started successfully.");
 
@@ -79,31 +80,58 @@ namespace Start
         {
             try
             {
-                SpecificationFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["SpecificationFolder"], nameof(SpecificationFolder));
+                var settings = System.Configuration.ConfigurationManager.AppSettings;
+
+                // specifications:
+                if (settings[FolderSettingsKeys.SpecificactionFolderKey] == null)
+                {
+                    settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications");
+                }
+                SpecificationFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.SpecificactionFolderKey], nameof(SpecificationFolder));
                 if (SpecificationFolder == null)
                 {
                     return false;
                 }
 
-                ReferenceFolderPath = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["ReferenceFolder"], nameof(ReferenceFolderPath));
+                // references:
+                if (settings[FolderSettingsKeys.ReferenceFolderKey] == null)
+                {
+                    settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References");
+                }
+                ReferenceFolderPath = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ReferenceFolderKey], nameof(ReferenceFolderPath));
                 if (ReferenceFolderPath == null)
                 {
                     return false;
                 }
 
-                MeasurementDataFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["MeasurementFolder"], nameof(MeasurementDataFolder));
+                // meas data:
+                if (settings[FolderSettingsKeys.MeasurementDataFolderKey] == null)
+                {
+                    settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements");
+                }
+                MeasurementDataFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.MeasurementDataFolderKey], nameof(MeasurementDataFolder));
                 if (MeasurementDataFolder == null)
                 {
                     return false;
                 }
 
-                ResultFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["ResultFolder"], nameof(ResultFolder));
+                // result:
+                if (settings[FolderSettingsKeys.ResultFolderKey] == null)
+                {
+                    settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results");
+                }
+                ResultFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ResultFolderKey], nameof(ResultFolder));
                 if (MeasurementDataFolder == null)
                 {
                     return false;
                 }
 
-                PluginsFolder = CreateFinalPath(CurrentExeFolder, System.Configuration.ConfigurationManager.AppSettings["PluginsFolder"], nameof(PluginsFolder));
+                // plugins:
+                if (settings[FolderSettingsKeys.PluginsFolderKey] == null)
+                {
+                    settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins");
+                }
+                PluginsFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.PluginsFolderKey], nameof(PluginsFolder));
                 if (PluginsFolder == null)
                 {
                     return false;
@@ -183,6 +211,16 @@ namespace Start
         {
             _logger.Error(message);
             Console.WriteLine(message + Environment.NewLine);
+        }
+
+        internal static class FolderSettingsKeys
+        {
+            internal const string SpecificactionFolderKey = "SpecificationFolder";
+            internal const string ReferenceFolderKey = "ReferenceFolder";
+            internal const string MeasurementDataFolderKey = "MeasurementFolder";
+            internal const string PluginsFolderKey = "PluginsFolder";
+            internal const string ResultFolderKey = "ResultFolder";
+
         }
 
     }
