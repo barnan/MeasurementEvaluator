@@ -1,4 +1,5 @@
-﻿using Frame.PluginLoader.Interfaces;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,14 @@ namespace Frame.PluginLoader
 
         private IList<KeyValuePair<Type, Assembly>> _iRunables;
 
+        public static string ConfigurationFolder { get; private set; }
         public static string CurrentExeFolder { get; private set; }
         public static string SpecificationFolder { get; private set; }
         public static string ReferenceFolder { get; private set; }
         public static string MeasurementDataFolder { get; private set; }
         public static string PluginsFolder { get; private set; }
         public static string ResultFolder { get; private set; }
+        public static ConfigManager ConfigManager { get; private set; }
 
 
         public PluginLoader()
@@ -40,10 +43,16 @@ namespace Frame.PluginLoader
         /// <param name="measDataFolder"></param>
         /// <param name="resultFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool SetFolders(string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
+        public bool SetFolders(string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
         {
             lock (_lockObj)
             {
+                if (!IsPathFolder(configurationFolder))
+                {
+                    return false;
+                }
+                ConfigurationFolder = configurationFolder;
+
                 if (!IsPathFolder(currentExeFolder))
                 {
                     return false;
@@ -79,6 +88,8 @@ namespace Frame.PluginLoader
                     return false;
                 }
                 ResultFolder = resultFolder;
+
+                ConfigManager = new ConfigManager(ConfigurationFolder);
 
                 return LoadPlugins();
             }

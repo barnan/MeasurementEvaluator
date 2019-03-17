@@ -24,12 +24,13 @@ namespace Start
         private static ILogger _logger;
         private static ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
-        private static string SpecificationFolder { get; set; }
-        private static string ReferenceFolderPath { get; set; }
-        private static string MeasurementDataFolder { get; set; }
-        private static string ResultFolder { get; set; }
-        private static string PluginsFolder { get; set; }
-        private static string CurrentExeFolder { get; set; }
+        private static string _configurationFolder;
+        private static string _specificationFolder;
+        private static string _referenceFolderPath;
+        private static string _measurementDataFolder;
+        private static string _resultFolder;
+        private static string _pluginsFolder;
+        private static string _currentExeFolder;
 
 
         static void Main(string[] args)
@@ -46,9 +47,9 @@ namespace Start
 
             try
             {
-                CurrentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
-                SendToInfoLogAndConsole($"Application runtime folder: {CurrentExeFolder}");
+                SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
 
                 // read some data from App settings
                 if (!ReadConfig())
@@ -58,7 +59,14 @@ namespace Start
 
                 // frame start:
                 PluginLoader pluginLoader = new PluginLoader();
-                if (!pluginLoader.SetFolders(CurrentExeFolder, PluginsFolder, SpecificationFolder, ReferenceFolderPath, MeasurementDataFolder, ResultFolder))
+                if (!pluginLoader.SetFolders(
+                    _configurationFolder,
+                    _currentExeFolder,
+                    _pluginsFolder,
+                    _specificationFolder,
+                    _referenceFolderPath,
+                    _measurementDataFolder,
+                    _resultFolder))
                 {
                     SendToErrrorLogAndConsole("Frame setup was not successful.");
                     return;
@@ -82,13 +90,24 @@ namespace Start
             {
                 var settings = System.Configuration.ConfigurationManager.AppSettings;
 
+                // cnfigurations:
+                if (settings[FolderSettingsKeys.ConfigurationFolderKey] == null)
+                {
+                    settings.Add(FolderSettingsKeys.ConfigurationFolderKey, @".\Configuration");
+                }
+                _configurationFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ConfigurationFolderKey], nameof(_configurationFolder));
+                if (_configurationFolder == null)
+                {
+                    return false;
+                }
+
                 // specifications:
                 if (settings[FolderSettingsKeys.SpecificactionFolderKey] == null)
                 {
                     settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications");
                 }
-                SpecificationFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.SpecificactionFolderKey], nameof(SpecificationFolder));
-                if (SpecificationFolder == null)
+                _specificationFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.SpecificactionFolderKey], nameof(_specificationFolder));
+                if (_specificationFolder == null)
                 {
                     return false;
                 }
@@ -98,8 +117,8 @@ namespace Start
                 {
                     settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References");
                 }
-                ReferenceFolderPath = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ReferenceFolderKey], nameof(ReferenceFolderPath));
-                if (ReferenceFolderPath == null)
+                _referenceFolderPath = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ReferenceFolderKey], nameof(_referenceFolderPath));
+                if (_referenceFolderPath == null)
                 {
                     return false;
                 }
@@ -109,8 +128,8 @@ namespace Start
                 {
                     settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements");
                 }
-                MeasurementDataFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.MeasurementDataFolderKey], nameof(MeasurementDataFolder));
-                if (MeasurementDataFolder == null)
+                _measurementDataFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.MeasurementDataFolderKey], nameof(_measurementDataFolder));
+                if (_measurementDataFolder == null)
                 {
                     return false;
                 }
@@ -120,8 +139,8 @@ namespace Start
                 {
                     settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results");
                 }
-                ResultFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ResultFolderKey], nameof(ResultFolder));
-                if (MeasurementDataFolder == null)
+                _resultFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ResultFolderKey], nameof(_resultFolder));
+                if (_measurementDataFolder == null)
                 {
                     return false;
                 }
@@ -131,19 +150,19 @@ namespace Start
                 {
                     settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins");
                 }
-                PluginsFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.PluginsFolderKey], nameof(PluginsFolder));
-                if (PluginsFolder == null)
+                _pluginsFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.PluginsFolderKey], nameof(_pluginsFolder));
+                if (_pluginsFolder == null)
                 {
                     return false;
                 }
 
                 if (_logger.IsTraceEnabled)
                 {
-                    SendToInfoLogAndConsole($"{nameof(SpecificationFolder)}: {SpecificationFolder}");
-                    SendToInfoLogAndConsole($"{nameof(ReferenceFolderPath)}: {ReferenceFolderPath}");
-                    SendToInfoLogAndConsole($"{nameof(MeasurementDataFolder)}: {MeasurementDataFolder}");
-                    SendToInfoLogAndConsole($"{nameof(ResultFolder)}: {ResultFolder}");
-                    SendToInfoLogAndConsole($"{nameof(PluginsFolder)}: {PluginsFolder}");
+                    SendToInfoLogAndConsole($"{nameof(_specificationFolder)}: {_specificationFolder}");
+                    SendToInfoLogAndConsole($"{nameof(_referenceFolderPath)}: {_referenceFolderPath}");
+                    SendToInfoLogAndConsole($"{nameof(_measurementDataFolder)}: {_measurementDataFolder}");
+                    SendToInfoLogAndConsole($"{nameof(_resultFolder)}: {_resultFolder}");
+                    SendToInfoLogAndConsole($"{nameof(_pluginsFolder)}: {_pluginsFolder}");
                 }
 
                 return true;
@@ -215,6 +234,7 @@ namespace Start
 
         internal static class FolderSettingsKeys
         {
+            internal const string ConfigurationFolderKey = "ConfigurationFolder";
             internal const string SpecificactionFolderKey = "SpecificationFolder";
             internal const string ReferenceFolderKey = "ReferenceFolder";
             internal const string MeasurementDataFolderKey = "MeasurementFolder";

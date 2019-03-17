@@ -1,4 +1,5 @@
 ﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
 using Frame.PluginLoader.Interfaces;
 using Interfaces.Misc;
 using NLog;
@@ -40,7 +41,7 @@ namespace MeasurementEvaluator
         {
             try
             {
-                // TODO: load parameter
+                bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
 
                 // Start UI:
                 Thread appThread = new Thread(() =>
