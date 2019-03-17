@@ -58,16 +58,21 @@ namespace Frame.ConfigHandler
 
             string[] namespaceFragments = namespaceOfType.Split('.');
 
-            if (!Array.Exists<string>(configFiles, p => p == namespaceFragments[0]))
+            if (!Array.Exists<string>(configFiles, p => Path.GetFileNameWithoutExtension(p) == namespaceFragments[0]))
             {
                 _logger.Error($"{namespaceFragments[0]}{_configFileExtension} file was not found.");
                 return false;
             }
 
-            XmlReader xmlReader = XmlReader.Create();
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load()
-
+            XmlReaderSettings readerSettings = new XmlReaderSettings();
+            using (StreamReader sr = new StreamReader(namespaceFragments[0] + _configFileExtension))
+            {
+                using (XmlReader xmlReader = XmlReader.Create(sr, readerSettings))
+                {
+                    xmlDoc.Load(xmlReader);
+                }
+            }
             return true;
         }
 
