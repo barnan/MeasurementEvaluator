@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.IO;
+using System.Text;
 using System.Xml;
 
 namespace Frame.ConfigHandler
@@ -10,6 +11,7 @@ namespace Frame.ConfigHandler
         private ILogger _logger;
         private string _configFolder;
         private readonly string _configFileExtension = ".config";
+        private const string ROOT_NODE_NAME = "Configurations";
 
         public ConfigManager(string folder)
         {
@@ -33,46 +35,94 @@ namespace Frame.ConfigHandler
             }
 
             Type type = inputObj.GetType();
-            string namespaceOfType = type.Namespace;
+            string namespaceOfType = type.Namespace ?? "Unknown";
 
             _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
             _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
 
+            //get config file list:
+
             string[] configFiles;
             try
             {
-                //get config file list:
-                configFiles = Directory.GetFiles(_configFolder, _configFileExtension);
+
+                configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
 
                 if (configFiles.Length == 0)
                 {
                     _logger.Error($"No config files were found in folder: {_configFolder}");
-                    return false;
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error($"Exception occured during config file search for {sectionName} in folder: {_configFolder}. {ex.Message}");
+                _logger.Error($"Exception occured during config file search for {sectionName} in folder: {_configFolder}{Environment.NewLine}{ex.Message}");
                 return false;
             }
 
+            // with the config file with the given namespace:
+
             string[] namespaceFragments = namespaceOfType.Split('.');
+            string configFileName = Path.Combine(_configFolder, namespaceFragments[0] + _configFileExtension);
 
             if (!Array.Exists<string>(configFiles, p => Path.GetFileNameWithoutExtension(p) == namespaceFragments[0]))
             {
-                _logger.Error($"{namespaceFragments[0]}{_configFileExtension} file was not found.");
-                return false;
+                _logger.Error($"{configFileName} file was not found.");
+
+                try
+                {
+                    FileStream fs = File.Create(configFileName);
+                    fs.Close();
+                    _logger.Info($"{configFileName} created.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"{configFileName} could not created: {ex.Message}");
+                    return false;
+                }
             }
+
+            // read in the xml doc
 
             XmlDocument xmlDoc = new XmlDocument();
             XmlReaderSettings readerSettings = new XmlReaderSettings();
-            using (StreamReader sr = new StreamReader(namespaceFragments[0] + _configFileExtension))
+            using (StreamReader sr = new StreamReader(configFileName))
             {
                 using (XmlReader xmlReader = XmlReader.Create(sr, readerSettings))
                 {
-                    xmlDoc.Load(xmlReader);
+                    try
+                    {
+                        xmlDoc.Load(xmlReader);
+                    }
+                    catch (XmlException xmlex)
+                    {
+                        XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
+                        xmlDoc.AppendChild(rootNode);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
                 }
             }
+
+
+            XmlWriterSettings writerSettings = new XmlWriterSettings();
+            writerSettings.Encoding = Encoding.UTF8;
+            writerSettings.Indent = true;
+            writerSettings.CloseOutput = true;
+
+            using (StreamWriter sw = new StreamWriter(configFileName))
+            {
+                using (XmlWriter xmlWriter = XmlWriter.Create(sw, writerSettings))
+                {
+                    xmlDoc.WriteTo(xmlWriter);
+                }
+            }
+
+            // go through the sections:
+
+
             return true;
         }
 

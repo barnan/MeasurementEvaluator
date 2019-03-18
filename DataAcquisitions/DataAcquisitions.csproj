@@ -56,7 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\HDDMeasurementDataRepository.cs" />
     <Compile Include="Repository\HDDReferenceRepository.cs" />
-    <Compile Include="Repository\HDDRepository.cs" />
+    <Compile Include="Repository\HDDTypedRepository.cs" />
     <Compile Include="Repository\HDDRepositoryParameters.cs" />
     <Compile Include="Repository\HDDSpecificationRepository.cs" />
     <Compile Include="Repository\RepositoryFactory.cs" />

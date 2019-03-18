@@ -1,59 +1,39 @@
-﻿using Interfaces.ToolSpecifications;
+﻿using Frame.PluginLoader.Interfaces;
+using Interfaces.DataAcquisition;
+using Interfaces.ToolSpecifications;
+using System;
+using System.Collections.Generic;
 
 namespace DataAcquisitions.Repository
 {
-    internal class HDDSpecificationRepository : HDDRepository<IToolSpecification>
+    internal class HDDSpecificationRepository : HDDTypedRepository<IToolSpecification>
     {
 
-        public HDDSpecificationRepository(HDDRepositoryParameters parameters)
+        internal HDDSpecificationRepository(HDDRepositoryParameters parameters)
         : base(parameters)
         {
         }
-
-
-        //protected override List<IToolSpecification> GetItemList(string fullPath)
-        //{
-        //    try
-        //    {
-        //        if (!CheckFolder(fullPath))
-        //        {
-        //            _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
-        //            return null;
-        //        }
-
-        //        List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilters}").ToList();
-        //        List<IToolSpecification> fileContentDictionary = new List<IToolSpecification>(fileNameList.Count);
-
-        //        foreach (string fileName in fileNameList)
-        //        {
-
-        //            IToolSpecification spec = _parameters.IHDDReaderWriter.ReadFromFile<IToolSpecification>(fileName);
-
-        //            fileContentDictionary.Add(spec);
-
-        //            if (_parameters.Logger.IsTraceEnabled)
-        //            {
-        //                _parameters.Logger.MethodTrace($"Specification file read: {fileName}");
-        //            }
-        //        }
-
-        //        if (_parameters.Logger.IsTraceEnabled)
-        //        {
-        //            foreach (var item in fileContentDictionary)
-        //            {
-        //                _parameters.Logger.MethodTrace($"Specification: {item}");
-        //            }
-        //        }
-
-        //        return fileContentDictionary;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _parameters.Logger.MethodError($"Exception occured: {ex}");
-        //        return null;
-        //    }
-        //}
-
     }
 
+
+    public class HDDSpecificationRepositoryFactory : IPluginFactory
+    {
+        private readonly Dictionary<string, IRepository<IToolSpecification>> _specificationRepositoryDictionary = new Dictionary<string, IRepository<IToolSpecification>>();
+
+        public object Create(Type t, string name)
+        {
+            if (t.IsAssignableFrom(typeof(HDDSpecificationRepository)))
+            {
+                HDDRepositoryParameters parameters = new HDDRepositoryParameters();
+                if (parameters.Load())
+                {
+                    HDDSpecificationRepository instance = new HDDSpecificationRepository(parameters);
+                    _specificationRepositoryDictionary.Add(name, instance);
+                }
+
+                return _specificationRepositoryDictionary[name];
+            }
+            return null;
+        }
+    }
 }

@@ -11,7 +11,7 @@ namespace DataAcquisitions.Repository
 
     // TODO: and maybe they should handle their own save/load??
 
-    internal class HDDRepository<T> : IRepository<T>
+    internal class HDDTypedRepository<T> : IRepository<T>
         where T : class, IComparable<T>, INamed
     {
 
@@ -20,7 +20,7 @@ namespace DataAcquisitions.Repository
 
 
 
-        protected HDDRepository(HDDRepositoryParameters parameters)
+        protected HDDTypedRepository(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }

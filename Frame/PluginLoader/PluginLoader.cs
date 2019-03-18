@@ -14,7 +14,7 @@ namespace Frame.PluginLoader
         private static ILogger _logger;
         private static object _lockObj = new object();
 
-        private IList<KeyValuePair<Type, Assembly>> _iRunables;
+        private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
         public static string ConfigurationFolder { get; private set; }
         public static string CurrentExeFolder { get; private set; }
@@ -36,7 +36,9 @@ namespace Frame.PluginLoader
         /// <summary>
         /// Sets the used pluginfolder to the given path
         /// </summary>
-        /// /// <param name="currentExeFolder"></param>
+        /// ///
+        /// <param name="configurationFolder"></param>
+        /// <param name="currentExeFolder"></param>
         /// <param name="pluginsFolder"></param>
         /// <param name="specificationFolder"></param>
         /// <param name="referenceFolder"></param>
@@ -252,6 +254,7 @@ namespace Frame.PluginLoader
                             {
                                 continue;
                             }
+
 
                             if (typeof(IPluginFactory).IsAssignableFrom(type))
                             {
