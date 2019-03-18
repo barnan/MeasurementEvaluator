@@ -28,8 +28,7 @@ namespace MeasurementEvaluator
         private ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
         [Configuration("Title of the used main window", "Main Window", true)]
-        IMainWindowUIWPF _mainWindow = null;
-
+        private IMainWindowUIWPF _mainWindow = null;
 
         public MeasurmentEvaluator()
         {

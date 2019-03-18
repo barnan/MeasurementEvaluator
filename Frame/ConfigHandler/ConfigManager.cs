@@ -1,6 +1,9 @@
 ﻿using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 
@@ -108,18 +111,28 @@ namespace Frame.ConfigHandler
 
 
             XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
-            XmlNode currentSectionNode = null;
+            XmlElement currentSectionNode = null;
 
             foreach (XmlNode node in childNodes)
             {
-                XmlAttributeCollection attributeColection = node.Attributes;
-                foreach (XmlAttribute attribute in attributeColection)
+                XmlAttributeCollection attributeCollection = node.Attributes;
+                if (attributeCollection == null)
+                {
+                    break;
+                }
+
+                foreach (XmlAttribute attribute in attributeCollection)
                 {
                     if (attribute.Name == SECTION_NAME_ATTRIBUTE_NAME && attribute.InnerText == sectionName)
                     {
-                        currentSectionNode = node;
+                        currentSectionNode = (XmlElement)node;
                         break;
                     }
+                }
+
+                if (currentSectionNode != null)
+                {
+                    break;
                 }
             }
 
@@ -133,7 +146,7 @@ namespace Frame.ConfigHandler
                 sectionNameAttribute.InnerText = sectionName;
 
                 XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute("Assembly");
-                assemblyAttribute.InnerText = type.Name.ToString();
+                assemblyAttribute.InnerText = type.Name;
 
                 currentSectionNode.Attributes.Append(sectionNameAttribute);
                 currentSectionNode.Attributes.Append(assemblyAttribute);
@@ -141,8 +154,28 @@ namespace Frame.ConfigHandler
                 xmlDoc.DocumentElement.AppendChild(currentSectionNode);
             }
 
-            // edit
-            // go through properties of the object
+            // edit according to the object
+
+            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var fieldInfo in fieldInfos)
+            {
+                List<Attribute> attributes = fieldInfo.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList();
+
+                if (attributes.Count == 0)
+                {
+                    continue;
+                }
+
+                if (attributes.Count > 1)
+                {
+                    _logger.Error($"More configuration attributes are attached to {type.Name}");
+                    break;
+                }
+
+                ConfigurationAttribute atribute = (ConfigurationAttribute)attributes[0];
+
+
+            }
 
             // write into the xml file:
 
@@ -157,36 +190,6 @@ namespace Frame.ConfigHandler
                 {
                     xmlDoc.WriteTo(xmlWriter);
                 }
-            }
-
-            return true;
-        }
-
-
-        private bool Parse(object obj, Type type, XmlDocument xmlDocument)
-        {
-            if (obj == null)
-            {
-                _logger.Error("Received obj is null.");
-                return false;
-            }
-
-            if (xmlDocument == null)
-            {
-                _logger.Error($"Received {nameof(xmlDocument)} is null.");
-                return false;
-            }
-
-            if (obj.GetType() != type)
-            {
-                _logger.Error($"Type of the arrived .");
-                return false;
-            }
-
-            XmlNodeList sectionNodes = xmlDocument.DocumentElement.ChildNodes;
-            foreach (var section in sectionNodes)
-            {
-
             }
 
             return true;
