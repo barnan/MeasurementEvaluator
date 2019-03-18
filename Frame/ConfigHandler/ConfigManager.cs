@@ -12,6 +12,7 @@ namespace Frame.ConfigHandler
         private string _configFolder;
         private readonly string _configFileExtension = ".config";
         private const string ROOT_NODE_NAME = "Configurations";
+        private const string SECTION_NAME_ATTRIBUTE_NAME = "SectionName";
 
         public ConfigManager(string folder)
         {
@@ -45,7 +46,6 @@ namespace Frame.ConfigHandler
             string[] configFiles;
             try
             {
-
                 configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
 
                 if (configFiles.Length == 0)
@@ -62,21 +62,21 @@ namespace Frame.ConfigHandler
             // with the config file with the given namespace:
 
             string[] namespaceFragments = namespaceOfType.Split('.');
-            string configFileName = Path.Combine(_configFolder, namespaceFragments[0] + _configFileExtension);
+            string currentConfigFileName = Path.Combine(_configFolder, namespaceFragments[0] + _configFileExtension);
 
             if (!Array.Exists<string>(configFiles, p => Path.GetFileNameWithoutExtension(p) == namespaceFragments[0]))
             {
-                _logger.Error($"{configFileName} file was not found.");
+                _logger.Error($"{currentConfigFileName} file was not found.");
 
                 try
                 {
-                    FileStream fs = File.Create(configFileName);
+                    FileStream fs = File.Create(currentConfigFileName);
                     fs.Close();
-                    _logger.Info($"{configFileName} created.");
+                    _logger.Info($"{currentConfigFileName} created.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"{configFileName} could not created: {ex.Message}");
+                    _logger.Error($"{currentConfigFileName} could not created: {ex.Message}");
                     return false;
                 }
             }
@@ -85,7 +85,7 @@ namespace Frame.ConfigHandler
 
             XmlDocument xmlDoc = new XmlDocument();
             XmlReaderSettings readerSettings = new XmlReaderSettings();
-            using (StreamReader sr = new StreamReader(configFileName))
+            using (StreamReader sr = new StreamReader(currentConfigFileName))
             {
                 using (XmlReader xmlReader = XmlReader.Create(sr, readerSettings))
                 {
@@ -93,35 +93,71 @@ namespace Frame.ConfigHandler
                     {
                         xmlDoc.Load(xmlReader);
                     }
-                    catch (XmlException xmlex)
-                    {
-                        XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
-                        xmlDoc.AppendChild(rootNode);
-                    }
                     catch (Exception ex)
                     {
-
+                        _logger.Error($"Config file ({currentConfigFileName}) could not read: {ex.Message}");
                     }
-
                 }
             }
 
+            if (xmlDoc.DocumentElement == null)
+            {
+                XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
+                xmlDoc.AppendChild(rootNode);
+            }
+
+
+            XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
+            XmlNode currentSectionNode = null;
+
+            foreach (XmlNode node in childNodes)
+            {
+                XmlAttributeCollection attributeColection = node.Attributes;
+                foreach (XmlAttribute attribute in attributeColection)
+                {
+                    if (attribute.Name == SECTION_NAME_ATTRIBUTE_NAME && attribute.InnerText == sectionName)
+                    {
+                        currentSectionNode = node;
+                        break;
+                    }
+                }
+            }
+
+            if (childNodes.Count == 0 || currentSectionNode == null)
+            {
+                currentSectionNode = xmlDoc.CreateElement(sectionName);
+
+                _logger.Error($"{sectionName} node was not found in {xmlDoc.DocumentElement?.Name} in {currentConfigFileName}. {sectionName} section was created.");
+
+                XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(SECTION_NAME_ATTRIBUTE_NAME);
+                sectionNameAttribute.InnerText = sectionName;
+
+                XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute("Assembly");
+                assemblyAttribute.InnerText = type.Name.ToString();
+
+                currentSectionNode.Attributes.Append(sectionNameAttribute);
+                currentSectionNode.Attributes.Append(assemblyAttribute);
+
+                xmlDoc.DocumentElement.AppendChild(currentSectionNode);
+            }
+
+            // edit
+            // go through properties of the object
+
+            // write into the xml file:
 
             XmlWriterSettings writerSettings = new XmlWriterSettings();
             writerSettings.Encoding = Encoding.UTF8;
             writerSettings.Indent = true;
             writerSettings.CloseOutput = true;
 
-            using (StreamWriter sw = new StreamWriter(configFileName))
+            using (StreamWriter sw = new StreamWriter(currentConfigFileName))
             {
                 using (XmlWriter xmlWriter = XmlWriter.Create(sw, writerSettings))
                 {
                     xmlDoc.WriteTo(xmlWriter);
                 }
             }
-
-            // go through the sections:
-
 
             return true;
         }
