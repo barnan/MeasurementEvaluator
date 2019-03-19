@@ -21,19 +21,8 @@ namespace Frame.ConfigHandler
         {
             _logger = LogManager.GetCurrentClassLogger();
             _configFolder = folder;
-
-
-            ReadOrCreateComponentList();
-
-
-
         }
 
-
-        private void ReadOrCreateComponentList()
-        {
-
-        }
 
 
         public bool Load(object inputObj, string sectionName)
@@ -52,12 +41,56 @@ namespace Frame.ConfigHandler
 
             Type type = inputObj.GetType();
             string namespaceOfType = type.Namespace ?? "Unknown";
+            string[] namespaceFragments = namespaceOfType.Split('.');
+            string currentConfigFileName = Path.Combine(_configFolder, namespaceFragments[0] + _configFileExtension);
 
             _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
             _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
 
-            //get config file list:
+            if (CheckOrCreateConfigFile(sectionName, currentConfigFileName))
+            {
+                return false;
+            }
 
+            XmlElement currentSectionElement = Load(type, sectionName, currentConfigFileName);
+
+
+            // edit according to the object
+
+            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var fieldInfo in fieldInfos)
+            {
+                List<Attribute> attributes = fieldInfo.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList();
+
+                if (attributes.Count == 0)
+                {
+                    continue;
+                }
+
+                if (attributes.Count > 1)
+                {
+                    _logger.Error($"More configuration attributes are attached to {type.Name}");
+                    break;
+                }
+
+                ConfigurationAttribute attribute = (ConfigurationAttribute)attributes[0];
+
+                if (attribute.LoadComponent)
+                {
+                    //var component = PluginLoader.PluginLoader.CreateInstance<>()
+                }
+
+
+            }
+
+            return true;
+        }
+
+
+
+        internal bool CheckOrCreateConfigFile(string sectionName, string currentConfigFileName)
+        {
+            //get config file list:
             string[] configFiles;
             try
             {
@@ -73,12 +106,7 @@ namespace Frame.ConfigHandler
                 return false;
             }
 
-            // with the config file with the given namespace:
-
-            string[] namespaceFragments = namespaceOfType.Split('.');
-            string currentConfigFileName = Path.Combine(_configFolder, namespaceFragments[0] + _configFileExtension);
-
-            if (!Array.Exists<string>(configFiles, p => Path.GetFileNameWithoutExtension(p) == namespaceFragments[0]))
+            if (!Array.Exists<string>(configFiles, p => Path.GetFileName(p) == Path.GetFileName(currentConfigFileName)))
             {
                 _logger.Error($"{currentConfigFileName} file was not found.");
 
@@ -90,11 +118,16 @@ namespace Frame.ConfigHandler
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"{currentConfigFileName} could not created: {ex.Message}");
+                    _logger.Error($"{currentConfigFileName} was NOT existing and could NOT created: {ex.Message}");
                     return false;
                 }
             }
+            return true;
+        }
 
+
+        internal XmlElement Load(Type type, string sectionName, string currentConfigFileName)
+        {
             // read in the xml doc
 
             XmlDocument xmlDoc = new XmlDocument();
@@ -119,7 +152,6 @@ namespace Frame.ConfigHandler
                 XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
                 xmlDoc.AppendChild(rootNode);
             }
-
 
             XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
             XmlElement currentSectionNode = null;
@@ -148,11 +180,11 @@ namespace Frame.ConfigHandler
                 }
             }
 
-            if (childNodes.Count == 0 || currentSectionNode == null)     // if the node was not found
+            if (childNodes.Count == 0 || currentSectionNode == null)     // if the node was not found, or its is empty
             {
                 currentSectionNode = xmlDoc.CreateElement(sectionName);
 
-                _logger.Error($"{sectionName} node was not found in {xmlDoc.DocumentElement?.Name} in {currentConfigFileName}. {sectionName} section was created.");
+                _logger.Error($"{sectionName} node was not found in {xmlDoc.DocumentElement?.Name} in {currentConfigFileName}.New {sectionName} section was created.");
 
                 XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(SECTION_NAME_ATTRIBUTE_NAME);
                 sectionNameAttribute.InnerText = sectionName;
@@ -164,38 +196,17 @@ namespace Frame.ConfigHandler
                 currentSectionNode.Attributes.Append(sectionNameAttribute);
                 currentSectionNode.Attributes.Append(assemblyAttribute);
 
-                xmlDoc.DocumentElement.AppendChild(currentSectionNode);
+                //xmlDoc.DocumentElement.AppendChild(currentSectionNode);
             }
 
-            // edit according to the object
+            return currentSectionNode;
+        }
 
-            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            foreach (var fieldInfo in fieldInfos)
-            {
-                List<Attribute> attributes = fieldInfo.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList();
+        internal bool Save(XmlElement newElement, string sectionName, string currentConfigFileName)
+        {
+            //write into the xml file:
 
-                if (attributes.Count == 0)
-                {
-                    continue;
-                }
-
-                if (attributes.Count > 1)
-                {
-                    _logger.Error($"More configuration attributes are attached to {type.Name}");
-                    break;
-                }
-
-                ConfigurationAttribute attribute = (ConfigurationAttribute)attributes[0];
-
-                if (attribute.LoadComponent)
-                {
-                    var component = PluginLoader.PluginLoader.CreateInstance<>()
-                }
-
-
-            }
-
-            // write into the xml file:
+            XmlDocument xmlDoc = new XmlDocument();
 
             XmlWriterSettings writerSettings = new XmlWriterSettings();
             writerSettings.Encoding = Encoding.UTF8;
@@ -212,6 +223,7 @@ namespace Frame.ConfigHandler
 
             return true;
         }
+
 
     }
 }

@@ -188,6 +188,11 @@ namespace Frame.PluginLoader
         /// <returns>Collection of factories</returns>
         private bool LoadPlugins()
         {
+            if (ReadOrCreateComponentList())
+            {
+                return false;
+            }
+
             if (Directory.Exists(PluginsFolder))
             {
                 // gather all dll names:
@@ -302,6 +307,26 @@ namespace Frame.PluginLoader
 
             return false;
         }
+
+
+
+        private bool ReadOrCreateComponentList()
+        {
+            string componentListName = Path.Combine(ConfigurationFolder, "ComponentList.config");
+
+            if (!ConfigManager.CheckOrCreateConfigFile("ComponentList", componentListName))
+            {
+                return false;
+            }
+
+            ConfigManager.Load(typeof(PluginLoader), "ComponentList", componentListName);
+
+            ConfigManager.Save("ComponentList", componentListName);
+
+            return true;
+        }
+
+
 
         #endregion
     }
