@@ -21,6 +21,18 @@ namespace Frame.ConfigHandler
         {
             _logger = LogManager.GetCurrentClassLogger();
             _configFolder = folder;
+
+
+            ReadOrCreateComponentList();
+
+
+
+        }
+
+
+        private void ReadOrCreateComponentList()
+        {
+
         }
 
 
@@ -50,7 +62,6 @@ namespace Frame.ConfigHandler
             try
             {
                 configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
-
                 if (configFiles.Length == 0)
                 {
                     _logger.Error($"No config files were found in folder: {_configFolder}");
@@ -94,7 +105,7 @@ namespace Frame.ConfigHandler
                 {
                     try
                     {
-                        xmlDoc.Load(xmlReader);
+                        xmlDoc.Load(xmlReader);     // throws an exception if the config file was created in the previous code-section above
                     }
                     catch (Exception ex)
                     {
@@ -103,7 +114,7 @@ namespace Frame.ConfigHandler
                 }
             }
 
-            if (xmlDoc.DocumentElement == null)
+            if (xmlDoc.DocumentElement == null)     // if the xml was "empty"
             {
                 XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
                 xmlDoc.AppendChild(rootNode);
@@ -118,7 +129,8 @@ namespace Frame.ConfigHandler
                 XmlAttributeCollection attributeCollection = node.Attributes;
                 if (attributeCollection == null)
                 {
-                    break;
+                    _logger.Error($"No attributes was found for node-element: {node.Name}");
+                    continue;
                 }
 
                 foreach (XmlAttribute attribute in attributeCollection)
@@ -130,13 +142,13 @@ namespace Frame.ConfigHandler
                     }
                 }
 
-                if (currentSectionNode != null)
+                if (currentSectionNode != null)     // if the inner loop has found the searched attribute for the node
                 {
                     break;
                 }
             }
 
-            if (childNodes.Count == 0 || currentSectionNode == null)
+            if (childNodes.Count == 0 || currentSectionNode == null)     // if the node was not found
             {
                 currentSectionNode = xmlDoc.CreateElement(sectionName);
 
@@ -145,6 +157,7 @@ namespace Frame.ConfigHandler
                 XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(SECTION_NAME_ATTRIBUTE_NAME);
                 sectionNameAttribute.InnerText = sectionName;
 
+                // creates additional attributes for the new node -> assembly name
                 XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute("Assembly");
                 assemblyAttribute.InnerText = type.Name;
 
@@ -172,7 +185,12 @@ namespace Frame.ConfigHandler
                     break;
                 }
 
-                ConfigurationAttribute atribute = (ConfigurationAttribute)attributes[0];
+                ConfigurationAttribute attribute = (ConfigurationAttribute)attributes[0];
+
+                if (attribute.LoadComponent)
+                {
+                    var component = PluginLoader.PluginLoader.CreateInstance<>()
+                }
 
 
             }
