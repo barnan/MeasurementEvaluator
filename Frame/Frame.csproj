@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ConfigHandler\ConfigurationAttribute.cs" />
     <Compile Include="ConfigHandler\ConfigManager.cs" />
+    <Compile Include="PluginLoader\ComponentList.cs" />
     <Compile Include="PluginLoader\Interfaces.cs" />
     <Compile Include="PluginLoader\PluginLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

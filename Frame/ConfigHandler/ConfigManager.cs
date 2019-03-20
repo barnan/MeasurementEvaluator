@@ -54,8 +54,7 @@ namespace Frame.ConfigHandler
                 return false;
             }
 
-            XmlElement currentSectionElement = Load(currentConfigFileName, sectionName, type);
-
+            XmlElement currentSectionElement = LoadXmlElement(currentConfigFileName, sectionName, type);
 
             // edit according to the object
 
@@ -85,7 +84,7 @@ namespace Frame.ConfigHandler
 
             }
 
-            return Save(currentConfigFileName, sectionName, currentSectionElement);
+            return Save(currentConfigFileName, sectionName, currentSectionElement, type);
         }
 
 
@@ -128,11 +127,27 @@ namespace Frame.ConfigHandler
         }
 
 
-        internal XmlElement Load(string currentConfigFileName, string sectionName, Type type)
+        internal XmlElement LoadXmlElement(string currentConfigFileName, string sectionName, Type type)
         {
             // read in the xml doc
 
             XmlDocument xmlDoc = new XmlDocument();
+
+            XmlElement currentSectionNode = LoadXmlElement(xmlDoc, currentConfigFileName, sectionName);
+
+            if (currentSectionNode == null)
+            {
+                _logger.Info("Null node received.");
+
+                currentSectionNode = CreateXmlSection(xmlDoc, sectionName, type);
+            }
+
+            return currentSectionNode;
+        }
+
+
+        internal XmlElement LoadXmlElement(XmlDocument xmlDoc, string currentConfigFileName, string sectionName)
+        {
             XmlReaderSettings readerSettings = new XmlReaderSettings();
             using (StreamReader sr = new StreamReader(currentConfigFileName))
             {
@@ -145,14 +160,14 @@ namespace Frame.ConfigHandler
                     catch (Exception ex)
                     {
                         _logger.Error($"Config file ({currentConfigFileName}) could not read: {ex.Message}");
-                        return CreateXmlSection(xmlDoc, sectionName, type);
+                        return null;
                     }
                 }
             }
 
             if (xmlDoc.DocumentElement == null)
             {
-                return CreateXmlSection(xmlDoc, sectionName, type);
+                return null;
             }
 
             XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
@@ -176,15 +191,10 @@ namespace Frame.ConfigHandler
                     }
                 }
 
-                if (currentSectionNode != null)     // if the inner loop has found the searched attribute for the node
+                if (currentSectionNode != null)
                 {
                     break;
                 }
-            }
-
-            if (currentSectionNode == null)
-            {
-                currentSectionNode = CreateXmlSection(xmlDoc, sectionName, type);
             }
 
             return currentSectionNode;
@@ -211,7 +221,7 @@ namespace Frame.ConfigHandler
         }
 
 
-        internal bool Save(string currentConfigFileName, string sectionName, XmlElement newElement)
+        internal bool Save(string currentConfigFileName, string sectionName, XmlElement newElement, Type type)
         {
             // todo lehet hogy a load is lefedné, és csak törölni a visszakapott element-et?
 
@@ -221,23 +231,17 @@ namespace Frame.ConfigHandler
                 return false;
             }
 
-            // read in the xml doc
+            //// read in the xml doc
 
             XmlDocument xmlDoc = new XmlDocument();
-            XmlReaderSettings readerSettings = new XmlReaderSettings();
-            try
+
+            XmlElement oldElement = LoadXmlElement(xmlDoc, currentConfigFileName, sectionName);
+
+            if (oldElement == null)
             {
-                using (StreamReader sr = new StreamReader(currentConfigFileName))
-                {
-                    using (XmlReader xmlReader = XmlReader.Create(sr, readerSettings))
-                    {
-                        xmlDoc.Load(xmlReader);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Config file ({currentConfigFileName}) could not read: {ex.Message}");
+                _logger.Info("Null node received.");
+
+                oldElement = CreateXmlSection(xmlDoc, sectionName, type);
             }
 
             if (xmlDoc.DocumentElement == null)
@@ -246,34 +250,13 @@ namespace Frame.ConfigHandler
                 xmlDoc.AppendChild(rootNode);
             }
 
-            XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
-
-            foreach (XmlNode node in childNodes)
+            try
             {
-                XmlAttributeCollection attributeCollection = node.Attributes;
-                if (attributeCollection == null)
-                {
-                    _logger.Error($"No attributes was found for node-element: {node.Name}");
-                    continue;
-                }
-
-                foreach (XmlAttribute attribute in attributeCollection)
-                {
-                    if (attribute.Name != SECTION_NAME_ATTRIBUTE_NAME || attribute.InnerText != sectionName)
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        xmlDoc.RemoveChild(node);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"Tried to remove node: ({node.Name}, {sectionName}), but removing was not successful: {ex.Message}");
-                    }
-                    break;
-                }
+                xmlDoc.RemoveChild(oldElement);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Tried to remove node: ({oldElement.Name}, {sectionName}), but removing was not successful: {ex.Message}");
             }
 
             try

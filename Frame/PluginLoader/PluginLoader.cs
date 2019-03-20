@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 
 namespace Frame.PluginLoader
 {
@@ -313,17 +314,26 @@ namespace Frame.PluginLoader
         private bool ReadOrCreateComponentList()
         {
             string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
+            string componentSectionName = "ComponentList";
 
             if (!ConfigManager.CheckOrCreateConfigFile("ComponentList", componentListFileName))
             {
                 return false;
             }
 
-            ConfigManager.Load(componentListFileName, "ComponentList", typeof(PluginLoader));
+            ComponentList componentList = new ComponentList();
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, componentSectionName);
 
-            // todo: create or read xmlelement
+            if (componentListSection == null)
+            {
+                componentListSection = ConfigManager.CreateXmlSection(xmlDoc, componentSectionName, typeof(ComponentList));
+            }
 
-            ConfigManager.Save(componentListFileName, "ComponentList", XXXXX);
+            if (!componentList.Load(componentListSection))
+            {
+                ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
+            }
 
             return true;
         }
