@@ -312,16 +312,18 @@ namespace Frame.PluginLoader
 
         private bool ReadOrCreateComponentList()
         {
-            string componentListName = Path.Combine(ConfigurationFolder, "ComponentList.config");
+            string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
 
-            if (!ConfigManager.CheckOrCreateConfigFile("ComponentList", componentListName))
+            if (!ConfigManager.CheckOrCreateConfigFile("ComponentList", componentListFileName))
             {
                 return false;
             }
 
-            ConfigManager.Load(typeof(PluginLoader), "ComponentList", componentListName);
+            ConfigManager.Load(componentListFileName, "ComponentList", typeof(PluginLoader));
 
-            ConfigManager.Save("ComponentList", componentListName);
+            // todo: create or read xmlelement
+
+            ConfigManager.Save(componentListFileName, "ComponentList", XXXXX);
 
             return true;
         }

@@ -15,7 +15,9 @@ namespace Frame.ConfigHandler
         private string _configFolder;
         private readonly string _configFileExtension = ".config";
         private const string ROOT_NODE_NAME = "Configurations";
-        private const string SECTION_NAME_ATTRIBUTE_NAME = "SectionName";
+        private const string SECTION_NAME_ATTRIBUTE_NAME = "Name";
+        private const string SECTION_NAME = "Section";
+        private const string Assembly_NAME_ATTRIBUTE_NAME = "Assembly";
 
         public ConfigManager(string folder)
         {
@@ -52,7 +54,7 @@ namespace Frame.ConfigHandler
                 return false;
             }
 
-            XmlElement currentSectionElement = Load(type, sectionName, currentConfigFileName);
+            XmlElement currentSectionElement = Load(currentConfigFileName, sectionName, type);
 
 
             // edit according to the object
@@ -83,7 +85,7 @@ namespace Frame.ConfigHandler
 
             }
 
-            return true;
+            return Save(currentConfigFileName, sectionName, currentSectionElement);
         }
 
 
@@ -126,7 +128,7 @@ namespace Frame.ConfigHandler
         }
 
 
-        internal XmlElement Load(Type type, string sectionName, string currentConfigFileName)
+        internal XmlElement Load(string currentConfigFileName, string sectionName, Type type)
         {
             // read in the xml doc
 
@@ -138,19 +140,19 @@ namespace Frame.ConfigHandler
                 {
                     try
                     {
-                        xmlDoc.Load(xmlReader);     // throws an exception if the config file was created in the previous code-section above
+                        xmlDoc.Load(xmlReader);
                     }
                     catch (Exception ex)
                     {
                         _logger.Error($"Config file ({currentConfigFileName}) could not read: {ex.Message}");
+                        return CreateXmlSection(xmlDoc, sectionName, type);
                     }
                 }
             }
 
-            if (xmlDoc.DocumentElement == null)     // if the xml was "empty"
+            if (xmlDoc.DocumentElement == null)
             {
-                XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
-                xmlDoc.AppendChild(rootNode);
+                return CreateXmlSection(xmlDoc, sectionName, type);
             }
 
             XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
@@ -180,45 +182,130 @@ namespace Frame.ConfigHandler
                 }
             }
 
-            if (childNodes.Count == 0 || currentSectionNode == null)     // if the node was not found, or its is empty
+            if (currentSectionNode == null)
             {
-                currentSectionNode = xmlDoc.CreateElement(sectionName);
-
-                _logger.Error($"{sectionName} node was not found in {xmlDoc.DocumentElement?.Name} in {currentConfigFileName}.New {sectionName} section was created.");
-
-                XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(SECTION_NAME_ATTRIBUTE_NAME);
-                sectionNameAttribute.InnerText = sectionName;
-
-                // creates additional attributes for the new node -> assembly name
-                XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute("Assembly");
-                assemblyAttribute.InnerText = type.Name;
-
-                currentSectionNode.Attributes.Append(sectionNameAttribute);
-                currentSectionNode.Attributes.Append(assemblyAttribute);
-
-                //xmlDoc.DocumentElement.AppendChild(currentSectionNode);
+                currentSectionNode = CreateXmlSection(xmlDoc, sectionName, type);
             }
 
             return currentSectionNode;
         }
 
-        internal bool Save(XmlElement newElement, string sectionName, string currentConfigFileName)
+
+        internal XmlElement CreateXmlSection(XmlDocument xmlDoc, string sectionName, Type type)
         {
-            //write into the xml file:
+            XmlElement createdSectionNode = xmlDoc.CreateElement(SECTION_NAME);
+
+            _logger.Info($"New {sectionName} section was created.");
+
+            XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(SECTION_NAME_ATTRIBUTE_NAME);
+            sectionNameAttribute.InnerText = sectionName;
+
+            // creates additional attributes for the new node -> assembly name
+            XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute(Assembly_NAME_ATTRIBUTE_NAME);
+            assemblyAttribute.InnerText = type.Name;
+
+            createdSectionNode.Attributes.Append(sectionNameAttribute);
+            createdSectionNode.Attributes.Append(assemblyAttribute);
+
+            return createdSectionNode;
+        }
+
+
+        internal bool Save(string currentConfigFileName, string sectionName, XmlElement newElement)
+        {
+            // todo lehet hogy a load is lefedné, és csak törölni a visszakapott element-et?
+
+            if (newElement == null)
+            {
+                _logger.Error("Received element is null.");
+                return false;
+            }
+
+            // read in the xml doc
 
             XmlDocument xmlDoc = new XmlDocument();
+            XmlReaderSettings readerSettings = new XmlReaderSettings();
+            try
+            {
+                using (StreamReader sr = new StreamReader(currentConfigFileName))
+                {
+                    using (XmlReader xmlReader = XmlReader.Create(sr, readerSettings))
+                    {
+                        xmlDoc.Load(xmlReader);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Config file ({currentConfigFileName}) could not read: {ex.Message}");
+            }
+
+            if (xmlDoc.DocumentElement == null)
+            {
+                XmlNode rootNode = xmlDoc.CreateElement(ROOT_NODE_NAME);
+                xmlDoc.AppendChild(rootNode);
+            }
+
+            XmlNodeList childNodes = xmlDoc.DocumentElement.ChildNodes;
+
+            foreach (XmlNode node in childNodes)
+            {
+                XmlAttributeCollection attributeCollection = node.Attributes;
+                if (attributeCollection == null)
+                {
+                    _logger.Error($"No attributes was found for node-element: {node.Name}");
+                    continue;
+                }
+
+                foreach (XmlAttribute attribute in attributeCollection)
+                {
+                    if (attribute.Name != SECTION_NAME_ATTRIBUTE_NAME || attribute.InnerText != sectionName)
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        xmlDoc.RemoveChild(node);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Tried to remove node: ({node.Name}, {sectionName}), but removing was not successful: {ex.Message}");
+                    }
+                    break;
+                }
+            }
+
+            try
+            {
+                xmlDoc.AppendChild(newElement);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Tried to append child node: ({newElement.Name}, {sectionName}), but adding was not successful: {ex.Message}");
+                return false;
+            }
+
+            //write into the xml file:
 
             XmlWriterSettings writerSettings = new XmlWriterSettings();
             writerSettings.Encoding = Encoding.UTF8;
             writerSettings.Indent = true;
             writerSettings.CloseOutput = true;
-
-            using (StreamWriter sw = new StreamWriter(currentConfigFileName))
+            try
             {
-                using (XmlWriter xmlWriter = XmlWriter.Create(sw, writerSettings))
+                using (StreamWriter sw = new StreamWriter(currentConfigFileName))
                 {
-                    xmlDoc.WriteTo(xmlWriter);
+                    using (XmlWriter xmlWriter = XmlWriter.Create(sw, writerSettings))
+                    {
+                        xmlDoc.WriteTo(xmlWriter);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Config file ({currentConfigFileName}) could not write: {ex.Message}");
+                return false;
             }
 
             return true;
