@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Frame.PluginLoader.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
@@ -42,6 +43,9 @@ namespace Frame.PluginLoader
             if (Components.Count == 0)
             {
                 // add a dummy component
+
+                Components.Add(new KeyValuePair<string, List<string>>("MeasurementEvaluator", new List<string> { typeof(IRunable).ToString() }));
+
                 return false;
             }
 
