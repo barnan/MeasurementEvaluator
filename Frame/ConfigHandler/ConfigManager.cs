@@ -49,7 +49,7 @@ namespace Frame.ConfigHandler
             _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
             _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
 
-            if (CheckOrCreateConfigFile(sectionName, currentConfigFileName))
+            if (!CheckOrCreateConfigFile(sectionName, currentConfigFileName))
             {
                 return false;
             }
@@ -57,6 +57,8 @@ namespace Frame.ConfigHandler
             XmlElement currentSectionElement = LoadXmlElement(currentConfigFileName, sectionName, type);
 
             // edit according to the object
+
+            bool differenceFound = false;
 
             FieldInfo[] fieldInfos = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var fieldInfo in fieldInfos)
@@ -75,14 +77,36 @@ namespace Frame.ConfigHandler
                 }
 
                 ConfigurationAttribute attribute = (ConfigurationAttribute)attributes[0];
+                XmlNode previousNode;
 
-                if (attribute.LoadComponent)
+                foreach (XmlNode childNode in currentSectionElement.ChildNodes)
                 {
-                    //var component = PluginLoader.PluginLoader.CreateInstance<>()
+                    if (childNode is XmlComment)
+                    {
+                        previousNode = childNode;
+                        continue;
+                    }
+                    
+                    foreach (XmlAttribute childNodeAttribute in childNode.Attributes)
+                    {
+
+                        if (childNodeAttribute.Name == "Name")
+
+                    }
+
+                    
                 }
+
+                //if (attribute.LoadComponent)
+                //{
+                //    //var component = PluginLoader.PluginLoader.CreateInstance<>()
+                //}
 
 
             }
+
+
+
 
             return Save(currentConfigFileName, sectionName, currentSectionElement, type);
         }

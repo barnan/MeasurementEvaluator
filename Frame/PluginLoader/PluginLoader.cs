@@ -4,7 +4,6 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml;
 
@@ -17,7 +16,7 @@ namespace Frame.PluginLoader
         private static object _lockObj = new object();
         private ComponentList _componentList;
 
-        //private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
+        private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
         public static string ConfigurationFolder { get; private set; }
         public static string CurrentExeFolder { get; private set; }
@@ -32,7 +31,7 @@ namespace Frame.PluginLoader
         public PluginLoader()
         {
             _logger = LogManager.GetCurrentClassLogger();
-            //_iRunables = new List<KeyValuePair<Type, Assembly>>();
+            _iRunables = new List<KeyValuePair<Type, Assembly>>();
         }
 
 
@@ -105,26 +104,41 @@ namespace Frame.PluginLoader
             lock (_lockObj)
             {
 
-                if (_componentList.Components.Any(p => p.Value.Contains(nameof(IRunable))))
+                //List<string> iRunables = _componentList.Components.Where(p => p.Value.Contains(nameof(IRunable))).Select(p => p.Key).ToList();
+
+                if (_iRunables.Count == 0)
                 {
-                    _logger.Error($"No {nameof(IRunable)} was found in the component list. (ComponentList.config)");
+                    _logger.Error($"No {nameof(IRunable)} was found in the folder: {PluginsFolder}");
                     return false;
                 }
 
 
-                //if (_iRunables.Count > 1)
+                if (_iRunables.Count > 1)
+                {
+                    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
+
+                    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
+                    {
+                        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                    }
+
+                    return false;
+                }
+
+                Type type = _iRunables[0].Key;
+
+                //foreach (string iRunableName in iRunables)
                 //{
-                //    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
+                //    Type type = Type.GetType("MeasurementEvaluator.MeasurementEvaluator");
 
-                //    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
-                //    {
-                //        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
-                //    }
+                //    IRunable runable = (IRunable)Activator.CreateInstance(type);
 
-                //    return false;
+                //    _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
+
+                //    runable.Run();
+
+                //    _logger.Info($"{iRunableName} started.");
                 //}
-
-                //Type type = _iRunables[0].Key;
 
 
                 IRunable runable = (IRunable)Activator.CreateInstance(type);
@@ -133,7 +147,7 @@ namespace Frame.PluginLoader
 
                 runable.Run();
 
-                _logger.Info($"{nameof(IRunable)} started.");
+                _logger.Info($"{type} started.");
 
                 return true;
             }
@@ -226,31 +240,31 @@ namespace Frame.PluginLoader
 
                 // go through all assemblies and look for IRunable component:
 
-                //foreach (Assembly assembly in assemblies)
-                //{
-                //    try
-                //    {
-                //        Type[] types = assembly.GetTypes();
+                foreach (Assembly assembly in assemblies)
+                {
+                    try
+                    {
+                        Type[] types = assembly.GetTypes();
 
-                //        foreach (Type type in types)
-                //        {
-                //            if (type.IsInterface || type.IsAbstract)
-                //            {
-                //                continue;
-                //            }
+                        foreach (Type type in types)
+                        {
+                            if (type.IsInterface || type.IsAbstract)
+                            {
+                                continue;
+                            }
 
-                //            if (typeof(IRunable).IsAssignableFrom(type))
-                //            {
-                //                _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
-                //                _logger.Info($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
-                //            }
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        _logger.Error($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
-                //    }
-                //}
+                            if (typeof(IRunable).IsAssignableFrom(type))
+                            {
+                                _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
+                                _logger.Info($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                    }
+                }
 
                 // go through all assemblies and and check whether they implement IPluginFactory interface:
 
