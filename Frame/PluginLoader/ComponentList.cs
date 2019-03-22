@@ -8,43 +8,72 @@ namespace Frame.PluginLoader
     internal class ComponentList
     {
         internal List<KeyValuePair<string, List<string>>> Components { get; private set; }
+        private const string NAME_ATTRIBUTE_NAME = "Name";
+        private const string TYPE_ATTRIBUTE_NAME = "Type";
+        private const string COMPONENT_NODE_NAME = "Component";
 
 
         /// <summary>
         /// Loads the compnent name and type list from the received XmlElement
         /// </summary>
+        /// <param name="xmlDoc"></param>
         /// <param name="inputElement">input xml element</param>
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
-        internal bool Load(XmlElement inputElement)
+        internal bool Load(XmlDocument xmlDoc, XmlElement inputElement)
         {
             Components = new List<KeyValuePair<string, List<string>>>();
 
             if (inputElement.HasChildNodes)
             {
-                foreach (XmlElement element in inputElement.ChildNodes)
+                XmlNode componentsNode = inputElement.FirstChild;
+
+                if (componentsNode != null && componentsNode.HasChildNodes)
                 {
-                    if (!element.HasAttributes)
+                    foreach (XmlNode componentNode in componentsNode.ChildNodes)
                     {
-                        continue;
-                    }
+                        string nameText = null;
+                        string typeText = null;
 
-                    foreach (XmlAttribute elementAttribute in element.Attributes)
-                    {
-                        string name = elementAttribute.Name;
-                        string text = elementAttribute.InnerText;
+                        foreach (XmlAttribute attribute in componentNode.Attributes)
+                        {
+                            if (attribute.Name == NAME_ATTRIBUTE_NAME)
+                            {
+                                nameText = attribute.InnerText;
+                            }
 
-                        string[] types = text.Split();
+                            if (attribute.Name == TYPE_ATTRIBUTE_NAME)
+                            {
+                                typeText = attribute.InnerText;
+                            }
+                        }
 
-                        Components.Add(new KeyValuePair<string, List<string>>(name, types.ToList()));
+                        if (!string.IsNullOrEmpty(nameText) || !string.IsNullOrEmpty(typeText))
+                        {
+                            string[] types = typeText.Split(';');
+                            Components.Add(new KeyValuePair<string, List<string>>(nameText, types.ToList()));
+                        }
+
                     }
                 }
             }
 
             if (Components.Count == 0)
             {
-                // add a dummy component
+                //Components.Add(new KeyValuePair<string, List<string>>("MeasurementEvaluator", new List<string> { nameof(IRunable) }));
 
-                Components.Add(new KeyValuePair<string, List<string>>("MeasurementEvaluator", new List<string> { typeof(IRunable).ToString() }));
+                XmlElement dummyelement = xmlDoc.CreateElement("Components");
+                XmlElement dummyChildElement = xmlDoc.CreateElement(COMPONENT_NODE_NAME);
+
+                XmlAttribute nameAttribute = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
+                nameAttribute.InnerText = "MeasurementEvaluator";
+                XmlAttribute typeAttribute = xmlDoc.CreateAttribute(TYPE_ATTRIBUTE_NAME);
+                typeAttribute.InnerText = nameof(IRunable);
+
+                dummyChildElement.Attributes.Append(nameAttribute);
+                dummyChildElement.Attributes.Append(typeAttribute);
+
+                dummyelement.AppendChild(dummyChildElement);
+                inputElement.AppendChild(dummyelement);
 
                 return false;
             }

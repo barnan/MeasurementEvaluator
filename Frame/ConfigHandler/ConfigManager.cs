@@ -252,7 +252,7 @@ namespace Frame.ConfigHandler
 
             try
             {
-                xmlDoc.RemoveChild(oldElement);
+                xmlDoc.DocumentElement.RemoveChild(oldElement);
             }
             catch (Exception ex)
             {
@@ -261,7 +261,8 @@ namespace Frame.ConfigHandler
 
             try
             {
-                xmlDoc.AppendChild(newElement);
+                XmlNode importNode = xmlDoc.ImportNode(newElement, true);
+                xmlDoc.DocumentElement.AppendChild(importNode);
             }
             catch (Exception ex)
             {

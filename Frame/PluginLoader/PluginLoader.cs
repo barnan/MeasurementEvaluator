@@ -4,6 +4,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 
@@ -14,8 +15,9 @@ namespace Frame.PluginLoader
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
         private static object _lockObj = new object();
+        private ComponentList _componentList;
 
-        private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
+        //private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
         public static string ConfigurationFolder { get; private set; }
         public static string CurrentExeFolder { get; private set; }
@@ -30,7 +32,7 @@ namespace Frame.PluginLoader
         public PluginLoader()
         {
             _logger = LogManager.GetCurrentClassLogger();
-            _iRunables = new List<KeyValuePair<Type, Assembly>>();
+            //_iRunables = new List<KeyValuePair<Type, Assembly>>();
         }
 
 
@@ -102,25 +104,29 @@ namespace Frame.PluginLoader
         {
             lock (_lockObj)
             {
-                if (_iRunables.Count == 0)
+
+                if (_componentList.Components.Any(p => p.Value.Contains(nameof(IRunable))))
                 {
-                    _logger.Error($"No {nameof(IRunable)} was found in folder: {PluginsFolder}");
+                    _logger.Error($"No {nameof(IRunable)} was found in the component list. (ComponentList.config)");
                     return false;
                 }
 
-                if (_iRunables.Count > 1)
-                {
-                    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
 
-                    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
-                    {
-                        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
-                    }
+                //if (_iRunables.Count > 1)
+                //{
+                //    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
 
-                    return false;
-                }
+                //    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
+                //    {
+                //        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                //    }
 
-                Type type = _iRunables[0].Key;
+                //    return false;
+                //}
+
+                //Type type = _iRunables[0].Key;
+
+
                 IRunable runable = (IRunable)Activator.CreateInstance(type);
 
                 _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
@@ -189,7 +195,8 @@ namespace Frame.PluginLoader
         /// <returns>Collection of factories</returns>
         private bool LoadPlugins()
         {
-            if (ReadOrCreateComponentList())
+            _componentList = ReadOrCreateComponentList();
+            if (_componentList == null)
             {
                 return false;
             }
@@ -219,31 +226,31 @@ namespace Frame.PluginLoader
 
                 // go through all assemblies and look for IRunable component:
 
-                foreach (Assembly assembly in assemblies)
-                {
-                    try
-                    {
-                        Type[] types = assembly.GetTypes();
+                //foreach (Assembly assembly in assemblies)
+                //{
+                //    try
+                //    {
+                //        Type[] types = assembly.GetTypes();
 
-                        foreach (Type type in types)
-                        {
-                            if (type.IsInterface || type.IsAbstract)
-                            {
-                                continue;
-                            }
+                //        foreach (Type type in types)
+                //        {
+                //            if (type.IsInterface || type.IsAbstract)
+                //            {
+                //                continue;
+                //            }
 
-                            if (typeof(IRunable).IsAssignableFrom(type))
-                            {
-                                _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
-                                _logger.Info($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
-                    }
-                }
+                //            if (typeof(IRunable).IsAssignableFrom(type))
+                //            {
+                //                _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
+                //                _logger.Info($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
+                //            }
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        _logger.Error($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                //    }
+                //}
 
                 // go through all assemblies and and check whether they implement IPluginFactory interface:
 
@@ -311,14 +318,14 @@ namespace Frame.PluginLoader
 
 
 
-        private bool ReadOrCreateComponentList()
+        private ComponentList ReadOrCreateComponentList()
         {
             string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
             string componentSectionName = "ComponentList";
 
             if (!ConfigManager.CheckOrCreateConfigFile("ComponentList", componentListFileName))
             {
-                return false;
+                return null;
             }
 
             ComponentList componentList = new ComponentList();
@@ -330,12 +337,12 @@ namespace Frame.PluginLoader
                 componentListSection = ConfigManager.CreateXmlSection(xmlDoc, componentSectionName, typeof(ComponentList));
             }
 
-            if (!componentList.Load(componentListSection))
+            if (!componentList.Load(xmlDoc, componentListSection))
             {
                 ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
             }
 
-            return true;
+            return componentList;
         }
 
 
