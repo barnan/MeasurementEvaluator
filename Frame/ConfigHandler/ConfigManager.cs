@@ -1,6 +1,5 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,15 +15,16 @@ namespace Frame.ConfigHandler
         private readonly string _configFileExtension = ".config";
         private const string ROOT_NODE_NAME = "Configurations";
         private const string SECTION_NAME_ATTRIBUTE_NAME = "Name";
-        private const string SECTION_NAME = "Section";
         private const string Assembly_NAME_ATTRIBUTE_NAME = "Assembly";
+        private const string SECTION_NAME = "Section";
+        private const string VALUE_NAME_ATTRIBUTE_NAME = "Value";
+
 
         public ConfigManager(string folder)
         {
             _logger = LogManager.GetCurrentClassLogger();
             _configFolder = folder;
         }
-
 
 
         public bool Load(object inputObj, string sectionName)
@@ -60,57 +60,55 @@ namespace Frame.ConfigHandler
 
             bool differenceFound = false;
 
-            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            foreach (var fieldInfo in fieldInfos)
+            foreach (XmlNode childNode in currentSectionElement.ChildNodes)
             {
-                List<Attribute> attributes = fieldInfo.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList();
-
-                if (attributes.Count == 0)
+                if (childNode is XmlComment)
                 {
                     continue;
                 }
 
-                if (attributes.Count > 1)
+                XmlAttribute nameAttribute = null;
+                XmlAttribute valueAttribute = null;
+                foreach (XmlAttribute childNodeAttribute in childNode.Attributes)
                 {
-                    _logger.Error($"More configuration attributes are attached to {type.Name}");
-                    break;
+                    if (childNodeAttribute.Name == SECTION_NAME_ATTRIBUTE_NAME)
+                    {
+                        nameAttribute = childNodeAttribute;
+                    }
+                    if (childNodeAttribute.Name == VALUE_NAME_ATTRIBUTE_NAME)
+                    {
+                        valueAttribute = childNodeAttribute;
+                    }
                 }
 
-                ConfigurationAttribute attribute = (ConfigurationAttribute)attributes[0];
-                XmlNode previousNode;
-
-                foreach (XmlNode childNode in currentSectionElement.ChildNodes)
+                if (nameAttribute == null || valueAttribute == null)
                 {
-                    if (childNode is XmlComment)
+                    _logger.Error($"XmlNode ({childNode.Name}) without {SECTION_NAME_ATTRIBUTE_NAME} or {VALUE_NAME_ATTRIBUTE_NAME} attribute was found. It is removed.");
+                    currentSectionElement.RemoveChild(childNode);
+                    continue;
+                }
+
+                FieldInfo currentField = null;
+                FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
+                foreach (var fieldInfo in fieldInfosWithConfigAttribute)
+                {
+                    ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
+
+                    if (fieldConfigurationAttribute.Name != nameAttribute.InnerText)
                     {
-                        previousNode = childNode;
                         continue;
                     }
-                    
-                    foreach (XmlAttribute childNodeAttribute in childNode.Attributes)
-                    {
 
-                        if (childNodeAttribute.Name == "Name")
+                    currentField = fieldInfo;
+                    Type fieldType = currentField.FieldType;
 
-                    }
-
-                    
+                    object temporary = Convert.ChangeType(valueAttribute.InnerText, fieldType);
+                    currentField.SetValue(inputObj, temporary);
                 }
 
-                //if (attribute.LoadComponent)
-                //{
-                //    //var component = PluginLoader.PluginLoader.CreateInstance<>()
-                //}
-
-
             }
-
-
-
-
             return Save(currentConfigFileName, sectionName, currentSectionElement, type);
         }
-
 
 
         internal bool CheckOrCreateConfigFile(string sectionName, string currentConfigFileName)
@@ -120,17 +118,13 @@ namespace Frame.ConfigHandler
             try
             {
                 configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
-                if (configFiles.Length == 0)
-                {
-                    _logger.Error($"No config files were found in folder: {_configFolder}");
-                }
+
             }
             catch (Exception ex)
             {
                 _logger.Error($"Exception occured during config file search for {sectionName} in folder: {_configFolder}{Environment.NewLine}{ex.Message}");
                 return false;
             }
-
             if (!Array.Exists<string>(configFiles, p => Path.GetFileName(p) == Path.GetFileName(currentConfigFileName)))
             {
                 _logger.Error($"{currentConfigFileName} file was not found.");
@@ -147,6 +141,7 @@ namespace Frame.ConfigHandler
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -247,8 +242,6 @@ namespace Frame.ConfigHandler
 
         internal bool Save(string currentConfigFileName, string sectionName, XmlElement newElement, Type type)
         {
-            // todo lehet hogy a load is lefedné, és csak törölni a visszakapott element-et?
-
             if (newElement == null)
             {
                 _logger.Error("Received element is null.");
@@ -258,15 +251,7 @@ namespace Frame.ConfigHandler
             //// read in the xml doc
 
             XmlDocument xmlDoc = new XmlDocument();
-
             XmlElement oldElement = LoadXmlElement(xmlDoc, currentConfigFileName, sectionName);
-
-            if (oldElement == null)
-            {
-                _logger.Info("Null node received.");
-
-                oldElement = CreateXmlSection(xmlDoc, sectionName, type);
-            }
 
             if (xmlDoc.DocumentElement == null)
             {
@@ -274,13 +259,22 @@ namespace Frame.ConfigHandler
                 xmlDoc.AppendChild(rootNode);
             }
 
-            try
+            if (oldElement == null)
             {
-                xmlDoc.DocumentElement.RemoveChild(oldElement);
+                _logger.Info("Null node received.");
+
+                oldElement = CreateXmlSection(xmlDoc, sectionName, type);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.Error($"Tried to remove node: ({oldElement.Name}, {sectionName}), but removing was not successful: {ex.Message}");
+                try
+                {
+                    xmlDoc.DocumentElement.RemoveChild(oldElement);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"Tried to remove node: ({oldElement.Name}, {sectionName}), but removing was not successful: {ex.Message}");
+                }
             }
 
             try

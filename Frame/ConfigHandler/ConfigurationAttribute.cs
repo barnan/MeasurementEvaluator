@@ -25,9 +25,10 @@ namespace Frame.ConfigHandler
 
         public string Name;
 
+        public string Value;
+
         private string Description;
 
         public bool LoadComponent;
-
     }
 }

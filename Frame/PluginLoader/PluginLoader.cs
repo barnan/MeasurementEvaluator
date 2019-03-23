@@ -99,13 +99,15 @@ namespace Frame.PluginLoader
             }
         }
 
+
+        /// <summary>
+        /// Starts the available IRunables from the [PluginsFolder] folder
+        /// </summary>
+        /// <returns></returns>
         public bool Start()
         {
             lock (_lockObj)
             {
-
-                //List<string> iRunables = _componentList.Components.Where(p => p.Value.Contains(nameof(IRunable))).Select(p => p.Key).ToList();
-
                 if (_iRunables.Count == 0)
                 {
                     _logger.Error($"No {nameof(IRunable)} was found in the folder: {PluginsFolder}");
@@ -126,20 +128,6 @@ namespace Frame.PluginLoader
                 }
 
                 Type type = _iRunables[0].Key;
-
-                //foreach (string iRunableName in iRunables)
-                //{
-                //    Type type = Type.GetType("MeasurementEvaluator.MeasurementEvaluator");
-
-                //    IRunable runable = (IRunable)Activator.CreateInstance(type);
-
-                //    _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
-
-                //    runable.Run();
-
-                //    _logger.Info($"{iRunableName} started.");
-                //}
-
 
                 IRunable runable = (IRunable)Activator.CreateInstance(type);
 
@@ -175,7 +163,6 @@ namespace Frame.PluginLoader
                 foreach (var factory in _factories)
                 {
                     T instance = (T)factory.Create(typeof(T), title);
-
                     if (instance == null)
                     {
                         continue;
@@ -234,7 +221,7 @@ namespace Frame.PluginLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error($"Could not load assembyly from file: {dllFile} -> {ex}");
+                        _logger.Error($"Could not load assemby from file: {dllFile} -> {ex}");
                     }
                 }
 
@@ -282,7 +269,6 @@ namespace Frame.PluginLoader
                                 continue;
                             }
 
-
                             if (typeof(IPluginFactory).IsAssignableFrom(type))
                             {
                                 factories.Add((IPluginFactory)Activator.CreateInstance(type));
@@ -300,6 +286,7 @@ namespace Frame.PluginLoader
             }
             return false;
         }
+
 
         /// <summary>
         /// Checks whether the received path string contains folder path or not
@@ -331,7 +318,10 @@ namespace Frame.PluginLoader
         }
 
 
-
+        /// <summary>
+        /// Reads the list of available components from the ComponentList.config or creates a dummy component list
+        /// </summary>
+        /// <returns>returns with the componentlist from the ComponentList.config or a dummy componentList (example)</returns>
         private ComponentList ReadOrCreateComponentList()
         {
             string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
@@ -358,8 +348,6 @@ namespace Frame.PluginLoader
 
             return componentList;
         }
-
-
 
         #endregion
     }

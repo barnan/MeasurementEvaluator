@@ -52,15 +52,13 @@ namespace Frame.PluginLoader
                             string[] types = typeText.Split(';');
                             Components.Add(new KeyValuePair<string, List<string>>(nameText, types.ToList()));
                         }
-
                     }
                 }
             }
 
+            // create dummy component for example:
             if (Components.Count == 0)
             {
-                //Components.Add(new KeyValuePair<string, List<string>>("MeasurementEvaluator", new List<string> { nameof(IRunable) }));
-
                 XmlElement dummyelement = xmlDoc.CreateElement("Components");
                 XmlElement dummyChildElement = xmlDoc.CreateElement(COMPONENT_NODE_NAME);
 
@@ -80,6 +78,5 @@ namespace Frame.PluginLoader
 
             return true;
         }
-
     }
 }
