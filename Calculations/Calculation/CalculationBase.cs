@@ -22,12 +22,6 @@ namespace Calculations.Calculation
 
         public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICalculationSettings settings = null)
         {
-            //if (!IsInitialized)
-            //{
-            //    _parameters.Logger.LogError("Not initilaized yet.");
-            //    return null;
-            //}
-
             if (measurementSerieData?.MeasData == null)
             {
                 _parameters.Logger.LogError("Received measdata is null.");
@@ -40,76 +34,6 @@ namespace Calculations.Calculation
 
         #endregion
 
-
-        //#region IInitialized
-        //public bool IsInitialized { get; private set; }
-
-        //public event EventHandler<EventArgs> Initialized;
-        //public event EventHandler<EventArgs> Closed;
-
-        //public void Close()
-        //{
-        //    if (!IsInitialized)
-        //    {
-        //        return;
-        //    }
-
-        //    lock (_lockObj)
-        //    {
-        //        if (!IsInitialized)
-        //        {
-        //            return;
-        //        }
-
-        //        IsInitialized = false;
-
-        //        OnClosed();
-
-        //        _parameters.Logger.MethodInfo("Closed.");
-        //    }
-        //}
-
-        //public bool Initiailze()
-        //{
-        //    if (IsInitialized)
-        //    {
-        //        return true;
-        //    }
-
-        //    lock (_lockObj)
-        //    {
-        //        if (IsInitialized)
-        //        {
-        //            return true;
-        //        }
-
-        //        IsInitialized = true;
-
-        //        OnInitialized();
-
-        //        _parameters.Logger.MethodInfo("Initialized.");
-
-        //        return IsInitialized;
-        //    }
-
-        //}
-
-
-        //private void OnInitialized()
-        //{
-        //    var initialized = Initialized;
-
-        //    initialized?.Invoke(this, new EventArgs());
-        //}
-
-
-        //private void OnClosed()
-        //{
-        //    var closed = Closed;
-
-        //    closed?.Invoke(this, new EventArgs());
-        //}
-        //#endregion
 
 
         public CalculationBase(CalculationParameters parameters)

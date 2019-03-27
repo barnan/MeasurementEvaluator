@@ -8,7 +8,7 @@ namespace Calculations.Calculation.CalculationContainer
 {
     internal class CalculationContainer : ICalculationContainer
     {
-        private CalculationContainerParameters _parameters;
+        private readonly CalculationContainerParameters _parameters;
 
         public IReadOnlyList<CalculationTypes> AvailableCalculatons
         {
@@ -51,6 +51,7 @@ namespace Calculations.Calculation.CalculationContainer
         public CalculationContainer(CalculationContainerParameters parameters)
         {
             _parameters = parameters;
+            _parameters.Logger.Info($"{nameof(CalculationContainer)} created.");
         }
 
     }

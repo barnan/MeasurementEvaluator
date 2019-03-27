@@ -22,9 +22,12 @@ namespace DataAcquisitions.Repository
         private string _hddDReaderWriter = null;
         internal IHDDFileReaderWriter HDDReaderWriter { get; private set; }
 
-        public bool Load()
+        public bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();
+
+            PluginLoader.ConfigManager.Load(this, sectionName);
+
             HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(_hddDReaderWriter);
             return CheckComponent();
         }

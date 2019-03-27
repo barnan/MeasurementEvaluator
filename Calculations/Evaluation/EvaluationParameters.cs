@@ -62,9 +62,11 @@ namespace Calculations.Evaluation
         internal IMathing Matcher { get; private set; }
 
 
-        public bool Load()
+        public bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();
+
+            PluginLoader.ConfigManager.Load(this, sectionName);
 
             CalculationContainer = PluginLoader.CreateInstance<ICalculationContainer>(_calculationContainer);
             DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollector);

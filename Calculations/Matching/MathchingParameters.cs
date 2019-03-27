@@ -17,9 +17,14 @@ namespace Calculations.Matching
         private string _bindingFilePath = "MatchingDictionary";
         internal string BindingFilePath => _bindingFilePath;
 
-        internal bool Load()
+
+
+        internal bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();
+
+            PluginLoader.ConfigManager.Load(this, sectionName);
+
             MatchingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_matchingFileReader);
 
             return CheckComponent();

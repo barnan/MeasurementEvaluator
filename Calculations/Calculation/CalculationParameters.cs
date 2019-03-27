@@ -1,23 +1,38 @@
-﻿using Interfaces.Misc;
-using Miscellaneous;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
+using Interfaces.Misc;
 using NLog;
 
 namespace Calculations.Calculation
 {
     internal class CalculationParameters
     {
-        public ILogger Logger { get; }
-
-        public IDateTimeProvider DateTimeProvider { get; }
+        public ILogger Logger { get; private set; }
 
 
+        [Configuration("DateTimeProvider", Name = "DateTimeProvider", LoadComponent = true)]
+        private IDateTimeProvider _dateTimeProvider = null;
+        public IDateTimeProvider DateTimeProvider => _dateTimeProvider;
 
-        public CalculationParameters()
+
+        internal bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();
 
-            DateTimeProvider = new StandardDateTimeProvider(new StandardDateTimeProviderParameter());
+            PluginLoader.ConfigManager.Load(this, sectionName);
+
+            return CheckComponents();
         }
 
+        private bool CheckComponents()
+        {
+            if (DateTimeProvider == null)
+            {
+                Logger.Error($"Error in the {nameof(CalculationParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

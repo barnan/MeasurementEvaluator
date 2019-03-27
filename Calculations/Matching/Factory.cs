@@ -16,7 +16,7 @@ namespace Calculations.Matching
                 if (!_matchingDict.ContainsKey(name))
                 {
                     MathchingParameters param = new MathchingParameters();
-                    if (param.Load())
+                    if (param.Load(name))
                     {
                         Matching instance = new Matching(param);
                         _matchingDict.Add(name, instance);

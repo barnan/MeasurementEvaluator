@@ -17,7 +17,7 @@ namespace Calculations.Evaluation
                 if (!_dataCollectorDict.ContainsKey(name))
                 {
                     EvaluationParameters param = new EvaluationParameters();
-                    if (param.Load())
+                    if (param.Load(name))
                     {
                         Evaluation instance = new Evaluation(param);
                         _dataCollectorDict.Add(name, instance);

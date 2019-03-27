@@ -44,9 +44,11 @@ namespace DataAcquisitions.DataCollector
 
 
 
-        internal bool Load()
+        internal bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();
+
+            PluginLoader.ConfigManager.Load(this, sectionName);
 
             SpecificationRepository = PluginLoader.CreateInstance<IRepository<IToolSpecification>>(_specificationRepository);
             ReferenceRepository = PluginLoader.CreateInstance<IRepository<IReferenceSample>>(_referenceRepository);

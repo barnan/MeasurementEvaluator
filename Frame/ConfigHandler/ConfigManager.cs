@@ -8,16 +8,21 @@ using System.Xml;
 
 namespace Frame.ConfigHandler
 {
+
+    // todo: list serialization
+
+
     public class ConfigManager
     {
         private ILogger _logger;
         private string _configFolder;
         private readonly string _configFileExtension = ".config";
         private const string ROOT_NODE_NAME = "Configurations";
-        private const string SECTION_NAME_ATTRIBUTE_NAME = "Name";
-        private const string Assembly_NAME_ATTRIBUTE_NAME = "Assembly";
+        private const string NAME_ATTRIBUTE_NAME = "Name";
+        private const string VALUE_ATTRIBUTE_NAME = "Value";
+        private const string ASSEMBLY_NAME_ATTRIBUTE_NAME = "Assembly";
+        private const string FIELD_NAME = "Field";
         private const string SECTION_NAME = "Section";
-        private const string VALUE_NAME_ATTRIBUTE_NAME = "Value";
 
 
         public ConfigManager(string folder)
@@ -71,29 +76,20 @@ namespace Frame.ConfigHandler
 
                 foreach (XmlNode xmlChildNode in currentSectionElement.ChildNodes)
                 {
-                    if (xmlChildNode is XmlComment)
+                    if (xmlChildNode is XmlComment || xmlChildNode == null)
                     {
                         continue;
                     }
 
-                    foreach (XmlAttribute childNodeAttribute in xmlChildNode.Attributes)
-                    {
-                        if (childNodeAttribute.Name == SECTION_NAME_ATTRIBUTE_NAME)
-                        {
-                            xmlNameAttribute = childNodeAttribute;
-                        }
-                        if (childNodeAttribute.Name == VALUE_NAME_ATTRIBUTE_NAME)
-                        {
-                            xmlValueAttribute = childNodeAttribute;
-                        }
-                    }
+                    xmlNameAttribute = GetAttributeValueByAttributeName(xmlChildNode, NAME_ATTRIBUTE_NAME);
+                    xmlValueAttribute = GetAttributeValueByAttributeName(xmlChildNode, VALUE_ATTRIBUTE_NAME);
 
                     if (xmlNameAttribute == null || xmlValueAttribute == null)
                     {
-                        _logger.Error($"XmlNode ({xmlChildNode.Name}) without {SECTION_NAME_ATTRIBUTE_NAME} or {VALUE_NAME_ATTRIBUTE_NAME} attribute was found. It is removed.");
                         try
                         {
                             currentSectionElement.RemoveChild(xmlChildNode);
+                            _logger.Info($"XmlNode ({xmlChildNode.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
                         }
                         catch (Exception ex)
                         {
@@ -108,30 +104,107 @@ namespace Frame.ConfigHandler
                     }
                 }
 
-                // no xmlnode was found for the given field in the xml section:
+                // xmlnode was found for the given field in the xml section:
                 if (xmlNameAttribute != null && xmlValueAttribute != null)
                 {
                     currentObjectField = fieldInfo;
                     Type fieldType = currentObjectField.FieldType;
 
-                    object temporary = null;
+                    object temporary;
                     try
                     {
                         temporary = Convert.ChangeType(xmlValueAttribute.InnerText, fieldType);
+                        currentObjectField.SetValue(inputObj, temporary);
                     }
                     catch (Exception ex)
                     {
                         _logger.Error($"Exception occured during {xmlNameAttribute.InnerText}, {xmlValueAttribute.InnerText} conversion: {ex.Message}");
                         break;
                     }
-
-                    currentObjectField.SetValue(inputObj, temporary);
                 }
+                else
+                {
+                    XmlElement newElement = CreateFieldXmlSection(currentSectionElement.OwnerDocument, fieldConfigurationAttribute.Name, "");
+                    XmlComment comment = CreateFieldXmlComment(currentSectionElement.OwnerDocument, fieldConfigurationAttribute.Description);
 
-                // create a new section for the field:
+                    currentSectionElement.AppendChild(comment);
+                    currentSectionElement.AppendChild(newElement);
+
+                    differenceFound = true;
+                }
             }
 
-            return Save(currentConfigFileName, sectionName, currentSectionElement, type);
+
+            // Investigate whether all field sections has pair in the object
+            XmlComment previousComment = null;
+            foreach (XmlNode xmlChildNode in currentSectionElement)
+            {
+                XmlAttribute xmlNameAttribute = null;
+                XmlAttribute xmlValueAttribute = null;
+
+                if (xmlChildNode is XmlComment || xmlChildNode == null)
+                {
+                    previousComment = (XmlComment)xmlChildNode;
+                    continue;
+                }
+
+                xmlNameAttribute = GetAttributeValueByAttributeName(xmlChildNode, NAME_ATTRIBUTE_NAME);
+                ConfigurationAttribute matchingConfigurationAttribute = null;
+
+                foreach (var fieldInfo in fieldInfosWithConfigAttribute)
+                {
+                    ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
+
+                    if (fieldConfigurationAttribute.Name == xmlNameAttribute.InnerText)
+                    {
+                        matchingConfigurationAttribute = fieldConfigurationAttribute;
+                        break;
+                    }
+                }
+
+                if (matchingConfigurationAttribute == null)
+                {
+                    XmlComment comment = currentSectionElement.OwnerDocument.CreateComment(xmlChildNode.InnerXml);
+                    try
+                    {
+                        currentSectionElement.RemoveChild(xmlChildNode);
+                        currentSectionElement.RemoveChild(previousComment);
+                        currentSectionElement.AppendChild(previousComment);
+                        currentSectionElement.AppendChild(comment);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Exception occured during node commenting: {ex.Message}");
+                    }
+
+                    differenceFound = true;
+                }
+            }
+
+            if (differenceFound)
+            {
+                Save(currentConfigFileName, sectionName, currentSectionElement, type);
+            }
+
+            return true;
+        }
+
+
+        private XmlAttribute GetAttributeValueByAttributeName(XmlNode node, string AttributeName)
+        {
+            foreach (XmlAttribute childNodeAttribute in node.Attributes)
+            {
+                if (childNodeAttribute.Name == NAME_ATTRIBUTE_NAME)
+                {
+                    return childNodeAttribute;
+                }
+                if (childNodeAttribute.Name == VALUE_ATTRIBUTE_NAME)
+                {
+                    return childNodeAttribute;
+                }
+            }
+
+            return null;
         }
 
 
@@ -226,7 +299,7 @@ namespace Frame.ConfigHandler
 
                 foreach (XmlAttribute attribute in attributeCollection)
                 {
-                    if (attribute.Name == SECTION_NAME_ATTRIBUTE_NAME && attribute.InnerText == sectionName)
+                    if (attribute.Name == NAME_ATTRIBUTE_NAME && attribute.InnerText == sectionName)
                     {
                         currentSectionNode = (XmlElement)node;
                         break;
@@ -249,17 +322,57 @@ namespace Frame.ConfigHandler
 
             _logger.Info($"New {sectionName} section was created.");
 
-            XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(SECTION_NAME_ATTRIBUTE_NAME);
+            XmlAttribute sectionNameAttribute = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
             sectionNameAttribute.InnerText = sectionName;
 
             // creates additional attributes for the new node -> assembly name
-            XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute(Assembly_NAME_ATTRIBUTE_NAME);
+            XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute(ASSEMBLY_NAME_ATTRIBUTE_NAME);
             assemblyAttribute.InnerText = type.Name;
 
             createdSectionNode.Attributes.Append(sectionNameAttribute);
             createdSectionNode.Attributes.Append(assemblyAttribute);
 
             return createdSectionNode;
+        }
+
+
+        internal XmlComment CreateFieldXmlComment(XmlDocument xmlDoc, string description)
+        {
+            if (string.IsNullOrEmpty(description))
+            {
+                _logger.Error("Received description is null or empty.");
+                return null;
+            }
+            XmlComment newComment = xmlDoc.CreateComment(description);
+            return newComment;
+        }
+
+
+        internal XmlElement CreateFieldXmlSection(XmlDocument xmlDoc, string name, string value)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                _logger.Error("Received name is null or empty.");
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(value))
+            {
+                _logger.Error("Received value is null or empty.");
+                return null;
+            }
+
+            XmlElement newElement = xmlDoc.CreateElement(FIELD_NAME);
+
+            XmlAttribute nameAttrib = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
+            nameAttrib.Value = name;
+            XmlAttribute valueAttrib = xmlDoc.CreateAttribute(VALUE_ATTRIBUTE_NAME);
+            valueAttrib.Value = value;
+
+            newElement.Attributes.Append(nameAttrib);
+            newElement.Attributes.Append(valueAttrib);
+
+            return newElement;
         }
 
 
@@ -282,13 +395,7 @@ namespace Frame.ConfigHandler
                 xmlDoc.AppendChild(rootNode);
             }
 
-            if (oldElement == null)
-            {
-                _logger.Info("Null node received.");
-
-                oldElement = CreateXmlSection(xmlDoc, sectionName, type);
-            }
-            else
+            if (oldElement != null)
             {
                 try
                 {
@@ -335,7 +442,6 @@ namespace Frame.ConfigHandler
 
             return true;
         }
-
 
     }
 }

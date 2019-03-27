@@ -27,7 +27,7 @@ namespace Frame.ConfigHandler
 
         public string Value;
 
-        private string Description;
+        public string Description;
 
         public bool LoadComponent;
     }

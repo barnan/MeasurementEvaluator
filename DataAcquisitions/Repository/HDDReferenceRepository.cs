@@ -25,7 +25,7 @@ namespace DataAcquisitions.Repository
             if (t.IsAssignableFrom(typeof(HDDReferenceRepository)))
             {
                 HDDRepositoryParameters parameters = new HDDRepositoryParameters();
-                if (parameters.Load())
+                if (parameters.Load(name))
                 {
                     HDDReferenceRepository instance = new HDDReferenceRepository(parameters);
                     _specificationRepositoryDictionary.Add(name, instance);
