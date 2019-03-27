@@ -15,6 +15,7 @@ namespace Frame.PluginLoader
         private static ILogger _logger;
         private static object _lockObj = new object();
         private ComponentList _componentList;
+        private readonly string _componentSectionName = "ComponentList";
 
         private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
@@ -196,7 +197,8 @@ namespace Frame.PluginLoader
         /// <returns>Collection of factories</returns>
         private bool LoadPlugins()
         {
-            _componentList = ReadOrCreateComponentList();
+            _componentList = LoadComponentList();
+
             if (_componentList == null)
             {
                 return false;
@@ -322,23 +324,22 @@ namespace Frame.PluginLoader
         /// Reads the list of available components from the ComponentList.config or creates a dummy component list
         /// </summary>
         /// <returns>returns with the componentlist from the ComponentList.config or a dummy componentList (example)</returns>
-        private ComponentList ReadOrCreateComponentList()
+        private ComponentList LoadComponentList()
         {
             string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
-            string componentSectionName = "ComponentList";
 
-            if (!ConfigManager.CheckOrCreateConfigFile("ComponentList", componentListFileName))
+            if (!ConfigManager.CheckOrCreateConfigFile(_componentSectionName, componentListFileName))
             {
                 return null;
             }
 
             ComponentList componentList = new ComponentList();
             XmlDocument xmlDoc = new XmlDocument();
-            XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, componentSectionName);
+            XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, _componentSectionName);
 
             if (componentListSection == null)
             {
-                componentListSection = ConfigManager.CreateXmlSection(xmlDoc, componentSectionName, typeof(ComponentList));
+                componentListSection = ConfigManager.CreateXmlSection(xmlDoc, _componentSectionName, typeof(ComponentList));
             }
 
             if (!componentList.Load(xmlDoc, componentListSection))

@@ -60,53 +60,77 @@ namespace Frame.ConfigHandler
 
             bool differenceFound = false;
 
-            foreach (XmlNode childNode in currentSectionElement.ChildNodes)
+            FieldInfo currentObjectField = null;
+            FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
+            foreach (var fieldInfo in fieldInfosWithConfigAttribute)
             {
-                if (childNode is XmlComment)
-                {
-                    continue;
-                }
+                ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
 
-                XmlAttribute nameAttribute = null;
-                XmlAttribute valueAttribute = null;
-                foreach (XmlAttribute childNodeAttribute in childNode.Attributes)
-                {
-                    if (childNodeAttribute.Name == SECTION_NAME_ATTRIBUTE_NAME)
-                    {
-                        nameAttribute = childNodeAttribute;
-                    }
-                    if (childNodeAttribute.Name == VALUE_NAME_ATTRIBUTE_NAME)
-                    {
-                        valueAttribute = childNodeAttribute;
-                    }
-                }
+                XmlAttribute xmlNameAttribute = null;
+                XmlAttribute xmlValueAttribute = null;
 
-                if (nameAttribute == null || valueAttribute == null)
+                foreach (XmlNode xmlChildNode in currentSectionElement.ChildNodes)
                 {
-                    _logger.Error($"XmlNode ({childNode.Name}) without {SECTION_NAME_ATTRIBUTE_NAME} or {VALUE_NAME_ATTRIBUTE_NAME} attribute was found. It is removed.");
-                    currentSectionElement.RemoveChild(childNode);
-                    continue;
-                }
-
-                FieldInfo currentField = null;
-                FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
-                foreach (var fieldInfo in fieldInfosWithConfigAttribute)
-                {
-                    ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
-
-                    if (fieldConfigurationAttribute.Name != nameAttribute.InnerText)
+                    if (xmlChildNode is XmlComment)
                     {
                         continue;
                     }
 
-                    currentField = fieldInfo;
-                    Type fieldType = currentField.FieldType;
+                    foreach (XmlAttribute childNodeAttribute in xmlChildNode.Attributes)
+                    {
+                        if (childNodeAttribute.Name == SECTION_NAME_ATTRIBUTE_NAME)
+                        {
+                            xmlNameAttribute = childNodeAttribute;
+                        }
+                        if (childNodeAttribute.Name == VALUE_NAME_ATTRIBUTE_NAME)
+                        {
+                            xmlValueAttribute = childNodeAttribute;
+                        }
+                    }
 
-                    object temporary = Convert.ChangeType(valueAttribute.InnerText, fieldType);
-                    currentField.SetValue(inputObj, temporary);
+                    if (xmlNameAttribute == null || xmlValueAttribute == null)
+                    {
+                        _logger.Error($"XmlNode ({xmlChildNode.Name}) without {SECTION_NAME_ATTRIBUTE_NAME} or {VALUE_NAME_ATTRIBUTE_NAME} attribute was found. It is removed.");
+                        try
+                        {
+                            currentSectionElement.RemoveChild(xmlChildNode);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error($"Section ({xmlChildNode.InnerText}) tried to remove, but exception occured: {ex.Message}");
+                        }
+                        continue;
+                    }
+
+                    if (fieldConfigurationAttribute.Name == xmlNameAttribute.InnerText)
+                    {
+                        break;
+                    }
                 }
 
+                // no xmlnode was found for the given field in the xml section:
+                if (xmlNameAttribute != null && xmlValueAttribute != null)
+                {
+                    currentObjectField = fieldInfo;
+                    Type fieldType = currentObjectField.FieldType;
+
+                    object temporary = null;
+                    try
+                    {
+                        temporary = Convert.ChangeType(xmlValueAttribute.InnerText, fieldType);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Exception occured during {xmlNameAttribute.InnerText}, {xmlValueAttribute.InnerText} conversion: {ex.Message}");
+                        break;
+                    }
+
+                    currentObjectField.SetValue(inputObj, temporary);
+                }
+
+                // create a new section for the field:
             }
+
             return Save(currentConfigFileName, sectionName, currentSectionElement, type);
         }
 
@@ -118,7 +142,6 @@ namespace Frame.ConfigHandler
             try
             {
                 configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
-
             }
             catch (Exception ex)
             {
