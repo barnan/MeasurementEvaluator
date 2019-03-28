@@ -1,7 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
-using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
@@ -174,18 +173,7 @@ namespace DataAcquisitions.DataCollector
                         return;
                     }
 
-                    _processorQueue.Enqueue(new GetDataQueueElement
-                    {
-                        SpecificationName = specificationName,
-                        ReferenceValueName = referenceName,
-                        MeasurementSerieDataNames = measurementDataFileNames,
-
-                        // create anonim method to process itself as queue element
-                        Process = delegate (string specName, List<string> measurementfilenames, string refname)
-                                           {
-
-                                           }
-                    });
+                    _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specificationName, referenceName, measurementDataFileNames, ResultReadyEvent));
 
                 }
                 catch (Exception ex)
@@ -208,40 +196,7 @@ namespace DataAcquisitions.DataCollector
                         return;
                     }
 
-                    _processorQueue.Enqueue(new GetNameQueueElement
-                    {
-                        Process = delegate ()
-                                             {
-                                                 try
-                                                 {
-                                                     List<string> specificationcresult = _parameters.SpecificationRepository.GetAllNames().ToList();
-                                                     List<string> referenceresult = _parameters.ReferenceRepository.GetAllNames().ToList();
-                                                     List<string> measurementdata = _parameters.MeasurementDataRepository.GetAllNames().ToList();
-                                                     if (specificationcresult.Count == 0)
-                                                     {
-                                                         _parameters.Logger.MethodError("Length of obtained SPECIFICATION list is zero or the list is null.");
-                                                     }
-
-                                                     if (measurementdata.Count == 0)
-                                                     {
-                                                         _parameters.Logger.MethodError("Length of obtained MEASUREMENT DATA list is zero or the list is null.");
-                                                     }
-
-                                                     if (referenceresult.Count == 0)
-                                                     {
-                                                         _parameters.Logger.MethodError("Length of obtained REFERENCE list is zero or the list is null.");
-                                                     }
-
-
-                                                     var filenamesreadyevent = FileNamesReadyEvent;
-                                                     filenamesreadyevent?.Invoke(this, new DataCollectorResultEventArgs(specificationcresult, measurementdata, referenceresult));
-                                                 }
-                                                 catch (Exception ex)
-                                                 {
-                                                     _parameters.Logger.Error($"Exception occured during data request: {ex.Message}");
-                                                 }
-                                             }
-                    });
+                    _processorQueue.Enqueue(new GetNameQueueElement(_parameters, FileNamesReadyEvent));
                 }
                 catch (Exception ex)
                 {
@@ -302,15 +257,7 @@ namespace DataAcquisitions.DataCollector
                             continue;
                         }
 
-                        if (item is GetNameQueueElement getNameQueueElement)
-                        {
-                            getNameQueueElement.Process();
-                        }
-
-                        if (item is GetDataQueueElement getDataQueueElement)
-                        {
-                            getDataQueueElement.Process(getDataQueueElement.SpecificationName, getDataQueueElement.MeasurementSerieDataNames, getDataQueueElement.ReferenceValueName);
-                        }
+                        item.Process();
                     }
                 }
 
@@ -342,26 +289,42 @@ namespace DataAcquisitions.DataCollector
 
 
 
-    internal class QueueElement
+    internal abstract class QueueElement
     {
+        protected DataCollectorParameters _parameters;
+
+        protected QueueElement(DataCollectorParameters parameters)
+        {
+            _parameters = parameters;
+        }
+
+        internal abstract void Process();
     }
+
 
     internal class GetDataQueueElement : QueueElement
     {
-        private IDateTimeProvider _dateTimeProvider;
-
-        internal List<string> MeasurementSerieDataNames { get; set; }
-        internal string SpecificationName { get; set; }
-        internal string ReferenceValueName { get; set; }
-
+        private string _specificationName;
+        private string _referenceName;
+        private List<string> _measurementDataFileNames;
+        private EventHandler<ResultEventArgs> _resultReadyEvent;
 
 
-        //internal Action<string, List<string>, string> Process;
-        internal void Process(string specName, List<string> MeasData, string reference)
+        public GetDataQueueElement(DataCollectorParameters parameters, string specificationName, string referenceName, List<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
+            : base(parameters)
+        {
+            _specificationName = specificationName;
+            _referenceName = referenceName;
+            _measurementDataFileNames = measurementDataFileNames;
+            _resultReadyEvent = resultReadyEvent;
+        }
+
+
+        internal override void Process()
         {
             DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
 
-            IToolSpecification specification = _parameters.SpecificationRepository.Get(specName);
+            IToolSpecification specification = _parameters.SpecificationRepository.Get(_specificationName);
             if (specification == null)
             {
                 _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
@@ -369,7 +332,7 @@ namespace DataAcquisitions.DataCollector
             }
 
             List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
-            foreach (string name in measurementfilenames)
+            foreach (string name in _measurementDataFileNames)
             {
                 measurementDatas.Add(_parameters.MeasurementDataRepository.Get(name));
             }
@@ -379,13 +342,13 @@ namespace DataAcquisitions.DataCollector
                 return;
             }
 
-            IReferenceSample reference = _parameters.ReferenceRepository.Get(refname);
+            IReferenceSample reference = _parameters.ReferenceRepository.Get(_referenceName);
             if (reference == null)
             {
                 _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
             }
 
-            var localResultreadyevent = ResultReadyEvent;
+            var localResultreadyevent = _resultReadyEvent;
             localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
                                                                                         _parameters.DateTimeProvider.GetDateTime(),
                                                                                         true,
@@ -397,7 +360,47 @@ namespace DataAcquisitions.DataCollector
 
     internal class GetNameQueueElement : QueueElement
     {
-        //internal Action Process;
+        private EventHandler<DataCollectorResultEventArgs> _fileNamesReadyEvent;
+
+        public GetNameQueueElement(DataCollectorParameters parameters, EventHandler<DataCollectorResultEventArgs> fileNamesReadyEvent)
+            : base(parameters)
+        {
+            _fileNamesReadyEvent = fileNamesReadyEvent;
+        }
+
+
+        internal override void Process()
+        {
+            try
+            {
+                List<string> specificationcresult = _parameters.SpecificationRepository.GetAllNames().ToList();
+                List<string> referenceresult = _parameters.ReferenceRepository.GetAllNames().ToList();
+                List<string> measurementdata = _parameters.MeasurementDataRepository.GetAllNames().ToList();
+                if (specificationcresult.Count == 0)
+                {
+                    _parameters.Logger.MethodError("Length of obtained SPECIFICATION list is zero or the list is null.");
+                }
+
+                if (measurementdata.Count == 0)
+                {
+                    _parameters.Logger.MethodError("Length of obtained MEASUREMENT DATA list is zero or the list is null.");
+                }
+
+                if (referenceresult.Count == 0)
+                {
+                    _parameters.Logger.MethodError("Length of obtained REFERENCE list is zero or the list is null.");
+                }
+
+
+                var filenamesreadyevent = _fileNamesReadyEvent;
+                filenamesreadyevent?.Invoke(this, new DataCollectorResultEventArgs(specificationcresult, measurementdata, referenceresult));
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured during data request: {ex.Message}");
+            }
+        }
     }
+
 
 }
