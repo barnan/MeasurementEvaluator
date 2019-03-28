@@ -36,7 +36,7 @@ namespace Calculations.Calculation
 
 
 
-        public CalculationBase(CalculationParameters parameters)
+        internal CalculationBase(CalculationParameters parameters)
         {
             _parameters = parameters;
         }

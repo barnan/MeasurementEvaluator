@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 namespace Calculations.Calculation
 {
-    internal class CpCalculation1D : CalculationBase
+    internal class CpCalculation1D : CalculationBase, ICpCalculation
     {
-        public CpCalculation1D(CalculationParameters parameters)
+        internal CpCalculation1D(CalculationParameters parameters)
             : base(parameters)
         {
         }

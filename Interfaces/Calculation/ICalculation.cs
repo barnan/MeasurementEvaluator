@@ -23,4 +23,23 @@ namespace Interfaces.Calculation
         CalculationTypes CalculationType { get; }
     }
 
+    public interface IAverageCalculation : ICalculation
+    {
+    }
+
+
+    public interface ICpkCalculation : ICalculation
+    {
+    }
+
+
+    public interface ICpCalculation : ICalculation
+    {
+    }
+
+
+    public interface IStdCalculation : ICalculation
+    {
+    }
+
 }

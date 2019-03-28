@@ -7,7 +7,7 @@ using Interfaces.Calculation;
 using NLog;
 using System.Collections.Generic;
 
-namespace Calculations.Calculation.CalculationContainer
+namespace Calculations.CalculationContainer
 {
     internal class CalculationContainerParameters
     {
@@ -31,6 +31,7 @@ namespace Calculations.Calculation.CalculationContainer
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
+            _availableCalculations = new List<ICalculation>();
             foreach (string calculationName in _availableCalculationsString)
             {
                 ICalculation calculation = PluginLoader.CreateInstance<ICalculation>(calculationName);
@@ -51,6 +52,12 @@ namespace Calculations.Calculation.CalculationContainer
             if (AvailableCalculations == null)
             {
                 Logger.Error($"Error in the {nameof(CalculationContainerParameters)} instantiation. {nameof(AvailableCalculations)} is null.");
+                return false;
+            }
+
+            if (AvailableCalculations.Count == 0)
+            {
+                Logger.Error($"Error in the {nameof(CalculationContainerParameters)} instantiation. {nameof(AvailableCalculations)} has 0 elements.");
                 return false;
             }
 

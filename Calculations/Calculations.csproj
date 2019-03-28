@@ -48,15 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculation\AverageCalculation1D.cs" />
-    <Compile Include="Calculation\CalculationContainer\Factory.cs" />
+    <Compile Include="CalculationContainer\Factory.cs" />
     <Compile Include="Calculation\CalculationResult.cs" />
     <Compile Include="Calculation\CpkCalculation1D.cs" />
     <Compile Include="Calculation\CpCalculation1D.cs" />
     <Compile Include="Calculation\Factory.cs" />
     <Compile Include="Calculation\QCellsCalculationResult.cs" />
     <Compile Include="Calculation\StdCalculation1D.cs" />
-    <Compile Include="Calculation\CalculationContainer\CalculationContainer.cs" />
-    <Compile Include="Calculation\CalculationContainer\CalculationContainerParameters.cs" />
+    <Compile Include="CalculationContainer\CalculationContainer.cs" />
+    <Compile Include="CalculationContainer\CalculationContainerParameters.cs" />
     <Compile Include="Calculation\CalculationParameters.cs" />
     <Compile Include="Calculation\CalculationBase.cs" />
     <Compile Include="Calculation\SimpleCalculationResult.cs" />

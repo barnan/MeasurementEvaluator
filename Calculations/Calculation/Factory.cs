@@ -20,7 +20,7 @@ namespace Calculations.Calculation
                     CalculationParameters param = new CalculationParameters();
                     if (param.Load(name))
                     {
-                        instance = new Evaluation.Evaluation(param);
+                        var instance = new (param);
                         _calculationDict.Add(name, instance);
                     }
                 }

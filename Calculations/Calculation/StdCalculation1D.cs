@@ -9,10 +9,10 @@ using System.Linq;
 
 namespace Calculations.Calculation
 {
-    class StdCalculation1D : CalculationBase
+    class StdCalculation1D : CalculationBase, IStdCalculation
     {
 
-        public StdCalculation1D(CalculationParameters parameters)
+        internal StdCalculation1D(CalculationParameters parameters)
             : base(parameters)
         {
         }

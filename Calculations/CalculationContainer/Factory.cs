@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Calculations.Calculation.CalculationContainer
+namespace Calculations.CalculationContainer
 {
     class Factory : IPluginFactory
     {
@@ -12,7 +12,7 @@ namespace Calculations.Calculation.CalculationContainer
 
         public object Create(Type t, string name)
         {
-            if (t.IsAssignableFrom(typeof(Evaluation.Evaluation)))
+            if (t.IsAssignableFrom(typeof(CalculationContainer)))
             {
                 if (!_calculationContainerDict.ContainsKey(name))
                 {

@@ -4,7 +4,7 @@ using Miscellaneous;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Calculations.Calculation.CalculationContainer
+namespace Calculations.CalculationContainer
 {
     internal class CalculationContainer : ICalculationContainer
     {

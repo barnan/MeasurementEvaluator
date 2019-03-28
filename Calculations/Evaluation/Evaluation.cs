@@ -48,7 +48,6 @@ namespace Calculations.Evaluation
         public Evaluation(EvaluationParameters parameters)
         {
             _parameters = parameters;
-
             _parameters.Logger.MethodError("Instantiated.");
         }
 
@@ -214,7 +213,7 @@ namespace Calculations.Evaluation
                             continue;
                         }
 
-                        Evaluate(item.DataCollectorResult);
+                        Evaluate(item);
                     }
                 }
 
@@ -227,8 +226,10 @@ namespace Calculations.Evaluation
         }
 
 
-        private void Evaluate(IDataCollectorResult collectedData)
+        private void Evaluate(QueueElement element)
         {
+            IDataCollectorResult collectedData = element.DataCollectorResult;
+
             IToolSpecification specification = collectedData.Specification;
             IReadOnlyList<IToolMeasurementData> measurementDatas = collectedData.MeasurementData;
             IReferenceSample referenceSample = collectedData.Reference;
@@ -275,7 +276,7 @@ namespace Calculations.Evaluation
                             continue;
                         }
 
-                        // skipp condition if not enabled:
+                        // skip condition if not enabled:
                         if (!condition.Enabled)
                         {
                             _parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name} {condition.Name} is not enabled -> condition check skipped.");
@@ -386,11 +387,11 @@ namespace Calculations.Evaluation
         #endregion
 
 
-        class QueueElement
+        internal class QueueElement
         {
-            public IDataCollectorResult DataCollectorResult { get; }
+            internal IDataCollectorResult DataCollectorResult { get; }
 
-            public QueueElement(IDataCollectorResult result)
+            internal QueueElement(IDataCollectorResult result)
             {
                 DataCollectorResult = result;
             }

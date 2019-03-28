@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 namespace Calculations.Calculation
 {
-    class AverageCalculation1D : CalculationBase
+    class AverageCalculation1D : CalculationBase, IAverageCalculation
     {
 
-        public AverageCalculation1D(CalculationParameters parameters)
+        internal AverageCalculation1D(CalculationParameters parameters)
             : base(parameters)
         {
         }
