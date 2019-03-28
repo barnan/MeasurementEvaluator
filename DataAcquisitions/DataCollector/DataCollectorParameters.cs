@@ -12,18 +12,6 @@ namespace DataAcquisitions.DataCollector
     internal class DataCollectorParameters
     {
 
-        //private IRepository<IToolSpecification> _specificationRepository;
-        //internal IRepository<IToolSpecification> SpecificationRepository => _specificationRepository;
-
-        //private IRepository<IReferenceSample> _referenceRepository;
-        //internal IRepository<IReferenceSample> ReferenceRepository => _referenceRepository;
-
-        //private IRepository<IToolMeasurementData> _measurementDataRepository;
-        //internal IRepository<IToolMeasurementData> MeasurementDataRepository => _measurementDataRepository;
-
-        //private IDateTimeProvider _dateTimeProvider;
-        //internal IDateTimeProvider DateTimeProvider => _dateTimeProvider;
-
         internal ILogger Logger { get; private set; }
 
         [Configuration("Name of date and time provider", "Date and time Provider", true)]

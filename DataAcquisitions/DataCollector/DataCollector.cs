@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
+using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
@@ -17,8 +18,9 @@ namespace DataAcquisitions.DataCollector
 
         private readonly DataCollectorParameters _parameters;
         private readonly object _lockObj = new object();
+
         private Queue<QueueElement> _processorQueue;
-        private AutoResetEvent _resetEvent = new AutoResetEvent(false);
+        private AutoResetEvent _processQueueResetEvent = new AutoResetEvent(false);
         private CancellationTokenSource _tokenSource;
         private const int WAITHANDLE_CYCLETIME_MS = 100;
 
@@ -74,7 +76,7 @@ namespace DataAcquisitions.DataCollector
                     }
 
                     _tokenSource.Cancel();
-                    _resetEvent.Reset();
+                    _processQueueResetEvent.Reset();
                     _processorQueue.Clear();
 
                     _parameters.SpecificationRepository.Close();
@@ -180,43 +182,9 @@ namespace DataAcquisitions.DataCollector
 
                         // create anonim method to process itself as queue element
                         Process = delegate (string specName, List<string> measurementfilenames, string refname)
-                        {
-                            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
+                                           {
 
-                            IToolSpecification specification = _parameters.SpecificationRepository.Get(specName);
-                            if (specification == null)
-                            {
-                                _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
-                                return;
-                            }
-
-                            List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
-                            foreach (string name in measurementfilenames)
-                            {
-                                measurementDatas.Add(_parameters.MeasurementDataRepository.Get(name));
-                            }
-                            if (measurementDatas.Count < 1)
-                            {
-                                _parameters.Logger.LogError($"Number of measurement data files that meet the condition ({measurementDatas.Count}) is not acceptable.");
-                                return;
-                            }
-
-                            IReferenceSample reference = _parameters.ReferenceRepository.Get(refname);
-                            if (reference == null)
-                            {
-                                _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
-                            }
-
-
-
-                            var resultreadyevent = ResultReadyEvent;
-                            resultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
-                                                                                                        _parameters.DateTimeProvider.GetDateTime(),
-                                                                                                        true,
-                                                                                                        specification,
-                                                                                                        measurementDatas,
-                                                                                                        reference)));
-                        }
+                                           }
                     });
 
                 }
@@ -244,28 +212,34 @@ namespace DataAcquisitions.DataCollector
                     {
                         Process = delegate ()
                                              {
-                                                 List<string> specificationcresult = _parameters.SpecificationRepository.GetAllNames().ToList();
-                                                 List<string> referenceresult = _parameters.ReferenceRepository.GetAllNames().ToList();
-                                                 List<string> measurementdata = _parameters.MeasurementDataRepository.GetAllNames().ToList();
-
-                                                 if ((specificationcresult?.Count ?? 0) == 0)
+                                                 try
                                                  {
-                                                     _parameters.Logger.MethodError("Length of obtained SPECIFICATION list is zero or the list is null.");
-                                                 }
+                                                     List<string> specificationcresult = _parameters.SpecificationRepository.GetAllNames().ToList();
+                                                     List<string> referenceresult = _parameters.ReferenceRepository.GetAllNames().ToList();
+                                                     List<string> measurementdata = _parameters.MeasurementDataRepository.GetAllNames().ToList();
+                                                     if (specificationcresult.Count == 0)
+                                                     {
+                                                         _parameters.Logger.MethodError("Length of obtained SPECIFICATION list is zero or the list is null.");
+                                                     }
 
-                                                 if ((measurementdata?.Count ?? 0) == 0)
+                                                     if (measurementdata.Count == 0)
+                                                     {
+                                                         _parameters.Logger.MethodError("Length of obtained MEASUREMENT DATA list is zero or the list is null.");
+                                                     }
+
+                                                     if (referenceresult.Count == 0)
+                                                     {
+                                                         _parameters.Logger.MethodError("Length of obtained REFERENCE list is zero or the list is null.");
+                                                     }
+
+
+                                                     var filenamesreadyevent = FileNamesReadyEvent;
+                                                     filenamesreadyevent?.Invoke(this, new DataCollectorResultEventArgs(specificationcresult, measurementdata, referenceresult));
+                                                 }
+                                                 catch (Exception ex)
                                                  {
-                                                     _parameters.Logger.MethodError("Length of obtained MEASUREMENT DATA list is zero or the list is null.");
+                                                     _parameters.Logger.Error($"Exception occured during data request: {ex.Message}");
                                                  }
-
-                                                 if ((referenceresult?.Count ?? 0) == 0)
-                                                 {
-                                                     _parameters.Logger.MethodError("Length of obtained REFERENCE list is zero or the list is null.");
-                                                 }
-
-
-                                                 var filenamesreadyevent = FileNamesReadyEvent;
-                                                 filenamesreadyevent?.Invoke(this, new DataCollectorResultEventArgs(specificationcresult, measurementdata, referenceresult));
                                              }
                     });
                 }
@@ -298,7 +272,7 @@ namespace DataAcquisitions.DataCollector
 
             while (true)
             {
-                if (_resetEvent.WaitOne(WAITHANDLE_CYCLETIME_MS))
+                if (_processQueueResetEvent.WaitOne(WAITHANDLE_CYCLETIME_MS))
                 {
                     while (true)
                     {
@@ -308,7 +282,7 @@ namespace DataAcquisitions.DataCollector
                             break;
                         }
 
-                        QueueElement item = null;
+                        QueueElement item;
                         lock (_lockObj)
                         {
                             if (_processorQueue.Count > 0)
@@ -346,24 +320,20 @@ namespace DataAcquisitions.DataCollector
                     break;
                 }
             }
-
         }
-
 
 
         private void OnInitialized()
         {
-            var initialized = Initialized;
-
-            initialized?.Invoke(this, new EventArgs());
+            var initializedEvent = Initialized;
+            initializedEvent?.Invoke(this, new EventArgs());
         }
 
 
         private void OnClosed()
         {
-            var closed = Closed;
-
-            closed?.Invoke(this, new EventArgs());
+            var closedEvent = Closed;
+            closedEvent?.Invoke(this, new EventArgs());
         }
 
         #endregion
@@ -378,16 +348,56 @@ namespace DataAcquisitions.DataCollector
 
     internal class GetDataQueueElement : QueueElement
     {
+        private IDateTimeProvider _dateTimeProvider;
+
         internal List<string> MeasurementSerieDataNames { get; set; }
         internal string SpecificationName { get; set; }
         internal string ReferenceValueName { get; set; }
 
-        internal Action<string, List<string>, string> Process;
+
+
+        //internal Action<string, List<string>, string> Process;
+        internal void Process(string specName, List<string> MeasData, string reference)
+        {
+            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
+
+            IToolSpecification specification = _parameters.SpecificationRepository.Get(specName);
+            if (specification == null)
+            {
+                _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
+                return;
+            }
+
+            List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
+            foreach (string name in measurementfilenames)
+            {
+                measurementDatas.Add(_parameters.MeasurementDataRepository.Get(name));
+            }
+            if (measurementDatas.Count < 1)
+            {
+                _parameters.Logger.LogError($"Number of measurement data files that meet the condition ({measurementDatas.Count}) is not acceptable.");
+                return;
+            }
+
+            IReferenceSample reference = _parameters.ReferenceRepository.Get(refname);
+            if (reference == null)
+            {
+                _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
+            }
+
+            var localResultreadyevent = ResultReadyEvent;
+            localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
+                                                                                        _parameters.DateTimeProvider.GetDateTime(),
+                                                                                        true,
+                                                                                        specification,
+                                                                                        measurementDatas,
+                                                                                        reference)));
+        }
     }
 
     internal class GetNameQueueElement : QueueElement
     {
-        internal Action Process;
+        //internal Action Process;
     }
 
 }
