@@ -27,8 +27,10 @@ namespace MeasurementEvaluator
         private ILogger _logger;
         private ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
-        [Configuration("Title of the used main window", "Main Window", true)]
-        private IMainWindowUIWPF _mainWindow = null;
+        [Configuration("Main Window", "Title of the used main window", true)]
+        private string _mainWindowName = null;
+
+        private IMainWindowUIWPF _mainWindow;
 
         public MeasurmentEvaluator()
         {
@@ -41,6 +43,7 @@ namespace MeasurementEvaluator
             try
             {
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
+                _mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(_mainWindowName);
 
                 // Start UI:
                 Thread appThread = new Thread(() =>

@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\Class1.cs" />
+    <Compile Include="DAL\TabularTextReaderParameters.cs" />
+    <Compile Include="DAL\Factory.cs" />
     <Compile Include="DAL\HDDTabularFileReaderWriter.cs" />
     <Compile Include="DAL\HDDXmlReaderWriter.cs" />
     <Compile Include="DAL\HDDFileReaderWriterBase.cs" />

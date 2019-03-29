@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Calculations.Matching
 {
+    [Serializable]
     public class MatchingKeyValuePairs
     {
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Calculations.Evaluation
 {
-    class Factory : IPluginFactory
+    public class Factory : IPluginFactory
     {
 
         Dictionary<string, Evaluation> _dataCollectorDict = new Dictionary<string, Evaluation>();

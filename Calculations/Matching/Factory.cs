@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Calculations.Matching
 {
-    class Factory : IPluginFactory
+    public class Factory : IPluginFactory
     {
         private Dictionary<string, Matching> _matchingDict = new Dictionary<string, Matching>();
 

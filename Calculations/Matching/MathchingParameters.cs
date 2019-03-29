@@ -39,9 +39,9 @@ namespace Calculations.Matching
                 return false;
             }
 
-            if (BindingFilePath == null)
+            if (string.IsNullOrEmpty(BindingFilePath))
             {
-                Logger.Error($"Error in the {nameof(MathchingParameters)} instantiation. {nameof(BindingFilePath)} is null.");
+                Logger.Error($"Error in the {nameof(MathchingParameters)} instantiation. {nameof(BindingFilePath)} is empty.");
                 return false;
             }
 

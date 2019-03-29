@@ -1,6 +1,5 @@
 ﻿using Interfaces;
 using Miscellaneous;
-using NLog;
 using System;
 using System.IO;
 using System.Text;
@@ -9,13 +8,13 @@ using System.Xml.Serialization;
 
 namespace DataAcquisitions.DAL
 {
-    public class HDDXmlSerializator : HDDFileReaderWriterBase
+    internal class HDDXmlSerializator : HDDFileReaderWriterBase
     {
 
         private readonly HDDXmlSerializatorParameters _parameters;
 
 
-        public HDDXmlSerializator(HDDXmlSerializatorParameters parameter)
+        internal HDDXmlSerializator(HDDXmlSerializatorParameters parameter)
         {
             _parameters = parameter;
         }
@@ -81,12 +80,5 @@ namespace DataAcquisitions.DAL
         }
 
     }
-
-
-    public class HDDXmlSerializatorParameters
-    {
-        public ILogger Logger { get; set; }
-    }
-
 
 }

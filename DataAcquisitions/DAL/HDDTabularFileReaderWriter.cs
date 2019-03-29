@@ -2,20 +2,19 @@
 using Interfaces;
 using Interfaces.MeasuredData;
 using Miscellaneous;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace DataAcquisitions.DAL
 {
-    public class HDDTabularFileReaderWriter : HDDFileReaderWriterBase
+    internal class HDDTabularFileReaderWriter : HDDFileReaderWriterBase
     {
 
         private readonly TabularTextReaderParameters _parameters;
 
 
-        public HDDTabularFileReaderWriter(TabularTextReaderParameters parameter)
+        internal HDDTabularFileReaderWriter(TabularTextReaderParameters parameter)
         {
             _parameters = parameter;
         }
@@ -148,14 +147,6 @@ namespace DataAcquisitions.DAL
             ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, Name = fileNameAndPath };
             return toolMeasData;
         }
-    }
-
-
-
-    public class TabularTextReaderParameters
-    {
-        public char Separator { get; set; }
-        public ILogger Logger { get; set; }
     }
 
 

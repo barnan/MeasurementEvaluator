@@ -11,7 +11,6 @@ namespace Frame.ConfigHandler
 
     // todo: list serialization
 
-
     public class ConfigManager
     {
         private ILogger _logger;
@@ -105,7 +104,7 @@ namespace Frame.ConfigHandler
                 }
 
                 // xmlnode was found for the given field in the xml section:
-                if (xmlNameAttribute != null && xmlValueAttribute != null)
+                if (xmlNameAttribute != null && xmlValueAttribute != null && fieldConfigurationAttribute.Name == xmlNameAttribute.InnerText)
                 {
                     currentObjectField = fieldInfo;
                     Type fieldType = currentObjectField.FieldType;
@@ -164,13 +163,14 @@ namespace Frame.ConfigHandler
 
                 if (matchingConfigurationAttribute == null)
                 {
-                    XmlComment comment = currentSectionElement.OwnerDocument.CreateComment(xmlChildNode.InnerXml);
+                    XmlComment comment = currentSectionElement.OwnerDocument.CreateComment(xmlChildNode.OuterXml);
                     try
                     {
                         currentSectionElement.RemoveChild(xmlChildNode);
                         currentSectionElement.RemoveChild(previousComment);
                         currentSectionElement.AppendChild(previousComment);
                         currentSectionElement.AppendChild(comment);
+                        
                     }
                     catch (Exception ex)
                     {
@@ -187,24 +187,6 @@ namespace Frame.ConfigHandler
             }
 
             return true;
-        }
-
-
-        private XmlAttribute GetAttributeValueByAttributeName(XmlNode node, string AttributeName)
-        {
-            foreach (XmlAttribute childNodeAttribute in node.Attributes)
-            {
-                if (childNodeAttribute.Name == NAME_ATTRIBUTE_NAME)
-                {
-                    return childNodeAttribute;
-                }
-                if (childNodeAttribute.Name == VALUE_ATTRIBUTE_NAME)
-                {
-                    return childNodeAttribute;
-                }
-            }
-
-            return null;
         }
 
 
@@ -239,25 +221,6 @@ namespace Frame.ConfigHandler
             }
 
             return true;
-        }
-
-
-        internal XmlElement LoadXmlElement(string currentConfigFileName, string sectionName, Type type)
-        {
-            // read in the xml doc
-
-            XmlDocument xmlDoc = new XmlDocument();
-
-            XmlElement currentSectionNode = LoadXmlElement(xmlDoc, currentConfigFileName, sectionName);
-
-            if (currentSectionNode == null)
-            {
-                _logger.Info("Null node received.");
-
-                currentSectionNode = CreateXmlSection(xmlDoc, sectionName, type);
-            }
-
-            return currentSectionNode;
         }
 
 
@@ -336,46 +299,6 @@ namespace Frame.ConfigHandler
         }
 
 
-        internal XmlComment CreateFieldXmlComment(XmlDocument xmlDoc, string description)
-        {
-            if (string.IsNullOrEmpty(description))
-            {
-                _logger.Error("Received description is null or empty.");
-                return null;
-            }
-            XmlComment newComment = xmlDoc.CreateComment(description);
-            return newComment;
-        }
-
-
-        internal XmlElement CreateFieldXmlSection(XmlDocument xmlDoc, string name, string value)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                _logger.Error("Received name is null or empty.");
-                return null;
-            }
-
-            if (string.IsNullOrEmpty(value))
-            {
-                _logger.Error("Received value is null or empty.");
-                return null;
-            }
-
-            XmlElement newElement = xmlDoc.CreateElement(FIELD_NAME);
-
-            XmlAttribute nameAttrib = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
-            nameAttrib.Value = name;
-            XmlAttribute valueAttrib = xmlDoc.CreateAttribute(VALUE_ATTRIBUTE_NAME);
-            valueAttrib.Value = value;
-
-            newElement.Attributes.Append(nameAttrib);
-            newElement.Attributes.Append(valueAttrib);
-
-            return newElement;
-        }
-
-
         internal bool Save(string currentConfigFileName, string sectionName, XmlElement newElement, Type type)
         {
             if (newElement == null)
@@ -442,6 +365,80 @@ namespace Frame.ConfigHandler
 
             return true;
         }
+
+
+
+        #region private
+
+        private XmlAttribute GetAttributeValueByAttributeName(XmlNode node, string AttributeName)
+        {
+            foreach (XmlAttribute childNodeAttribute in node.Attributes)
+            {
+                if (childNodeAttribute.Name == NAME_ATTRIBUTE_NAME)
+                {
+                    return childNodeAttribute;
+                }
+                if (childNodeAttribute.Name == VALUE_ATTRIBUTE_NAME)
+                {
+                    return childNodeAttribute;
+                }
+            }
+
+            return null;
+        }
+
+        private XmlElement LoadXmlElement(string currentConfigFileName, string sectionName, Type type)
+        {
+            // read in the xml doc
+
+            XmlDocument xmlDoc = new XmlDocument();
+
+            XmlElement currentSectionNode = LoadXmlElement(xmlDoc, currentConfigFileName, sectionName);
+
+            if (currentSectionNode == null)
+            {
+                _logger.Info("Null node received.");
+
+                currentSectionNode = CreateXmlSection(xmlDoc, sectionName, type);
+            }
+
+            return currentSectionNode;
+        }
+
+        private XmlComment CreateFieldXmlComment(XmlDocument xmlDoc, string description)
+        {
+            if (string.IsNullOrEmpty(description))
+            {
+                _logger.Error("Received description is null or empty.");
+                return null;
+            }
+            XmlComment newComment = xmlDoc.CreateComment(description);
+            return newComment;
+        }
+
+
+        private XmlElement CreateFieldXmlSection(XmlDocument xmlDoc, string name, string value)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                _logger.Error("Received name is null or empty.");
+                return null;
+            }
+
+            XmlElement newElement = xmlDoc.CreateElement(FIELD_NAME);
+
+            XmlAttribute nameAttrib = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
+            nameAttrib.Value = name;
+            XmlAttribute valueAttrib = xmlDoc.CreateAttribute(VALUE_ATTRIBUTE_NAME);
+            valueAttrib.Value = value;
+
+            newElement.Attributes.Append(nameAttrib);
+            newElement.Attributes.Append(valueAttrib);
+
+            return newElement;
+        }
+
+        #endregion
 
     }
 }

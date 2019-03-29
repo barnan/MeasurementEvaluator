@@ -387,7 +387,7 @@ namespace Calculations.Evaluation
         #endregion
 
 
-        internal class QueueElement
+        private class QueueElement
         {
             internal IDataCollectorResult DataCollectorResult { get; }
 
