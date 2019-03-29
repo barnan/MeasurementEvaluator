@@ -11,12 +11,12 @@ namespace Frame.ConfigHandler
         {
         }
 
-        public ConfigurationAttribute(string name, string description)
+        public ConfigurationAttribute(string description, string name)
             : this(name, description, false)
         {
         }
 
-        public ConfigurationAttribute(string name, string description, bool loadComponent)
+        public ConfigurationAttribute(string description, string name, bool loadComponent)
         {
             Name = name;
             Description = description;

@@ -2,7 +2,7 @@
 
 namespace MeasurementEvaluatorUIWPF
 {
-    public class MainWindowViewModel : ViewModelBase
+    internal class MainWindowViewModel : ViewModelBase
     {
         private MainWindowParameters _parameters;
         public MainWindowParameters Parameters => _parameters;
@@ -10,7 +10,7 @@ namespace MeasurementEvaluatorUIWPF
 
 
 
-        public MainWindowViewModel(MainWindowParameters parameters)
+        internal MainWindowViewModel(MainWindowParameters parameters)
         {
             _parameters = parameters;
         }

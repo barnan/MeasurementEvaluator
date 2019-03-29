@@ -49,6 +49,7 @@
     <Compile Include="Misc\IUIMessageControl.cs" />
     <Compile Include="Misc\INamed.cs" />
     <Compile Include="DataAcquisition\IManagableFromRepository.cs" />
+    <Compile Include="Misc\IMainPageUIWPF.cs" />
     <Compile Include="ToolSpecifications\IRotatable.cs" />
     <Compile Include="Result\ICalculationResult.cs" />
     <Compile Include="DataAcquisition\IHDDFileReaderWriter.cs" />

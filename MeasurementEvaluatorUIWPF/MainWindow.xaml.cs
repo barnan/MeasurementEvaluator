@@ -8,8 +8,12 @@ namespace MeasurementEvaluatorUIWPF
     /// </summary>
     public partial class MainWindow : Window, IMainWindowUIWPF
     {
-        public MainWindow()
+        private MainWindowParameters _param;
+
+        internal MainWindow(MainWindowParameters param)
         {
+            _param = param;
+
             InitializeComponent();
 
             DataContext = new MainWindowViewModel(new MainWindowParameters());

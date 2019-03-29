@@ -27,7 +27,7 @@ namespace MeasurementEvaluator
         private ILogger _logger;
         private ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
-        [Configuration("Main Window", "Title of the used main window", true)]
+        [Configuration("Title of the used main window", "Main Window", true)]
         private string _mainWindowName = null;
 
         private IMainWindowUIWPF _mainWindow;

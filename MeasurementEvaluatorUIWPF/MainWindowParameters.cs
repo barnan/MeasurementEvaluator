@@ -1,21 +1,33 @@
-﻿using MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
+using Interfaces.Misc;
 
 namespace MeasurementEvaluatorUIWPF
 {
-    public class MainWindowParameters
+    internal class MainWindowParameters
     {
-        MainPageUIWPF MainPage { get; }
+        [Configuration("MainPage", "MainPage", true)]
+        private string _mainPage = null;
+        internal IMainPageUIWPF MainPage { get; private set; }
 
 
-        public MainWindowParameters(MainPageUIWPF mainPage)
+        internal bool Load(string sectionName)
         {
-            MainPage = mainPage;
+            PluginLoader.ConfigManager.Load(this, sectionName);
+
+            MainPage = PluginLoader.CreateInstance<IMainPageUIWPF>(_mainPage);
+
+            return CheckComponents();
         }
 
-
-        public MainWindowParameters()
+        private bool CheckComponents()
         {
-            MainPage = new MainPageUIWPF(new MainPageUIWPFParameters());
+            if (MainPage == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
     }
