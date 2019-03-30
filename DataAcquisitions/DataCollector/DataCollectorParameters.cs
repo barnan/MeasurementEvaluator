@@ -18,15 +18,15 @@ namespace DataAcquisitions.DataCollector
         private string _dateTimeProvider = null;
         internal IDateTimeProvider DateTimeProvider { get; private set; }
 
-        [Configuration("Name of the measurement Data repository", Name = "Measurement Data Repository", LoadComponent = true)]
+        [Configuration("Name of the measurement Data repository", "Measurement Data Repository", LoadComponent = true)]
         private string _measurementDataRepository = null;
         internal IRepository<IToolMeasurementData> MeasurementDataRepository { get; private set; }
 
-        [Configuration("Name of the reference repository", Name = "Reference Repository", LoadComponent = true)]
+        [Configuration("Name of the reference repository", "Reference Repository", LoadComponent = true)]
         private string _referenceRepository = null;
         internal IRepository<IReferenceSample> ReferenceRepository { get; private set; }
 
-        [Configuration("Name of the specification repository", Name = "Specification Repository", LoadComponent = true)]
+        [Configuration("Name of the specification repository", "Specification Repository", LoadComponent = true)]
         private string _specificationRepository = null;
         internal IRepository<IToolSpecification> SpecificationRepository { get; private set; }
 

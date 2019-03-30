@@ -12,19 +12,19 @@ namespace Calculations.Evaluation
     {
         internal ILogger Logger { get; private set; }
 
-        [Configuration("Contains the possible calculation", Name = "Name of Calculation Container Component", LoadComponent = true)]
+        [Configuration("Contains the possible calculation", "Name of Calculation Container Component", LoadComponent = true)]
         private string _calculationContainer = null;
         internal ICalculationContainer CalculationContainer { get; private set; }
 
-        [Configuration("Data Collection", Name = "Name of Data collector Component", LoadComponent = true)]
+        [Configuration("Data Collection", "Name of Data collector Component", LoadComponent = true)]
         private string _dataCollector = null;
         internal IDataCollector DataCollector { get; private set; }
 
-        [Configuration("Date and time provider", Name = "Name of the DateTimeProvider Component", LoadComponent = true)]
+        [Configuration("Date and time provider", "Name of the DateTimeProvider Component", LoadComponent = true)]
         private string _dateTimeProvider = null;
         internal IDateTimeProvider DateTimeProvider { get; private set; }
 
-        [Configuration("Data matching", Name = "Name of the Data matcher Component", LoadComponent = true)]
+        [Configuration("Data matching", "Name of the Data matcher Component", LoadComponent = true)]
         private string _matcher = null;
         internal IMathing Matcher { get; private set; }
 

@@ -10,7 +10,7 @@ namespace Calculations.Calculation
         public ILogger Logger { get; private set; }
 
 
-        [Configuration("DateTimeProvider", Name = "DateTimeProvider", LoadComponent = true)]
+        [Configuration("DateTimeProvider", "DateTimeProvider", LoadComponent = true)]
         private IDateTimeProvider _dateTimeProvider = null;
         public IDateTimeProvider DateTimeProvider => _dateTimeProvider;
 

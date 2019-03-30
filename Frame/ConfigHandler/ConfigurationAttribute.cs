@@ -5,12 +5,6 @@ namespace Frame.ConfigHandler
     [AttributeUsage(AttributeTargets.Field)]
     public class ConfigurationAttribute : Attribute
     {
-
-        public ConfigurationAttribute(string description)
-        : this(null, description, false)
-        {
-        }
-
         public ConfigurationAttribute(string description, string name)
             : this(name, description, false)
         {

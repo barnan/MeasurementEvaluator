@@ -6,7 +6,7 @@ namespace MeasurementEvaluatorUIWPF
 {
     internal class MainWindowParameters
     {
-        [Configuration("MainPage", "MainPage", true)]
+        [Configuration("Name of the MainPage", "MainPage", true)]
         private string _mainPage = null;
         internal IMainPageUIWPF MainPage { get; private set; }
 

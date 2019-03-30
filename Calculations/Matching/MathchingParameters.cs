@@ -9,11 +9,11 @@ namespace Calculations.Matching
     {
         internal ILogger Logger { get; private set; }
 
-        [Configuration("Handles the reading of the matching file.", Name = "Name of Matching Component", LoadComponent = true)]
+        [Configuration("Handles the reading of the matching file.", "Name of Matching Component", LoadComponent = true)]
         private string _matchingFileReader = null;
         internal IHDDFileReader MatchingFileReader { get; private set; }
 
-        [Configuration("Name of the matching file", Name = "Name of the matching file", LoadComponent = false)]
+        [Configuration("Name of the matching file", "Name of the matching file", LoadComponent = false)]
         private string _bindingFilePath = "MatchingDictionary";
         internal string BindingFilePath => _bindingFilePath;
 

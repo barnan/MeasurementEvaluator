@@ -1,5 +1,6 @@
 ﻿using Frame.PluginLoader.Interfaces;
 using Interfaces.Misc;
+using MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF;
 using System;
 
 namespace MeasurementEvaluatorUIWPF
@@ -8,6 +9,7 @@ namespace MeasurementEvaluatorUIWPF
     {
 
         IMainWindowUIWPF _mainWindow;
+        IMainPageUIWPF _mainPage;
 
 
         public object Create(Type t, string name)
@@ -25,6 +27,21 @@ namespace MeasurementEvaluatorUIWPF
                 }
                 return _mainWindow;
             }
+
+            if (t.IsAssignableFrom(typeof(IMainPageUIWPF)))
+            {
+                if (_mainPage == null)
+                {
+                    MainPageUIWPFParameters param = new MainPageUIWPFParameters();
+                    if (param.Load(name))
+                    {
+                        MainPageUIWPF instance = new MainPageUIWPF(param);
+                        _mainPage = instance;
+                    }
+                }
+                return _mainWindow;
+            }
+
             return null;
         }
     }

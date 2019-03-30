@@ -19,9 +19,10 @@ namespace Frame.ConfigHandler
         private const string ROOT_NODE_NAME = "Configurations";
         private const string NAME_ATTRIBUTE_NAME = "Name";
         private const string VALUE_ATTRIBUTE_NAME = "Value";
-        private const string ASSEMBLY_NAME_ATTRIBUTE_NAME = "Assembly";
-        private const string FIELD_NAME = "Field";
-        private const string SECTION_NAME = "Section";
+        private const string ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
+        private const string FIELD_NODE_NAME = "Parameter";
+        private const string SECTION_NODE_NAME = "Section";
+        private const string LIST_ELEMENT_NODE_NAME = "Element";
 
 
         public ConfigManager(string folder)
@@ -170,7 +171,7 @@ namespace Frame.ConfigHandler
                         currentSectionElement.RemoveChild(previousComment);
                         currentSectionElement.AppendChild(previousComment);
                         currentSectionElement.AppendChild(comment);
-                        
+
                     }
                     catch (Exception ex)
                     {
@@ -281,7 +282,7 @@ namespace Frame.ConfigHandler
 
         internal XmlElement CreateXmlSection(XmlDocument xmlDoc, string sectionName, Type type)
         {
-            XmlElement createdSectionNode = xmlDoc.CreateElement(SECTION_NAME);
+            XmlElement createdSectionNode = xmlDoc.CreateElement(SECTION_NODE_NAME);
 
             _logger.Info($"New {sectionName} section was created.");
 
@@ -289,7 +290,7 @@ namespace Frame.ConfigHandler
             sectionNameAttribute.InnerText = sectionName;
 
             // creates additional attributes for the new node -> assembly name
-            XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute(ASSEMBLY_NAME_ATTRIBUTE_NAME);
+            XmlAttribute assemblyAttribute = xmlDoc.CreateAttribute(ASSEMBLY_ATTRIBUTE_NAME);
             assemblyAttribute.InnerText = type.Name;
 
             createdSectionNode.Attributes.Append(sectionNameAttribute);
@@ -350,11 +351,9 @@ namespace Frame.ConfigHandler
             try
             {
                 using (StreamWriter sw = new StreamWriter(currentConfigFileName))
+                using (XmlWriter xmlWriter = XmlWriter.Create(sw, writerSettings))
                 {
-                    using (XmlWriter xmlWriter = XmlWriter.Create(sw, writerSettings))
-                    {
-                        xmlDoc.WriteTo(xmlWriter);
-                    }
+                    xmlDoc.WriteTo(xmlWriter);
                 }
             }
             catch (Exception ex)
@@ -365,8 +364,6 @@ namespace Frame.ConfigHandler
 
             return true;
         }
-
-
 
         #region private
 
@@ -416,7 +413,6 @@ namespace Frame.ConfigHandler
             return newComment;
         }
 
-
         private XmlElement CreateFieldXmlSection(XmlDocument xmlDoc, string name, string value)
         {
             if (string.IsNullOrEmpty(name))
@@ -425,7 +421,7 @@ namespace Frame.ConfigHandler
                 return null;
             }
 
-            XmlElement newElement = xmlDoc.CreateElement(FIELD_NAME);
+            XmlElement newElement = xmlDoc.CreateElement(FIELD_NODE_NAME);
 
             XmlAttribute nameAttrib = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
             nameAttrib.Value = name;
