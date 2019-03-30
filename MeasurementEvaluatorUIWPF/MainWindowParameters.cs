@@ -8,14 +8,14 @@ namespace MeasurementEvaluatorUIWPF
     {
         [Configuration("Name of the MainPage", "MainPage", true)]
         private string _mainPage = null;
-        internal IMainPageUIWPF MainPage { get; private set; }
+        internal IPageUIWPF MainPage { get; private set; }
 
 
         internal bool Load(string sectionName)
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            MainPage = PluginLoader.CreateInstance<IMainPageUIWPF>(_mainPage);
+            MainPage = PluginLoader.CreateInstance<IPageUIWPF>(typeof(IPageUIWPF), _mainPage);
 
             return CheckComponents();
         }

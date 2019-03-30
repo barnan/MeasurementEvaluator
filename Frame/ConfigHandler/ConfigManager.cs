@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -73,6 +74,7 @@ namespace Frame.ConfigHandler
 
                 XmlAttribute xmlNameAttribute = null;
                 XmlAttribute xmlValueAttribute = null;
+                XmlNodeList xmlChildsOfChild = null;
 
                 foreach (XmlNode xmlChildNode in currentSectionElement.ChildNodes)
                 {
@@ -81,6 +83,7 @@ namespace Frame.ConfigHandler
                         continue;
                     }
 
+                    xmlChildsOfChild = xmlChildNode.ChildNodes;
                     xmlNameAttribute = GetAttributeValueByAttributeName(xmlChildNode, NAME_ATTRIBUTE_NAME);
                     xmlValueAttribute = GetAttributeValueByAttributeName(xmlChildNode, VALUE_ATTRIBUTE_NAME);
 
@@ -107,14 +110,30 @@ namespace Frame.ConfigHandler
                 // xmlnode was found for the given field in the xml section:
                 if (xmlNameAttribute != null && xmlValueAttribute != null && fieldConfigurationAttribute.Name == xmlNameAttribute.InnerText)
                 {
-                    currentObjectField = fieldInfo;
-                    Type fieldType = currentObjectField.FieldType;
-
-                    object temporary;
                     try
                     {
-                        temporary = Convert.ChangeType(xmlValueAttribute.InnerText, fieldType);
-                        currentObjectField.SetValue(inputObj, temporary);
+                        currentObjectField = fieldInfo;
+                        Type fieldType = currentObjectField.FieldType;
+
+                        // process list:
+                        if (xmlValueAttribute.Value == string.Empty && xmlChildsOfChild != null && typeof(ICollection).IsAssignableFrom(fieldType))
+                        {
+                            IList listobj = (IList)Activator.CreateInstance(fieldType);
+
+                            foreach (object item in xmlChildsOfChild)
+                            {
+                                xmlValueAttribute = GetAttributeValueByAttributeName((XmlNode)item, VALUE_ATTRIBUTE_NAME);
+                                string listElement = (string)Convert.ChangeType(xmlValueAttribute.Value, typeof(string));
+                                listobj.Add(listElement);
+                            }
+                            currentObjectField.SetValue(inputObj, listobj);
+                        }
+                        else
+                        {
+                            object temporary = Convert.ChangeType(xmlValueAttribute.InnerText, fieldType);
+                            currentObjectField.SetValue(inputObj, temporary);
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -140,7 +159,6 @@ namespace Frame.ConfigHandler
             foreach (XmlNode xmlChildNode in currentSectionElement)
             {
                 XmlAttribute xmlNameAttribute = null;
-                XmlAttribute xmlValueAttribute = null;
 
                 if (xmlChildNode is XmlComment || xmlChildNode == null)
                 {
@@ -171,7 +189,6 @@ namespace Frame.ConfigHandler
                         currentSectionElement.RemoveChild(previousComment);
                         currentSectionElement.AppendChild(previousComment);
                         currentSectionElement.AppendChild(comment);
-
                     }
                     catch (Exception ex)
                     {
@@ -367,15 +384,15 @@ namespace Frame.ConfigHandler
 
         #region private
 
-        private XmlAttribute GetAttributeValueByAttributeName(XmlNode node, string AttributeName)
+        private XmlAttribute GetAttributeValueByAttributeName(XmlNode node, string attributeName)
         {
             foreach (XmlAttribute childNodeAttribute in node.Attributes)
             {
-                if (childNodeAttribute.Name == NAME_ATTRIBUTE_NAME)
+                if (childNodeAttribute.Name == attributeName)
                 {
                     return childNodeAttribute;
                 }
-                if (childNodeAttribute.Name == VALUE_ATTRIBUTE_NAME)
+                if (childNodeAttribute.Name == attributeName)
                 {
                     return childNodeAttribute;
                 }

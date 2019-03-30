@@ -14,7 +14,7 @@ namespace Frame.PluginLoader
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
         private static object _lockObj = new object();
-        private ComponentList _componentList;
+        private static ComponentList _componentList;
         private readonly string _componentSectionName = "ComponentList";
 
         private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
@@ -147,9 +147,9 @@ namespace Frame.PluginLoader
         /// creates the component with the given title
         /// </summary>
         /// <typeparam name="T">type of the required component</typeparam>
-        /// <param name="title">title of the required component</param>
+        /// <param name="name">title of the required component</param>
         /// <returns>returns the instantiated component</returns>
-        public static T CreateInstance<T>(string title)
+        public static T CreateInstance<T>(Type type, string name)
         {
             lock (_lockObj)
             {
@@ -159,11 +159,17 @@ namespace Frame.PluginLoader
                     return default(T);
                 }
 
+                if (!_componentList.Components.ContainsKey(name) || !_componentList.Components[name].Contains(type.Name))
+                {
+                    _logger.Error($"ComponentList does not contain {name} {type}");
+                    return default(T);
+                }
+
                 List<T> instances = new List<T>();
 
                 foreach (var factory in _factories)
                 {
-                    T instance = (T)factory.Create(typeof(T), title);
+                    T instance = (T)factory.Create(type, name);
                     if (instance == null)
                     {
                         continue;
@@ -174,13 +180,13 @@ namespace Frame.PluginLoader
 
                 if (instances.Count == 0)
                 {
-                    _logger.Error($"No factory was found to create: {typeof(T)}");
+                    _logger.Error($"No factory was found to create: {type}");
                     return default(T);
                 }
 
                 if (instances.Count > 1)
                 {
-                    _logger.Error($"More than one factories was found to create: {typeof(T)}");
+                    _logger.Error($"More than one factories was found to create: {type}");
                     return default(T);
                 }
 

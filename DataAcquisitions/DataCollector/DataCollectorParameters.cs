@@ -38,10 +38,10 @@ namespace DataAcquisitions.DataCollector
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            SpecificationRepository = PluginLoader.CreateInstance<IRepository<IToolSpecification>>(_specificationRepository);
-            ReferenceRepository = PluginLoader.CreateInstance<IRepository<IReferenceSample>>(_referenceRepository);
-            MeasurementDataRepository = PluginLoader.CreateInstance<IRepository<IToolMeasurementData>>(_measurementDataRepository);
-            DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
+            SpecificationRepository = PluginLoader.CreateInstance<IRepository<IToolSpecification>>(typeof(IToolSpecification), _specificationRepository);
+            ReferenceRepository = PluginLoader.CreateInstance<IRepository<IReferenceSample>>(typeof(IReferenceSample), _referenceRepository);
+            MeasurementDataRepository = PluginLoader.CreateInstance<IRepository<IToolMeasurementData>>(typeof(IRepository<IToolMeasurementData>), _measurementDataRepository);
+            DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(typeof(IDateTimeProvider), _dateTimeProvider);
 
             return CheckComponent();
         }

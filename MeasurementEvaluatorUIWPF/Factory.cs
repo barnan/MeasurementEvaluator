@@ -9,7 +9,7 @@ namespace MeasurementEvaluatorUIWPF
     {
 
         IMainWindowUIWPF _mainWindow;
-        IMainPageUIWPF _mainPage;
+        IPageUIWPF _mainPage;
 
 
         public object Create(Type t, string name)
@@ -28,7 +28,7 @@ namespace MeasurementEvaluatorUIWPF
                 return _mainWindow;
             }
 
-            if (t.IsAssignableFrom(typeof(IMainPageUIWPF)))
+            if (t.IsAssignableFrom(typeof(IPageUIWPF)))
             {
                 if (_mainPage == null)
                 {

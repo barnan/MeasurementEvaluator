@@ -28,7 +28,7 @@ namespace DataAcquisitions.Repository
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(_hddDReaderWriter);
+            HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(typeof(IHDDFileReaderWriter), _hddDReaderWriter);
             return CheckComponent();
         }
 

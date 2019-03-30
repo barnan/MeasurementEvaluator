@@ -6,7 +6,7 @@ namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF
     /// <summary>
     /// Interaction logic for MainPageUIWPF.xaml
     /// </summary>
-    public partial class MainPageUIWPF : Page, IMainPageUIWPF
+    public partial class MainPageUIWPF : Page, IPageUIWPF
     {
         internal MainPageUIWPF(MainPageUIWPFParameters parameters)
         {

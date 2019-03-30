@@ -35,10 +35,10 @@ namespace Calculations.Evaluation
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            CalculationContainer = PluginLoader.CreateInstance<ICalculationContainer>(_calculationContainer);
-            DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollector);
-            DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
-            Matcher = PluginLoader.CreateInstance<IMathing>(_matcher);
+            CalculationContainer = PluginLoader.CreateInstance<ICalculationContainer>(typeof(ICalculationContainer), _calculationContainer);
+            DataCollector = PluginLoader.CreateInstance<IDataCollector>(typeof(IDataCollector), _dataCollector);
+            DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(typeof(IDateTimeProvider), _dateTimeProvider);
+            Matcher = PluginLoader.CreateInstance<IMathing>(typeof(IMathing), _matcher);
 
             return CheckComponent();
         }

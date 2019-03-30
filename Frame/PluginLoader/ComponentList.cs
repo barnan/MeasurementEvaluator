@@ -7,7 +7,7 @@ namespace Frame.PluginLoader
 {
     internal class ComponentList
     {
-        internal List<KeyValuePair<string, List<string>>> Components { get; private set; }
+        internal Dictionary<string, List<string>> Components { get; private set; }
         private const string NAME_ATTRIBUTE_NAME = "Name";
         private const string TYPE_ATTRIBUTE_NAME = "Type";
         private const string COMPONENT_NODE_NAME = "Component";
@@ -21,7 +21,7 @@ namespace Frame.PluginLoader
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
         internal bool Load(XmlDocument xmlDoc, XmlElement inputElement)
         {
-            Components = new List<KeyValuePair<string, List<string>>>();
+            Components = new Dictionary<string, List<string>>();
 
             if (inputElement.HasChildNodes)
             {
@@ -50,7 +50,7 @@ namespace Frame.PluginLoader
                         if (!string.IsNullOrEmpty(nameText) || !string.IsNullOrEmpty(typeText))
                         {
                             string[] types = typeText.Split(';');
-                            Components.Add(new KeyValuePair<string, List<string>>(nameText, types.ToList()));
+                            Components.Add(nameText, types.ToList());
                         }
                     }
                 }
