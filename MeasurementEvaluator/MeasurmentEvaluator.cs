@@ -43,11 +43,13 @@ namespace MeasurementEvaluator
             try
             {
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
-                _mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(typeof(IMainWindowUIWPF), _mainWindowName);
+                //_mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(typeof(IMainWindowUIWPF), _mainWindowName);
 
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
+                    _mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(typeof(IMainWindowUIWPF), _mainWindowName);
+
                     Application application = new Application();
 
                     Window mainWindow = (Window)_mainWindow;

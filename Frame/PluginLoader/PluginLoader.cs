@@ -151,47 +151,44 @@ namespace Frame.PluginLoader
         /// <returns>returns the instantiated component</returns>
         public static T CreateInstance<T>(Type type, string name)
         {
-            lock (_lockObj)
+            if (_factories == null)
             {
-                if (_factories == null)
-                {
-                    _logger.Error("Factories are not created yet.");
-                    return default(T);
-                }
-
-                if (!_componentList.Components.ContainsKey(name) || !_componentList.Components[name].Contains(type.Name))
-                {
-                    _logger.Error($"ComponentList does not contain {name} {type}");
-                    return default(T);
-                }
-
-                List<T> instances = new List<T>();
-
-                foreach (var factory in _factories)
-                {
-                    T instance = (T)factory.Create(type, name);
-                    if (instance == null)
-                    {
-                        continue;
-                    }
-
-                    instances.Add(instance);
-                }
-
-                if (instances.Count == 0)
-                {
-                    _logger.Error($"No factory was found to create: {type}");
-                    return default(T);
-                }
-
-                if (instances.Count > 1)
-                {
-                    _logger.Error($"More than one factories was found to create: {type}");
-                    return default(T);
-                }
-
-                return instances[0];
+                _logger.Error("Factories are not created yet.");
+                return default(T);
             }
+
+            if (!_componentList.Components.ContainsKey(name) || !_componentList.Components[name].Contains(type.Name))
+            {
+                _logger.Error($"ComponentList does not contain {name} {type}");
+                return default(T);
+            }
+
+            List<T> instances = new List<T>();
+
+            foreach (var factory in _factories)
+            {
+                object instance = factory.Create(type, name);
+                if (instance == null)
+                {
+                    continue;
+                }
+
+                instances.Add((T)Convert.ChangeType(instance, typeof(T)));
+            }
+
+            if (instances.Count == 0)
+            {
+                _logger.Error($"No factory was found to create: {type}");
+                return default(T);
+            }
+
+            if (instances.Count > 1)
+            {
+                _logger.Error($"More than one factories was found to create: {type}");
+                return default(T);
+            }
+
+            return instances[0];
         }
 
 

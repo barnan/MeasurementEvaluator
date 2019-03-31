@@ -14,7 +14,10 @@ namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
 
         public string ID { get; }
 
-
+        internal bool Load(string name)
+        {
+            return true;
+        }
 
     }
 }
