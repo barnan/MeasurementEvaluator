@@ -143,27 +143,21 @@ namespace Frame.PluginLoader
         }
 
 
-        /// <summary>
-        /// creates the component with the given title
-        /// </summary>
-        /// <typeparam name="T">type of the required component</typeparam>
-        /// <param name="name">title of the required component</param>
-        /// <returns>returns the instantiated component</returns>
-        public static T CreateInstance<T>(Type type, string name)
+        public static object CreateInstance(Type type, string name)
         {
             if (_factories == null)
             {
                 _logger.Error("Factories are not created yet.");
-                return default(T);
+                return null;
             }
 
             if (!_componentList.Components.ContainsKey(name) || !_componentList.Components[name].Contains(type.Name))
             {
                 _logger.Error($"ComponentList does not contain {name} {type}");
-                return default(T);
+                return null;
             }
 
-            List<T> instances = new List<T>();
+            List<object> instances = new List<object>();
 
             foreach (var factory in _factories)
             {
@@ -173,22 +167,33 @@ namespace Frame.PluginLoader
                     continue;
                 }
 
-                instances.Add((T)Convert.ChangeType(instance, typeof(T)));
+                instances.Add(Convert.ChangeType(instance, typeof(object)));
             }
 
             if (instances.Count == 0)
             {
                 _logger.Error($"No factory was found to create: {type}");
-                return default(T);
+                return null;
             }
 
             if (instances.Count > 1)
             {
                 _logger.Error($"More than one factories was found to create: {type}");
-                return default(T);
+                return null;
             }
 
             return instances[0];
+        }
+
+        /// <summary>
+        /// creates the component with the given title
+        /// </summary>
+        /// <typeparam name="T">type of the required component</typeparam>
+        /// <param name="name">title of the required component</param>
+        /// <returns>returns the instantiated component</returns>
+        public static T CreateInstance<T>(string name)
+        {
+            return (T)CreateInstance(typeof(T), name);
         }
 
 
