@@ -1,17 +1,40 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Frame.ConfigHandler;
+using Frame.PluginLoader;
+using Interfaces.DataAcquisition;
+using NLog;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 {
 
     public class DataCollectorUIWPFParameters
     {
-        internal IDataCollector DataCollector { get; }
+
+        [Configuration("Name of DataCollector component", nameof(DataCollector), true)]
+        private string _dataCollectorName;
+        internal IDataCollector DataCollector { get; private set; }
 
 
-        public DataCollectorUIWPFParameters(IDataCollector dataCollector)
+        internal ILogger Logger { get; private set; }
+
+
+        internal bool Load(string sectionName)
         {
-            DataCollector = dataCollector;
+            PluginLoader.ConfigManager.Load(this, sectionName);
+
+            DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollectorName);
+
+            return CheckComponent();
         }
 
+
+        private bool CheckComponent()
+        {
+            if (DataCollector == null)
+            {
+
+            }
+
+            return true;
+        }
     }
 }

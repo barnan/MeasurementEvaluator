@@ -4,6 +4,6 @@ namespace DataAcquisitions.DAL
 {
     internal class HDDXmlSerializatorParameters
     {
-        internal ILogger Logger { get; set; }
+        internal ILogger Logger { get; private set; }
     }
 }

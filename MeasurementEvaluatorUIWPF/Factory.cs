@@ -1,7 +1,9 @@
 ﻿using Frame.PluginLoader.Interfaces;
 using Interfaces.Misc;
+using MeasurementEvaluatorUIWPF.Pages.EditorPageUIWPF;
 using MeasurementEvaluatorUIWPF.Pages.EvaluationPage;
 using MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF;
+using MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF;
 using System;
 
 namespace MeasurementEvaluatorUIWPF
@@ -54,7 +56,43 @@ namespace MeasurementEvaluatorUIWPF
                         return instance;
                     }
                 }
+
+                if (name.Contains("Editor"))
+                {
+                    EditorPageUIWPFParameters param = new EditorPageUIWPFParameters();
+                    if (param.Load(name))
+                    {
+                        EditorPageUIWPF instance = new EditorPageUIWPF(param);
+                        return instance;
+                    }
+                }
             }
+
+
+            if (t.IsAssignableFrom(typeof(IUserControlUIWPF)))
+            {
+                if (name.Contains("DataCollector"))
+                {
+                    DataCollectorUIWPFParameters param = new DataCollectorUIWPFParameters();
+                    if (param.Load(name))
+                    {
+                        DataCollectorUIWPF instance = new DataCollectorUIWPF(param);
+                        return instance;
+                    }
+                }
+
+                if (name.Contains("ResultHandling"))
+                {
+                    return null;
+                }
+
+                if (name.Contains("DataCollector"))
+                {
+                    return null;
+                }
+
+            }
+
 
             return null;
         }

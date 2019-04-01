@@ -19,7 +19,8 @@ namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF
             TabPages = new List<IPageUIWPF>();
             foreach (string tabpage in _tabPages)
             {
-                TabPages.Add(PluginLoader.CreateInstance<IPageUIWPF>(typeof(IPageUIWPF), tabpage));
+                //TabPages.Add(PluginLoader.CreateInstance<IPageUIWPF>(typeof(IPageUIWPF), tabpage));
+                TabPages.Add(PluginLoader.CreateInstance<IPageUIWPF>(tabpage));
             }
 
             return CheckComponents();

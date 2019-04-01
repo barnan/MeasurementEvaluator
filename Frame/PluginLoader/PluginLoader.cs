@@ -107,39 +107,36 @@ namespace Frame.PluginLoader
         /// <returns></returns>
         public bool Start()
         {
-            lock (_lockObj)
+            if (_iRunables.Count == 0)
             {
-                if (_iRunables.Count == 0)
-                {
-                    _logger.Error($"No {nameof(IRunable)} was found in the folder: {PluginsFolder}");
-                    return false;
-                }
-
-
-                if (_iRunables.Count > 1)
-                {
-                    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
-
-                    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
-                    {
-                        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
-                    }
-
-                    return false;
-                }
-
-                Type type = _iRunables[0].Key;
-
-                IRunable runable = (IRunable)Activator.CreateInstance(type);
-
-                _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
-
-                runable.Run();
-
-                _logger.Info($"{type} started.");
-
-                return true;
+                _logger.Error($"No {nameof(IRunable)} was found in the folder: {PluginsFolder}");
+                return false;
             }
+
+
+            if (_iRunables.Count > 1)
+            {
+                _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
+
+                foreach (KeyValuePair<Type, Assembly> item in _iRunables)
+                {
+                    _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                }
+
+                return false;
+            }
+
+            Type type = _iRunables[0].Key;
+
+            IRunable runable = (IRunable)Activator.CreateInstance(type);
+
+            _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
+
+            runable.Run();
+
+            _logger.Info($"{type} started.");
+
+            return true;
         }
 
 
@@ -167,7 +164,7 @@ namespace Frame.PluginLoader
                     continue;
                 }
 
-                instances.Add(Convert.ChangeType(instance, typeof(object)));
+                instances.Add(instance);
             }
 
             if (instances.Count == 0)

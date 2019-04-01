@@ -48,7 +48,8 @@ namespace MeasurementEvaluator
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
-                    _mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(typeof(IMainWindowUIWPF), _mainWindowName);
+                    //_mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(typeof(IMainWindowUIWPF), _mainWindowName);
+                    _mainWindow = PluginLoader.CreateInstance<IMainWindowUIWPF>(_mainWindowName);
 
                     Application application = new Application();
 

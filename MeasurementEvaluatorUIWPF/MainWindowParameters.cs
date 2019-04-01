@@ -15,7 +15,7 @@ namespace MeasurementEvaluatorUIWPF
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            MainPage = PluginLoader.CreateInstance<IPageUIWPF>(typeof(IPageUIWPF), _mainPage);
+            MainPage = PluginLoader.CreateInstance<IPageUIWPF>(_mainPage);
 
             return CheckComponents();
         }

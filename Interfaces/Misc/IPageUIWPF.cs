@@ -3,4 +3,10 @@
     public interface IPageUIWPF
     {
     }
+
+
+    public interface IUserControlUIWPF
+    {
+    }
+
 }
