@@ -6,12 +6,13 @@ using System.Collections.Generic;
 
 namespace DataAcquisitions.Repository
 {
-    internal class HDDMeasurementDataRepository : HDDTypedRepository<IToolMeasurementData>
+    internal class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>, IMeasurementDataRepository
     {
 
         internal HDDMeasurementDataRepository(HDDRepositoryParameters parameters)
         : base(parameters)
         {
+            _repositoryPath = Frame.PluginLoader.PluginLoader.MeasurementDataFolder;
         }
 
     }
@@ -19,7 +20,7 @@ namespace DataAcquisitions.Repository
 
     public class HDDMeasurementDataRepositoryFactory : IPluginFactory
     {
-        private readonly Dictionary<string, IRepository<IToolMeasurementData>> _specificationRepositoryDictionary = new Dictionary<string, IRepository<IToolMeasurementData>>();
+        private readonly Dictionary<string, IMeasurementDataRepository> _specificationRepositoryDictionary = new Dictionary<string, IMeasurementDataRepository>();
 
 
         public object Create(Type t, string name)

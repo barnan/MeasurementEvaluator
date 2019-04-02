@@ -8,8 +8,5 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="800" Width="1000" MinHeight="500"  MinWidth="800">
-
-    <ContentPresenter Content="{Binding Parameters.MainPage}"/>
-
 </Window>
     

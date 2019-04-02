@@ -59,7 +59,7 @@ namespace Start
 
                 // frame start:
                 PluginLoader pluginLoader = new PluginLoader();
-                if (!pluginLoader.SetFolders(
+                if (!pluginLoader.Inititialize(
                     _configurationFolder,
                     _currentExeFolder,
                     _pluginsFolder,

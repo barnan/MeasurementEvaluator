@@ -12,16 +12,13 @@ namespace DataAcquisitions.DAL
 
         public object Create(Type t, string name)
         {
-            if (t.IsAssignableFrom(typeof(HDDFileReaderWriterBase)))
+            if (t.IsAssignableFrom(typeof(HDDXmlSerializator)))
             {
                 if (!_fileReaderDict.ContainsKey(name))
                 {
-                    //EvaluationParameters param = new EvaluationParameters();
-                    //if (param.Load(name))
-                    //{
-                    //    HDDFileReaderWriterBase instance = new HDDFileReaderWriterBase(param);
-                    //    _dataCollectorDict.Add(name, instance);
-                    //}
+                    HDDXmlSerializatorParameters param = new HDDXmlSerializatorParameters();
+                    HDDXmlSerializator instance = new HDDXmlSerializator(param);
+                    _fileReaderDict.Add(name, instance);
                 }
                 return _fileReaderDict[name];
             }

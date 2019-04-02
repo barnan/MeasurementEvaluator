@@ -10,9 +10,9 @@ namespace DataAcquisitions.Repository
     {
         internal ILogger Logger { get; private set; }
 
-        [Configuration("Folder name of the repository.", "Repository folder", true)]
-        private string _repositoryDirectoryPath = "Path";
-        internal string RepositoryDirectoryPath => _repositoryDirectoryPath;
+        //[Configuration("Folder name of the repository.", "Repository folder", true)]
+        //private string _repositoryDirectoryPath = "Path";
+        //internal string RepositoryDirectoryPath { get; private set; }
 
         [Configuration("File extension of the files used in the given repository folder", "File Extension", true)]
         private List<string> _fileExtensionFilters = null;
@@ -28,8 +28,8 @@ namespace DataAcquisitions.Repository
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            //HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(typeof(IHDDFileReaderWriter), _hddDReaderWriter);
             HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(_hddDReaderWriter);
+
             return CheckComponent();
         }
 
@@ -47,11 +47,11 @@ namespace DataAcquisitions.Repository
                 return false;
             }
 
-            if (RepositoryDirectoryPath == null)
-            {
-                Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(RepositoryDirectoryPath)} is null.");
-                return false;
-            }
+            //if (RepositoryDirectoryPath == null)
+            //{
+            //    Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(RepositoryDirectoryPath)} is null.");
+            //    return false;
+            //}
 
             return true;
         }

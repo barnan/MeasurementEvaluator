@@ -4,16 +4,19 @@ using Interfaces.Misc;
 
 namespace MeasurementEvaluatorUIWPF
 {
-    internal class MainWindowParameters
+    public class MainWindowParameters
     {
-        [Configuration("Name of the MainPage", "MainPage", true)]
+        [Configuration("Name of the MainPage", "MainPage Name", true)]
         private string _mainPage = null;
-        internal IPageUIWPF MainPage { get; private set; }
+        public IPageUIWPF MainPage { get; private set; }
 
 
         internal bool Load(string sectionName)
         {
-            PluginLoader.ConfigManager.Load(this, sectionName);
+            if (!PluginLoader.ConfigManager.Load(this, sectionName))
+            {
+                return false;
+            }
 
             MainPage = PluginLoader.CreateInstance<IPageUIWPF>(_mainPage);
 

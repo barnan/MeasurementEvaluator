@@ -11,16 +11,16 @@ namespace DataAcquisitions.Repository
 
     // TODO: and maybe they should handle their own save/load??
 
-    internal class HDDTypedRepository<T> : IRepository<T>
+    internal class HDDRepository<T> : IRepository<T>
         where T : class, IComparable<T>, INamed
     {
 
         private readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
+        protected string _repositoryPath;
 
 
-
-        protected HDDTypedRepository(HDDRepositoryParameters parameters)
+        protected HDDRepository(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }
@@ -42,9 +42,9 @@ namespace DataAcquisitions.Repository
                     return true;
                 }
 
-                if (!Directory.Exists(_parameters.RepositoryDirectoryPath))
+                if (!Directory.Exists(_repositoryPath))
                 {
-                    _parameters.Logger.MethodError($"The given directory ({_parameters.RepositoryDirectoryPath}) does not exists.");
+                    _parameters.Logger.MethodError($"The given directory ({_repositoryPath}) does not exists.");
                     return IsInitialized = false;
                 }
 
@@ -116,7 +116,7 @@ namespace DataAcquisitions.Repository
                     return null;
                 }
 
-                List<T> itemList = GetItemList(_parameters.RepositoryDirectoryPath);
+                List<T> itemList = GetItemList(_repositoryPath);
                 List<T> hitList = new List<T>();
 
                 foreach (T item in itemList)
@@ -144,7 +144,7 @@ namespace DataAcquisitions.Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_parameters.RepositoryDirectoryPath);
+                    List<T> itemList = GetItemList(_repositoryPath);
 
                     if (index > itemList.Count)
                     {
@@ -186,7 +186,7 @@ namespace DataAcquisitions.Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_parameters.RepositoryDirectoryPath).Where(p => p.Name == name).ToList();
+                    List<T> itemList = GetItemList(_repositoryPath).Where(p => p.Name == name).ToList();
 
                     if (itemList.Count == 0)
                     {
@@ -226,7 +226,7 @@ namespace DataAcquisitions.Repository
                         return false;
                     }
 
-                    string fullName = Path.Combine(_parameters.RepositoryDirectoryPath, item.Name);
+                    string fullName = Path.Combine(_repositoryPath, item.Name);
                     if (File.Exists(fullName))
                     {
                         _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
@@ -264,7 +264,7 @@ namespace DataAcquisitions.Repository
         {
             lock (_lockObject)
             {
-                return GetItemList(_parameters.RepositoryDirectoryPath).Select(p => p.ToString()).ToList();
+                return GetItemList(_repositoryPath).Select(p => p.ToString()).ToList();
             }
         }
 
@@ -282,7 +282,7 @@ namespace DataAcquisitions.Repository
                     }
 
 
-                    string fullName = Path.Combine(_parameters.RepositoryDirectoryPath, item.Name);
+                    string fullName = Path.Combine(_repositoryPath, item.Name);
                     if (File.Exists(fullName))
                     {
                         _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");

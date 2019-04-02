@@ -6,19 +6,20 @@ using System.Collections.Generic;
 
 namespace DataAcquisitions.Repository
 {
-    internal class HDDSpecificationRepository : HDDTypedRepository<IToolSpecification>
+    internal class HDDSpecificationRepository : HDDRepository<IToolSpecification>, IToolSpecificationRepository
     {
 
         internal HDDSpecificationRepository(HDDRepositoryParameters parameters)
         : base(parameters)
         {
+            _repositoryPath = Frame.PluginLoader.PluginLoader.SpecificationFolder;
         }
     }
 
 
     public class HDDSpecificationRepositoryFactory : IPluginFactory
     {
-        private readonly Dictionary<string, IRepository<IToolSpecification>> _specificationRepositoryDictionary = new Dictionary<string, IRepository<IToolSpecification>>();
+        private readonly Dictionary<string, IToolSpecificationRepository> _specificationRepositoryDictionary = new Dictionary<string, IToolSpecificationRepository>();
 
         public object Create(Type t, string name)
         {

@@ -28,6 +28,8 @@ namespace Frame.PluginLoader
         public static string ResultFolder { get; private set; }
         public static ConfigManager ConfigManager { get; private set; }
 
+        public bool Initialized { get; private set; }
+
 
         public PluginLoader()
         {
@@ -48,7 +50,7 @@ namespace Frame.PluginLoader
         /// <param name="measDataFolder"></param>
         /// <param name="resultFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool SetFolders(string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
+        public bool Inititialize(string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
         {
             lock (_lockObj)
             {
@@ -96,7 +98,12 @@ namespace Frame.PluginLoader
 
                 ConfigManager = new ConfigManager(ConfigurationFolder);
 
-                return LoadPlugins();
+                if (!LoadPlugins())
+                {
+                    return Initialized = false;
+                }
+
+                return Initialized = true;
             }
         }
 
@@ -107,6 +114,12 @@ namespace Frame.PluginLoader
         /// <returns></returns>
         public bool Start()
         {
+            if (!Initialized)
+            {
+                _logger.Error($"{nameof(PluginLoader)} not initialized yet.");
+                return false;
+            }
+
             if (_iRunables.Count == 0)
             {
                 _logger.Error($"No {nameof(IRunable)} was found in the folder: {PluginsFolder}");
@@ -140,7 +153,7 @@ namespace Frame.PluginLoader
         }
 
 
-        public static object CreateInstance(Type type, string name)
+        private static object CreateInstance(Type type, string name)
         {
             if (_factories == null)
             {

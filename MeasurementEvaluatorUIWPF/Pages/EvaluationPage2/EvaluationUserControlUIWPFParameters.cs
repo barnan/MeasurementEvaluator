@@ -2,11 +2,10 @@
 using Frame.PluginLoader;
 using Interfaces.Misc;
 
-namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
+namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage2
 {
-    public class EvaluationPageUIWPFParameters
+    public class EvaluationUserControlUIWPFParameters
     {
-
         [Configuration("Data Collector user control name", nameof(DataCollectorUIWPF), true)]
         private string _dataCollectorUIWPFName;
         public IUserControlUIWPF DataCollectorUIWPF { get; private set; }
@@ -36,6 +35,5 @@ namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
 
             return true;
         }
-
     }
 }

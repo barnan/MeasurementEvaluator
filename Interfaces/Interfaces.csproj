@@ -41,6 +41,9 @@
     <Compile Include="Calculation\ICalculationContainer.cs" />
     <Compile Include="Calculation\ICalculationSettings.cs" />
     <Compile Include="DataAcquisition\IDataCollector.cs" />
+    <Compile Include="DataAcquisition\IMeasurementDataRepository.cs" />
+    <Compile Include="DataAcquisition\IReferenceRepository.cs" />
+    <Compile Include="DataAcquisition\IToolSpecificationRepository.cs" />
     <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IMathing.cs" />
     <Compile Include="Misc\IComponent.cs" />

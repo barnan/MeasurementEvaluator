@@ -130,7 +130,16 @@ namespace Frame.ConfigHandler
                         }
                         else
                         {
-                            object temporary = Convert.ChangeType(xmlValueAttribute.InnerText, fieldType);
+                            object temporary;
+                            if (fieldType.GenericTypeArguments != null && fieldType.GenericTypeArguments.Length > 0 && fieldType.GenericTypeArguments[0] == typeof(System.String))
+                            {
+                                temporary = xmlValueAttribute.InnerText;
+                            }
+                            else
+                            {
+                                temporary = Convert.ChangeType(xmlValueAttribute.InnerText, fieldType);
+                            }
+
                             currentObjectField.SetValue(inputObj, temporary);
                         }
 

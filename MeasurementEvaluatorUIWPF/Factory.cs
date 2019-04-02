@@ -5,6 +5,7 @@ using MeasurementEvaluatorUIWPF.Pages.EvaluationPage;
 using MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF;
 using MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF;
 using System;
+using System.Collections.Generic;
 
 namespace MeasurementEvaluatorUIWPF
 {
@@ -13,6 +14,8 @@ namespace MeasurementEvaluatorUIWPF
 
         IMainWindowUIWPF _mainWindow;
         IPageUIWPF _mainPage;
+        private Dictionary<string, IPageUIWPF> _pages;
+
 
 
         public object Create(Type t, string name)
@@ -44,7 +47,7 @@ namespace MeasurementEvaluatorUIWPF
                             _mainPage = instance;
                         }
                     }
-                    return _mainWindow;
+                    return _mainPage;
                 }
 
                 if (name.Contains("Evaluation"))

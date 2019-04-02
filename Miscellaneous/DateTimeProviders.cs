@@ -1,5 +1,7 @@
-﻿using Interfaces.Misc;
+﻿using Frame.PluginLoader.Interfaces;
+using Interfaces.Misc;
 using System;
+using System.Collections.Generic;
 
 namespace Miscellaneous
 {
@@ -10,16 +12,10 @@ namespace Miscellaneous
             return DateTime.Now;
         }
 
-        public StandardDateTimeProvider(StandardDateTimeProviderParameter parameter)
+        public StandardDateTimeProvider()
         {
         }
     }
-
-    internal sealed class StandardDateTimeProviderParameter
-    {
-    }
-
-
 
 
     internal sealed class SimulatedDateTimeProvider : IDateTimeProvider
@@ -44,5 +40,37 @@ namespace Miscellaneous
     {
         public DateTime DateTimeToUse { get; }
     }
+
+
+
+
+    public class Factory : IPluginFactory
+    {
+
+        private Dictionary<string, IDateTimeProvider> _dateTimeProviderDictionary = new Dictionary<string, IDateTimeProvider>();
+
+        public object Create(Type t, string name)
+        {
+            if (t.IsAssignableFrom(typeof(StandardDateTimeProvider)))
+            {
+                if (!_dateTimeProviderDictionary.ContainsKey(name))
+                {
+                    //EvaluationParameters param = new EvaluationParameters();
+                    //if (param.Load(name))
+                    {
+                        StandardDateTimeProvider instance = new StandardDateTimeProvider();
+                        _dateTimeProviderDictionary.Add(name, instance);
+                    }
+                }
+                return _dateTimeProviderDictionary[name];
+            }
+            return null;
+        }
+    }
+
+
+
+
+
 
 }

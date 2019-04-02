@@ -67,6 +67,11 @@
     </Compile>
     <Compile Include="Pages\EditorPageUIWPF\EditorPageUIWPFParameters.cs" />
     <Compile Include="Pages\EditorPageUIWPF\EditorPageViewModel.cs" />
+    <Compile Include="Pages\EvaluationPage2\EvaluationUserControlUIWPFParameters.cs" />
+    <Compile Include="Pages\EvaluationPage2\EvaluationUserControlViewModel.cs" />
+    <Compile Include="Pages\EvaluationPage2\EvaluationUserControlUIWPF.xaml.cs">
+      <DependentUpon>EvaluationUserControlUIWPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPFParameters.cs" />
     <Compile Include="Pages\EvaluationPage\EvaluationPageViewModel.cs" />
     <Compile Include="Pages\MainPageUIWPF\Converters\TabPageNameConverter.cs" />
@@ -113,6 +118,10 @@
     </Compile>
     <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
     <Page Include="Pages\EditorPageUIWPF\EditorPageUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EvaluationPage2\EvaluationUserControlUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

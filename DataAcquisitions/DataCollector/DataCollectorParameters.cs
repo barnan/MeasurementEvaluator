@@ -1,10 +1,7 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
-using Interfaces.MeasuredData;
 using Interfaces.Misc;
-using Interfaces.ReferenceSample;
-using Interfaces.ToolSpecifications;
 using NLog;
 
 namespace DataAcquisitions.DataCollector
@@ -15,20 +12,20 @@ namespace DataAcquisitions.DataCollector
         internal ILogger Logger { get; private set; }
 
         [Configuration("Name of date and time provider", "Date and time Provider", true)]
-        private string _dateTimeProvider = null;
+        private string _dateTimeProviderName = null;
         internal IDateTimeProvider DateTimeProvider { get; private set; }
 
         [Configuration("Name of the measurement Data repository", "Measurement Data Repository", LoadComponent = true)]
-        private string _measurementDataRepository = null;
-        internal IRepository<IToolMeasurementData> MeasurementDataRepository { get; private set; }
+        private string _measurementDataRepositoryName = null;
+        internal IMeasurementDataRepository MeasurementDataRepository { get; private set; }
 
         [Configuration("Name of the reference repository", "Reference Repository", LoadComponent = true)]
-        private string _referenceRepository = null;
-        internal IRepository<IReferenceSample> ReferenceRepository { get; private set; }
+        private string _referenceRepositoryName = null;
+        internal IReferenceRepository ReferenceRepository { get; private set; }
 
         [Configuration("Name of the specification repository", "Specification Repository", LoadComponent = true)]
-        private string _specificationRepository = null;
-        internal IRepository<IToolSpecification> SpecificationRepository { get; private set; }
+        private string _specificationRepositoryName = null;
+        internal IToolSpecificationRepository SpecificationRepository { get; private set; }
 
 
 
@@ -38,14 +35,10 @@ namespace DataAcquisitions.DataCollector
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            //SpecificationRepository = PluginLoader.CreateInstance<IRepository<IToolSpecification>>(typeof(IToolSpecification), _specificationRepository);
-            //ReferenceRepository = PluginLoader.CreateInstance<IRepository<IReferenceSample>>(typeof(IReferenceSample), _referenceRepository);
-            //MeasurementDataRepository = PluginLoader.CreateInstance<IRepository<IToolMeasurementData>>(typeof(IRepository<IToolMeasurementData>), _measurementDataRepository);
-            //DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(typeof(IDateTimeProvider), _dateTimeProvider);
-            SpecificationRepository = PluginLoader.CreateInstance<IRepository<IToolSpecification>>(_specificationRepository);
-            ReferenceRepository = PluginLoader.CreateInstance<IRepository<IReferenceSample>>(_referenceRepository);
-            MeasurementDataRepository = PluginLoader.CreateInstance<IRepository<IToolMeasurementData>>(_measurementDataRepository);
-            DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
+            SpecificationRepository = PluginLoader.CreateInstance<IToolSpecificationRepository>(_specificationRepositoryName);
+            ReferenceRepository = PluginLoader.CreateInstance<IReferenceRepository>(_referenceRepositoryName);
+            MeasurementDataRepository = PluginLoader.CreateInstance<IMeasurementDataRepository>(_measurementDataRepositoryName);
+            DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProviderName);
 
             return CheckComponent();
         }

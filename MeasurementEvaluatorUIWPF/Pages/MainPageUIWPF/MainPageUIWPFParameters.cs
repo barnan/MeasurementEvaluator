@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF
 {
-    internal class MainPageUIWPFParameters
+    public class MainPageUIWPFParameters
     {
-        [Configuration("Tabpage names", nameof(TabPages), true)]
+        [Configuration("Tabpage names", "TabPage Names", true)]
         List<string> _tabPages = null;
-        internal List<IPageUIWPF> TabPages { get; private set; }        // todo: fill the Title at instantiation time!!
+        public List<IPageUIWPF> TabPages { get; private set; }        // todo: fill the Title at instantiation time!!
 
 
         internal bool Load(string sectionName)
@@ -19,7 +19,6 @@ namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF
             TabPages = new List<IPageUIWPF>();
             foreach (string tabpage in _tabPages)
             {
-                //TabPages.Add(PluginLoader.CreateInstance<IPageUIWPF>(typeof(IPageUIWPF), tabpage));
                 TabPages.Add(PluginLoader.CreateInstance<IPageUIWPF>(tabpage));
             }
 

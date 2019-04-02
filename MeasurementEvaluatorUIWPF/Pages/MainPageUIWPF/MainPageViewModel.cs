@@ -2,10 +2,10 @@
 
 namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF
 {
-    internal class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel : ViewModelBase
     {
         private MainPageUIWPFParameters _parameters;
-        internal MainPageUIWPFParameters Parameters => _parameters;
+        public MainPageUIWPFParameters Parameters => _parameters;
 
         internal MainPageViewModel(MainPageUIWPFParameters parameters)
         {

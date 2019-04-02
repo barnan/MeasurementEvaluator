@@ -1,4 +1,5 @@
 ﻿using Interfaces.Misc;
+using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 
@@ -26,4 +27,9 @@ namespace Interfaces.DataAcquisition
         void RemoveRange(IEnumerable<T> items);
 
     }
+
+
+    
+
+
 }

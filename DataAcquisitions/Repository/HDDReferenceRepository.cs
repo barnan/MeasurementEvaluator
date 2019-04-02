@@ -6,18 +6,19 @@ using System.Collections.Generic;
 
 namespace DataAcquisitions.Repository
 {
-    class HDDReferenceRepository : HDDTypedRepository<IReferenceSample>
+    class HDDReferenceRepository : HDDRepository<IReferenceSample>, IReferenceRepository
     {
         internal HDDReferenceRepository(HDDRepositoryParameters parameters)
         : base(parameters)
         {
+            _repositoryPath = Frame.PluginLoader.PluginLoader.ReferenceFolder;
         }
 
     }
 
     public class HDDReferenceRepositoryFactory : IPluginFactory
     {
-        private readonly Dictionary<string, IRepository<IReferenceSample>> _specificationRepositoryDictionary = new Dictionary<string, IRepository<IReferenceSample>>();
+        private readonly Dictionary<string, IReferenceRepository> _specificationRepositoryDictionary = new Dictionary<string, IReferenceRepository>();
 
 
         public object Create(Type t, string name)
