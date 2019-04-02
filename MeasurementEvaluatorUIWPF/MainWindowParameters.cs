@@ -1,31 +1,33 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Interfaces.Misc;
+using System.Collections.Generic;
 
 namespace MeasurementEvaluatorUIWPF
 {
     public class MainWindowParameters
     {
-        [Configuration("Name of the MainPage", "MainPage Name", true)]
-        private string _mainPage = null;
-        public IPageUIWPF MainPage { get; private set; }
+        [Configuration("Tab names", "Tab Names", true)]
+        List<string> _tabs = null;
+        public List<IPageUIWPF> Tabs { get; private set; }        // todo: fill the Title at instantiation time!!
 
 
         internal bool Load(string sectionName)
         {
-            if (!PluginLoader.ConfigManager.Load(this, sectionName))
-            {
-                return false;
-            }
+            PluginLoader.ConfigManager.Load(this, sectionName);
 
-            MainPage = PluginLoader.CreateInstance<IPageUIWPF>(_mainPage);
+            Tabs = new List<IPageUIWPF>();
+            foreach (string tab in _tabs)
+            {
+                Tabs.Add(PluginLoader.CreateInstance<IPageUIWPF>(tab));
+            }
 
             return CheckComponents();
         }
 
         private bool CheckComponents()
         {
-            if (MainPage == null)
+            if (Tabs == null)
             {
                 return false;
             }

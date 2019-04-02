@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF.Converters
+namespace MeasurementEvaluatorUIWPF.Converters
 {
     class TabPageNameConverter : IValueConverter
     {

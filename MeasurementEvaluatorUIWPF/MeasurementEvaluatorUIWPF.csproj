@@ -62,24 +62,12 @@
     <Compile Include="Factory.cs" />
     <Compile Include="MainWindowParameters.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="Pages\EditorPageUIWPF\EditorPageUIWPF.xaml.cs">
-      <DependentUpon>EditorPageUIWPF.xaml</DependentUpon>
+    <Compile Include="UserControls\EvaluationTab\EvaluationTabUIWPFParameters.cs" />
+    <Compile Include="UserControls\EvaluationTab\EvaluationTabViewModel.cs" />
+    <Compile Include="UserControls\EvaluationTab\EvaluationTabUIWPF.xaml.cs">
+      <DependentUpon>EvaluationTabUIWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EditorPageUIWPF\EditorPageUIWPFParameters.cs" />
-    <Compile Include="Pages\EditorPageUIWPF\EditorPageViewModel.cs" />
-    <Compile Include="Pages\EvaluationPage2\EvaluationUserControlUIWPFParameters.cs" />
-    <Compile Include="Pages\EvaluationPage2\EvaluationUserControlViewModel.cs" />
-    <Compile Include="Pages\EvaluationPage2\EvaluationUserControlUIWPF.xaml.cs">
-      <DependentUpon>EvaluationUserControlUIWPF.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPFParameters.cs" />
-    <Compile Include="Pages\EvaluationPage\EvaluationPageViewModel.cs" />
-    <Compile Include="Pages\MainPageUIWPF\Converters\TabPageNameConverter.cs" />
-    <Compile Include="Pages\MainPageUIWPF\MainPageUIWPF.xaml.cs">
-      <DependentUpon>MainPageUIWPF.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\MainPageUIWPF\MainPageUIWPFParameters.cs" />
-    <Compile Include="Pages\MainPageUIWPF\MainPageViewModel.cs" />
+    <Compile Include="Converters\TabPageNameConverter.cs" />
     <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPFParameters.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="UserControls\DataCollectorUIWPF\DataCollectorUIWPF.xaml.cs">
@@ -94,12 +82,6 @@
     <Compile Include="MessageControlUIWPF\UIMessageControl.cs" />
     <Compile Include="MessageControlUIWPF\MessageControlUIWPF.xaml.cs">
       <DependentUpon>MessageControlUIWPF.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\EvaluationPage\EvaluationPageUIWPF.xaml.cs">
-      <DependentUpon>EvaluationPageUIWPF.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SpecificationEditorPage\SpecificationEditorPageUIWPF.xaml.cs">
-      <DependentUpon>SpecificationEditorPageUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ResultChartUIWPF\ResultChartUIWPF.xaml.cs">
       <DependentUpon>ResultChartUIWPF.xaml</DependentUpon>
@@ -117,15 +99,7 @@
       <DependentUpon>SampleOrientationUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
-    <Page Include="Pages\EditorPageUIWPF\EditorPageUIWPF.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\EvaluationPage2\EvaluationUserControlUIWPF.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\MainPageUIWPF\MainPageUIWPF.xaml">
+    <Page Include="UserControls\EvaluationTab\EvaluationTabUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -146,14 +120,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MessageControlUIWPF\MessageControlUIWPF.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\EvaluationPage\EvaluationPageUIWPF.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\SpecificationEditorPage\SpecificationEditorPageUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

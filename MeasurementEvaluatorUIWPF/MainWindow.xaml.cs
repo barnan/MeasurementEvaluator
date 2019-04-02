@@ -17,8 +17,6 @@ namespace MeasurementEvaluatorUIWPF
             InitializeComponent();
 
             this.DataContext = new MainWindowViewModel(new MainWindowParameters());
-
-            this.Content = _param.MainPage;
         }
     }
 }

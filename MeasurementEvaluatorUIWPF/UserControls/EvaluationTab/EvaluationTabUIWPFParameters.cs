@@ -2,23 +2,22 @@
 using Frame.PluginLoader;
 using Interfaces.Misc;
 
-namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
+namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTab
 {
-    public class EvaluationPageUIWPFParameters
+    public class EvaluationTabUIWPFParameters
     {
-
         [Configuration("Data Collector user control name", nameof(DataCollectorUIWPF), true)]
-        private string _dataCollectorUIWPFName;
+        private string _dataCollectorUIWPFName = null;
         public IUserControlUIWPF DataCollectorUIWPF { get; private set; }
 
 
         [Configuration("Result grid user control name", nameof(ResultGridUIWPF), true)]
-        private string _resultGridUIWPFName;
+        private string _resultGridUIWPFName = null;
         public IUserControlUIWPF ResultGridUIWPF { get; private set; }
 
 
         [Configuration("Result handling user control name", nameof(ResultHandlingUIWPF), true)]
-        private string _resultHandlingUIWPFName;
+        private string _resultHandlingUIWPFName = null;
         public IUserControlUIWPF ResultHandlingUIWPF { get; private set; }
 
 
@@ -36,6 +35,5 @@ namespace MeasurementEvaluatorUIWPF.Pages.EvaluationPage
 
             return true;
         }
-
     }
 }

@@ -5,8 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF"
         xmlns:mainpageuiwpf="clr-namespace:MeasurementEvaluatorUIWPF.Pages.MainPageUIWPF"
+        xmlns:messageControlUiwpf="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
+        xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="800" Width="1000" MinHeight="500"  MinWidth="800">
+
+
+    <Grid>
+
+        <Grid.Resources>
+            <!--<Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                <Setter Property="Header" Value="{Binding ID}"/>
+            </Style>-->
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TabControl x:Name="MainPageTabControl" ItemsSource="{Binding Parameters.TabPages}">
+
+            <TabControl.Resources>
+                <converters:TabPageNameConverter x:Key="TabPageNameConverter"/>
+            </TabControl.Resources>
+
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ., Converter={StaticResource TabPageNameConverter} }"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+
+
+            <!--<TabItem Header="Evaluation">-->
+            <!--<ContentPresenter  Content="{Binding Parameters.TabPages}"/>-->
+            <!--</TabItem>-->
+            <!--<TabItem Header="Specification-file Editor" />
+            <TabItem Header="Reference-file Editor" />
+            <TabItem Header="Skew Calculation" />-->
+        </TabControl>
+
+        <GroupBox Grid.Row="1" Header="Messages">
+            <messageControlUiwpf:MessageControlUIWPF />
+        </GroupBox>
+
+    </Grid>
+
+
 </Window>
     
