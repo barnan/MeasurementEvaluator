@@ -1,8 +1,11 @@
 ﻿namespace Interfaces.Misc
 {
-    public interface IPageUIWPF
+    public interface ITabUIWPF : INamed
     {
+        string Title { get; }
     }
+
+
 
 
     public interface IUserControlUIWPF

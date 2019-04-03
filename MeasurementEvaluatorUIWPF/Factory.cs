@@ -1,38 +1,35 @@
 ﻿using Frame.PluginLoader.Interfaces;
 using Interfaces.Misc;
 using MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF;
-using MeasurementEvaluatorUIWPF.UserControls.EvaluationTab;
+using MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF;
+using MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF;
 using System;
-using System.Collections.Generic;
 
 namespace MeasurementEvaluatorUIWPF
 {
     public class Factory : IPluginFactory
     {
 
-        IMainWindowUIWPF _mainWindow;
-        IPageUIWPF _mainPage;
-        private Dictionary<string, IPageUIWPF> _pages;
-
+        IWindowUIWPF _window;
 
 
         public object Create(Type t, string name)
         {
-            if (t.IsAssignableFrom(typeof(MainWindow)))
+            if (t.IsAssignableFrom(typeof(Window)))
             {
-                if (_mainWindow == null)
+                if (_window == null)
                 {
                     MainWindowParameters param = new MainWindowParameters();
                     if (param.Load(name))
                     {
-                        MainWindow instance = new MainWindow(param);
-                        _mainWindow = instance;
+                        Window instance = new Window(param);
+                        _window = instance;
                     }
                 }
-                return _mainWindow;
+                return _window;
             }
 
-            if (t.IsAssignableFrom(typeof(IUserControlUIWPF)))
+            if (t.IsAssignableFrom(typeof(ITabUIWPF)))
             {
                 if (name.Contains("EvaluationTab"))
                 {
@@ -44,7 +41,19 @@ namespace MeasurementEvaluatorUIWPF
                     }
                 }
 
+                if (name.Contains("EditorTab"))
+                {
+                    EditorTabUIWPFParameters param = new EditorTabUIWPFParameters();
+                    if (param.Load(name))
+                    {
+                        EditorTabUIWPF instance = new EditorTabUIWPF(param);
+                        return instance;
+                    }
+                }
+            }
 
+            if (t.IsAssignableFrom(typeof(IUserControlUIWPF)))
+            {
                 if (name.Contains("DataCollector"))
                 {
                     DataCollectorUIWPFParameters param = new DataCollectorUIWPFParameters();
@@ -66,7 +75,6 @@ namespace MeasurementEvaluatorUIWPF
                 }
 
             }
-
 
             return null;
         }

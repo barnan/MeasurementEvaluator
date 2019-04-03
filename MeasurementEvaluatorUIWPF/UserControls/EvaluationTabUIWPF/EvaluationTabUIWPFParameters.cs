@@ -2,7 +2,7 @@
 using Frame.PluginLoader;
 using Interfaces.Misc;
 
-namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTab
+namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 {
     public class EvaluationTabUIWPFParameters
     {
@@ -21,7 +21,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTab
         public IUserControlUIWPF ResultHandlingUIWPF { get; private set; }
 
 
-        public string ID { get; }
+        public string ID { get; private set; }
 
 
 
@@ -32,6 +32,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTab
             DataCollectorUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_dataCollectorUIWPFName);
             ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultGridUIWPFName);
             ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultHandlingUIWPFName);
+
+            ID = sectionName;
 
             return true;
         }

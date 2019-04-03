@@ -9,17 +9,22 @@ namespace MeasurementEvaluatorUIWPF
     {
         [Configuration("Tab names", "Tab Names", true)]
         List<string> _tabs = null;
-        public List<IPageUIWPF> Tabs { get; private set; }        // todo: fill the Title at instantiation time!!
+        public List<ITabUIWPF> Tabs { get; private set; }        // todo: fill the Title at instantiation time!!
+
+
+        public string ID { get; private set; }
 
 
         internal bool Load(string sectionName)
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            Tabs = new List<IPageUIWPF>();
+            ID = sectionName;
+
+            Tabs = new List<ITabUIWPF>();
             foreach (string tab in _tabs)
             {
-                Tabs.Add(PluginLoader.CreateInstance<IPageUIWPF>(tab));
+                Tabs.Add(PluginLoader.CreateInstance<ITabUIWPF>(tab));
             }
 
             return CheckComponents();

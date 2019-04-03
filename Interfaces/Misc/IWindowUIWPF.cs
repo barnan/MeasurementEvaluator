@@ -1,6 +1,6 @@
 ﻿namespace Interfaces.Misc
 {
-    public interface IMainWindowUIWPF
+    public interface IWindowUIWPF
     {
     }
 }

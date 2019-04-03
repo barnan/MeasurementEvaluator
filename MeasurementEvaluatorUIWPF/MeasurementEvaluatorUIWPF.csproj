@@ -62,9 +62,15 @@
     <Compile Include="Factory.cs" />
     <Compile Include="MainWindowParameters.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="UserControls\EvaluationTab\EvaluationTabUIWPFParameters.cs" />
-    <Compile Include="UserControls\EvaluationTab\EvaluationTabViewModel.cs" />
-    <Compile Include="UserControls\EvaluationTab\EvaluationTabUIWPF.xaml.cs">
+    <Compile Include="TabItem.cs" />
+    <Compile Include="UserControls\EditorTabUIWPF\EditorTabUIWPF.xaml.cs">
+      <DependentUpon>EditorTabUIWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\EditorTabUIWPF\EditorTabUIWPFParameters.cs" />
+    <Compile Include="UserControls\EditorTabUIWPF\EditorTabViewModel.cs" />
+    <Compile Include="UserControls\EvaluationTabUIWPF\EvaluationTabUIWPFParameters.cs" />
+    <Compile Include="UserControls\EvaluationTabUIWPF\EvaluationTabViewModel.cs" />
+    <Compile Include="UserControls\EvaluationTabUIWPF\EvaluationTabUIWPF.xaml.cs">
       <DependentUpon>EvaluationTabUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\TabPageNameConverter.cs" />
@@ -99,7 +105,11 @@
       <DependentUpon>SampleOrientationUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
-    <Page Include="UserControls\EvaluationTab\EvaluationTabUIWPF.xaml">
+    <Page Include="UserControls\EditorTabUIWPF\EditorTabUIWPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\EvaluationTabUIWPF\EvaluationTabUIWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -107,12 +117,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Window.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="Window.xaml.cs">
+      <DependentUpon>Window.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Base\StyleDictionary.xaml">

@@ -1,12 +1,9 @@
 ﻿using Interfaces.Misc;
 using MeasurementEvaluatorUI.Base;
 
-namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTab
+namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 {
-    /// <summary>
-    /// Interaction logic for EvaluationUserControlUIWPF.xaml
-    /// </summary>
-    public partial class EvaluationTabUIWPF : UserControlBase, IUserControlUIWPF
+    public partial class EvaluationTabUIWPF : UserControlBase, ITabUIWPF
     {
         public EvaluationTabUIWPF(EvaluationTabUIWPFParameters parameters)
         {
@@ -15,6 +12,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTab
             DataContext = new EvaluationTabViewModel(parameters);
 
             Name = parameters.ID;
+            Title = "Evaluation Tab";
         }
     }
 }
