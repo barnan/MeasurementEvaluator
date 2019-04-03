@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Calculations.Matching
+namespace MeasurementEvaluator.Matching
 {
     [Serializable]
     public class MatchingKeyValuePairs

@@ -52,10 +52,6 @@
     <Compile Include="DAL\HDDTabularFileReaderWriter.cs" />
     <Compile Include="DAL\HDDXmlReaderWriter.cs" />
     <Compile Include="DAL\HDDFileReaderWriterBase.cs" />
-    <Compile Include="DataCollector\DataCollector.cs" />
-    <Compile Include="DataCollector\Factory.cs" />
-    <Compile Include="DataCollector\DataCollectorParameters.cs" />
-    <Compile Include="DataCollector\DataCollectorResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\HDDMeasurementDataRepository.cs" />
     <Compile Include="Repository\HDDReferenceRepository.cs" />

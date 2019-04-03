@@ -34,7 +34,6 @@ namespace Calculations.CalculationContainer
             _availableCalculations = new List<ICalculation>();
             foreach (string calculationName in _availableCalculationsString)
             {
-                //ICalculation calculation = PluginLoader.CreateInstance<ICalculation>(typeof(ICalculation), calculationName);
                 ICalculation calculation = PluginLoader.CreateInstance<ICalculation>(calculationName);
 
                 if (calculation == null)

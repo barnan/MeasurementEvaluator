@@ -12,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace Calculations.Evaluation
+namespace MeasurementEvaluator.Evaluation
 {
     internal class Evaluation : IEvaluation
     {

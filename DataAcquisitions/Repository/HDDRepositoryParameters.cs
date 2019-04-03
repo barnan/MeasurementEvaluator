@@ -10,10 +10,6 @@ namespace DataAcquisitions.Repository
     {
         internal ILogger Logger { get; private set; }
 
-        //[Configuration("Folder name of the repository.", "Repository folder", true)]
-        //private string _repositoryDirectoryPath = "Path";
-        //internal string RepositoryDirectoryPath { get; private set; }
-
         [Configuration("File extension of the files used in the given repository folder", "File Extension", true)]
         private List<string> _fileExtensionFilters = null;
         internal List<string> FileExtensionFilters => _fileExtensionFilters;
@@ -46,12 +42,6 @@ namespace DataAcquisitions.Repository
                 Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(FileExtensionFilters)} is null.");
                 return false;
             }
-
-            //if (RepositoryDirectoryPath == null)
-            //{
-            //    Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(RepositoryDirectoryPath)} is null.");
-            //    return false;
-            //}
 
             return true;
         }

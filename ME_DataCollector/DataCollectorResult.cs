@@ -6,7 +6,7 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.DataCollector
+namespace MeasurementEvaluator.DataCollector
 {
     internal class DataCollectorResult : ResultBase, IDataCollectorResult
     {

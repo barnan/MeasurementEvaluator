@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace Calculations.Evaluation
+namespace MeasurementEvaluator.Evaluation
 {
     internal class EvaluationResult : ResultBase, IEvaluationResult
     {

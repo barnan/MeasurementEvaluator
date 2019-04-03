@@ -60,14 +60,6 @@
     <Compile Include="Calculation\CalculationParameters.cs" />
     <Compile Include="Calculation\CalculationBase.cs" />
     <Compile Include="Calculation\SimpleCalculationResult.cs" />
-    <Compile Include="Evaluation\Evaluation.cs" />
-    <Compile Include="Evaluation\EvaluationParameters.cs" />
-    <Compile Include="Evaluation\EvaluationResult.cs" />
-    <Compile Include="Evaluation\Factory.cs" />
-    <Compile Include="Matching\Factory.cs" />
-    <Compile Include="Matching\MatchingKeyValuePairs.cs" />
-    <Compile Include="Matching\Matching.cs" />
-    <Compile Include="Matching\MathchingParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,5 +83,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

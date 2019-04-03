@@ -3,7 +3,7 @@ using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using NLog;
 
-namespace Calculations.Matching
+namespace MeasurementEvaluator.Matching
 {
     internal class MathchingParameters
     {
@@ -25,7 +25,6 @@ namespace Calculations.Matching
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            //MatchingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(typeof(IHDDFileReader), _matchingFileReader);
             MatchingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_matchingFileReader);
 
             return CheckComponent();

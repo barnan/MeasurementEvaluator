@@ -6,9 +6,9 @@ using Interfaces.Evaluation;
 using Interfaces.Misc;
 using NLog;
 
-namespace Calculations.Evaluation
+namespace MeasurementEvaluator.Evaluation
 {
-    internal class EvaluationParameters
+    internal sealed class EvaluationParameters
     {
         internal ILogger Logger { get; private set; }
 
@@ -35,10 +35,6 @@ namespace Calculations.Evaluation
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            //CalculationContainer = PluginLoader.CreateInstance<ICalculationContainer>(typeof(ICalculationContainer), _calculationContainer);
-            //DataCollector = PluginLoader.CreateInstance<IDataCollector>(typeof(IDataCollector), _dataCollector);
-            //DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(typeof(IDateTimeProvider), _dateTimeProvider);
-            //Matcher = PluginLoader.CreateInstance<IMathing>(typeof(IMathing), _matcher);
             CalculationContainer = PluginLoader.CreateInstance<ICalculationContainer>(_calculationContainer);
             DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollector);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
