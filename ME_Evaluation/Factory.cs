@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MeasurementEvaluator.Evaluation
+namespace MeasurementEvaluator.ME_Evaluation
 {
     public class Factory : IPluginFactory
     {

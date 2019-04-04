@@ -53,14 +53,10 @@
     <Compile Include="DAL\HDDXmlReaderWriter.cs" />
     <Compile Include="DAL\HDDFileReaderWriterBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\HDDMeasurementDataRepository.cs" />
-    <Compile Include="Repository\HDDReferenceRepository.cs" />
-    <Compile Include="Repository\HDDRepository.cs" />
-    <Compile Include="Repository\HDDRepositoryParameters.cs" />
-    <Compile Include="Repository\HDDSpecificationRepository.cs" />
-    <Compile Include="Repository\RepositoryFactory.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Repository\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataStructures\DataStructures.csproj">
       <Project>{6e851eb0-9af1-45ad-ad46-f84bdadd6689}</Project>

@@ -1,30 +1,22 @@
-﻿using Interfaces.MeasuredData;
+﻿using DataStructures;
+using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
-using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace MeasurementEvaluator.Evaluation
+namespace MeasurementEvaluator.ME_Evaluation
 {
     internal class EvaluationResult : ResultBase, IEvaluationResult
     {
-        public DateTime StartTime { get; }
-
-        public DateTime EndTime { get; }
-
-        public bool Successful { get; }
-
         public IReadOnlyList<IQuantityEvaluationResult> EvaluationResults { get; }
 
 
         public EvaluationResult(DateTime startTime, DateTime endTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> evaluationResults)
+            : base(startTime, endTime, successfulCalculation)
         {
-            StartTime = startTime;
-            EndTime = endTime;
-            Successful = successfulCalculation;
             EvaluationResults = evaluationResults;
         }
 
@@ -45,12 +37,6 @@ namespace MeasurementEvaluator.Evaluation
 
     internal class ConditionEvaluaitonResult : ResultBase, IConditionEvaluationResult
     {
-        public DateTime StartTime { get; }
-
-        public DateTime EndTime { get; }
-
-        public bool Successful { get; }
-
         public XElement Save()
         {
             throw new NotImplementedException();
@@ -73,10 +59,8 @@ namespace MeasurementEvaluator.Evaluation
 
 
         public ConditionEvaluaitonResult(DateTime startTime, DateTime endTime, bool successfulCalculation, IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, ICalculationResult result)
+            : base(startTime, endTime, successfulCalculation)
         {
-            StartTime = startTime;
-            EndTime = endTime;
-            Successful = successfulCalculation;
             MeasurementSerieData = measurementSerieData;
             Condition = condition;
             ReferenceValue = referenceValue;

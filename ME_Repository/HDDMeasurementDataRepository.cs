@@ -4,7 +4,7 @@ using Interfaces.MeasuredData;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.Repository
+namespace DataAcquisitions.ME_Repository
 {
     internal class HDDMeasurementDataRepository : HDDRepository<IToolMeasurementData>, IMeasurementDataRepository
     {

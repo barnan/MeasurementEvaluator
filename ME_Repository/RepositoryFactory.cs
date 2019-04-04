@@ -1,4 +1,4 @@
-﻿namespace DataAcquisitions.Repository
+﻿namespace DataAcquisitions.ME_Repository
 {
     //class RepositoryFactory<T>
     //    where T : class, IComparable<T>, INamed

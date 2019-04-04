@@ -4,7 +4,7 @@ using Interfaces.DataAcquisition;
 using Interfaces.Misc;
 using NLog;
 
-namespace MeasurementEvaluator.DataCollector
+namespace MeasurementEvaluator.ME_DataCollector
 {
     internal class DataCollectorParameters
     {

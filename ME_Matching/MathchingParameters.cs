@@ -3,7 +3,7 @@ using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using NLog;
 
-namespace MeasurementEvaluator.Matching
+namespace MeasurementEvaluator.ME_Matching
 {
     internal class MathchingParameters
     {

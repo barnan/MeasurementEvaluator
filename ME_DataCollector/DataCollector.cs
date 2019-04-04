@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace MeasurementEvaluator.DataCollector
+namespace MeasurementEvaluator.ME_DataCollector
 {
     internal class DataCollector : IDataCollector
     {

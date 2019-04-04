@@ -4,7 +4,7 @@ using Interfaces.DataAcquisition;
 using NLog;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.Repository
+namespace DataAcquisitions.ME_Repository
 {
     internal class HDDRepositoryParameters
     {

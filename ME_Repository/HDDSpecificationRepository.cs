@@ -4,7 +4,7 @@ using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.Repository
+namespace DataAcquisitions.ME_Repository
 {
     internal class HDDSpecificationRepository : HDDRepository<IToolSpecification>, IToolSpecificationRepository
     {

@@ -6,7 +6,7 @@ using Interfaces.Evaluation;
 using Interfaces.Misc;
 using NLog;
 
-namespace MeasurementEvaluator.Evaluation
+namespace MeasurementEvaluator.ME_Evaluation
 {
     internal sealed class EvaluationParameters
     {

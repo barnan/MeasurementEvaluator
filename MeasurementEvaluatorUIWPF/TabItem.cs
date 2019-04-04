@@ -1,6 +1,6 @@
 ﻿namespace MeasurementEvaluatorUIWPF
 {
-    class TabItem
+    internal class TabItem
 
     {
 

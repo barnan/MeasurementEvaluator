@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MeasurementEvaluator.Matching
+namespace MeasurementEvaluator.ME_Matching
 {
     public class Factory : IPluginFactory
     {

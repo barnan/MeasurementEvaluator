@@ -4,7 +4,7 @@ using Interfaces.ReferenceSample;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.Repository
+namespace DataAcquisitions.ME_Repository
 {
     class HDDReferenceRepository : HDDRepository<IReferenceSample>, IReferenceRepository
     {

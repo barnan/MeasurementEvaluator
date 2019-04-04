@@ -1,21 +1,15 @@
-﻿using Interfaces.MeasuredData;
+﻿using DataStructures;
+using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
-using Miscellaneous;
 using System;
 using System.Collections.Generic;
 
-namespace MeasurementEvaluator.DataCollector
+namespace MeasurementEvaluator.ME_DataCollector
 {
     internal class DataCollectorResult : ResultBase, IDataCollectorResult
     {
-        public DateTime StartTime { get; }
-
-        public DateTime EndTime { get; }
-
-        public bool Successful { get; }
-
         public IToolSpecification Specification { get; }
 
         public IReferenceSample Reference { get; }
@@ -24,10 +18,8 @@ namespace MeasurementEvaluator.DataCollector
 
 
         public DataCollectorResult(DateTime startTime, DateTime endTime, bool successfulCalculation, IToolSpecification toolSpecification, IReadOnlyList<IToolMeasurementData> measurementData, IReferenceSample referenceSample = null)
+        : base(startTime, endTime, successfulCalculation)
         {
-            StartTime = startTime;
-            EndTime = EndTime;
-            Successful = successfulCalculation;
             Specification = toolSpecification;
             Reference = referenceSample;
             MeasurementData = measurementData;
