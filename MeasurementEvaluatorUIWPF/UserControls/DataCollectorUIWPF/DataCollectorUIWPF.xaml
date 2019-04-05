@@ -6,6 +6,7 @@
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="500" MinWidth="400">
+
     <Grid>
         
         <Grid.Resources>
@@ -43,7 +44,7 @@
         </ComboBox>
         
         <!--Toolspecification selection combo box:-->
-        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2"  Style="{StaticResource MarginStyle}">
+        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Style="{StaticResource MarginStyle}">
 
         </ComboBox>
         

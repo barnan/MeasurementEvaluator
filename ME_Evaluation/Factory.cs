@@ -6,8 +6,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 {
     public class Factory : IPluginFactory
     {
-
-        Dictionary<string, Evaluation> _dataCollectorDict = new Dictionary<string, Evaluation>();
+        readonly Dictionary<string, Evaluation> _dataCollectorDict = new Dictionary<string, Evaluation>();
 
 
         public object Create(Type t, string name)

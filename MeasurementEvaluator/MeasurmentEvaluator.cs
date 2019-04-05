@@ -29,8 +29,11 @@ namespace MeasurementEvaluator
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private string _mainWindowName = null;
-
         private IWindowUIWPF _window;
+
+
+        [Configuration("true -> the application does not start, only some dummy objects will be (re)created.", "Create Dummy Objects", true)]
+        private bool _createDummyObjects = false;
 
         public MeasurmentEvaluator()
         {
@@ -43,10 +46,27 @@ namespace MeasurementEvaluator
             try
             {
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
-
                 if (!successfulLoading)
                 {
                     SendToErrrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
+                }
+
+                if (_createDummyObjects)
+                {
+                    IDummyObjectCreator creator = PluginLoader.CreateInstance<IDummyObjectCreator>("DummyObjectCreator");
+
+                    creator.Create(PluginLoader.SpecificationFolder, PluginLoader.ReferenceFolder, PluginLoader.MeasurementDataFolder);
+
+                    _logger.Info("**********************************************************************************************************************************");
+
+                    _logger.Info("DummyObject Creator started. Folders:");
+                    _logger.Info($"Specification Folder: {PluginLoader.SpecificationFolder}");
+                    _logger.Info($"Reference Folder: {PluginLoader.ReferenceFolder}");
+                    _logger.Info($"Meaurement Folder: {PluginLoader.MeasurementDataFolder}");
+
+                    _logger.Info("**********************************************************************************************************************************");
+
+                    return;
                 }
 
                 // Start UI:

@@ -7,8 +7,7 @@ namespace Calculations.Calculation
 {
     class Factory : IPluginFactory
     {
-
-        Dictionary<string, ICalculation> _calculationDict = new Dictionary<string, ICalculation>();
+        readonly Dictionary<string, ICalculation> _calculationDict = new Dictionary<string, ICalculation>();
 
 
         public object Create(Type t, string name)

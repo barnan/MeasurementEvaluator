@@ -6,7 +6,7 @@ namespace MeasurementEvaluator.ME_Matching
 {
     public class Factory : IPluginFactory
     {
-        private Dictionary<string, Matching> _matchingDict = new Dictionary<string, Matching>();
+        private readonly Dictionary<string, Matching> _matchingDict = new Dictionary<string, Matching>();
 
 
         public object Create(Type t, string name)

@@ -7,10 +7,9 @@ namespace DateTimeProviders
 {
     public class Factory : IPluginFactory
     {
-
-        Dictionary<string, IDateTimeProvider> _fakeDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
-        Dictionary<string, IDateTimeProvider> _simulatedDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
-        Dictionary<string, IDateTimeProvider> _standardDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
+        readonly Dictionary<string, IDateTimeProvider> _fakeDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
+        readonly Dictionary<string, IDateTimeProvider> _simulatedDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
+        readonly Dictionary<string, IDateTimeProvider> _standardDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
 
 
         public object Create(Type t, string name)
@@ -24,6 +23,7 @@ namespace DateTimeProviders
                     {
                         IDateTimeProvider instance = new FakeDateTimeProvider(param);
                         _fakeDateTimeProviderDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else
@@ -41,6 +41,7 @@ namespace DateTimeProviders
                     {
                         IDateTimeProvider instance = new SimulatedDateTimeProvider(param);
                         _simulatedDateTimeProviderDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else
@@ -55,6 +56,7 @@ namespace DateTimeProviders
                 {
                     IDateTimeProvider instance = new StandardDateTimeProvider();
                     _standardDateTimeProviderDict.Add(name, instance);
+                    return instance;
                 }
                 else
                 {

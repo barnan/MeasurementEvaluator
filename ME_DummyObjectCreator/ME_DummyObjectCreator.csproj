@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5E98E58E-5E99-43BB-9288-610EDB9C2316}</ProjectGuid>
+    <ProjectGuid>{932878C9-4A44-4F18-99EA-95D9CFCAC3C0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataAcquisitions</RootNamespace>
-    <AssemblyName>DataAcquisitions</AssemblyName>
+    <RootNamespace>ME_DummyObjectCreator</RootNamespace>
+    <AssemblyName>ME_DummyObjectCreator</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,32 +31,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\HDDXmlSerializatorParameters.cs" />
-    <Compile Include="DAL\TabularTextReaderParameters.cs" />
-    <Compile Include="DAL\Factory.cs" />
-    <Compile Include="DAL\HDDTabularFileReaderWriter.cs" />
-    <Compile Include="DAL\HDDXmlReaderWriter.cs" />
-    <Compile Include="DAL\HDDFileReaderWriterBase.cs" />
+    <Compile Include="DummyObjectCreator.cs" />
+    <Compile Include="Factory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DataStructures\DataStructures.csproj">
-      <Project>{6e851eb0-9af1-45ad-ad46-f84bdadd6689}</Project>
+      <Project>{6E851EB0-9AF1-45AD-AD46-F84BDADD6689}</Project>
       <Name>DataStructures</Name>
     </ProjectReference>
     <ProjectReference Include="..\Frame\Frame.csproj">
@@ -68,13 +58,6 @@
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miscellaneous\Miscellaneous.csproj">
-      <Project>{7f91e183-4b11-47d2-b51f-8c9be7b20256}</Project>
-      <Name>Miscellaneous</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

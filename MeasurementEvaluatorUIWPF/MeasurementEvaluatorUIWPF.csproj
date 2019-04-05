@@ -92,6 +92,7 @@
     <Compile Include="UserControls\ResultChartUIWPF\ResultChartUIWPF.xaml.cs">
       <DependentUpon>ResultChartUIWPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ResultGridUIWPF\EvaluationResultViewModel.cs" />
     <Compile Include="UserControls\ResultGridUIWPF\ResultGridUIWPF.xaml.cs">
       <DependentUpon>ResultGridUIWPF.xaml</DependentUpon>
     </Compile>
