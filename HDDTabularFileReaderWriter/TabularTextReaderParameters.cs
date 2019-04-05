@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace DataAcquisitions.DAL
+namespace DataAcquisitions
 {
     internal class TabularTextReaderParameters
     {

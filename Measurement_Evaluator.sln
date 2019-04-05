@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculations", "Calculation
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miscellaneous", "Miscellaneous\Miscellaneous.csproj", "{7F91E183-4B11-47D2-B51F-8C9BE7B20256}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAcquisitions", "DataAcquisitions\DataAcquisitions.csproj", "{5E98E58E-5E99-43BB-9288-610EDB9C2316}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluator", "MeasurementEvaluator\MeasurementEvaluator.csproj", "{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluatorUIWPF", "MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj", "{26F70B15-0BE9-487A-BCBC-729C4F9802BF}"
@@ -36,6 +34,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dummy", "Dummy", "{0CABCC99-036F-4773-8B6F-CAB01075D082}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ME_DummyObjectCreator", "ME_DummyObjectCreator\ME_DummyObjectCreator.csproj", "{932878C9-4A44-4F18-99EA-95D9CFCAC3C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDTabularFileReaderWriter", "HDDTabularFileReaderWriter\HDDTabularFileReaderWriter.csproj", "{AEF677D6-5377-4C4F-8ED6-E9EB7AE5037A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDXMLSerializator", "HDDXMLSerializator\HDDXMLSerializator.csproj", "{682CC5C9-81F8-4308-94C6-CF66F755C6EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +65,6 @@ Global
 		{7F91E183-4B11-47D2-B51F-8C9BE7B20256}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F91E183-4B11-47D2-B51F-8C9BE7B20256}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F91E183-4B11-47D2-B51F-8C9BE7B20256}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E98E58E-5E99-43BB-9288-610EDB9C2316}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DDE0FEA-913A-43C6-AD71-5CD33D307A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,6 +105,14 @@ Global
 		{932878C9-4A44-4F18-99EA-95D9CFCAC3C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{932878C9-4A44-4F18-99EA-95D9CFCAC3C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{932878C9-4A44-4F18-99EA-95D9CFCAC3C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEF677D6-5377-4C4F-8ED6-E9EB7AE5037A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEF677D6-5377-4C4F-8ED6-E9EB7AE5037A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEF677D6-5377-4C4F-8ED6-E9EB7AE5037A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEF677D6-5377-4C4F-8ED6-E9EB7AE5037A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

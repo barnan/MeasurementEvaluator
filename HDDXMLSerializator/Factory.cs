@@ -1,13 +1,14 @@
 ﻿using Frame.PluginLoader.Interfaces;
+using Interfaces.DataAcquisition;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.DAL
+namespace DataAcquisitions
 {
     public class Factory : IPluginFactory
     {
 
-        Dictionary<string, HDDFileReaderWriterBase> _fileReaderDict = new Dictionary<string, HDDFileReaderWriterBase>();
+        Dictionary<string, IHDDFileReaderWriter> _fileReaderDict = new Dictionary<string, IHDDFileReaderWriter>();
 
 
         public object Create(Type t, string name)

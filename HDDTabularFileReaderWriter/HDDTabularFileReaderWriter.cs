@@ -1,17 +1,19 @@
 ﻿using DataStructures.MeasuredData;
 using Interfaces;
+using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DataAcquisitions.DAL
+namespace DataAcquisitions
 {
-    internal class HDDTabularFileReaderWriter : HDDFileReaderWriterBase
+    internal class HDDTabularFileReaderWriter : IHDDFileReaderWriter
     {
 
         private readonly TabularTextReaderParameters _parameters;
+        private readonly object _lockObject = new object();
 
 
         internal HDDTabularFileReaderWriter(TabularTextReaderParameters parameter)
@@ -21,14 +23,14 @@ namespace DataAcquisitions.DAL
 
 
 
-        public override bool WriteToFile<T>(T obj, string fileNameAndPath)
+        public bool WriteToFile<T>(T obj, string fileNameAndPath)
         {
             throw new NotImplementedException();
         }
 
 
 
-        public override T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
+        public T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
         {
             lock (_lockObject)
             {
@@ -147,6 +149,32 @@ namespace DataAcquisitions.DAL
             ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, Name = fileNameAndPath };
             return toolMeasData;
         }
+
+
+
+
+        public bool CanRead(string fileNameAndPath)
+        {
+            if (!string.IsNullOrEmpty(fileNameAndPath))
+            {
+                using (FileStream fstream = new FileStream(fileNameAndPath, FileMode.Open, FileAccess.Read))
+                {
+                    if (fstream.CanRead)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        private bool CheckFilePath(string fileNameAndPath)
+        {
+            return File.Exists(fileNameAndPath);
+        }
+
+
     }
 
 

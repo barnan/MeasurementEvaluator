@@ -74,29 +74,29 @@ namespace Frame.ConfigHandler
 
                 XmlAttribute xmlNameAttribute = null;
                 XmlAttribute xmlValueAttribute = null;
-                XmlNodeList xmlChildsOfChild = null;
+                XmlNodeList xmlListElementNode = null;
 
-                foreach (XmlNode xmlChildNode in currentSectionElement.ChildNodes)
+                foreach (XmlNode xmlParameterNode in currentSectionElement.ChildNodes)
                 {
-                    if (xmlChildNode is XmlComment || xmlChildNode == null)
+                    if (xmlParameterNode is XmlComment || xmlParameterNode == null)
                     {
                         continue;
                     }
 
-                    xmlChildsOfChild = xmlChildNode.ChildNodes;
-                    xmlNameAttribute = GetAttributeValueByAttributeName(xmlChildNode, NAME_ATTRIBUTE_NAME);
-                    xmlValueAttribute = GetAttributeValueByAttributeName(xmlChildNode, VALUE_ATTRIBUTE_NAME);
+                    xmlListElementNode = xmlParameterNode.ChildNodes;
+                    xmlNameAttribute = GetAttributeValueByAttributeName(xmlParameterNode, NAME_ATTRIBUTE_NAME);
+                    xmlValueAttribute = GetAttributeValueByAttributeName(xmlParameterNode, VALUE_ATTRIBUTE_NAME);
 
                     if (xmlNameAttribute == null || xmlValueAttribute == null)
                     {
                         try
                         {
-                            currentSectionElement.RemoveChild(xmlChildNode);
-                            _logger.Info($"XmlNode ({xmlChildNode.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
+                            currentSectionElement.RemoveChild(xmlParameterNode);
+                            _logger.Info($"XmlNode ({xmlParameterNode.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error($"Section ({xmlChildNode.InnerText}) tried to remove, but exception occured: {ex.Message}");
+                            _logger.Error($"Section ({xmlParameterNode.InnerText}) tried to remove, but exception occured: {ex.Message}");
                         }
                         continue;
                     }
@@ -116,11 +116,11 @@ namespace Frame.ConfigHandler
                         Type fieldType = currentObjectField.FieldType;
 
                         // process list:
-                        if (xmlValueAttribute.Value == string.Empty && xmlChildsOfChild != null && typeof(ICollection).IsAssignableFrom(fieldType))
+                        if (xmlValueAttribute.Value == string.Empty && xmlListElementNode != null && typeof(ICollection).IsAssignableFrom(fieldType))
                         {
                             IList listobj = (IList)Activator.CreateInstance(fieldType);
 
-                            foreach (object item in xmlChildsOfChild)
+                            foreach (object item in xmlListElementNode)
                             {
                                 xmlValueAttribute = GetAttributeValueByAttributeName((XmlNode)item, VALUE_ATTRIBUTE_NAME);
                                 string listElement = (string)Convert.ChangeType(xmlValueAttribute.Value, typeof(string));

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DataAcquisitions")]
+[assembly: AssemblyTitle("HDDXMLSerializator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DataAcquisitions")]
+[assembly: AssemblyProduct("HDDXMLSerializator")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5e98e58e-5e99-43bb-9288-610edb9c2316")]
+[assembly: Guid("682cc5c9-81f8-4308-94c6-cf66f755c6ea")]
 
 // Version information for an assembly consists of the following four values:
 //
