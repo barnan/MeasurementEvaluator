@@ -48,7 +48,7 @@ namespace MeasurementEvaluator
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
                 if (!successfulLoading)
                 {
-                    SendToErrrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
+                    PluginLoader.SendToErrrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
                 }
 
                 if (_createDummyObjects)
@@ -91,12 +91,12 @@ namespace MeasurementEvaluator
                 appThread.Start();
 
 #if RELEASE
-                            ShowWindow(GetConsoleWindow(), SW_HIDE);
+                ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
 
                 _uiFinishedEvent.WaitOne();
 
-                SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
+                PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
             }
             catch (Exception ex)
             {
@@ -107,24 +107,10 @@ namespace MeasurementEvaluator
         private void MainWindow_OnClosed(object sender, EventArgs eventArgs)
         {
             // todo: null mainwindow??
-            SendToInfoLogAndConsole("MainWindow closed.");
+            PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
 
             Task.Run(() => _uiFinishedEvent.Set());
         }
-
-
-        private void SendToInfoLogAndConsole(string message)
-        {
-            _logger.Info(message);
-            Console.WriteLine(message + Environment.NewLine);
-        }
-
-        private void SendToErrrorLogAndConsole(string message)
-        {
-            _logger.Error(message);
-            Console.WriteLine(message + Environment.NewLine);
-        }
-
 
     }
 }

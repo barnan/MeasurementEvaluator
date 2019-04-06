@@ -49,7 +49,7 @@ namespace Start
             {
                 _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
-                SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
+                PluginLoader.SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
 
                 // read some data from App settings
                 if (!ReadConfig())
@@ -68,12 +68,12 @@ namespace Start
                     _measurementDataFolder,
                     _resultFolder))
                 {
-                    SendToErrrorLogAndConsole("Frame setup was not successful.");
+                    PluginLoader.SendToErrrorLogAndConsole("Frame setup was not successful.");
                     return;
                 }
                 pluginLoader.Start();
 
-                SendToInfoLogAndConsole("Frame started successfully.");
+                PluginLoader.SendToInfoLogAndConsole("Frame started successfully.");
 
                 ShowWindow(GetConsoleWindow(), SW_HIDE);
             }
@@ -158,11 +158,11 @@ namespace Start
 
                 if (_logger.IsTraceEnabled)
                 {
-                    SendToInfoLogAndConsole($"{nameof(_specificationFolder)}: {_specificationFolder}");
-                    SendToInfoLogAndConsole($"{nameof(_referenceFolderPath)}: {_referenceFolderPath}");
-                    SendToInfoLogAndConsole($"{nameof(_measurementDataFolder)}: {_measurementDataFolder}");
-                    SendToInfoLogAndConsole($"{nameof(_resultFolder)}: {_resultFolder}");
-                    SendToInfoLogAndConsole($"{nameof(_pluginsFolder)}: {_pluginsFolder}");
+                    PluginLoader.SendToInfoLogAndConsole($"{nameof(_specificationFolder)}: {_specificationFolder}");
+                    PluginLoader.SendToInfoLogAndConsole($"{nameof(_referenceFolderPath)}: {_referenceFolderPath}");
+                    PluginLoader.SendToInfoLogAndConsole($"{nameof(_measurementDataFolder)}: {_measurementDataFolder}");
+                    PluginLoader.SendToInfoLogAndConsole($"{nameof(_resultFolder)}: {_resultFolder}");
+                    PluginLoader.SendToInfoLogAndConsole($"{nameof(_pluginsFolder)}: {_pluginsFolder}");
                 }
 
                 return true;
@@ -180,13 +180,13 @@ namespace Start
             {
                 if (string.IsNullOrEmpty(currentExeFolder) || string.IsNullOrEmpty(name))
                 {
-                    SendToErrrorLogAndConsole("Received exefolder-path OR path-name is null.");
+                    PluginLoader.SendToErrrorLogAndConsole("Received exefolder-path OR path-name is null.");
                     return null;
                 }
 
                 if (string.IsNullOrEmpty(specialFolder))
                 {
-                    SendToErrrorLogAndConsole($"{name} is null.");
+                    PluginLoader.SendToErrrorLogAndConsole($"{name} is null.");
                     return null;
                 }
 
@@ -195,10 +195,10 @@ namespace Start
                     if (!Directory.Exists(specialFolder))
                     {
                         Directory.CreateDirectory(specialFolder);
-                        SendToInfoLogAndConsole($"{specialFolder} created.");
+                        PluginLoader.SendToInfoLogAndConsole($"{specialFolder} created.");
                     }
 
-                    SendToInfoLogAndConsole($"{name} ({specialFolder}) wil be used.");
+                    PluginLoader.SendToInfoLogAndConsole($"{name} ({specialFolder}) wil be used.");
                     return specialFolder;
                 }
 
@@ -206,16 +206,16 @@ namespace Start
 
                 if (!Directory.Exists(combinedPath))
                 {
-                    SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) created.");
+                    PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) created.");
                     Directory.CreateDirectory(combinedPath);
                 }
 
-                SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
+                PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
                 return combinedPath;
             }
             catch (Exception ex)
             {
-                SendToErrrorLogAndConsole($"Problem during {name} check: {ex}");
+                PluginLoader.SendToErrrorLogAndConsole($"Problem during {name} check: {ex}");
                 return null;
             }
         }
@@ -223,12 +223,6 @@ namespace Start
         private static void SendToInfoLogAndConsole(string message)
         {
             _logger.Info(message);
-            Console.WriteLine(message + Environment.NewLine);
-        }
-
-        private static void SendToErrrorLogAndConsole(string message)
-        {
-            _logger.Error(message);
             Console.WriteLine(message + Environment.NewLine);
         }
 

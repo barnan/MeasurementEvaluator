@@ -38,6 +38,19 @@ namespace Frame.PluginLoader
         }
 
 
+        public static void SendToInfoLogAndConsole(string message)
+        {
+            _logger.Info(message);
+            Console.WriteLine(message + Environment.NewLine);
+        }
+
+        public static void SendToErrrorLogAndConsole(string message)
+        {
+            _logger.Error(message);
+            Console.WriteLine(message + Environment.NewLine);
+        }
+
+
         /// <summary>
         /// Sets the used pluginfolder to the given path
         /// </summary>
