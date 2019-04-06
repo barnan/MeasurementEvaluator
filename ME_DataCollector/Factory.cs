@@ -22,9 +22,13 @@ namespace MeasurementEvaluator.ME_DataCollector
                     {
                         DataCollector instance = new DataCollector(param);
                         _dataCollectorDict.Add(name, instance);
+                        return instance;
                     }
                 }
-                return _dataCollectorDict[name];
+                else
+                {
+                    return _dataCollectorDict[name];
+                }
             }
             return null;
         }

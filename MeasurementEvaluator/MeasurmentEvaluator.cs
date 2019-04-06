@@ -6,7 +6,6 @@ using NLog;
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,15 +14,6 @@ namespace MeasurementEvaluator
 {
     internal class MeasurmentEvaluator : IRunable
     {
-        [DllImport("kernel32.dll")]
-        internal static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
-
-
         private ILogger _logger;
         private ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
@@ -90,17 +80,13 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
-#if RELEASE
-                ShowWindow(GetConsoleWindow(), SW_HIDE);
-#endif
-
                 _uiFinishedEvent.WaitOne();
 
                 PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
             }
             catch (Exception ex)
             {
-                _logger.Error($"Exception occured: {ex}");
+                PluginLoader.SendToErrrorLogAndConsole($"Exception occured: {ex}");
             }
         }
 

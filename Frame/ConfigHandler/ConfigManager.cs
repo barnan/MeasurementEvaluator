@@ -55,7 +55,7 @@ namespace Frame.ConfigHandler
             _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
             _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
 
-            if (!CheckOrCreateConfigFile(sectionName, currentConfigFileName))
+            if (!CheckOrCreateConfigFile(currentConfigFileName))
             {
                 return false;
             }
@@ -217,34 +217,18 @@ namespace Frame.ConfigHandler
         }
 
 
-        internal bool CheckOrCreateConfigFile(string sectionName, string currentConfigFileName)
+        internal bool CheckOrCreateConfigFile(string currentConfigFileName)
         {
             //get config file list:
-            string[] configFiles;
-            try
-            {
-                configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Exception occured during config file search for {sectionName} in folder: {_configFolder}{Environment.NewLine}{ex.Message}");
-                return false;
-            }
+            string[] configFiles = Directory.GetFiles(_configFolder, "*" + _configFileExtension, SearchOption.TopDirectoryOnly);
+
             if (!Array.Exists<string>(configFiles, p => Path.GetFileName(p) == Path.GetFileName(currentConfigFileName)))
             {
                 _logger.Error($"{currentConfigFileName} file was not found.");
 
-                try
-                {
-                    FileStream fs = File.Create(currentConfigFileName);
-                    fs.Close();
-                    _logger.Info($"{currentConfigFileName} created.");
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error($"{currentConfigFileName} was NOT existing and could NOT created: {ex.Message}");
-                    return false;
-                }
+                FileStream fs = File.Create(currentConfigFileName);
+                fs.Close();
+                _logger.Info($"{currentConfigFileName} created.");
             }
 
             return true;

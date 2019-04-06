@@ -5,12 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace Frame.PluginLoader
 {
     public class PluginLoader
     {
+        [DllImport("kernel32.dll")]
+        internal static extern IntPtr GetConsoleWindow();
+
+
+        [DllImport("user32.dll")]
+        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
+
+
         private static ICollection<IPluginFactory> _factories;
         private static ILogger _logger;
         private static object _lockObj = new object();
@@ -31,23 +43,32 @@ namespace Frame.PluginLoader
         public bool Initialized { get; private set; }
 
 
-        public PluginLoader()
+        static PluginLoader()
         {
             _logger = LogManager.GetCurrentClassLogger();
+        }
+
+        public PluginLoader()
+        {
             _iRunables = new List<KeyValuePair<Type, Assembly>>();
         }
 
 
-        public static void SendToInfoLogAndConsole(string message)
+        public static string SendToInfoLogAndConsole(string message)
         {
-            _logger.Info(message);
+            _logger?.Info(message);
             Console.WriteLine(message + Environment.NewLine);
+            return message;
         }
 
-        public static void SendToErrrorLogAndConsole(string message)
+        public static string SendToErrrorLogAndConsole(string message)
         {
-            _logger.Error(message);
+            _logger?.Error(message);
+            ConsoleColor cc = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message + Environment.NewLine);
+            Console.ForegroundColor = cc;
+            return message;
         }
 
 
@@ -65,58 +86,75 @@ namespace Frame.PluginLoader
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
         public bool Inititialize(string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
         {
-            lock (_lockObj)
+            try
             {
-                if (!IsPathFolder(configurationFolder))
+                lock (_lockObj)
                 {
-                    return false;
+                    if (!IsPathFolder(configurationFolder))
+                    {
+                        return false;
+                    }
+                    ConfigurationFolder = configurationFolder;
+
+                    if (!IsPathFolder(currentExeFolder))
+                    {
+                        return false;
+                    }
+                    CurrentExeFolder = currentExeFolder;
+
+                    if (!IsPathFolder(pluginsFolder))
+                    {
+                        return false;
+                    }
+                    PluginsFolder = pluginsFolder;
+
+                    if (!IsPathFolder(specificationFolder))
+                    {
+                        return false;
+                    }
+                    SpecificationFolder = specificationFolder;
+
+                    if (!IsPathFolder(referenceFolder))
+                    {
+                        return false;
+                    }
+                    ReferenceFolder = referenceFolder;
+
+                    if (!IsPathFolder(measDataFolder))
+                    {
+                        return false;
+                    }
+                    MeasurementDataFolder = measDataFolder;
+
+                    if (!IsPathFolder(resultFolder))
+                    {
+                        return false;
+                    }
+                    ResultFolder = resultFolder;
+
+                    ConfigManager = new ConfigManager(ConfigurationFolder);
+
+                    if (!LoadPlugins())
+                    {
+                        return Initialized = false;
+                    }
+
+#if RELEASE
+                ShowWindow(GetConsoleWindow(), SW_HIDE);
+#endif
+
+                    return Initialized = true;
                 }
-                ConfigurationFolder = configurationFolder;
-
-                if (!IsPathFolder(currentExeFolder))
-                {
-                    return false;
-                }
-                CurrentExeFolder = currentExeFolder;
-
-                if (!IsPathFolder(pluginsFolder))
-                {
-                    return false;
-                }
-                PluginsFolder = pluginsFolder;
-
-                if (!IsPathFolder(specificationFolder))
-                {
-                    return false;
-                }
-                SpecificationFolder = specificationFolder;
-
-                if (!IsPathFolder(referenceFolder))
-                {
-                    return false;
-                }
-                ReferenceFolder = referenceFolder;
-
-                if (!IsPathFolder(measDataFolder))
-                {
-                    return false;
-                }
-                MeasurementDataFolder = measDataFolder;
-
-                if (!IsPathFolder(resultFolder))
-                {
-                    return false;
-                }
-                ResultFolder = resultFolder;
-
-                ConfigManager = new ConfigManager(ConfigurationFolder);
-
-                if (!LoadPlugins())
-                {
-                    return Initialized = false;
-                }
-
-                return Initialized = true;
+            }
+            catch (ArgumentNullException ex)
+            {
+                SendToErrrorLogAndConsole($"Problem with input variable: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                SendToErrrorLogAndConsole($"Exception occured: {ex.Message}");
+                return false;
             }
         }
 
@@ -127,42 +165,46 @@ namespace Frame.PluginLoader
         /// <returns></returns>
         public bool Start()
         {
-            if (!Initialized)
+            lock (_lockObj)
             {
-                _logger.Error($"{nameof(PluginLoader)} not initialized yet.");
-                return false;
-            }
-
-            if (_iRunables.Count == 0)
-            {
-                _logger.Error($"No {nameof(IRunable)} was found in the folder: {PluginsFolder}");
-                return false;
-            }
-
-
-            if (_iRunables.Count > 1)
-            {
-                _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
-
-                foreach (KeyValuePair<Type, Assembly> item in _iRunables)
+                if (!Initialized)
                 {
-                    _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                    _logger.Error($"{nameof(PluginLoader)} not initialized yet.");
+                    return false;
                 }
 
-                return false;
+                if (_iRunables.Count > 1)
+                {
+                    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
+
+                    foreach (KeyValuePair<Type, Assembly> item in _iRunables)
+                    {
+                        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                    }
+
+                    return false;
+                }
+
+                try
+                {
+                    Type type = _iRunables[0].Key;
+
+                    IRunable runable = (IRunable)Activator.CreateInstance(type);
+
+                    _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
+
+                    runable.Run();
+
+                    _logger.Info($"{type} started.");
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    SendToErrrorLogAndConsole($"Exception occured: {ex}");
+                    return false;
+                }
             }
-
-            Type type = _iRunables[0].Key;
-
-            IRunable runable = (IRunable)Activator.CreateInstance(type);
-
-            _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
-
-            runable.Run();
-
-            _logger.Info($"{type} started.");
-
-            return true;
         }
 
 
@@ -230,94 +272,94 @@ namespace Frame.PluginLoader
         {
             _componentList = LoadComponentList();
 
-            if (_componentList == null)
+            if (!Directory.Exists(PluginsFolder))
             {
                 return false;
             }
+            // gather all dll names:
+            string[] dllFileNames = Directory.GetFiles(PluginsFolder, "*.dll");
 
-            if (Directory.Exists(PluginsFolder))
+            ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
+            foreach (string dllFile in dllFileNames)
             {
-                // gather all dll names:
-                string[] dllFileNames = Directory.GetFiles(PluginsFolder, "*.dll");
-
-                ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
-                foreach (string dllFile in dllFileNames)
+                try
                 {
-                    try
-                    {
-                        // load the assembly:
-                        AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
-                        Assembly assembly = Assembly.Load(an);
-                        assemblies.Add(assembly);
+                    // load the assembly:
+                    AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
+                    Assembly assembly = Assembly.Load(an);
+                    assemblies.Add(assembly);
 
-                        _logger.Info($"{assembly.FullName} assembly loadded.");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"Could not load assemby from file: {dllFile} -> {ex}");
-                    }
+                    SendToInfoLogAndConsole($"{assembly.FullName} assembly loadded.");
                 }
-
-                // go through all assemblies and look for IRunable component:
-
-                foreach (Assembly assembly in assemblies)
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        Type[] types = assembly.GetTypes();
-
-                        foreach (Type type in types)
-                        {
-                            if (type.IsInterface || type.IsAbstract)
-                            {
-                                continue;
-                            }
-
-                            if (typeof(IRunable).IsAssignableFrom(type))
-                            {
-                                _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
-                                _logger.Info($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
-                    }
+                    SendToErrrorLogAndConsole($"Could not load assemby from file: {dllFile} -> {ex}");
                 }
-
-                // go through all assemblies and and check whether they implement IPluginFactory interface:
-
-                ICollection<IPluginFactory> factories = new List<IPluginFactory>();
-                foreach (Assembly assembly in assemblies)
-                {
-                    try
-                    {
-                        Type[] types = assembly.GetTypes();
-
-                        foreach (Type type in types)
-                        {
-                            if (type.IsInterface || type.IsAbstract)
-                            {
-                                continue;
-                            }
-
-                            if (typeof(IPluginFactory).IsAssignableFrom(type))
-                            {
-                                factories.Add((IPluginFactory)Activator.CreateInstance(type));
-                                _logger.Info($"{type} added to plugin factories.");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
-                    }
-                }
-                _factories = factories;
-                return true;
             }
-            return false;
+
+            // go through all assemblies and look for IRunable component:
+
+            foreach (Assembly assembly in assemblies)
+            {
+                try
+                {
+                    Type[] types = assembly.GetTypes();
+
+                    foreach (Type type in types)
+                    {
+                        if (type.IsInterface || type.IsAbstract)
+                        {
+                            continue;
+                        }
+
+                        if (typeof(IRunable).IsAssignableFrom(type))
+                        {
+                            _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
+                            SendToInfoLogAndConsole($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SendToErrrorLogAndConsole($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                }
+            }
+
+            if (_iRunables.Count == 0)
+            {
+                throw new Exception($"No {nameof(IRunable)} comopnent was found in {PluginsFolder}");
+            }
+
+            // go through all assemblies and and check whether they implement IPluginFactory interface:
+
+            ICollection<IPluginFactory> factories = new List<IPluginFactory>();
+            foreach (Assembly assembly in assemblies)
+            {
+                try
+                {
+                    Type[] types = assembly.GetTypes();
+
+                    foreach (Type type in types)
+                    {
+                        if (type.IsInterface || type.IsAbstract)
+                        {
+                            continue;
+                        }
+
+                        if (typeof(IPluginFactory).IsAssignableFrom(type))
+                        {
+                            factories.Add((IPluginFactory)Activator.CreateInstance(type));
+                            SendToInfoLogAndConsole($"{type} added to plugin factories.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SendToErrrorLogAndConsole($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
+                }
+            }
+            _factories = factories;
+            return true;
         }
 
 
@@ -330,21 +372,13 @@ namespace Frame.PluginLoader
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
             {
-                _logger.Error("Arrived path is null, empty or whitespace.");
-                return false;
+                throw new ArgumentNullException("Arrived path is null, empty or whitespace.");
             }
 
-            try
+            FileAttributes attr = File.GetAttributes(path);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                FileAttributes attr = File.GetAttributes(path);
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                {
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Exception occured: {ex}");
+                return true;
             }
 
             return false;
@@ -357,28 +391,33 @@ namespace Frame.PluginLoader
         /// <returns>returns with the componentlist from the ComponentList.config or a dummy componentList (example)</returns>
         private ComponentList LoadComponentList()
         {
-            string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
-
-            if (!ConfigManager.CheckOrCreateConfigFile(_componentSectionName, componentListFileName))
+            try
             {
-                return null;
+                string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
+
+                ConfigManager.CheckOrCreateConfigFile(componentListFileName);
+
+                ComponentList componentList = new ComponentList();
+                XmlDocument xmlDoc = new XmlDocument();
+                XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, _componentSectionName);
+
+                if (componentListSection == null)
+                {
+                    componentListSection = ConfigManager.CreateXmlSection(xmlDoc, _componentSectionName, typeof(ComponentList));
+                }
+
+                if (!componentList.Load(xmlDoc, componentListSection))
+                {
+                    ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
+                }
+
+                return componentList;
             }
-
-            ComponentList componentList = new ComponentList();
-            XmlDocument xmlDoc = new XmlDocument();
-            XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, _componentSectionName);
-
-            if (componentListSection == null)
+            catch (Exception ex)
             {
-                componentListSection = ConfigManager.CreateXmlSection(xmlDoc, _componentSectionName, typeof(ComponentList));
+                // todo throw stacktrace
+                throw new Exception($"Problem during component list loading: {ex.Message}");
             }
-
-            if (!componentList.Load(xmlDoc, componentListSection))
-            {
-                ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
-            }
-
-            return componentList;
         }
 
         #endregion
