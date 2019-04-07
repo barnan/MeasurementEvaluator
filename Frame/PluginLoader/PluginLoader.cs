@@ -395,7 +395,7 @@ namespace Frame.PluginLoader
             {
                 string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
 
-                ConfigManager.CheckOrCreateConfigFile(componentListFileName);
+                ConfigManager.CreateConfigFileIfNotExisting(componentListFileName);
 
                 ComponentList componentList = new ComponentList();
                 XmlDocument xmlDoc = new XmlDocument();
