@@ -9,6 +9,10 @@ namespace DataStructures.ToolSpecifications
     {
         #region ctor
 
+        public QuantitySpecification()
+        {
+        }
+
         public QuantitySpecification(IReadOnlyList<ICondition> conditions, IQuantity quantity)
         {
             Conditions = conditions;

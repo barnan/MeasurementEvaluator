@@ -84,19 +84,19 @@ namespace DataStructures.ToolSpecifications
             bool equality = EqualityComparer<T>.Default.Equals(leftValue, Value);
             int compResult = Comparer<T>.Default.Compare(leftValue, Value);
 
-            switch (ConditionRelation)
+            switch (ConditionRelation.Value)
             {
-                case Relations.LESS:
+                case Relations.RelationsEnumValues.LESS:
                     return compResult == -1;
-                case Relations.GREATER:
+                case Relations.RelationsEnumValues.GREATER:
                     return compResult == 1;
-                case Relations.LESSOREQUAL:
+                case Relations.RelationsEnumValues.LESSOREQUAL:
                     return compResult == -1 && equality;
-                case Relations.GREATEROREQUAL:
+                case Relations.RelationsEnumValues.GREATEROREQUAL:
                     return compResult == 1 && equality;
-                case Relations.EQUAL:
+                case Relations.RelationsEnumValues.EQUAL:
                     return equality;
-                case Relations.NOTEQUAL:
+                case Relations.RelationsEnumValues.NOTEQUAL:
                     return equality;
             }
             return false;
