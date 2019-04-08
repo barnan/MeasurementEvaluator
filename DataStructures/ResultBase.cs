@@ -4,11 +4,18 @@ using System.Xml;
 
 namespace DataStructures
 {
-    abstract class ResultBase : IResult
+    public abstract class ResultBase : IResult
     {
-        public abstract DateTime StartTime { get; }
-        public abstract DateTime EndTime { get; }
-        public abstract bool Successful { get; }
+        protected ResultBase(DateTime startTime, DateTime endTime, bool successful)
+        {
+            StartTime = startTime;
+            EndTime = endTime;
+            Successful = successful;
+        }
+
+        public virtual DateTime StartTime { get; }
+        public virtual DateTime EndTime { get; }
+        public virtual bool Successful { get; }
 
         public XmlElement Save(XmlElement input)
         {

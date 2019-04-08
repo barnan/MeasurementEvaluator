@@ -14,12 +14,10 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-
         public SampleOrientation[] GetAvailableOrientations()
         {
             throw new System.NotImplementedException();
         }
-
 
 
         public bool SetCurrentOrientation(SampleOrientation orientation)

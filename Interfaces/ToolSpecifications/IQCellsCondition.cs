@@ -7,10 +7,7 @@
         /// </summary>
         double HalfTolerance { get; }
 
-        /// <summary>
-        /// Defines whether relative or absolute condition
-        /// </summary>
-        RELATIVEORABSOLUTE RelOrAbs { get; }
+        
     }
 
 
@@ -19,7 +16,7 @@
     {
         new double HalfTolerance { get; set; }
 
-        new RELATIVEORABSOLUTE RelOrAbs { get; set; }
+        
     }
 
 }

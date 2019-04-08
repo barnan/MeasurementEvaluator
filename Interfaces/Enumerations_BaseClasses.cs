@@ -6,15 +6,87 @@ using System.ComponentModel;
 namespace Interfaces
 {
 
-    public enum Relations : byte
+    // type safe enum, but not sealed!!
+    public class Relations
     {
-        EQUAL = 0,
-        NOTEQUAL = 1,
-        LESS = 2,
-        LESSOREQUAL = 3,
-        GREATER = 4,
-        GREATEROREQUAL = 5
+        public string Name { get; }
+        public int Value { get; }
+
+        public Relations(string name, int value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public class RelationsEnumValues
+        {
+            public const int EQUAL = 0;
+            public const int NOTEQUAL = 1;
+            public const int LESS = 2;
+            public const int LESSOREQUAL = 3;
+            public const int GREATER = 4;
+            public const int GREATEROREQUAL = 5;
+        }
+
+        public static Relations EQUAL = new Relations(nameof(EQUAL), RelationsEnumValues.EQUAL);
+        public static Relations NOTEQUAL = new Relations(nameof(NOTEQUAL), RelationsEnumValues.NOTEQUAL);
+        public static Relations LESS = new Relations(nameof(LESS), RelationsEnumValues.LESS);
+        public static Relations LESSOREQUAL = new Relations(nameof(LESSOREQUAL), RelationsEnumValues.LESSOREQUAL);
+        public static Relations GREATER = new Relations(nameof(GREATER), RelationsEnumValues.GREATER);
+        public static Relations GREATEROREQUAL = new Relations(nameof(GREATEROREQUAL), RelationsEnumValues.GREATEROREQUAL);
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public static implicit operator int(Relations rel)
+        {
+            return rel.Value;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object other)
+        {
+            Relations otherRelation = other as Relations;
+            if (ReferenceEquals(null, otherRelation))
+            {
+                return false;
+            }
+            return Value == otherRelation.Value;
+        }
     }
+
+
+    public class ValidIfRelations : Relations
+    {
+        public ValidIfRelations(string name, int value)
+            : base(name, value)
+        {
+        }
+
+        public class ValidIfRelationsEnumValues : RelationsEnumValues
+        {
+            public const int ALLWAYS = 6;
+        }
+
+        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), ValidIfRelationsEnumValues.ALLWAYS);
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public override bool Equals(object other)
+        {
+            return base.Equals(other);
+        }
+    }
+
 
     public enum RELATIVEORABSOLUTE : byte
     {
@@ -30,6 +102,7 @@ namespace Interfaces
         Orientation_180 = 270,
         Orientation_270 = 360
     };
+
 
     public enum Units : byte
     {
@@ -94,7 +167,6 @@ namespace Interfaces
     }
 
 
-
     public class ResultEventArgs : EventArgs
     {
         public IResult Result { get; }
@@ -132,7 +204,6 @@ namespace Interfaces
 
         public T Data => _data;
     }
-
 
 
     public enum MessageSeverityLevels

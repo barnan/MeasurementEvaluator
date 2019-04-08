@@ -92,6 +92,7 @@
     <Compile Include="UserControls\ResultChartUIWPF\ResultChartUIWPF.xaml.cs">
       <DependentUpon>ResultChartUIWPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ResultGridUIWPF\EvaluationResultViewModel.cs" />
     <Compile Include="UserControls\ResultGridUIWPF\ResultGridUIWPF.xaml.cs">
       <DependentUpon>ResultGridUIWPF.xaml</DependentUpon>
     </Compile>
@@ -168,7 +169,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

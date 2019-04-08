@@ -28,7 +28,7 @@ namespace Calculations.Calculation
         {
             if (DateTimeProvider == null)
             {
-                Logger.Error($"Error in the {nameof(CalculationParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
+                Logger.Error($"Error in the {nameof(CalculationParameters)} loading. {nameof(DateTimeProvider)} is null.");
                 return false;
             }
 

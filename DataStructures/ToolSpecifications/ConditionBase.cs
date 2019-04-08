@@ -14,12 +14,13 @@ namespace DataStructures.ToolSpecifications
         {
         }
 
-        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled)
+        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled, RELATIVEORABSOLUTE relorabs)
         {
             Name = name;
             CalculationType = calculationtype;
             ConditionRelation = relation;
             Enabled = enabled;
+            RelOrAbs = relorabs;
         }
 
         #region INamed
@@ -33,6 +34,8 @@ namespace DataStructures.ToolSpecifications
         public CalculationTypes CalculationType { get; set; }
         public Relations ConditionRelation { get; set; }
         public bool Enabled { get; set; }
+        public RELATIVEORABSOLUTE RelOrAbs { get; set; }
+
 
         public bool Compare(ICalculationResult calculationResult)
         {
@@ -51,7 +54,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}";
+            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}{Environment.NewLine}RelativeOrAbsolute: {RelOrAbs}";
         }
 
         #endregion
@@ -65,8 +68,8 @@ namespace DataStructures.ToolSpecifications
         public T Value { get; set; }
 
 
-        public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled)
-            : base(name, calculationtype, relation, enabled)
+        public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled, RELATIVEORABSOLUTE relorabs)
+            : base(name, calculationtype, relation, enabled, relorabs)
         {
             Value = value;
         }
@@ -84,19 +87,19 @@ namespace DataStructures.ToolSpecifications
             bool equality = EqualityComparer<T>.Default.Equals(leftValue, Value);
             int compResult = Comparer<T>.Default.Compare(leftValue, Value);
 
-            switch (ConditionRelation)
+            switch (ConditionRelation.Value)
             {
-                case Relations.LESS:
+                case Relations.RelationsEnumValues.LESS:
                     return compResult == -1;
-                case Relations.GREATER:
+                case Relations.RelationsEnumValues.GREATER:
                     return compResult == 1;
-                case Relations.LESSOREQUAL:
+                case Relations.RelationsEnumValues.LESSOREQUAL:
                     return compResult == -1 && equality;
-                case Relations.GREATEROREQUAL:
+                case Relations.RelationsEnumValues.GREATEROREQUAL:
                     return compResult == 1 && equality;
-                case Relations.EQUAL:
+                case Relations.RelationsEnumValues.EQUAL:
                     return equality;
-                case Relations.NOTEQUAL:
+                case Relations.RelationsEnumValues.NOTEQUAL:
                     return equality;
             }
             return false;

@@ -8,21 +8,18 @@ namespace DataStructures.ToolSpecifications
     public class CpkCondition : ConditionBase<double>, ICpkConditionHandler
     {
         public double HalfTolerance { get; set; }
-        public RELATIVEORABSOLUTE RelOrAbs { get; set; }
 
 
         public CpkCondition()
             : base()
         {
             HalfTolerance = 0;
-            RelOrAbs = RELATIVEORABSOLUTE.ABSOLUTE;
         }
 
 
         public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, RELATIVEORABSOLUTE relativeorabsolute, double halfTolerance)
-            : base(name, calculationtype, value, relation, enabled)
+            : base(name, calculationtype, value, relation, enabled, relativeorabsolute)
         {
-            RelOrAbs = relativeorabsolute;
             HalfTolerance = halfTolerance;
         }
 
