@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ME_DummyObjectCreator
 {
-    internal class CreateSpecification
+    internal class SpecificationCreator
     {
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {

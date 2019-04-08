@@ -12,8 +12,9 @@ namespace ME_DummyObjectCreator
 
 
         [Configuration("HDDFileReaderWriter", "HDDFileReaderWriter", LoadComponent = true)]
-        private IHDDFileReaderWriter _hddFileReaderWriter = null;
-        public IHDDFileReaderWriter HDDFileReaderWriter => _hddFileReaderWriter;
+        private string _hddFileReaderWriter = null;
+
+        public IHDDFileReaderWriter HDDFileReaderWriter { get; private set; }
 
 
         internal bool Load(string sectionName)
@@ -21,6 +22,8 @@ namespace ME_DummyObjectCreator
             Logger = LogManager.GetCurrentClassLogger();
 
             PluginLoader.ConfigManager.Load(this, sectionName);
+
+            HDDFileReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(_hddFileReaderWriter);
 
             return CheckComponents();
         }

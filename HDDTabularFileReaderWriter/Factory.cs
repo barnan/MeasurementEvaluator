@@ -3,7 +3,7 @@ using Interfaces.DataAcquisition;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions.HDDXmlSerializator
+namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 {
     public class Factory : IPluginFactory
     {
@@ -13,14 +13,17 @@ namespace DataAcquisitions.HDDXmlSerializator
 
         public object Create(Type t, string name)
         {
-            if (t.IsAssignableFrom(typeof(HDDXmlSerializator)))
+            if (t.IsAssignableFrom(typeof(HDDTabularMeasurementFileReaderWriter)))
             {
                 if (!_fileReaderDict.ContainsKey(name))
                 {
-                    HDDXmlSerializatorParameters param = new HDDXmlSerializatorParameters();
-                    HDDXmlSerializator instance = new HDDXmlSerializator(param);
-                    _fileReaderDict.Add(name, instance);
-                    return instance;
+                    Parameters param = new Parameters();
+                    if (param.Load(name))
+                    {
+                        HDDTabularMeasurementFileReaderWriter instance = new HDDTabularMeasurementFileReaderWriter(param);
+                        _fileReaderDict.Add(name, instance);
+                        return instance;
+                    }
                 }
                 else
                 {

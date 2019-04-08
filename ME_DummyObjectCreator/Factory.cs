@@ -1,5 +1,6 @@
 ﻿using Frame.PluginLoader.Interfaces;
 using Interfaces.Misc;
+using ME_DummyObjectCreator;
 using System;
 using System.Collections.Generic;
 
@@ -15,11 +16,18 @@ namespace MeasurementEvaluator.ME_DummyObjectCreator
             {
                 if (!_dummyObjectCretatorDict.ContainsKey(name))
                 {
-                    IDummyObjectCreator instance = new DummyObjectCreator();
-                    _dummyObjectCretatorDict.Add(name, instance);
-                    return instance;
+                    DummyObjectCreatorParameters param = new DummyObjectCreatorParameters();
+                    if (param.Load(name))
+                    {
+                        IDummyObjectCreator instance = new DummyObjectCreator(param);
+                        _dummyObjectCretatorDict.Add(name, instance);
+                        return instance;
+                    }
                 }
-                return _dummyObjectCretatorDict[name];
+                else
+                {
+                    return _dummyObjectCretatorDict[name];
+                }
             }
             return null;
         }
