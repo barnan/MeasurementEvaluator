@@ -8,7 +8,6 @@ namespace Interfaces.ToolSpecifications
         /// unit of quantity
         /// </summary>
         Units Dimension { get; }
-
     }
 
 
@@ -16,8 +15,6 @@ namespace Interfaces.ToolSpecifications
     public interface IQuantityHandler : IQuantity, INamedHandler
     {
         new Units Dimension { get; set; }
-
     }
-
 
 }

@@ -35,13 +35,13 @@ namespace MeasurementEvaluator.ME_Matching
         {
             if (MatchingFileReader == null)
             {
-                Logger.Error($"Error in the {nameof(MathchingParameters)} instantiation. {nameof(MatchingFileReader)} is null.");
+                Logger.Error($"Error in the {nameof(MathchingParameters)} loading. {nameof(MatchingFileReader)} is null.");
                 return false;
             }
 
             if (string.IsNullOrEmpty(BindingFilePath))
             {
-                Logger.Error($"Error in the {nameof(MathchingParameters)} instantiation. {nameof(BindingFilePath)} is empty.");
+                Logger.Error($"Error in the {nameof(MathchingParameters)} loading. {nameof(BindingFilePath)} is empty.");
                 return false;
             }
 

@@ -1,8 +1,8 @@
 ﻿using NLog;
 
-namespace DataAcquisitions
+namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 {
-    internal class TabularTextReaderParameters
+    internal class Parameters
     {
         internal char Separator { get; set; }
         internal ILogger Logger { get; set; }

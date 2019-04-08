@@ -3,7 +3,7 @@ using Interfaces.DataAcquisition;
 using System;
 using System.Collections.Generic;
 
-namespace DataAcquisitions
+namespace DataAcquisitions.HDDXmlSerializator
 {
     public class Factory : IPluginFactory
     {

@@ -47,25 +47,25 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             if (CalculationContainer == null)
             {
-                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(CalculationContainer)} is null.");
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} loading. {nameof(CalculationContainer)} is null.");
                 return false;
             }
 
             if (DataCollector == null)
             {
-                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(DataCollector)} is null.");
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} loading. {nameof(DataCollector)} is null.");
                 return false;
             }
 
             if (DateTimeProvider == null)
             {
-                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} loading. {nameof(DateTimeProvider)} is null.");
                 return false;
             }
 
             if (Matcher == null)
             {
-                Logger.Error($"Error in the {nameof(EvaluationParameters)} instantiation. {nameof(Matcher)} is null.");
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} loading. {nameof(Matcher)} is null.");
                 return false;
             }
 

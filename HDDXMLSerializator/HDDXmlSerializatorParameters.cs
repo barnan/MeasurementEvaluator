@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace DataAcquisitions
+namespace DataAcquisitions.HDDXmlSerializator
 {
     internal class HDDXmlSerializatorParameters
     {

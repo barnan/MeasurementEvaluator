@@ -20,11 +20,11 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relations validIf, double validIf_Value)
-            : base(name, calculationtype, value, relation, enabled)
+        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, RELATIVEORABSOLUTE relorabs, Relations validIf, double validIfValue)
+            : base(name, calculationtype, value, relation, enabled, relorabs)
         {
             ValidIf = validIf;
-            ValidIf_Value = validIf_Value;
+            ValidIf_Value = validIfValue;
         }
 
         protected override bool EvaluateCondition(ICalculationResult calculationResult)
@@ -51,7 +51,6 @@ namespace DataStructures.ToolSpecifications
         }
 
         #endregion
-
 
     }
 }

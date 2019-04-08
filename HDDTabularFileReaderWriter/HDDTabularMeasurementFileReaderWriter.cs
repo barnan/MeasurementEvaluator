@@ -7,16 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DataAcquisitions
+namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 {
-    internal class HDDTabularFileReaderWriter : IHDDFileReaderWriter
+    internal class HDDTabularMeasurementFileReaderWriter : IHDDFileReaderWriter
     {
 
-        private readonly TabularTextReaderParameters _parameters;
+        private readonly Parameters _parameters;
         private readonly object _lockObject = new object();
 
 
-        internal HDDTabularFileReaderWriter(TabularTextReaderParameters parameter)
+        internal HDDTabularMeasurementFileReaderWriter(Parameters parameter)
         {
             _parameters = parameter;
         }
@@ -38,12 +38,6 @@ namespace DataAcquisitions
 
                 try
                 {
-                    if (!CheckFilePath(fileNameAndPath))
-                    {
-                        _parameters.Logger.MethodError($"File does not exists: {fileNameAndPath}");
-                        return default(T);
-                    }
-
                     if (!CanRead(fileNameAndPath))
                     {
                         _parameters.Logger.MethodError($"File is not readable: {fileNameAndPath}");
@@ -52,7 +46,7 @@ namespace DataAcquisitions
 
                     if (typeof(T) != typeof(IToolMeasurementData))
                     {
-                        _parameters.Logger.MethodError($"The {nameof(HDDTabularFileReaderWriter)} can read only tabular data, {typeof(T)} can not be handled.");
+                        _parameters.Logger.MethodError($"The {nameof(HDDTabularMeasurementFileReaderWriter)} can read only tabular data, {typeof(T)} can not be handled.");
                         return default(T);
                     }
 
@@ -155,28 +149,21 @@ namespace DataAcquisitions
 
         public bool CanRead(string fileNameAndPath)
         {
-            if (!string.IsNullOrEmpty(fileNameAndPath))
+            if (string.IsNullOrEmpty(fileNameAndPath))
             {
-                using (FileStream fstream = new FileStream(fileNameAndPath, FileMode.Open, FileAccess.Read))
+                throw new ArgumentNullException($"{fileNameAndPath} can not read.");
+            }
+
+            using (FileStream fstream = new FileStream(fileNameAndPath, FileMode.Open, FileAccess.Read))
+            {
+                if (fstream.CanRead)
                 {
-                    if (fstream.CanRead)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             return false;
         }
 
-
-        private bool CheckFilePath(string fileNameAndPath)
-        {
-            return File.Exists(fileNameAndPath);
-        }
-
-
     }
-
-
 
 }

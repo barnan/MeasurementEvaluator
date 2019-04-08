@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace DataAcquisitions
+namespace DataAcquisitions.HDDXmlSerializator
 {
     internal class HDDXmlSerializator : IHDDFileReaderWriter
     {

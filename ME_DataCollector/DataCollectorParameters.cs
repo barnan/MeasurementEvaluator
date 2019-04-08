@@ -47,26 +47,26 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             if (SpecificationRepository == null)
             {
-                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(SpecificationRepository)} is null.");
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(SpecificationRepository)} is null.");
                 return false;
             }
 
             if (ReferenceRepository == null)
             {
-                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(ReferenceRepository)} is null.");
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(ReferenceRepository)} is null.");
                 return false;
             }
 
 
             if (MeasurementDataRepository == null)
             {
-                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(MeasurementDataRepository)} is null.");
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(MeasurementDataRepository)} is null.");
                 return false;
             }
 
             if (DateTimeProvider == null)
             {
-                Logger.Error($"Error in the {nameof(DataCollectorParameters)} instantiation. {nameof(DateTimeProvider)} is null.");
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(DateTimeProvider)} is null.");
                 return false;
             }
 

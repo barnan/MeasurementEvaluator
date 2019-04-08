@@ -24,6 +24,11 @@ namespace Interfaces.ToolSpecifications
         /// <param name="calculationResult">the calculation result which will be used in the condition comparison</param>
         /// <returns></returns>
         bool Compare(ICalculationResult calculationResult);
+
+        /// <summary>
+        /// Defines whether relative or absolute condition
+        /// </summary>
+        RELATIVEORABSOLUTE RelOrAbs { get; }
     }
 
 
@@ -49,6 +54,8 @@ namespace Interfaces.ToolSpecifications
         new CalculationTypes CalculationType { get; set; }
 
         new bool Enabled { get; set; }
+
+        new RELATIVEORABSOLUTE RelOrAbs { get; set; }
     }
 
 

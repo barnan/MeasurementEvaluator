@@ -8,9 +8,7 @@ namespace DataStructures.ToolSpecifications
 
         public Units Dimension { get; set; }
 
-
         public string Name { get; set; }
-
 
 
         public Quantity(Units dimension, string name)
