@@ -7,9 +7,10 @@ namespace Frame.PluginLoader
 {
     internal class ComponentList
     {
-        internal Dictionary<string, List<string>> Components { get; private set; }
+        internal List<Component> Components { get; private set; }
         private const string NAME_ATTRIBUTE_NAME = "Name";
-        private const string TYPE_ATTRIBUTE_NAME = "Type";
+        private const string ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
+        private const string INTERFACE_ATTRIBUTE_NAME = "Interfaces";
         private const string COMPONENT_NODE_NAME = "Component";
 
 
@@ -21,7 +22,7 @@ namespace Frame.PluginLoader
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
         internal bool Load(XmlDocument xmlDoc, XmlElement inputElement)
         {
-            Components = new Dictionary<string, List<string>>();
+            Components = new List<Component>();
 
             if (inputElement.HasChildNodes)
             {
@@ -32,7 +33,8 @@ namespace Frame.PluginLoader
                     foreach (XmlNode componentNode in componentsNode.ChildNodes)
                     {
                         string nameText = null;
-                        string typeText = null;
+                        string assemblyText = null;
+                        string interfaceText = null;
 
                         foreach (XmlAttribute attribute in componentNode.Attributes)
                         {
@@ -41,16 +43,21 @@ namespace Frame.PluginLoader
                                 nameText = attribute.InnerText;
                             }
 
-                            if (attribute.Name == TYPE_ATTRIBUTE_NAME)
+                            if (attribute.Name == ASSEMBLY_ATTRIBUTE_NAME)
                             {
-                                typeText = attribute.InnerText;
+                                assemblyText = attribute.InnerText;
+                            }
+
+                            if (attribute.Name == INTERFACE_ATTRIBUTE_NAME)
+                            {
+                                interfaceText = attribute.InnerText;
                             }
                         }
 
-                        if (!string.IsNullOrEmpty(nameText) || !string.IsNullOrEmpty(typeText))
+                        if (!string.IsNullOrEmpty(nameText) && !string.IsNullOrEmpty(interfaceText) && !string.IsNullOrEmpty(assemblyText))
                         {
-                            string[] types = typeText.Split(';');
-                            Components.Add(nameText, types.ToList());
+                            string[] interfaces = interfaceText.Split(';');
+                            Components.Add(new Component { Name = nameText, Interfaces = interfaces.ToList(), AssemblyName = assemblyText });
                         }
                     }
                 }
@@ -64,11 +71,14 @@ namespace Frame.PluginLoader
 
                 XmlAttribute nameAttribute = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
                 nameAttribute.InnerText = "MeasurementEvaluator";
-                XmlAttribute typeAttribute = xmlDoc.CreateAttribute(TYPE_ATTRIBUTE_NAME);
-                typeAttribute.InnerText = nameof(IRunable);
+                XmlAttribute typeAttribute = xmlDoc.CreateAttribute(ASSEMBLY_ATTRIBUTE_NAME);
+                typeAttribute.InnerText = "Measurement EValuator";
+                XmlAttribute interfaceAttribute = xmlDoc.CreateAttribute(INTERFACE_ATTRIBUTE_NAME);
+                interfaceAttribute.InnerText = nameof(IRunable);
 
                 dummyChildElement.Attributes.Append(nameAttribute);
                 dummyChildElement.Attributes.Append(typeAttribute);
+                dummyChildElement.Attributes.Append(interfaceAttribute);
 
                 dummyelement.AppendChild(dummyChildElement);
                 inputElement.AppendChild(dummyelement);
@@ -77,6 +87,15 @@ namespace Frame.PluginLoader
             }
 
             return true;
+        }
+
+
+        internal class Component
+        {
+            internal string Name { get; set; }
+            internal string AssemblyName { get; set; }
+            internal List<string> Interfaces { get; set; }
+
         }
     }
 }
