@@ -4,6 +4,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
@@ -23,7 +24,7 @@ namespace Frame.PluginLoader
 
 
 
-        private static ICollection<IPluginFactory> _factories;
+        private static ICollection<FactoryElement> _factories;
         private static ILogger _logger;
         private static object _lockObj = new object();
         private static ComponentList _componentList;
@@ -208,7 +209,7 @@ namespace Frame.PluginLoader
         }
 
 
-        private static object CreateInstance(Type type, string name)
+        private static object CreateInstance(Type interfaceType, string name)
         {
             if (_factories == null)
             {
@@ -216,17 +217,25 @@ namespace Frame.PluginLoader
                 return null;
             }
 
-            if (!_componentList.Components.ContainsKey(name) || !_componentList.Components[name].Contains(type.Name))
+            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))
             {
-                _logger.Error($"ComponentList does not contain {name} {type}");
+                _logger.Error($"ComponentList does not contain {name} {interfaceType}");
                 return null;
             }
 
-            List<object> instances = new List<object>();
-
-            foreach (var factory in _factories)
+            var component = _componentList.Components.Where(p => p.Name == name).ToList();
+            if (component.Count != 1)
             {
-                object instance = factory.Create(type, name);
+                _logger.Error($"Ambiguity between components in the ComponentList. {name} appears more times.");
+                return null;
+            }
+
+            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == component[0].AssemblyName).ToList();
+
+            List<object> instances = new List<object>();
+            foreach (var factory in fact)
+            {
+                object instance = factory.Factory.Create(interfaceType, name);
                 if (instance == null)
                 {
                     continue;
@@ -237,13 +246,13 @@ namespace Frame.PluginLoader
 
             if (instances.Count == 0)
             {
-                _logger.Error($"No factory was found to create: {type}");
+                _logger.Error($"No factory was found to create: {interfaceType}");
                 return null;
             }
 
             if (instances.Count > 1)
             {
-                _logger.Error($"More than one factories was found to create: {type}");
+                _logger.Error($"More than one factories was found to create: {interfaceType}");
                 return null;
             }
 
@@ -332,7 +341,7 @@ namespace Frame.PluginLoader
 
             // go through all assemblies and and check whether they implement IPluginFactory interface:
 
-            ICollection<IPluginFactory> factories = new List<IPluginFactory>();
+            ICollection<FactoryElement> factories = new List<FactoryElement>();
             foreach (Assembly assembly in assemblies)
             {
                 try
@@ -348,7 +357,9 @@ namespace Frame.PluginLoader
 
                         if (typeof(IPluginFactory).IsAssignableFrom(type))
                         {
-                            factories.Add((IPluginFactory)Activator.CreateInstance(type));
+                            string assemblyName = assembly.FullName.Split(',')[0];
+
+                            factories.Add(new FactoryElement { Factory = (IPluginFactory)Activator.CreateInstance(type), AssemblyName = assemblyName });
                             SendToInfoLogAndConsole($"{type} added to plugin factories.");
                         }
                     }
@@ -421,5 +432,14 @@ namespace Frame.PluginLoader
         }
 
         #endregion
+
+
+        internal class FactoryElement
+        {
+            internal IPluginFactory Factory { get; set; }
+            internal string AssemblyName { get; set; }
+        }
+
+
     }
 }

@@ -7,8 +7,8 @@
     <ProjectGuid>{682CC5C9-81F8-4308-94C6-CF66F755C6EA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HDDXMLSerializator</RootNamespace>
-    <AssemblyName>HDDXMLSerializator</AssemblyName>
+    <RootNamespace>HDDXmlSerializator</RootNamespace>
+    <AssemblyName>HDDXmlSerializator</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

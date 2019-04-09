@@ -37,7 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ME_DummyObjectCreator", "ME
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDTabularFileReaderWriter", "HDDTabularFileReaderWriter\HDDTabularFileReaderWriter.csproj", "{AEF677D6-5377-4C4F-8ED6-E9EB7AE5037A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDXMLSerializator", "HDDXMLSerializator\HDDXMLSerializator.csproj", "{682CC5C9-81F8-4308-94C6-CF66F755C6EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDXmlSerializator", "HDDXmlSerializator\HDDXmlSerializator.csproj", "{682CC5C9-81F8-4308-94C6-CF66F755C6EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
