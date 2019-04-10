@@ -12,7 +12,7 @@ namespace MeasurementEvaluatorUIWPF
         internal Window(MainWindowParameters param)
         {
             _param = param;
-            Name = param.ID;
+            Name = param.Name;
 
             InitializeComponent();
 

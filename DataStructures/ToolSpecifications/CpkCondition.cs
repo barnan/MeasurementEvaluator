@@ -2,6 +2,7 @@
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -52,6 +53,25 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
+
+        public override XElement SaveToXml(XElement inputElement)
+        {
+            XElement simpleConditionNode = new XElement(nameof(CpkCondition));
+            simpleConditionNode.SetAttributeValue(nameof(Name), Name);
+            simpleConditionNode.Add(new XElement(nameof(CalculationType), CalculationType));
+            simpleConditionNode.Add(new XElement(nameof(ConditionRelation), ConditionRelation));
+            simpleConditionNode.Add(new XElement(nameof(RelOrAbs), RelOrAbs));
+            simpleConditionNode.Add(new XElement(nameof(Value), Value));
+            simpleConditionNode.Add(new XElement(nameof(HalfTolerance), HalfTolerance));
+
+            inputElement.Add(simpleConditionNode);
+            return inputElement;
+        }
+
+        public override bool LoadFromXml(XElement inputElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

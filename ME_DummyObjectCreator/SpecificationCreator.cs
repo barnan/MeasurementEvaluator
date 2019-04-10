@@ -18,7 +18,7 @@ namespace ME_DummyObjectCreator
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = RELATIVEORABSOLUTE.ABSOLUTE,
-                ValidIf = ValidIfRelations.ALLWAYS,
+                ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
 
@@ -30,7 +30,7 @@ namespace ME_DummyObjectCreator
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = RELATIVEORABSOLUTE.RELATIVE,
-                ValidIf = ValidIfRelations.ALLWAYS,
+                ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
 
@@ -43,7 +43,7 @@ namespace ME_DummyObjectCreator
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = RELATIVEORABSOLUTE.ABSOLUTE,
-                ValidIf = ValidIfRelations.ALLWAYS,
+                ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
 
@@ -55,7 +55,7 @@ namespace ME_DummyObjectCreator
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = RELATIVEORABSOLUTE.RELATIVE,
-                ValidIf = ValidIfRelations.ALLWAYS,
+                ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
 

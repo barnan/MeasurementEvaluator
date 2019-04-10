@@ -3,6 +3,7 @@ using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -58,8 +59,12 @@ namespace DataStructures.ToolSpecifications
         }
 
         #endregion
-    }
 
+        public abstract XElement SaveToXml(XElement inputElement);
+
+        public abstract bool LoadFromXml(XElement inputElement);
+
+    }
 
 
     public abstract class ConditionBase<T> : ConditionBase, IConditionHandler<T>

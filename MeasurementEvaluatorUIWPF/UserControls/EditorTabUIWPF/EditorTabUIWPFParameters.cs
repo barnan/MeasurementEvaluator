@@ -1,18 +1,16 @@
 ﻿using Frame.PluginLoader;
+using MeasurementEvaluatorUIWPF.Base;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF
 {
-    public class EditorTabUIWPFParameters
+    public class EditorTabUIWPFParameters : ParameterBase
     {
-        public string ID { get; private set; }
-
-
 
         internal bool Load(string sectionName)
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            ID = sectionName;
+            Name = sectionName;
 
             return true;
         }

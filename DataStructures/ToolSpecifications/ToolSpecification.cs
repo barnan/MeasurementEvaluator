@@ -5,6 +5,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -125,5 +126,15 @@ namespace DataStructures.ToolSpecifications
         }
 
         #endregion
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

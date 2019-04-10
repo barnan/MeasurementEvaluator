@@ -1,6 +1,6 @@
 ﻿using Interfaces.Result;
 using System;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace DataStructures
 {
@@ -17,12 +17,12 @@ namespace DataStructures
         public virtual DateTime EndTime { get; }
         public virtual bool Successful { get; }
 
-        public XmlElement Save(XmlElement input)
+        public XElement SaveToXml(XElement input)
         {
             throw new NotImplementedException();
         }
 
-        public bool Load(XmlElement input)
+        public bool LoadFromXml(XElement input)
         {
             throw new NotImplementedException();
         }

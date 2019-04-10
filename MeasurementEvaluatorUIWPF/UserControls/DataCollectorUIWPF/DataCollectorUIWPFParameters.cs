@@ -1,12 +1,13 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
+using MeasurementEvaluatorUIWPF.Base;
 using NLog;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 {
 
-    public class DataCollectorUIWPFParameters
+    public class DataCollectorUIWPFParameters : ParameterBase
     {
 
         [Configuration("Name of DataCollector component", "DataCollector Name", true)]
@@ -20,6 +21,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         internal bool Load(string sectionName)
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
+
+            Name = sectionName;
 
             DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollectorName);
 

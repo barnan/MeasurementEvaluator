@@ -26,6 +26,7 @@ namespace Interfaces
             public const int LESSOREQUAL = 3;
             public const int GREATER = 4;
             public const int GREATEROREQUAL = 5;
+            public const int ALLWAYS = 6;
         }
 
         public static Relations EQUAL = new Relations(nameof(EQUAL), RelationsEnumValues.EQUAL);
@@ -34,6 +35,7 @@ namespace Interfaces
         public static Relations LESSOREQUAL = new Relations(nameof(LESSOREQUAL), RelationsEnumValues.LESSOREQUAL);
         public static Relations GREATER = new Relations(nameof(GREATER), RelationsEnumValues.GREATER);
         public static Relations GREATEROREQUAL = new Relations(nameof(GREATEROREQUAL), RelationsEnumValues.GREATEROREQUAL);
+        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), RelationsEnumValues.ALLWAYS);
 
         public override string ToString()
         {
@@ -43,6 +45,42 @@ namespace Interfaces
         public static implicit operator int(Relations rel)
         {
             return rel.Value;
+        }
+
+
+        public static explicit operator Relations(string val)
+        {
+
+            if (EQUAL.ToString() == val)
+            {
+                return EQUAL;
+            }
+            if (NOTEQUAL.ToString() == val)
+            {
+                return NOTEQUAL;
+            }
+            if (LESS.ToString() == val)
+            {
+                return LESS;
+            }
+            if (LESSOREQUAL.ToString() == val)
+            {
+                return LESSOREQUAL;
+            }
+            if (GREATER.ToString() == val)
+            {
+                return GREATER;
+            }
+            if (GREATEROREQUAL.ToString() == val)
+            {
+                return GREATEROREQUAL;
+            }
+            if (ALLWAYS.ToString() == val)
+            {
+                return ALLWAYS;
+            }
+
+            return null;
         }
 
         public override int GetHashCode()
@@ -58,32 +96,6 @@ namespace Interfaces
                 return false;
             }
             return Value == otherRelation.Value;
-        }
-    }
-
-
-    public class ValidIfRelations : Relations
-    {
-        public ValidIfRelations(string name, int value)
-            : base(name, value)
-        {
-        }
-
-        public class ValidIfRelationsEnumValues : RelationsEnumValues
-        {
-            public const int ALLWAYS = 6;
-        }
-
-        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), ValidIfRelationsEnumValues.ALLWAYS);
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public override bool Equals(object other)
-        {
-            return base.Equals(other);
         }
     }
 

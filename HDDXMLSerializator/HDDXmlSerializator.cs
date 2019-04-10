@@ -22,7 +22,6 @@ namespace DataAcquisitions.HDDXmlSerializator
         }
 
 
-
         public T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
         {
             lock (_lockObject)
@@ -48,7 +47,6 @@ namespace DataAcquisitions.HDDXmlSerializator
                 }
             }
         }
-
 
 
         public bool WriteToFile<T>(T tobj, string fileNameAndPath)
@@ -80,9 +78,6 @@ namespace DataAcquisitions.HDDXmlSerializator
                 }
             }
         }
-
-
-
 
 
         public bool CanRead(string fileNameAndPath)

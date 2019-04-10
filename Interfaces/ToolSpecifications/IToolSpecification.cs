@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface IToolSpecification : IComparable<IToolSpecification>, INamed
+    public interface IToolSpecification : IComparable<IToolSpecification>, INamed, IXmlStorable
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool

@@ -1,10 +1,11 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Interfaces.Misc;
+using MeasurementEvaluatorUIWPF.Base;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 {
-    public class EvaluationTabUIWPFParameters
+    public class EvaluationTabUIWPFParameters : ParameterBase
     {
         [Configuration("Data Collector user control name", nameof(DataCollectorUIWPF), true)]
         private string _dataCollectorUIWPFName = null;
@@ -21,10 +22,6 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
         public IUserControlUIWPF ResultHandlingUIWPF { get; private set; }
 
 
-        public string ID { get; private set; }
-
-
-
         internal bool Load(string sectionName)
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
@@ -33,7 +30,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
             ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultGridUIWPFName);
             ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultHandlingUIWPFName);
 
-            ID = sectionName;
+            Name = sectionName;
 
             return true;
         }

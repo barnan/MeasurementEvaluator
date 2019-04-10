@@ -1,6 +1,7 @@
 ﻿using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -50,7 +51,7 @@ namespace DataStructures.ToolSpecifications
         #endregion
 
 
-        #region IComparable
+        #region IComparable<IQuantitySpecification>
 
         public int CompareTo(IQuantitySpecification other)
         {
@@ -70,6 +71,20 @@ namespace DataStructures.ToolSpecifications
             }
 
             return Conditions.Count > other.Conditions.Count ? 1 : -1;
+        }
+
+        #endregion
+
+        #region IXmlStorable
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

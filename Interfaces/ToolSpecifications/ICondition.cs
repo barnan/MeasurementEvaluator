@@ -4,7 +4,7 @@ using Interfaces.Result;
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition : INamed
+    public interface ICondition : INamed, IXmlStorable
     {
 
         /// <summary>

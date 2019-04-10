@@ -11,7 +11,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 
             DataContext = new EvaluationTabViewModel(parameters);
 
-            Name = parameters.ID;
+            Name = parameters.Name;
             Title = "Evaluation Tab";
         }
     }
