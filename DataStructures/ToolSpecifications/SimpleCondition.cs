@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System;
 using System.Xml.Linq;
 
@@ -22,7 +23,7 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, RELATIVEORABSOLUTE relorabs, Relations validIf, double validIfValue)
+        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relativity relorabs, Relations validIf, double validIfValue)
             : base(name, calculationtype, value, relation, enabled, relorabs)
         {
             ValidIf = validIf;
@@ -58,12 +59,12 @@ namespace DataStructures.ToolSpecifications
         public override XElement SaveToXml(XElement inputElement)
         {
             inputElement.SetAttributeValue(nameof(Name), Name);
-            inputElement.Add(new XElement(nameof(CalculationType), CalculationType));
-            inputElement.Add(new XElement(nameof(ConditionRelation), ConditionRelation));
-            inputElement.Add(new XElement(nameof(RelOrAbs), RelOrAbs));
-            inputElement.Add(new XElement(nameof(Value), Value));
-            inputElement.Add(new XElement(nameof(ValidIf), ValidIf));
-            inputElement.Add(new XElement(nameof(ValidIf_Value), ValidIf_Value));
+            this.TrySave(CalculationType, inputElement, nameof(CalculationType));
+            this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
+            this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
+            this.TrySave(Value, inputElement, nameof(Value));
+            this.TrySave(ValidIf, inputElement, nameof(ValidIf));
+            this.TrySave(ValidIf_Value, inputElement, nameof(ValidIf_Value));
 
             return inputElement;
         }
@@ -78,7 +79,7 @@ namespace DataStructures.ToolSpecifications
                 {
                     CalculationType = (CalculationTypes)Enum.Parse(typeof(CalculationTypes), xelement.Element(nameof(CalculationType)).Value);
                     ConditionRelation = (Relations)xelement.Element(nameof(ConditionRelation)).Value;
-                    RelOrAbs = (RELATIVEORABSOLUTE)Enum.Parse(typeof(RELATIVEORABSOLUTE), xelement.Element(nameof(RelOrAbs)).Value);
+                    RelOrAbs = (Relativity)Enum.Parse(typeof(Relativity), xelement.Element(nameof(RelOrAbs)).Value);
                     Value = double.Parse(xelement.Element(nameof(Value)).Value);
                     ValidIf_Value = double.Parse(xelement.Element(nameof(ValidIf_Value)).Value);
                     ValidIf = (Relations)xelement.Element(nameof(ValidIf)).Value;

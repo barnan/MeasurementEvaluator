@@ -3,6 +3,7 @@ using Interfaces;
 using Interfaces.DataAcquisition;
 using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace ME_DummyObjectCreator
 {
@@ -17,7 +18,7 @@ namespace ME_DummyObjectCreator
                 Value = 1,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
-                RelOrAbs = RELATIVEORABSOLUTE.ABSOLUTE,
+                RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -29,7 +30,7 @@ namespace ME_DummyObjectCreator
                 Value = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = RELATIVEORABSOLUTE.RELATIVE,
+                RelOrAbs = Relativity.Relative,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -42,7 +43,7 @@ namespace ME_DummyObjectCreator
                 Value = 1,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
-                RelOrAbs = RELATIVEORABSOLUTE.ABSOLUTE,
+                RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -54,7 +55,7 @@ namespace ME_DummyObjectCreator
                 Value = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = RELATIVEORABSOLUTE.RELATIVE,
+                RelOrAbs = Relativity.Relative,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -84,6 +85,10 @@ namespace ME_DummyObjectCreator
                 Specifications = quanSpecList
             };
 
+
+            XElement conditionElement = new XElement("Root");
+            XElement output = specificationHandler.SaveToXml(conditionElement);
+            output.Save("example");
 
             readerWriter.WriteToFile<IToolSpecification>(specificationHandler, specificationPath);
         }

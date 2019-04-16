@@ -28,7 +28,7 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// Defines whether relative or absolute condition
         /// </summary>
-        RELATIVEORABSOLUTE RelOrAbs { get; }
+        Relativity RelOrAbs { get; }
     }
 
 
@@ -55,7 +55,7 @@ namespace Interfaces.ToolSpecifications
 
         new bool Enabled { get; set; }
 
-        new RELATIVEORABSOLUTE RelOrAbs { get; set; }
+        new Relativity RelOrAbs { get; set; }
     }
 
 

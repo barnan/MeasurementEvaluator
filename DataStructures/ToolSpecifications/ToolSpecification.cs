@@ -129,7 +129,10 @@ namespace DataStructures.ToolSpecifications
 
         public XElement SaveToXml(XElement inputElement)
         {
-            throw new NotImplementedException();
+            this.TrySave(Name, inputElement, nameof(Name));
+            this.TrySave(ToolName, inputElement, nameof(ToolName));
+            this.TrySave(Specifications, inputElement, nameof(Specifications));
+            return inputElement;
         }
 
         public bool LoadFromXml(XElement inputElement)

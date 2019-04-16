@@ -1,4 +1,5 @@
 ﻿using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
@@ -79,7 +80,9 @@ namespace DataStructures.ToolSpecifications
 
         public XElement SaveToXml(XElement inputElement)
         {
-            throw new System.NotImplementedException();
+            this.TrySave(Conditions, inputElement, nameof(Conditions));
+            this.TrySave(Quantity, inputElement, nameof(Quantity));
+            return inputElement;
         }
 
         public bool LoadFromXml(XElement inputElement)

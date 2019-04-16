@@ -1,5 +1,7 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -15,6 +17,18 @@ namespace DataStructures.ToolSpecifications
         {
             Dimension = dimension;
             Name = name;
+        }
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            this.TrySave(Dimension, inputElement, nameof(Dimension));
+            this.TrySave(Name, inputElement, nameof(Name));
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

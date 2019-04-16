@@ -15,7 +15,7 @@ namespace DataStructures.ToolSpecifications
         {
         }
 
-        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled, RELATIVEORABSOLUTE relorabs)
+        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled, Relativity relorabs)
         {
             Name = name;
             CalculationType = calculationtype;
@@ -35,7 +35,7 @@ namespace DataStructures.ToolSpecifications
         public CalculationTypes CalculationType { get; set; }
         public Relations ConditionRelation { get; set; }
         public bool Enabled { get; set; }
-        public RELATIVEORABSOLUTE RelOrAbs { get; set; }
+        public Relativity RelOrAbs { get; set; }
 
 
         public bool Compare(ICalculationResult calculationResult)
@@ -73,7 +73,7 @@ namespace DataStructures.ToolSpecifications
         public T Value { get; set; }
 
 
-        public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled, RELATIVEORABSOLUTE relorabs)
+        public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled, Relativity relorabs)
             : base(name, calculationtype, relation, enabled, relorabs)
         {
             Value = value;

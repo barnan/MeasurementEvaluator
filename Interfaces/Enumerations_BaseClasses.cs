@@ -1,14 +1,18 @@
-﻿using Interfaces.Result;
+﻿using Interfaces.Misc;
+using Interfaces.Result;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace Interfaces
 {
 
     // type safe enum, but not sealed!!
-    public class Relations
+    public class Relations : IXmlStorable
     {
+        private const string XELEMENT_ATTRIBUTE_NAME = "Value";
+
         public string Name { get; }
         public int Value { get; }
 
@@ -97,13 +101,24 @@ namespace Interfaces
             }
             return Value == otherRelation.Value;
         }
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            inputElement.SetAttributeValue(XELEMENT_ATTRIBUTE_NAME, Name);
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
-    public enum RELATIVEORABSOLUTE : byte
+    public enum Relativity
     {
-        ABSOLUTE = 0,
-        RELATIVE = 1
+        Absolute = 0,
+        Relative = 1
     }
 
 
@@ -116,7 +131,7 @@ namespace Interfaces
     };
 
 
-    public enum Units : byte
+    public enum Units
     {
         [Description("ADU")]
         ADU = 0,
@@ -168,7 +183,7 @@ namespace Interfaces
     }
 
 
-    public enum CalculationTypes : byte
+    public enum CalculationTypes
     {
         Unknown = 0,
         Average,
