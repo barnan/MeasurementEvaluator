@@ -24,9 +24,8 @@ namespace Miscellaneous
         public static void TryLoad(this IXmlStorable storable, XElement inputElement, string name)
         {
             PropertyInfo[] propInfos = storable.GetType().GetProperties();
-
-
             PropertyInfo propInfo = propInfos.FirstOrDefault(p => p.Name == name);
+
 
             if (propInfo.PropertyType.IsInterface && typeof(IXmlStorable).IsAssignableFrom(propInfo.PropertyType))
             {
@@ -68,16 +67,24 @@ namespace Miscellaneous
         {
             string serializableName = name;
             string attributeValue = null;
+
             if (serializableName == null)
             {
-                serializableName = inputType.ToString();
+                if (typeof(IList).IsAssignableFrom(inputType))
+                {
+                    serializableName = "List";
+                }
+                else
+                {
+                    serializableName = inputElement.Name.LocalName;
+                }
             }
 
             if (inputType.IsInterface)
             {
-                serializableName = inputElement.Name.LocalName;
                 attributeValue = inputElement.Attribute("Type").Value;
             }
+
 
             if (typeof(Type).IsAssignableFrom(inputType))
             {
@@ -118,7 +125,7 @@ namespace Miscellaneous
                 return storableObject;
             }
 
-            if (typeof(IList).IsAssignableFrom(inputType))
+            if (typeof(IList).IsAssignableFrom(inputType) || typeof(IList).IsAssignableFrom(Type.GetType(attributeValue ?? "")))
             {
                 Type listGenericType = typeof(List<>);
                 Type listType = listGenericType.MakeGenericType(inputType.GetGenericArguments()[0]);
@@ -142,11 +149,15 @@ namespace Miscellaneous
                     foreach (var xItem in xlistItems)
                     {
                         string itemName = xItem.Name.LocalName;
-                        string attribContent = xItem.Attribute("Type").Value;
 
+                        string attribContent = null;
+                        if (xItem.HasAttributes)
+                        {
+                            attribContent = xItem.Attribute("Type").Value;
+                        }
 
                         var loadedListElement = Load(elementType, xItem, itemName);
-                        list.Add(Convert.ChangeType(loadedListElement, Type.GetType(attribContent ?? inputType.Name)));
+                        list.Add(Convert.ChangeType(loadedListElement, (attribContent == null ? elementType : Type.GetType(attribContent))));
                     }
 
                 }
@@ -165,6 +176,5 @@ namespace Miscellaneous
             return null;
 
         }
-
     }
 }

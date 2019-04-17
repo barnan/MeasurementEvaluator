@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Interfaces.Misc;
+using System;
 using System.Collections;
 using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using Interfaces.Misc;
 
 namespace Miscellaneous
 {
@@ -51,14 +50,25 @@ namespace Miscellaneous
         {
             string serializableName = name;
             XAttribute attribute = null;
+
+            IList listVersion = inputobj as IList;
+            IDictionary dictVersion = inputobj as IDictionary;
+            IXmlStorable xmlstorableVerison = inputobj as IXmlStorable;
+
             if (serializableName == null)
             {
-                serializableName = inputType.ToString();
+                if (listVersion != null)
+                {
+                    serializableName = "List";
+                }
+                else
+                {
+                    serializableName = inputobj.GetType().ToString();
+                }
             }
 
             if (inputType.IsInterface)
             {
-                serializableName = inputobj.GetType().ToString();
                 attribute = new XAttribute("Type", inputobj.GetType().AssemblyQualifiedName);
             }
 
@@ -87,10 +97,8 @@ namespace Miscellaneous
                 return;
             }
 
-            IList listVersion = inputobj as IList;
-            IDictionary dictVersion = inputobj as IDictionary;
-            IXmlStorable xmlstorableVerison = inputobj as IXmlStorable;
-            ISerializable serializableVersion = inputobj as ISerializable;
+
+            //ISerializable serializableVersion = inputobj as ISerializable;
 
 
             //xml sotrable:
@@ -130,12 +138,17 @@ namespace Miscellaneous
                 {
                     // reference types in the list:
 
+                    XElement refListXElement = new XElement(serializableName);
                     foreach (var item in listVersion)
                     {
-                        XElement refListXElement = new XElement(serializableName);
+                        if (attribute != null)
+                        {
+                            refListXElement.Add(attribute);
+                        }
+
                         Save(item, itemTypes[0], refListXElement, null);
-                        inputElement.Add(refListXElement);
                     }
+                    inputElement.Add(refListXElement);
                 }
                 return;
             }
