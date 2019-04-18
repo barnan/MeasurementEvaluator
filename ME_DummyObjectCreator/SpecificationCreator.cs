@@ -3,12 +3,16 @@ using Interfaces;
 using Interfaces.DataAcquisition;
 using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml.Linq;
 
 namespace ME_DummyObjectCreator
 {
     internal class SpecificationCreator
     {
+        private string _fileExtension = ".Spec";
+
+
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {
             ICondition<double> condition1 = new SimpleCondition()
@@ -61,7 +65,6 @@ namespace ME_DummyObjectCreator
             };
 
 
-
             IQuantitySpecificationHandler thicknessQuantitySpecification = new QuantitySpecification();
             thicknessQuantitySpecification.Quantity = new Quantity(Units.um, "Thickness Average");
             thicknessQuantitySpecification.Conditions = new List<ICondition> { condition1, condition2 };
@@ -80,21 +83,16 @@ namespace ME_DummyObjectCreator
 
             IToolSpecificationHandler specificationHandler = new ToolSpecification
             {
-                Name = "TTR Coompliant Specification",
+                Name = "TTR Compliant Specification",
                 ToolName = ToolNames.TTR,
                 Specifications = quanSpecList
             };
 
 
-            XElement conditionElement = new XElement("Root");
-            XElement output = specificationHandler.SaveToXml(conditionElement);
-            output.Save("example");
+            XElement specificationElement = new XElement("Specification");
+            XElement output = specificationHandler.SaveToXml(specificationElement);
 
-            ToolSpecification spec = new ToolSpecification();
-            spec.LoadFromXml(output);
-
+            output.Save(Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
         }
-
-
     }
 }

@@ -4,7 +4,7 @@ using Miscellaneous;
 using NLog;
 using System;
 using System.Collections.Generic;
-
+using System.Xml.Linq;
 
 namespace DataStructures.ReferenceSample
 {
@@ -32,8 +32,12 @@ namespace DataStructures.ReferenceSample
         public ReferenceSample()
         {
             _logger = LogManager.GetCurrentClassLogger();
+        }
 
-            _logger.MethodInfo($"{Name} reference sample created.");
+        public ReferenceSample(string name, IReadOnlyList<IReferenceValue> referenceValues)
+        {
+            Name = name;
+            ReferenceValues = referenceValues;
         }
 
 
@@ -91,6 +95,22 @@ namespace DataStructures.ReferenceSample
                 _logger.MethodError($"Exception occured: {ex}");
                 return 0;
             }
+        }
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            this.TrySave(Name, inputElement, nameof(Name));
+            this.TrySave(ReferenceValues, inputElement, nameof(ReferenceValues));
+            this.TrySave(SampleOrientation, inputElement, nameof(SampleOrientation));
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(ReferenceValues));
+            this.TryLoad(inputElement, nameof(SampleOrientation));
+            return true;
         }
 
         #endregion

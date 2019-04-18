@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceSample : IComparable<IReferenceSample>, INamed
+    public interface IReferenceSample : IComparable<IReferenceSample>, INamed, IXmlStorable
     {
         /// <summary>
         /// reference values, which characterise the sample
