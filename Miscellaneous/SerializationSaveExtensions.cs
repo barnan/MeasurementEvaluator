@@ -67,16 +67,20 @@ namespace Miscellaneous
                 }
             }
 
-            if (inputType.IsInterface)
+            if (inputType == typeof(Type))
             {
-                attribute = new XAttribute("Type", inputobj.GetType().AssemblyQualifiedName);
+                attribute = new XAttribute("Assembly", ((Type)inputobj).AssemblyQualifiedName);
+            }
+            else
+            {
+                attribute = new XAttribute("Assembly", inputobj.GetType().AssemblyQualifiedName);
             }
 
             // type:
             if (inputType == typeof(Type))
             {
                 XElement typeElement = new XElement(name, inputobj.ToString());
-                typeElement.SetAttributeValue("Assembly", inputType.AssemblyQualifiedName);
+                typeElement.Add(attribute);
                 inputElement.Add(typeElement);
                 return;
             }
@@ -85,6 +89,7 @@ namespace Miscellaneous
             if (typeof(string).IsAssignableFrom(inputType))
             {
                 XElement stringElement = new XElement(name, inputobj);
+                stringElement.Add(attribute);
                 inputElement.Add(stringElement);
                 return;
             }
@@ -93,6 +98,7 @@ namespace Miscellaneous
             if (inputType.IsValueType && inputType.IsPrimitive)
             {
                 XElement valueElement = new XElement(name, inputobj);
+                valueElement.Add(attribute);
                 inputElement.Add(valueElement);
                 return;
             }
@@ -106,10 +112,10 @@ namespace Miscellaneous
             {
                 XElement xmlStorableXElement = new XElement(serializableName);
                 xmlstorableVerison.SaveToXml(xmlStorableXElement);
-                if (attribute != null)
-                {
-                    xmlStorableXElement.Add(attribute);
-                }
+                //if (attribute != null)
+                //{
+                xmlStorableXElement.Add(attribute);
+                //}
                 inputElement.Add(xmlStorableXElement);
                 return;
             }
@@ -141,13 +147,14 @@ namespace Miscellaneous
                     XElement refListXElement = new XElement(serializableName);
                     foreach (var item in listVersion)
                     {
-                        if (attribute != null)
-                        {
-                            refListXElement.Add(attribute);
-                        }
+                        //if (attribute != null)
+                        //{
+                        //refListXElement.Add(attribute);
+                        //}
 
                         Save(item, itemTypes[0], refListXElement, null);
                     }
+                    refListXElement.Add(attribute);
                     inputElement.Add(refListXElement);
                 }
                 return;
@@ -163,14 +170,15 @@ namespace Miscellaneous
 
             // serializable:
             //if (serializableVersion != null)
-            if (inputType.IsSerializable)
+            if (inputobj.GetType().IsSerializable)
             {
                 using (var memoryStream = new MemoryStream())
                 using (TextWriter streamWriter = new StreamWriter(memoryStream))
                 {
-                    var xmlSerializer = new XmlSerializer(inputType);
+                    var xmlSerializer = new XmlSerializer(inputobj.GetType());
                     xmlSerializer.Serialize(streamWriter, inputobj);
                     XElement serializedXElement = XElement.Parse(Encoding.ASCII.GetString(memoryStream.ToArray()));
+                    serializedXElement.Add(attribute);
                     inputElement.Add(serializedXElement);
                 }
             }

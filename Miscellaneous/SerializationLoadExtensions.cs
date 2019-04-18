@@ -80,25 +80,15 @@ namespace Miscellaneous
                 }
             }
 
-            if (inputType.IsInterface)
+            if (inputElement.Attribute("Assembly") != null)
             {
-                attributeValue = inputElement.Attribute("Type").Value;
+                attributeValue = inputElement.Attribute("Assembly").Value;
             }
 
 
             if (typeof(Type).IsAssignableFrom(inputType))
             {
-                string assemblyName = inputElement.Attribute("Assembly").Value;
-                if (inputElement.Value.Contains("String"))
-                {
-                    var variable = Activator.CreateInstance(Type.GetType(inputElement.Value), "".ToCharArray());
-                    return variable.GetType();
-                }
-                else
-                {
-                    var variable = Activator.CreateInstance(Type.GetType(inputElement.Value));
-                    return variable.GetType();
-                }
+                return Type.GetType(attributeValue);
             }
 
             if (typeof(string).IsAssignableFrom(inputType))
@@ -120,12 +110,12 @@ namespace Miscellaneous
 
             if (typeof(IXmlStorable).IsAssignableFrom(inputType))
             {
-                var storableObject = (IXmlStorable)Activator.CreateInstance(Type.GetType(attributeValue ?? serializableName));
+                var storableObject = (IXmlStorable)Activator.CreateInstance(Type.GetType(attributeValue/* ?? serializableName*/));
                 storableObject.LoadFromXml(inputElement);
                 return storableObject;
             }
 
-            if (typeof(IList).IsAssignableFrom(inputType) || typeof(IList).IsAssignableFrom(Type.GetType(attributeValue ?? "")))
+            if (typeof(IList).IsAssignableFrom(inputType) || typeof(IList).IsAssignableFrom(Type.GetType(attributeValue/* ?? ""*/)))
             {
                 Type listGenericType = typeof(List<>);
                 Type listType = listGenericType.MakeGenericType(inputType.GetGenericArguments()[0]);
@@ -153,7 +143,7 @@ namespace Miscellaneous
                         string attribContent = null;
                         if (xItem.HasAttributes)
                         {
-                            attribContent = xItem.Attribute("Type").Value;
+                            attribContent = xItem.Attribute("Assembly").Value;
                         }
 
                         var loadedListElement = Load(elementType, xItem, itemName);
@@ -164,9 +154,9 @@ namespace Miscellaneous
                 return list;
             }
 
-            if (inputType.IsSerializable)
+            if (Type.GetType(attributeValue).IsSerializable)
             {
-                var xmlSerializer = new XmlSerializer(inputType);
+                var xmlSerializer = new XmlSerializer(Type.GetType(attributeValue));
                 return xmlSerializer.Deserialize(inputElement.CreateReader());
 
             }
