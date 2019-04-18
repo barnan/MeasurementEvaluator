@@ -27,19 +27,10 @@ namespace Miscellaneous
             PropertyInfo propInfo = propInfos.FirstOrDefault(p => p.Name == name);
 
 
-            if (propInfo.PropertyType.IsInterface && typeof(IXmlStorable).IsAssignableFrom(propInfo.PropertyType))
-            {
-                IXmlStorable xmlStorableChild = propInfo.GetValue(storable) as IXmlStorable;
-                xmlStorableChild.LoadFromXml(inputElement);
-            }
-            else
-            {
-                XElement propElement = inputElement.Element(name);
-                Type type = propInfo.PropertyType;
-                var value = Load(type, propElement, name);
-                propInfo.SetValue(storable, value);
-            }
-
+            XElement propElement = inputElement.Element(name);
+            Type type = propInfo.PropertyType;
+            var value = Load(type, propElement, name);
+            propInfo.SetValue(storable, value);
         }
 
 

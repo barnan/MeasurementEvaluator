@@ -79,7 +79,7 @@ namespace Miscellaneous
             // type:
             if (inputType == typeof(Type))
             {
-                XElement typeElement = new XElement(name, inputobj.ToString());
+                XElement typeElement = new XElement(serializableName, inputobj.ToString());
                 typeElement.Add(attribute);
                 inputElement.Add(typeElement);
                 return;
@@ -88,8 +88,7 @@ namespace Miscellaneous
             // string:
             if (typeof(string).IsAssignableFrom(inputType))
             {
-                XElement stringElement = new XElement(name, inputobj);
-                stringElement.Add(attribute);
+                XElement stringElement = new XElement(serializableName, inputobj);
                 inputElement.Add(stringElement);
                 return;
             }
@@ -97,14 +96,10 @@ namespace Miscellaneous
             // value type:
             if (inputType.IsValueType && inputType.IsPrimitive)
             {
-                XElement valueElement = new XElement(name, inputobj);
-                valueElement.Add(attribute);
+                XElement valueElement = new XElement(serializableName, inputobj);
                 inputElement.Add(valueElement);
                 return;
             }
-
-
-            //ISerializable serializableVersion = inputobj as ISerializable;
 
 
             //xml sotrable:
@@ -112,10 +107,7 @@ namespace Miscellaneous
             {
                 XElement xmlStorableXElement = new XElement(serializableName);
                 xmlstorableVerison.SaveToXml(xmlStorableXElement);
-                //if (attribute != null)
-                //{
                 xmlStorableXElement.Add(attribute);
-                //}
                 inputElement.Add(xmlStorableXElement);
                 return;
             }
@@ -147,11 +139,6 @@ namespace Miscellaneous
                     XElement refListXElement = new XElement(serializableName);
                     foreach (var item in listVersion)
                     {
-                        //if (attribute != null)
-                        //{
-                        //refListXElement.Add(attribute);
-                        //}
-
                         Save(item, itemTypes[0], refListXElement, null);
                     }
                     refListXElement.Add(attribute);
@@ -183,5 +170,6 @@ namespace Miscellaneous
                 }
             }
         }
+
     }
 }
