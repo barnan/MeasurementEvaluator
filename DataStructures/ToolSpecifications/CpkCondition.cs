@@ -1,6 +1,7 @@
 ﻿using Interfaces;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System;
 using System.Xml.Linq;
 
@@ -56,21 +57,25 @@ namespace DataStructures.ToolSpecifications
 
         public override XElement SaveToXml(XElement inputElement)
         {
-            XElement simpleConditionNode = new XElement(nameof(CpkCondition));
-            simpleConditionNode.SetAttributeValue(nameof(Name), Name);
-            simpleConditionNode.Add(new XElement(nameof(CalculationType), CalculationType));
-            simpleConditionNode.Add(new XElement(nameof(ConditionRelation), ConditionRelation));
-            simpleConditionNode.Add(new XElement(nameof(RelOrAbs), RelOrAbs));
-            simpleConditionNode.Add(new XElement(nameof(Value), Value));
-            simpleConditionNode.Add(new XElement(nameof(HalfTolerance), HalfTolerance));
+            inputElement.SetAttributeValue(nameof(Name), Name);
+            this.TrySave(CalculationType, inputElement, nameof(CalculationType));
+            this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
+            this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
+            this.TrySave(Value, inputElement, nameof(Value));
+            this.TrySave(HalfTolerance, inputElement, nameof(HalfTolerance));
 
-            inputElement.Add(simpleConditionNode);
             return inputElement;
         }
 
         public override bool LoadFromXml(XElement inputElement)
         {
-            throw new NotImplementedException();
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(CalculationType));
+            this.TryLoad(inputElement, nameof(ConditionRelation));
+            this.TryLoad(inputElement, nameof(RelOrAbs));
+            this.TryLoad(inputElement, nameof(Value));
+            this.TryLoad(inputElement, nameof(HalfTolerance));
+            return true;
         }
     }
 

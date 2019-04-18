@@ -19,16 +19,23 @@ namespace DataStructures.ToolSpecifications
             Name = name;
         }
 
+        public Quantity()
+        {
+        }
+
+
         public XElement SaveToXml(XElement inputElement)
         {
-            this.TrySave(Dimension, inputElement, nameof(Dimension));
             this.TrySave(Name, inputElement, nameof(Name));
+            this.TrySave(Dimension, inputElement, nameof(Dimension));
             return inputElement;
         }
 
         public bool LoadFromXml(XElement inputElement)
         {
-            throw new System.NotImplementedException();
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(Dimension));
+            return true;
         }
     }
 }

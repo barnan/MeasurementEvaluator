@@ -58,7 +58,7 @@ namespace DataStructures.ToolSpecifications
 
         public override XElement SaveToXml(XElement inputElement)
         {
-            inputElement.SetAttributeValue(nameof(Name), Name);
+            this.TrySave(Name, inputElement, nameof(Name));
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
@@ -71,24 +71,14 @@ namespace DataStructures.ToolSpecifications
 
         public override bool LoadFromXml(XElement inputElement)
         {
-            foreach (XElement xelement in inputElement.Elements(nameof(SimpleCondition)))
-            {
-                var nameElement = xelement.Element(nameof(Name));
-
-                if (Name == nameElement.Value)
-                {
-                    CalculationType = (CalculationTypes)Enum.Parse(typeof(CalculationTypes), xelement.Element(nameof(CalculationType)).Value);
-                    ConditionRelation = (Relations)xelement.Element(nameof(ConditionRelation)).Value;
-                    RelOrAbs = (Relativity)Enum.Parse(typeof(Relativity), xelement.Element(nameof(RelOrAbs)).Value);
-                    Value = double.Parse(xelement.Element(nameof(Value)).Value);
-                    ValidIf_Value = double.Parse(xelement.Element(nameof(ValidIf_Value)).Value);
-                    ValidIf = (Relations)xelement.Element(nameof(ValidIf)).Value;
-
-                    return true;
-                }
-            }
-
-            return false;
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(CalculationType));
+            this.TryLoad(inputElement, nameof(ConditionRelation));
+            this.TryLoad(inputElement, nameof(RelOrAbs));
+            this.TryLoad(inputElement, nameof(Value));
+            this.TryLoad(inputElement, nameof(ValidIf));
+            this.TryLoad(inputElement, nameof(ValidIf_Value));
+            return true;
         }
 
     }

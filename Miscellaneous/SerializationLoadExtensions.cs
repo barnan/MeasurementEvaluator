@@ -27,9 +27,9 @@ namespace Miscellaneous
             PropertyInfo propInfo = propInfos.FirstOrDefault(p => p.Name == name);
 
 
-            XElement propElement = inputElement.Element(name);
             Type type = propInfo.PropertyType;
-            var value = Load(type, propElement, name);
+            XElement propXElement = inputElement.Element(name) ?? inputElement.Element(type.Name);
+            var value = Load(type, propXElement, name);
             propInfo.SetValue(storable, value);
         }
 

@@ -8,18 +8,24 @@ using System.Xml.Linq;
 namespace Interfaces
 {
 
-    // type safe enum, but not sealed!!
-    public class Relations : IXmlStorable
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Relations : IXmlStorable
     {
         private const string XELEMENT_ATTRIBUTE_NAME = "Value";
 
-        public string Name { get; }
-        public int Value { get; }
+        public string Name { get; private set; }
+        public int Value { get; private set; }
 
         public Relations(string name, int value)
         {
             Name = name;
             Value = value;
+        }
+
+        public Relations()
+        {
         }
 
         public class RelationsEnumValues
@@ -54,7 +60,6 @@ namespace Interfaces
 
         public static explicit operator Relations(string val)
         {
-
             if (EQUAL.ToString() == val)
             {
                 return EQUAL;
@@ -110,11 +115,18 @@ namespace Interfaces
 
         public bool LoadFromXml(XElement inputElement)
         {
-            throw new NotImplementedException();
+            string attributeValue = inputElement.Attribute(XELEMENT_ATTRIBUTE_NAME).Value;
+            var element = (Relations)attributeValue;
+            Name = element.Name;
+            Value = element.Value;
+            return true;
         }
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum Relativity
     {
         Absolute = 0,
@@ -122,6 +134,9 @@ namespace Interfaces
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum SampleOrientation
     {
         Orientation_0 = 0,
@@ -131,6 +146,10 @@ namespace Interfaces
     };
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public enum Units
     {
         [Description("ADU")]
@@ -154,16 +173,25 @@ namespace Interfaces
     };
 
 
-    // type safe enum pattern:
-    public sealed class ToolNames
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class ToolNames : IXmlStorable
     {
-        public string Name { get; }
-        public int Value { get; }
+        private const string XELEMENT_TOOLNAME = "ToolName";
+
+        public string Name { get; private set; }
+        public int Value { get; private set; }
 
         public ToolNames(string name, int value)
         {
             Name = name;
             Value = value;
+        }
+
+        public ToolNames()
+        {
         }
 
         public static ToolNames Unknown = new ToolNames(nameof(Unknown), 0);
@@ -180,9 +208,69 @@ namespace Interfaces
         {
             return Name;
         }
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            inputElement.SetAttributeValue(XELEMENT_TOOLNAME, Name);
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            string attributeValue = inputElement.Attribute(XELEMENT_TOOLNAME).Value;
+            var element = (ToolNames)attributeValue;
+            Name = element.Name;
+            Value = element.Value;
+            return true;
+        }
+
+        public static explicit operator ToolNames(string val)
+        {
+            if (val == Unknown.Name)
+            {
+                return Unknown;
+            }
+            if (val == TTR.Name)
+            {
+                return TTR;
+            }
+            if (val == SHP.Name)
+            {
+                return SHP;
+            }
+            if (val == WSIChipping.Name)
+            {
+                return WSIChipping;
+            }
+            if (val == WSIContamination.Name)
+            {
+                return WSIContamination;
+            }
+            if (val == PED.Name)
+            {
+                return PED;
+            }
+            if (val == MCI.Name)
+            {
+                return MCI;
+            }
+            if (val == PLI.Name)
+            {
+                return PLI;
+            }
+            if (val == UPCD.Name)
+            {
+                return UPCD;
+            }
+            return null;
+        }
+
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum CalculationTypes
     {
         Unknown = 0,
@@ -194,6 +282,9 @@ namespace Interfaces
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ResultEventArgs : EventArgs
     {
         public IResult Result { get; }
@@ -204,6 +295,10 @@ namespace Interfaces
     }
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class DataCollectorResultEventArgs : EventArgs
     {
         List<string> SpecificationName { get; }
@@ -220,6 +315,10 @@ namespace Interfaces
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class CustomEventArg<T> : EventArgs
     {
         private readonly T _data;
@@ -233,6 +332,10 @@ namespace Interfaces
     }
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public enum MessageSeverityLevels
     {
         Trace,

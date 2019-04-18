@@ -87,7 +87,9 @@ namespace DataStructures.ToolSpecifications
 
         public bool LoadFromXml(XElement inputElement)
         {
-            throw new System.NotImplementedException();
+            this.TryLoad(inputElement, nameof(Conditions));
+            this.TryLoad(inputElement, nameof(Quantity));
+            return true;
         }
 
         #endregion

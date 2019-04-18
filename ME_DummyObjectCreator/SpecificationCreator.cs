@@ -90,7 +90,9 @@ namespace ME_DummyObjectCreator
             XElement output = specificationHandler.SaveToXml(conditionElement);
             output.Save("example");
 
-            readerWriter.WriteToFile<IToolSpecification>(specificationHandler, specificationPath);
+            ToolSpecification spec = new ToolSpecification();
+            spec.LoadFromXml(output);
+
         }
 
 

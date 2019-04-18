@@ -35,6 +35,7 @@ namespace DataStructures.ToolSpecifications
 
         #region ctor
 
+
         public ToolSpecification()
         {
             _logger = LogManager.GetCurrentClassLogger();
@@ -137,7 +138,10 @@ namespace DataStructures.ToolSpecifications
 
         public bool LoadFromXml(XElement inputElement)
         {
-            throw new NotImplementedException();
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(ToolName));
+            this.TryLoad(inputElement, nameof(Specifications));
+            return true;
         }
     }
 }
