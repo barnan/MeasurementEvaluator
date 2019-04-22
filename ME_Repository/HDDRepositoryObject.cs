@@ -1,5 +1,4 @@
 ﻿using Interfaces.DataAcquisition;
-using Interfaces.Misc;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -8,19 +7,15 @@ using System.Linq;
 
 namespace DataAcquisitions.ME_Repository
 {
-
-    // TODO: and maybe they should handle their own save/load??
-
-    internal abstract class HDDRepository<T> : IRepository<T>
-        where T : class, IComparable<T>, INamed
+    internal class HDDRepositoryObject : IRepository<object>
     {
 
-        protected readonly HDDRepositoryParameters _parameters;
-        protected readonly object _lockObject = new object();
+        private readonly HDDRepositoryParameters _parameters;
+        private readonly object _lockObject = new object();
         protected string _repositoryPath;
 
 
-        protected HDDRepository(HDDRepositoryParameters parameters)
+        protected HDDRepositoryObject(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }
@@ -104,9 +99,9 @@ namespace DataAcquisitions.ME_Repository
         #endregion
 
 
-        #region IRepository<T>
+        #region IRepository<object>
 
-        public virtual IEnumerable<T> Find(Predicate<T> predicate)
+        public virtual IEnumerable<object> Find(Predicate<object> predicate)
         {
             lock (_lockObject)
             {
@@ -116,10 +111,10 @@ namespace DataAcquisitions.ME_Repository
                     return null;
                 }
 
-                List<T> itemList = GetItemList(_repositoryPath);
-                List<T> hitList = new List<T>();
+                List<object> itemList = GetItemList(_repositoryPath);
+                List<object> hitList = new List<object>();
 
-                foreach (T item in itemList)
+                foreach (object item in itemList)
                 {
                     if (predicate(item))
                     {
@@ -132,7 +127,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual T Get(int index, IComparer<T> comparer = null)
+        public virtual object Get(int index, IComparer<object> comparer = null)
         {
             lock (_lockObject)
             {
@@ -144,7 +139,7 @@ namespace DataAcquisitions.ME_Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_repositoryPath);
+                    List<object> itemList = GetItemList(_repositoryPath);
 
                     if (index > itemList.Count)
                     {
@@ -174,7 +169,7 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
-        public virtual T Get(string name)
+        public virtual object Get(string name)
         {
             lock (_lockObject)
             {
@@ -186,7 +181,7 @@ namespace DataAcquisitions.ME_Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_repositoryPath).Where(p => p.Name == name).ToList();
+                    List<object> itemList = GetItemList(_repositoryPath).Where(p => p.Name == name).ToList();
 
                     if (itemList.Count == 0)
                     {
@@ -214,7 +209,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual bool Add(T item)
+        public virtual bool Add(object item)
         {
             lock (_lockObject)
             {
@@ -251,7 +246,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual void AddRange(IEnumerable<T> items)
+        public virtual void AddRange(IEnumerable<object> items)
         {
             foreach (var item in items)
             {
@@ -269,7 +264,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual bool Remove(T item)
+        public virtual bool Remove(object item)
         {
             lock (_lockObject)
             {
@@ -319,7 +314,7 @@ namespace DataAcquisitions.ME_Repository
         #endregion
 
 
-        protected bool CheckFolder(string fullPath)
+        private bool CheckFolder(string fullPath)
         {
             if (string.IsNullOrEmpty(fullPath))
             {
@@ -347,9 +342,50 @@ namespace DataAcquisitions.ME_Repository
             return true;
         }
 
-        protected abstract List<T> GetItemList(string fullPath);
+        private List<object> GetItemList(string fullPath)
+        {
+            try
+            {
+                if (!CheckFolder(fullPath))
+                {
+                    _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
+                    return null;
+                }
+
+                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilters}").ToList();
+                List<object> fileContentDictionary = new List<object>(fileNameList.Count);
+
+                foreach (string fileName in fileNameList)
+                {
+
+                    object obj = _parameters.HDDReaderWriter.ReadFromFile<T>(fileName);
+
+                    fileContentDictionary.Add(obj);
+
+                    if (_parameters.Logger.IsTraceEnabled)
+                    {
+                        _parameters.Logger.MethodTrace($"File read: {fileName}");
+                    }
+                }
+
+                if (_parameters.Logger.IsTraceEnabled)
+                {
+                    foreach (var item in fileContentDictionary)
+                    {
+                        _parameters.Logger.MethodTrace($"Items: {item}");
+                    }
+                }
+
+                return fileContentDictionary;
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
+                return null;
+            }
+        }
+
 
 
     }
-
 }

@@ -1,5 +1,4 @@
 ﻿using Interfaces.Misc;
-using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +6,7 @@ namespace Interfaces.DataAcquisition
 {
 
     public interface IRepository<T> : IInitializable
-        where T : class
+         where T : class, IComparable<T>, INamed
     {
 
         T Get(int index, IComparer<T> comparer = null);
@@ -25,11 +24,6 @@ namespace Interfaces.DataAcquisition
         bool Remove(T item);
 
         void RemoveRange(IEnumerable<T> items);
-
     }
-
-
-    
-
 
 }
