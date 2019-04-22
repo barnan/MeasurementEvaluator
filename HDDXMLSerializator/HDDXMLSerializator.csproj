@@ -53,6 +53,7 @@
     <Compile Include="HDDXmlSerializator.cs" />
     <Compile Include="HDDXmlSerializatorParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecificationSerializator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

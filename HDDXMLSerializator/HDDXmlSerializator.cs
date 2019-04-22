@@ -1,15 +1,13 @@
 ﻿using Interfaces;
 using Interfaces.DataAcquisition;
-using Miscellaneous;
+using Interfaces.Misc;
 using System;
 using System.IO;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace DataAcquisitions.HDDXmlSerializator
 {
-    internal class HDDXmlSerializator : IHDDFileReaderWriter
+    internal abstract class HDDXmlSerializator : IHDDFileReaderWriter
     {
 
         private readonly HDDXmlSerializatorParameters _parameters;
@@ -22,55 +20,29 @@ namespace DataAcquisitions.HDDXmlSerializator
         }
 
 
-        public T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
+        public abstract object ReadFromFile(string fileNameAndPath, ToolNames toolName = null);
+
+
+
+
+        public bool WriteToFile(object tobj, string fileNameAndPath)
         {
             lock (_lockObject)
             {
                 try
                 {
-                    if (!CheckFilePath(fileNameAndPath))
+                    if (tobj is IXmlStorable storable)
                     {
-                        _parameters.Logger.MethodError($"File does not exists: {fileNameAndPath}");
-                        return default(T);
+                        Type type = tobj.GetType();
+
+                        XElement element = new XElement(type.FullName);
+                        storable.SaveToXml(element);
+                        element.Save(fileNameAndPath);
+                        return true;
                     }
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-
-                    using (StreamReader sr = new StreamReader(fileNameAndPath))
-                    {
-                        return (T)serializer.Deserialize(sr);
-                    }
-                }
-                catch (Exception)
-                {
-                    return default(T);
-                }
-            }
-        }
-
-
-        public bool WriteToFile<T>(T tobj, string fileNameAndPath)
-        {
-            lock (_lockObject)
-            {
-                try
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-
-                    XmlWriterSettings settings = new XmlWriterSettings();
-                    settings.Indent = true;
-                    settings.OmitXmlDeclaration = false;
-                    settings.Encoding = new UnicodeEncoding(true, true);
-
-                    using (StreamWriter sw = new StreamWriter(fileNameAndPath))
-                    {
-                        using (XmlWriter xw = XmlWriter.Create(sw, settings))
-                        {
-                            serializer.Serialize(xw, tobj);
-                        }
-                    }
-
-                    return true;
+                    _parameters.Logger.Error($"Received object is not {nameof(IXmlStorable)}");
+                    return false;
                 }
                 catch (Exception)
                 {

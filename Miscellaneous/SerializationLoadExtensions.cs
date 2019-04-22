@@ -101,12 +101,12 @@ namespace Miscellaneous
 
             if (typeof(IXmlStorable).IsAssignableFrom(inputType))
             {
-                var storableObject = (IXmlStorable)Activator.CreateInstance(Type.GetType(attributeValue/* ?? serializableName*/));
+                var storableObject = (IXmlStorable)Activator.CreateInstance(Type.GetType(attributeValue));
                 storableObject.LoadFromXml(inputElement);
                 return storableObject;
             }
 
-            if (typeof(IList).IsAssignableFrom(inputType) || typeof(IList).IsAssignableFrom(Type.GetType(attributeValue/* ?? ""*/)))
+            if (typeof(IList).IsAssignableFrom(inputType) || typeof(IList).IsAssignableFrom(Type.GetType(attributeValue)))
             {
                 Type listGenericType = typeof(List<>);
                 Type listType = listGenericType.MakeGenericType(inputType.GetGenericArguments()[0]);

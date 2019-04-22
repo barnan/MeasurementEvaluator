@@ -8,19 +8,15 @@ using System.Linq;
 
 namespace DataAcquisitions.ME_Repository
 {
-
-    // TODO: and maybe they should handle their own save/load??
-
-    internal abstract class HDDRepository<T> : IRepository<T>
-        where T : class, IComparable<T>, INamed
+    internal class HDDRepository : IRepository
     {
 
-        protected readonly HDDRepositoryParameters _parameters;
-        protected readonly object _lockObject = new object();
+        private readonly HDDRepositoryParameters _parameters;
+        private readonly object _lockObject = new object();
         protected string _repositoryPath;
 
 
-        protected HDDRepository(HDDRepositoryParameters parameters)
+        internal HDDRepository(HDDRepositoryParameters parameters)
         {
             _parameters = parameters;
         }
@@ -104,22 +100,22 @@ namespace DataAcquisitions.ME_Repository
         #endregion
 
 
-        #region IRepository<T>
+        #region IRepository<object>
 
-        public virtual IEnumerable<T> Find(Predicate<T> predicate)
+        public virtual IEnumerable<object> Find(Predicate<object> predicate)
         {
             lock (_lockObject)
             {
                 if (predicate == null)
                 {
-                    _parameters.Logger.MethodError("The arrived predicate is null.");
+                    _parameters.Logger.MethodError("The received predicate is null.");
                     return null;
                 }
 
-                List<T> itemList = GetItemList(_repositoryPath);
-                List<T> hitList = new List<T>();
+                IEnumerable<object> itemList = GetItemList(_repositoryPath).Select(P => P.Value);
+                List<object> hitList = new List<object>();
 
-                foreach (T item in itemList)
+                foreach (object item in itemList)
                 {
                     if (predicate(item))
                     {
@@ -132,7 +128,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual T Get(int index, IComparer<T> comparer = null)
+        public virtual object Get(int index, IComparer<object> comparer = null)
         {
             lock (_lockObject)
             {
@@ -144,7 +140,7 @@ namespace DataAcquisitions.ME_Repository
                         return null;
                     }
 
-                    List<T> itemList = GetItemList(_repositoryPath);
+                    List<object> itemList = GetItemList(_repositoryPath).Select(p => p.Value).ToList();
 
                     if (index > itemList.Count)
                     {
@@ -174,7 +170,7 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
-        public virtual T Get(string name)
+        public virtual object Get(string name)
         {
             lock (_lockObject)
             {
@@ -182,11 +178,11 @@ namespace DataAcquisitions.ME_Repository
                 {
                     if (string.IsNullOrEmpty(name))
                     {
-                        _parameters.Logger.MethodError("The arrived name is null or empty.");
-                        return null;
+                        _parameters.Logger.MethodError($"Received name null or empty.");
+                        return false;
                     }
 
-                    List<T> itemList = GetItemList(_repositoryPath).Where(p => p.Name == name).ToList();
+                    List<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath).Where(p => p.Key == name).ToList();
 
                     if (itemList.Count == 0)
                     {
@@ -214,22 +210,24 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual bool Add(T item)
+        public virtual bool Add(object item)
         {
             lock (_lockObject)
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(item?.Name))
+                    INamed named = item as INamed;
+
+                    if (string.IsNullOrEmpty(named?.Name))
                     {
-                        _parameters.Logger.MethodError("Arrived specification is null or its filename is null or empty.");
+                        _parameters.Logger.MethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
                         return false;
                     }
 
-                    string fullName = Path.Combine(_repositoryPath, item.Name);
+                    string fullName = Path.Combine(_repositoryPath, CreateFileNameFromName(named.Name));
                     if (File.Exists(fullName))
                     {
-                        _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
+                        _parameters.Logger.MethodError($"The created fileName: {fullName} already exists.");
                         return false;
                     }
 
@@ -250,8 +248,18 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
+        private string CreateFileNameFromName(string name)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Received name is not appropriate.");
+            }
 
-        public virtual void AddRange(IEnumerable<T> items)
+            string[] nameElements = name.Split(' ');
+            return nameElements[0];
+        }
+
+        public virtual void AddRange(IEnumerable<object> items)
         {
             foreach (var item in items)
             {
@@ -269,31 +277,40 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual bool Remove(T item)
+        public virtual bool Remove(object item)
         {
             lock (_lockObject)
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(item?.Name))
+                    INamed named = item as INamed;
+
+                    if (string.IsNullOrEmpty(named?.Name))
                     {
-                        _parameters.Logger.MethodError("Arrived specification is null or its filename is null or empty.");
+                        _parameters.Logger.MethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
                         return false;
                     }
 
+                    List<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
 
-                    string fullName = Path.Combine(_repositoryPath, item.Name);
-                    if (File.Exists(fullName))
+                    var selectedItem = itemList.Where(p => p.Key == named.Name).ToList();
+                    if (selectedItem.Count > 1)
                     {
-                        _parameters.Logger.MethodError($"The given file: {item.Name} already exists.");
+                        _parameters.Logger.MethodError($"More files contain {named.Name} -> {string.Join(",", selectedItem.Select(p => p.Key))}");
                         return false;
                     }
 
-                    File.Delete(fullName);
+                    if (selectedItem.Count < 1)
+                    {
+                        _parameters.Logger.MethodError($"No files contain {named.Name}");
+                        return false;
+                    }
+
+                    File.Delete(selectedItem[0].Key);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"Item removed: {fullName}");
+                        _parameters.Logger.MethodTrace($"Item removed: {selectedItem[0].Key}");
                     }
 
                     return true;
@@ -307,7 +324,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual void RemoveRange(IEnumerable<T> items)
+        public virtual void RemoveRange(IEnumerable<object> items)
         {
             foreach (var item in items)
             {
@@ -319,7 +336,7 @@ namespace DataAcquisitions.ME_Repository
         #endregion
 
 
-        protected bool CheckFolder(string fullPath)
+        private bool CheckFolder(string fullPath)
         {
             if (string.IsNullOrEmpty(fullPath))
             {
@@ -347,9 +364,50 @@ namespace DataAcquisitions.ME_Repository
             return true;
         }
 
-        protected abstract List<T> GetItemList(string fullPath);
+        private List<KeyValuePair<string, object>> GetItemList(string fullPath)
+        {
+            try
+            {
+                if (!CheckFolder(fullPath))
+                {
+                    _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
+                    return null;
+                }
+
+                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilters}").ToList();
+                List<KeyValuePair<string, object>> fileContentDictionary = new List<KeyValuePair<string, object>>(fileNameList.Count);
+
+                foreach (string fileName in fileNameList)
+                {
+
+                    object obj = _parameters.HDDReaderWriter.ReadFromFile(fileName);
+
+                    fileContentDictionary.Add(new KeyValuePair<string, object>(fileName, obj));
+
+                    if (_parameters.Logger.IsTraceEnabled)
+                    {
+                        _parameters.Logger.MethodTrace($"File read: {fileName}");
+                    }
+                }
+
+                if (_parameters.Logger.IsTraceEnabled)
+                {
+                    foreach (var item in fileContentDictionary)
+                    {
+                        _parameters.Logger.MethodTrace($"Items: {item}");
+                    }
+                }
+
+                return fileContentDictionary;
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.MethodError($"Exception occured: {ex}");
+                return null;
+            }
+        }
+
 
 
     }
-
 }

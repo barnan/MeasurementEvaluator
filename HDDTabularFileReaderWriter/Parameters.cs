@@ -7,7 +7,7 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
     internal class Parameters
     {
         [Configuration("Separator", "Separator", LoadComponent = false)]
-        private char _separator;
+        private char _separator = default(char);
         internal char Separator => _separator;
 
         public ILogger Logger { get; private set; }

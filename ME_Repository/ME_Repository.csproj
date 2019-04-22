@@ -51,8 +51,8 @@
   <ItemGroup>
     <Compile Include="HDDMeasurementDataRepository.cs" />
     <Compile Include="HDDReferenceRepository.cs" />
+    <Compile Include="HDDRepositoryGeneric.cs" />
     <Compile Include="HDDRepository.cs" />
-    <Compile Include="HDDRepositoryObject.cs" />
     <Compile Include="HDDRepositoryParameters.cs" />
     <Compile Include="HDDSpecificationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -23,39 +23,33 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 
 
 
-        public bool WriteToFile<T>(T obj, string fileNameAndPath)
+        public bool WriteToFile(object obj, string fileNameAndPath)
         {
             throw new NotImplementedException();
         }
 
 
 
-        public T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
+        public object ReadFromFile(string fileNameAndPath, ToolNames toolName = null)
         {
             lock (_lockObject)
             {
-                T data;
+                object data;
 
                 try
                 {
                     if (!CanRead(fileNameAndPath))
                     {
                         _parameters.Logger.MethodError($"File is not readable: {fileNameAndPath}");
-                        return default(T);
+                        return null;
                     }
 
-                    if (typeof(T) != typeof(IToolMeasurementData))
-                    {
-                        _parameters.Logger.MethodError($"The {nameof(HDDTabularMeasurementFileReaderWriter)} can read only tabular data, {typeof(T)} can not be handled.");
-                        return default(T);
-                    }
-
-                    data = (T)ReadTabularDataFile(fileNameAndPath, toolName);
+                    data = ReadTabularDataFile(fileNameAndPath, toolName);
                 }
                 catch (Exception ex)
                 {
                     _parameters.Logger.MethodError($"Exception occured: {ex}");
-                    return default(T);
+                    return null;
                 }
 
                 return data;

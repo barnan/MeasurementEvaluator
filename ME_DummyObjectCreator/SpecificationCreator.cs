@@ -89,7 +89,7 @@ namespace ME_DummyObjectCreator
             };
 
 
-            XElement specificationElement = new XElement("Specification");
+            XElement specificationElement = new XElement(nameof(ToolSpecification));
             XElement output = specificationHandler.SaveToXml(specificationElement);
 
             output.Save(Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));

@@ -42,7 +42,8 @@ namespace MeasurementEvaluator.ME_Matching
                     return false;
                 }
 
-                _specificationMeasDataReferencePairs = _parameters.MatchingFileReader.ReadFromFile<List<MatchingKeyValuePairs>>(_parameters.BindingFilePath);
+                // todo: check type
+                _specificationMeasDataReferencePairs = (List<MatchingKeyValuePairs>)_parameters.MatchingFileReader.ReadFromFile(_parameters.BindingFilePath);
                 if (_specificationMeasDataReferencePairs == null)
                 {
                     _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.BindingFilePath}");

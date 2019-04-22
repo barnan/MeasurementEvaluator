@@ -5,25 +5,24 @@ using System.Collections.Generic;
 namespace Interfaces.DataAcquisition
 {
 
-    public interface IRepository<T> : IInitializable
-         where T : class, IComparable<T>, INamed
+    public interface IRepository : IInitializable
     {
 
-        T Get(int index, IComparer<T> comparer = null);
+        object Get(int index, IComparer<object> comparer = null);
 
-        T Get(string name);
+        object Get(string name);
 
         IEnumerable<string> GetAllNames();
 
-        IEnumerable<T> Find(Predicate<T> predicate);
+        IEnumerable<object> Find(Predicate<object> predicate);
 
-        bool Add(T item);
+        bool Add(object item);
 
-        void AddRange(IEnumerable<T> items);
+        void AddRange(IEnumerable<object> items);
 
-        bool Remove(T item);
+        bool Remove(object item);
 
-        void RemoveRange(IEnumerable<T> items);
+        void RemoveRange(IEnumerable<object> items);
     }
 
 }
