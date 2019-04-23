@@ -6,7 +6,6 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -158,9 +157,6 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         #region IDataCollector
 
-        public event EventHandler<DataCollectorResultEventArgs> FileNamesReadyEvent;
-
-
         public void GatherData(string specificationName, List<string> measurementDataFileNames, string referenceName = null)
         {
             lock (_lockObj)
@@ -183,26 +179,35 @@ namespace MeasurementEvaluator.ME_DataCollector
             }
         }
 
-
-        public void GatherNames()
+        public List<ToolNames> GetAvailableToolNames()
         {
             lock (_lockObj)
             {
-                try
+                IEnumerable<string> specificationNames = _parameters.SpecificationRepository.GetAllNames();
+                List<ToolNames> toolList = new List<ToolNames>();
+                foreach (string specificationName in specificationNames)
                 {
-                    if (!IsInitialized)
-                    {
-                        _parameters.Logger.LogError("Not initialized yet.");
-                        return;
-                    }
 
-                    _processorQueue.Enqueue(new GetNameQueueElement(_parameters, FileNamesReadyEvent));
+
+                    toolList.Add
                 }
-                catch (Exception ex)
-                {
-                    _parameters.Logger.LogError($"Exception occured: {ex}");
-                    return;
-                }
+
+            }
+        }
+
+        public List<IToolSpecification> GetSpecifications(ToolNames toolName)
+        {
+            lock (_lockObj)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public List<IReferenceSample> GetReferenceSamples()
+        {
+            lock (_lockObj)
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -288,7 +293,6 @@ namespace MeasurementEvaluator.ME_DataCollector
     }
 
 
-
     internal abstract class QueueElement
     {
         protected DataCollectorParameters _parameters;
@@ -355,50 +359,6 @@ namespace MeasurementEvaluator.ME_DataCollector
                                                                                         specification,
                                                                                         measurementDatas,
                                                                                         reference)));
-        }
-    }
-
-    internal class GetNameQueueElement : QueueElement
-    {
-        private EventHandler<DataCollectorResultEventArgs> _fileNamesReadyEvent;
-
-        public GetNameQueueElement(DataCollectorParameters parameters, EventHandler<DataCollectorResultEventArgs> fileNamesReadyEvent)
-            : base(parameters)
-        {
-            _fileNamesReadyEvent = fileNamesReadyEvent;
-        }
-
-
-        internal override void Process()
-        {
-            try
-            {
-                List<string> specificationcresult = _parameters.SpecificationRepository.GetAllNames().ToList();
-                List<string> referenceresult = _parameters.ReferenceRepository.GetAllNames().ToList();
-                List<string> measurementdata = _parameters.MeasurementDataRepository.GetAllNames().ToList();
-                if (specificationcresult.Count == 0)
-                {
-                    _parameters.Logger.MethodError("Length of obtained SPECIFICATION list is zero or the list is null.");
-                }
-
-                if (measurementdata.Count == 0)
-                {
-                    _parameters.Logger.MethodError("Length of obtained MEASUREMENT DATA list is zero or the list is null.");
-                }
-
-                if (referenceresult.Count == 0)
-                {
-                    _parameters.Logger.MethodError("Length of obtained REFERENCE list is zero or the list is null.");
-                }
-
-
-                var filenamesreadyevent = _fileNamesReadyEvent;
-                filenamesreadyevent?.Invoke(this, new DataCollectorResultEventArgs(specificationcresult, measurementdata, referenceresult));
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.Error($"Exception occured during data request: {ex.Message}");
-            }
         }
     }
 

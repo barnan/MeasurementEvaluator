@@ -1,11 +1,11 @@
 ﻿using Interfaces.Misc;
-using Interfaces.Result;
-using System;
+using Interfaces.ReferenceSample;
+using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 
 namespace Interfaces.DataAcquisition
 {
-    public interface IDataCollector : IInitializable, IResultProvider
+    public interface IDataCollector : IInitializable
     {
         /// <summary>
         /// Gatheres the data with the given name inputs. When ready calls its ResultReady event.
@@ -15,15 +15,10 @@ namespace Interfaces.DataAcquisition
         /// <param name="referenceName">names of required reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
         void GatherData(string specifactionName, List<string> measurementDataFileNames, string referenceName = null);
 
-        /// <summary>
-        /// Method the gather the available measurement data, speficiation and reference file names from the given media
-        /// </summary>
-        void GatherNames();
+        List<ToolNames> GetAvailableToolNames();
 
-        /// <summary>
-        /// Fires an event when the GatherNames is finished
-        /// </summary>
-        event EventHandler<DataCollectorResultEventArgs> FileNamesReadyEvent;
+        List<IToolSpecification> GetSpecifications(ToolNames toolName);
 
+        List<IReferenceSample> GetReferenceSamples();
     }
 }
