@@ -4,7 +4,6 @@ using Interfaces.DataAcquisition;
 using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 
 namespace ME_DummyObjectCreator
 {
@@ -89,10 +88,11 @@ namespace ME_DummyObjectCreator
             };
 
 
-            XElement specificationElement = new XElement(nameof(ToolSpecification));
-            XElement output = specificationHandler.SaveToXml(specificationElement);
+            readerWriter.WriteToFile(specificationHandler, Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
 
-            output.Save(Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
+            //XElement specificationElement = new XElement(nameof(ToolSpecification));
+            //XElement output = specificationHandler.SaveToXml(specificationElement);
+            //output.Save(Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
         }
     }
 }

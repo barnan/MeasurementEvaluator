@@ -324,7 +324,7 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
 
-            IToolSpecification specification = _parameters.SpecificationRepository.Get(_specificationName);
+            IToolSpecification specification = (IToolSpecification)_parameters.SpecificationRepository.Get(_specificationName);
             if (specification == null)
             {
                 _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
@@ -334,7 +334,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
             foreach (string name in _measurementDataFileNames)
             {
-                measurementDatas.Add(_parameters.MeasurementDataRepository.Get(name));
+                measurementDatas.Add((IToolMeasurementData)_parameters.MeasurementDataRepository.Get(name));
             }
             if (measurementDatas.Count < 1)
             {
@@ -342,7 +342,7 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return;
             }
 
-            IReferenceSample reference = _parameters.ReferenceRepository.Get(_referenceName);
+            IReferenceSample reference = (IReferenceSample)_parameters.ReferenceRepository.Get(_referenceName);
             if (reference == null)
             {
                 _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");

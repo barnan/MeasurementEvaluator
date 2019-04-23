@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace DataAcquisitions.HDDXmlSerializator
 {
-    internal abstract class HDDXmlSerializator : IHDDFileReaderWriter
+    internal class HDDXmlSerializator : IHDDFileReaderWriter
     {
 
         private readonly HDDXmlSerializatorParameters _parameters;
@@ -20,9 +20,28 @@ namespace DataAcquisitions.HDDXmlSerializator
         }
 
 
-        public abstract object ReadFromFile(string fileNameAndPath, ToolNames toolName = null);
+        public object ReadFromFile(string fileNameAndPath, ToolNames toolName = null)
+        {
+            lock (_lockObject)
+            {
+                try
+                {
+                    if (!CanRead(fileNameAndPath))
+                    {
+                        _parameters.Logger.Error($"File is not accessible: {fileNameAndPath}");
+                    }
 
-
+                    XElement readElement = XElement.Load(fileNameAndPath);
+                    object createdObj = Activator.CreateInstance(Type.GetType(readElement.Name.LocalName));
+                    return createdObj;
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.Error($"Exception occured: {ex}");
+                    return false;
+                }
+            }
+        }
 
 
         public bool WriteToFile(object tobj, string fileNameAndPath)
@@ -44,8 +63,9 @@ namespace DataAcquisitions.HDDXmlSerializator
                     _parameters.Logger.Error($"Received object is not {nameof(IXmlStorable)}");
                     return false;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _parameters.Logger.Error($"Exception occured: {ex}");
                     return false;
                 }
             }
@@ -74,5 +94,4 @@ namespace DataAcquisitions.HDDXmlSerializator
         }
 
     }
-
 }

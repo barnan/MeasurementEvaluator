@@ -3,7 +3,6 @@ using Interfaces.DataAcquisition;
 using Interfaces.ReferenceSample;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Linq;
 
 namespace ME_DummyObjectCreator
 {
@@ -22,10 +21,11 @@ namespace ME_DummyObjectCreator
 
             ReferenceSample referenceSample1 = new ReferenceSample("Thisckness Reference 500", referenceValues);
 
-            XElement referenceElement = new XElement(nameof(ReferenceSample));
-            XElement output = referenceSample1.SaveToXml(referenceElement);
+            readerWriter.WriteToFile(referenceSample1, Path.Combine(referencePath, $"TTR_Spec_1{_fileExtension}"));
 
-            output.Save(Path.Combine(referencePath, $"TTR_Spec_1{_fileExtension}"));
+            //XElement referenceElement = new XElement(nameof(ReferenceSample));
+            //XElement output = referenceSample1.SaveToXml(referenceElement);
+            //output.Save(Path.Combine(referencePath, $"TTR_Spec_1{_fileExtension}"));
 
         }
     }
