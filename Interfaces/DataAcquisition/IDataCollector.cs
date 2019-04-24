@@ -1,11 +1,12 @@
 ﻿using Interfaces.Misc;
 using Interfaces.ReferenceSample;
+using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 
 namespace Interfaces.DataAcquisition
 {
-    public interface IDataCollector : IInitializable
+    public interface IDataCollector : IInitializable, IResultProvider
     {
         /// <summary>
         /// Gatheres the data with the given name inputs. When ready calls its ResultReady event.

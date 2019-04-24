@@ -13,7 +13,7 @@ namespace DataAcquisitions.ME_Repository
 
         private readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
-        protected string _repositoryPath;
+        private string _repositoryPath;
 
 
         internal HDDRepository(HDDRepositoryParameters parameters)
@@ -82,7 +82,7 @@ namespace DataAcquisitions.ME_Repository
         public bool IsInitialized { get; private set; }
 
 
-        protected void OnInitialized()
+        private void OnInitialized()
         {
             var initialized = Initialized;
 
@@ -90,7 +90,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        protected void OnClosed()
+        private void OnClosed()
         {
             var closed = Closed;
 
@@ -179,7 +179,7 @@ namespace DataAcquisitions.ME_Repository
                     if (string.IsNullOrEmpty(name))
                     {
                         _parameters.Logger.MethodError($"Received name null or empty.");
-                        return false;
+                        return null;
                     }
 
                     List<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath).Where(p => p.Key == name).ToList();
@@ -248,16 +248,6 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
-        private string CreateFileNameFromName(string name)
-        {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException("Received name is not appropriate.");
-            }
-
-            string[] nameElements = name.Split(' ');
-            return nameElements[0];
-        }
 
         public virtual void AddRange(IEnumerable<object> items)
         {
@@ -272,7 +262,18 @@ namespace DataAcquisitions.ME_Repository
         {
             lock (_lockObject)
             {
-                return GetItemList(_repositoryPath).Select(p => p.ToString()).ToList();
+                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
+                List<string> nameList = new List<string>();
+                foreach (KeyValuePair<string, object> pair in itemList)
+                {
+                    if (pair.Value is INamed namedPairValue)
+                    {
+                        nameList.Add(namedPairValue.Name);
+                        continue;
+                    }
+                    nameList.Add(pair.Key);
+                }
+                return nameList;
             }
         }
 
@@ -407,7 +408,16 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
+        private string CreateFileNameFromName(string name)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Received name is not appropriate.");
+            }
 
+            string[] nameElements = name.Split(' ');
+            return nameElements[0];
+        }
 
     }
 }

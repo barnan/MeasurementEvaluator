@@ -1,10 +1,11 @@
-﻿using Interfaces.DataAcquisition;
+﻿using Frame.PluginLoader.Interfaces;
+using Interfaces.DataAcquisition;
 using System;
 using System.Collections.Generic;
 
 namespace DataAcquisitions.ME_Repository
 {
-    class RepositoryFactory
+    public class RepositoryFactory : IPluginFactory
     {
         Dictionary<string, IRepository> _repositoryDictionary = new Dictionary<string, IRepository>();
 

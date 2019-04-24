@@ -6,6 +6,7 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -66,29 +67,22 @@ namespace MeasurementEvaluator.ME_DataCollector
 
             lock (_lockObj)
             {
-                try
+                if (!IsInitialized)
                 {
-                    if (!IsInitialized)
-                    {
-                        return;
-                    }
-
-                    _tokenSource.Cancel();
-                    _processQueueResetEvent.Reset();
-                    _processorQueue.Clear();
-
-                    _parameters.SpecificationRepository.Close();
-                    _parameters.ReferenceRepository.Close();
-                    _parameters.MeasurementDataRepository.Close();
-
-                    IsInitialized = false;
-                    OnClosed();
-                    _parameters.Logger.MethodInfo("Closed.");
+                    return;
                 }
-                catch (Exception ex)
-                {
-                    _parameters.Logger.LogError($"Exception occured: {ex}");
-                }
+
+                _tokenSource.Cancel();
+                _processQueueResetEvent.Reset();
+                _processorQueue.Clear();
+
+                _parameters.SpecificationRepository.Close();
+                _parameters.ReferenceRepository.Close();
+                _parameters.MeasurementDataRepository.Close();
+
+                IsInitialized = false;
+                OnClosed();
+                _parameters.Logger.MethodInfo("Closed.");
             }
         }
 
@@ -102,54 +96,46 @@ namespace MeasurementEvaluator.ME_DataCollector
 
             lock (_lockObj)
             {
-                try
+                if (IsInitialized)
                 {
-                    if (IsInitialized)
-                    {
-                        return true;
-                    }
-
-                    if (!_parameters.SpecificationRepository.Initiailze())
-                    {
-                        _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
-
-                        return false;
-                    }
-
-                    if (!_parameters.ReferenceRepository.Initiailze())
-                    {
-                        _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
-                        return false;
-                    }
-
-                    if (!_parameters.MeasurementDataRepository.Initiailze())
-                    {
-                        _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
-                        return false;
-                    }
-
-                    _processorQueue = new Queue<QueueElement>();
-                    _tokenSource = new CancellationTokenSource();
-
-                    // start queue procesor thread:
-                    Thread thread = new Thread(ProcessQueueElements)
-                    {
-                        IsBackground = false,
-                        Name = "DataCollectorQueueElementProcessor"
-                    };
-                    thread.Start(_tokenSource.Token);
-
-                    IsInitialized = true;
-                    OnInitialized();
-                    _parameters.Logger.MethodInfo("Initialized.");
-
-                    return IsInitialized;
+                    return true;
                 }
-                catch (Exception ex)
+
+                if (!_parameters.SpecificationRepository.Initiailze())
                 {
-                    _parameters.Logger.LogError($"Exception occured: {ex}");
-                    return IsInitialized = false;
+                    _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
+
+                    return false;
                 }
+
+                if (!_parameters.ReferenceRepository.Initiailze())
+                {
+                    _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
+                    return false;
+                }
+
+                if (!_parameters.MeasurementDataRepository.Initiailze())
+                {
+                    _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
+                    return false;
+                }
+
+                _processorQueue = new Queue<QueueElement>();
+                _tokenSource = new CancellationTokenSource();
+
+                // start queue procesor thread:
+                Thread thread = new Thread(ProcessQueueElements)
+                {
+                    IsBackground = false,
+                    Name = "DataCollectorQueueElementProcessor"
+                };
+                thread.Start(_tokenSource.Token);
+
+                IsInitialized = true;
+                OnInitialized();
+                _parameters.Logger.MethodInfo("Initialized.");
+
+                return IsInitialized;
             }
         }
 
@@ -161,21 +147,14 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             lock (_lockObj)
             {
-                try
+                if (!IsInitialized)
                 {
-                    if (!IsInitialized)
-                    {
-                        _parameters.Logger.LogError("Not initialized yet.");
-                        return;
-                    }
-
-                    _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specificationName, referenceName, measurementDataFileNames, ResultReadyEvent));
-
+                    _parameters.Logger.LogError("Not initialized yet.");
+                    return;
                 }
-                catch (Exception ex)
-                {
-                    _parameters.Logger.LogError($"Exception occured: {ex}");
-                }
+
+                _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specificationName, referenceName, measurementDataFileNames, ResultReadyEvent));
+
             }
         }
 
@@ -185,29 +164,82 @@ namespace MeasurementEvaluator.ME_DataCollector
             {
                 IEnumerable<string> specificationNames = _parameters.SpecificationRepository.GetAllNames();
                 List<ToolNames> toolList = new List<ToolNames>();
+
                 foreach (string specificationName in specificationNames)
                 {
-
-
-                    toolList.Add
+                    try
+                    {
+                        var specification = (IToolSpecification)_parameters.SpecificationRepository.Get(specificationName);
+                        if (!toolList.Contains(specification.ToolName))
+                        {
+                            toolList.Add(specification.ToolName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _parameters.Logger.Error($"Exception occured: {ex}");
+                    }
                 }
 
+                return toolList;
             }
         }
+
 
         public List<IToolSpecification> GetSpecifications(ToolNames toolName)
         {
             lock (_lockObj)
             {
-                throw new NotImplementedException();
+                IEnumerable<string> specificationNames = _parameters.SpecificationRepository.GetAllNames();
+                List<IToolSpecification> specList = new List<IToolSpecification>();
+
+                foreach (string specificationName in specificationNames)
+                {
+                    try
+                    {
+                        var specification = (IToolSpecification)_parameters.SpecificationRepository.Get(specificationName);
+                        if (specList.Any(p => p.Name == specification.Name))
+                        {
+                            _parameters.Logger.Error($"The given specification name is already added: {specification.Name}");
+                            continue;
+                        }
+                        specList.Add(specification);
+                    }
+                    catch (Exception ex)
+                    {
+                        _parameters.Logger.Error($"Exception occured: {ex}");
+                    }
+                }
+                return specList;
             }
         }
+
 
         public List<IReferenceSample> GetReferenceSamples()
         {
             lock (_lockObj)
             {
-                throw new NotImplementedException();
+                IEnumerable<string> sampleNames = _parameters.ReferenceRepository.GetAllNames();
+                List<IReferenceSample> refList = new List<IReferenceSample>();
+
+                foreach (string sampleName in sampleNames)
+                {
+                    try
+                    {
+                        var reference = (IReferenceSample)_parameters.SpecificationRepository.Get(sampleName);
+                        if (refList.Any(p => p.Name == reference.Name))
+                        {
+                            _parameters.Logger.Error($"The given specification name is already added: {reference.Name}");
+                            continue;
+                        }
+                        refList.Add(reference);
+                    }
+                    catch (Exception ex)
+                    {
+                        _parameters.Logger.Error($"Exception occured: {ex}");
+                    }
+                }
+                return refList;
             }
         }
 
@@ -277,15 +309,29 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         private void OnInitialized()
         {
-            var initializedEvent = Initialized;
-            initializedEvent?.Invoke(this, new EventArgs());
+            try
+            {
+                var initializedEvent = Initialized;
+                initializedEvent?.Invoke(this, new EventArgs());
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured during subscribed method call: {ex.Message}");
+            }
         }
 
 
         private void OnClosed()
         {
-            var closedEvent = Closed;
-            closedEvent?.Invoke(this, new EventArgs());
+            try
+            {
+                var closedEvent = Closed;
+                closedEvent?.Invoke(this, new EventArgs());
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured during subscribed method call: {ex.Message}");
+            }
         }
 
         #endregion

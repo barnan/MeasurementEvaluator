@@ -20,6 +20,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         internal bool Load(string sectionName)
         {
+            Logger = LogManager.GetCurrentClassLogger();
+
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             Name = sectionName;
