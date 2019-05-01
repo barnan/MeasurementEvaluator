@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Frame.PluginLoader
 {
@@ -20,7 +21,7 @@ namespace Frame.PluginLoader
         /// <param name="xmlDoc"></param>
         /// <param name="inputElement">input xml element</param>
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
-        internal bool Load(XmlDocument xmlDoc, XmlElement inputElement)
+        internal bool Load(XElement inputElement)
         {
             Components = new List<Component>();
 

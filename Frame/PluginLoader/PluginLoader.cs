@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Frame.PluginLoader
 {
@@ -28,7 +29,9 @@ namespace Frame.PluginLoader
         private static ILogger _logger;
         private static object _lockObj = new object();
         private static ComponentList _componentList;
-        private readonly string _componentSectionName = "ComponentList";
+        private const string _COMPONENT_SECTION_NAME = "ComponentList";
+        private const string _COMPONENT_FILE_NAME = "ComponentList";
+        private const string _CONFIG_FILE_EXTENSION = ".config";
 
         private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
@@ -91,43 +94,43 @@ namespace Frame.PluginLoader
             {
                 lock (_lockObj)
                 {
-                    if (!IsPathFolder(configurationFolder))
+                    if (!IsPathFolder(configurationFolder) || !Directory.Exists(configurationFolder))
                     {
                         return false;
                     }
                     ConfigurationFolder = configurationFolder;
 
-                    if (!IsPathFolder(currentExeFolder))
+                    if (!IsPathFolder(currentExeFolder) || !Directory.Exists(currentExeFolder))
                     {
                         return false;
                     }
                     CurrentExeFolder = currentExeFolder;
 
-                    if (!IsPathFolder(pluginsFolder))
+                    if (!IsPathFolder(pluginsFolder) || !Directory.Exists(pluginsFolder))
                     {
                         return false;
                     }
                     PluginsFolder = pluginsFolder;
 
-                    if (!IsPathFolder(specificationFolder))
+                    if (!IsPathFolder(specificationFolder) || !Directory.Exists(specificationFolder))
                     {
                         return false;
                     }
                     SpecificationFolder = specificationFolder;
 
-                    if (!IsPathFolder(referenceFolder))
+                    if (!IsPathFolder(referenceFolder) || !Directory.Exists(referenceFolder))
                     {
                         return false;
                     }
                     ReferenceFolder = referenceFolder;
 
-                    if (!IsPathFolder(measDataFolder))
+                    if (!IsPathFolder(measDataFolder) || !Directory.Exists(measDataFolder))
                     {
                         return false;
                     }
                     MeasurementDataFolder = measDataFolder;
 
-                    if (!IsPathFolder(resultFolder))
+                    if (!IsPathFolder(resultFolder) || !Directory.Exists(resultFolder))
                     {
                         return false;
                     }
@@ -383,7 +386,7 @@ namespace Frame.PluginLoader
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("Arrived path is null, empty or whitespace.");
+                throw new ArgumentNullException("Arrived path is null, empty or consists of whitespace.");
             }
 
             FileAttributes attr = File.GetAttributes(path);
@@ -404,20 +407,19 @@ namespace Frame.PluginLoader
         {
             try
             {
-                string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
+                string componentListFileName = Path.Combine(ConfigurationFolder, $"{_COMPONENT_FILE_NAME}{_CONFIG_FILE_EXTENSION}");
 
                 ConfigManager.CreateConfigFileIfNotExisting(componentListFileName);
 
                 ComponentList componentList = new ComponentList();
-                XmlDocument xmlDoc = new XmlDocument();
-                XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, _componentSectionName);
+                XElement componentListSection = ConfigManager.LoadSectionXElement(componentListFileName, _COMPONENT_SECTION_NAME);
 
                 if (componentListSection == null)
                 {
-                    componentListSection = ConfigManager.CreateXmlSection(xmlDoc, _componentSectionName, typeof(ComponentList));
+                    componentListSection = ConfigManager.CreateSectionXElement(_COMPONENT_SECTION_NAME, typeof(ComponentList));
                 }
 
-                if (!componentList.Load(xmlDoc, componentListSection))
+                if (!componentList.Load(componentListSection))
                 {
                     ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
                 }

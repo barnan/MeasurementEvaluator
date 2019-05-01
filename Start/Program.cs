@@ -55,14 +55,12 @@ namespace Start
                     _measurementDataFolder,
                     _resultFolder))
                 {
-                    PluginLoader.SendToErrrorLogAndConsole("Frame setup was not successful.");
+                    PluginLoader.SendToErrrorLogAndConsole("Frame initialization was NOT successful.");
                     return;
                 }
                 pluginLoader.Start();
 
                 PluginLoader.SendToInfoLogAndConsole("Frame started successfully.");
-
-
             }
             catch (Exception ex)
             {
@@ -162,7 +160,7 @@ namespace Start
                     PluginLoader.SendToInfoLogAndConsole($"{specialFolder} created.");
                 }
 
-                PluginLoader.SendToInfoLogAndConsole($"{name} ({specialFolder}) wil be used.");
+                PluginLoader.SendToInfoLogAndConsole($"{specialFolder} will be used as {name}");
                 return specialFolder;
             }
 
@@ -170,8 +168,8 @@ namespace Start
 
             if (!Directory.Exists(combinedPath))
             {
-                PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) created.");
                 Directory.CreateDirectory(combinedPath);
+                PluginLoader.SendToInfoLogAndConsole($"Combined {name} directory ({combinedPath}) created.");
             }
 
             PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
