@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Frame.PluginLoader
@@ -412,12 +411,7 @@ namespace Frame.PluginLoader
                 ConfigManager.CreateConfigFileIfNotExisting(componentListFileName);
 
                 ComponentList componentList = new ComponentList();
-                XElement componentListSection = ConfigManager.LoadSectionXElement(componentListFileName, _COMPONENT_SECTION_NAME);
-
-                if (componentListSection == null)
-                {
-                    componentListSection = ConfigManager.CreateSectionXElement(_COMPONENT_SECTION_NAME, typeof(ComponentList));
-                }
+                XElement componentListSection = ConfigManager.LoadSectionXElementFromFile(componentListFileName, _COMPONENT_SECTION_NAME, typeof(ComponentList));
 
                 if (!componentList.Load(componentListSection))
                 {

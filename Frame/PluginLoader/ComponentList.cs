@@ -1,7 +1,6 @@
 ﻿using Frame.PluginLoader.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Frame.PluginLoader
@@ -25,33 +24,33 @@ namespace Frame.PluginLoader
         {
             Components = new List<Component>();
 
-            if (inputElement.HasChildNodes)
+            if (inputElement.HasElements)
             {
-                XmlNode componentsNode = inputElement.FirstChild;
+                XElement componentsNode = inputElement.Elements().First();
 
-                if (componentsNode != null && componentsNode.HasChildNodes)
+                if (componentsNode != null && componentsNode.HasElements)
                 {
-                    foreach (XmlNode componentNode in componentsNode.ChildNodes)
+                    foreach (XElement componentXElement in componentsNode.Elements())
                     {
                         string nameText = null;
                         string assemblyText = null;
                         string interfaceText = null;
 
-                        foreach (XmlAttribute attribute in componentNode.Attributes)
+                        foreach (XAttribute attribute in componentXElement.Attributes())
                         {
                             if (attribute.Name == NAME_ATTRIBUTE_NAME)
                             {
-                                nameText = attribute.InnerText;
+                                nameText = attribute.Value;
                             }
 
                             if (attribute.Name == ASSEMBLY_ATTRIBUTE_NAME)
                             {
-                                assemblyText = attribute.InnerText;
+                                assemblyText = attribute.Value;
                             }
 
                             if (attribute.Name == INTERFACE_ATTRIBUTE_NAME)
                             {
-                                interfaceText = attribute.InnerText;
+                                interfaceText = attribute.Value;
                             }
                         }
 
@@ -67,22 +66,19 @@ namespace Frame.PluginLoader
             // create dummy component for example:
             if (Components.Count == 0)
             {
-                XmlElement dummyelement = xmlDoc.CreateElement("Components");
-                XmlElement dummyChildElement = xmlDoc.CreateElement(COMPONENT_NODE_NAME);
+                XElement dummyelement = new XElement("Components");
+                XElement dummyChildElement = new XElement(COMPONENT_NODE_NAME);
 
-                XmlAttribute nameAttribute = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
-                nameAttribute.InnerText = "MeasurementEvaluator";
-                XmlAttribute typeAttribute = xmlDoc.CreateAttribute(ASSEMBLY_ATTRIBUTE_NAME);
-                typeAttribute.InnerText = "Measurement EValuator";
-                XmlAttribute interfaceAttribute = xmlDoc.CreateAttribute(INTERFACE_ATTRIBUTE_NAME);
-                interfaceAttribute.InnerText = nameof(IRunable);
+                XAttribute nameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, "MeasurementEvaluator");
+                XAttribute typeAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, "Measurement EValuator");
+                XAttribute interfaceAttribute = new XAttribute(INTERFACE_ATTRIBUTE_NAME, nameof(IRunable));
 
-                dummyChildElement.Attributes.Append(nameAttribute);
-                dummyChildElement.Attributes.Append(typeAttribute);
-                dummyChildElement.Attributes.Append(interfaceAttribute);
+                dummyChildElement.Add(nameAttribute);
+                dummyChildElement.Add(typeAttribute);
+                dummyChildElement.Add(interfaceAttribute);
 
-                dummyelement.AppendChild(dummyChildElement);
-                inputElement.AppendChild(dummyelement);
+                dummyelement.Add(dummyChildElement);
+                inputElement.Add(dummyelement);
 
                 return false;
             }
