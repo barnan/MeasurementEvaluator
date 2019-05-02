@@ -65,6 +65,16 @@ namespace Frame.ConfigHandler
 
                 XElement currentSectionElement = LoadSectionXElementFromFile(currentConfigFileName, sectionName, type);
 
+                if (currentSectionElement == null)
+                {
+                    currentSectionElement = CreateSectionXElement(sectionName, type);
+                }
+
+                //if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
+                //{
+                //    currentSectionElement = FixAssembylAttributeOfSection(currentSectionElement, type);
+                //}
+
                 // edit according to the received parameter object:
 
                 bool differenceFound = false;
@@ -79,7 +89,7 @@ namespace Frame.ConfigHandler
                     XAttribute valueAttribute = null;
                     IEnumerable<XElement> xmlListElementNode = null;
 
-                    foreach (XElement parameterNode in currentSectionElement.Nodes())
+                    foreach (XNode parameterNode in currentSectionElement.Nodes())
                     {
                         if (parameterNode is XComment)       // todo
                         {
@@ -91,14 +101,14 @@ namespace Frame.ConfigHandler
                             continue;       // todo
                         }
 
-                        xmlListElementNode = parameterNode.Elements();
+                        xmlListElementNode = parameterElement.Elements();
                         nameAttribute = GetAttributeValueByAttributeName(parameterElement, NAME_ATTRIBUTE_NAME);
                         valueAttribute = GetAttributeValueByAttributeName(parameterElement, VALUE_ATTRIBUTE_NAME);
 
                         if (nameAttribute == null || valueAttribute == null)
                         {
                             parameterNode.Remove();
-                            _logger.Info($"Section ({parameterNode.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
+                            _logger.Info($"Section ({parameterElement.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
 
                             continue;
                         }
@@ -226,11 +236,46 @@ namespace Frame.ConfigHandler
             return true;
         }
 
-        private XElement LoadXmlFromFile(string currentConfigFileName)
+        private bool CheckAssemblyAttributeOfSection(XElement currentSectionElement, Type type)
+        {
+            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
+
+            if (assemblyVersionInfo == null)
+            {
+                return false;
+            }
+
+            return true;    // todo befejezni
+        }
+
+        private XElement FixAssembylAttributeOfSection(XElement currentSectionElement, Type type)
+        {
+            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
+
+            if (assemblyVersionInfo != null)
+            {
+                foreach (XAttribute item in currentSectionElement.Attributes())
+                {
+                    item.Remove();
+                }
+            }
+            XAttribute attrib = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
+            currentSectionElement.Add(attrib);
+            return currentSectionElement;
+        }
+
+        internal XElement LoadXmlFromFile(string currentConfigFileName)
         {
             // read in the xml:
-
-            return XElement.Load(currentConfigFileName);
+            try
+            {
+                return XElement.Load(currentConfigFileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Exception occured loading xml from file ({currentConfigFileName}): {ex.Message}");
+                return null;
+            }
         }
 
         internal void CreateConfigFileIfNotExisting(string currentConfigFileName)
@@ -256,7 +301,7 @@ namespace Frame.ConfigHandler
             _logger.Info($"New {sectionName} section was created.");
 
             XAttribute sectionNameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, sectionName);
-            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Name);
+            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
 
             createdXElement.Add(sectionNameAttribute);
             createdXElement.Add(assemblyAttribute);
@@ -276,7 +321,7 @@ namespace Frame.ConfigHandler
             // read in the xml:
 
             XElement rootXml = LoadXmlFromFile(currentConfigFileName);
-            XElement oldElement = LoadSectionXElementFromFile(rootXml, sectionName, type);
+            XElement oldElement = LoadSectionXElementFromXElement(rootXml, sectionName, type);
 
             if (rootXml == null || rootXml.NodeType != XmlNodeType.Element)
             {
@@ -330,7 +375,7 @@ namespace Frame.ConfigHandler
 
         #region private
 
-        private XAttribute GetAttributeValueByAttributeName(XElement element, string attributeName)
+        internal XAttribute GetAttributeValueByAttributeName(XElement element, string attributeName)
         {
             foreach (XAttribute attribute in element.Attributes())
             {
@@ -346,12 +391,20 @@ namespace Frame.ConfigHandler
         internal XElement LoadSectionXElementFromFile(string fileName, string sectionName, Type type)
         {
             XElement readXml = LoadXmlFromFile(fileName);
-            XElement currentSectionElement = LoadSectionXElementFromFile(readXml, sectionName, type);
+
+            XElement currentSectionElement = LoadSectionXElementFromXElement(readXml, sectionName, type);
+
             return currentSectionElement;
         }
 
-        internal XElement LoadSectionXElementFromFile(XElement inputXElement, string sectionName, Type type)
+        internal XElement LoadSectionXElementFromXElement(XElement inputXElement, string sectionName, Type type)
         {
+            if (inputXElement == null)
+            {
+                _logger.Error($"Received ipnutXElement is null, {sectionName} is not found.");
+                return null;
+            }
+
             IEnumerable<XElement> childElements = inputXElement.Elements();
             XElement currentSection = null;
 
@@ -379,17 +432,10 @@ namespace Frame.ConfigHandler
                 }
             }
 
-            if (currentSection == null)
-            {
-                _logger.Info($"Section ({sectionName}) was not found.");
-
-                currentSection = CreateSectionXElement(sectionName, type);
-            }
-
             return currentSection;
         }
 
-        private XComment CreateXComment(string description)
+        internal XComment CreateXComment(string description)
         {
             if (string.IsNullOrEmpty(description))
             {
@@ -399,7 +445,7 @@ namespace Frame.ConfigHandler
             return new XComment(description);
         }
 
-        private XElement CreateFieldSectionXElement(string name, string value)
+        internal XElement CreateFieldSectionXElement(string name, string value)
         {
             if (string.IsNullOrEmpty(name))
             {

@@ -413,9 +413,14 @@ namespace Frame.PluginLoader
                 ComponentList componentList = new ComponentList();
                 XElement componentListSection = ConfigManager.LoadSectionXElementFromFile(componentListFileName, _COMPONENT_SECTION_NAME, typeof(ComponentList));
 
+                if (componentListSection == null)
+                {
+                    componentListSection = ConfigManager.CreateSectionXElement(_COMPONENT_SECTION_NAME, typeof(ComponentList));
+                }
+
                 if (!componentList.Load(componentListSection))
                 {
-                    ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
+                    ConfigManager.Save(componentListFileName, _COMPONENT_SECTION_NAME, componentListSection, typeof(ComponentList));
                 }
 
                 return componentList;

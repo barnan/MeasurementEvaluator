@@ -11,6 +11,7 @@ namespace Frame.PluginLoader
         private const string NAME_ATTRIBUTE_NAME = "Name";
         private const string ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
         private const string INTERFACE_ATTRIBUTE_NAME = "Interfaces";
+        private const string COMPONENTS_NODE_NAME = "Components";
         private const string COMPONENT_NODE_NAME = "Component";
 
 
@@ -26,11 +27,11 @@ namespace Frame.PluginLoader
 
             if (inputElement.HasElements)
             {
-                XElement componentsNode = inputElement.Elements().First();
+                XElement componentsElement = inputElement.Element(COMPONENTS_NODE_NAME);
 
-                if (componentsNode != null && componentsNode.HasElements)
+                if (componentsElement != null && componentsElement.HasElements)
                 {
-                    foreach (XElement componentXElement in componentsNode.Elements())
+                    foreach (XElement componentXElement in componentsElement.Elements())
                     {
                         string nameText = null;
                         string assemblyText = null;
@@ -66,11 +67,11 @@ namespace Frame.PluginLoader
             // create dummy component for example:
             if (Components.Count == 0)
             {
-                XElement dummyelement = new XElement("Components");
+                XElement dummyelement = new XElement(COMPONENTS_NODE_NAME);
                 XElement dummyChildElement = new XElement(COMPONENT_NODE_NAME);
 
                 XAttribute nameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, "MeasurementEvaluator");
-                XAttribute typeAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, "Measurement EValuator");
+                XAttribute typeAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, "MeasurementEValuator");
                 XAttribute interfaceAttribute = new XAttribute(INTERFACE_ATTRIBUTE_NAME, nameof(IRunable));
 
                 dummyChildElement.Add(nameAttribute);
