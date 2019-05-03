@@ -50,7 +50,7 @@ namespace MeasurementEvaluator
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
                 if (!successfulLoading)
                 {
-                    PluginLoader.SendToErrrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
+                    PluginLoader.SendToErrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
                 }
 
                 if (_createDummyObjects)
@@ -73,6 +73,16 @@ namespace MeasurementEvaluator
 
                 DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollectorName);
                 Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
+
+                if (DataCollector.Initiailze())
+                {
+                    PluginLoader.SendToErrorLogAndConsole($"{nameof(DataCollector)} could not been initialized.");
+                }
+
+                if (Evaluator.Initiailze())
+                {
+                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
+                }
 
                 // Start UI:
                 Thread appThread = new Thread(() =>
@@ -98,10 +108,12 @@ namespace MeasurementEvaluator
                 _uiFinishedEvent.WaitOne();
 
                 PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
+
+                Thread.Sleep(10);
             }
             catch (Exception ex)
             {
-                PluginLoader.SendToErrrorLogAndConsole($"Exception occured: {ex}");
+                PluginLoader.SendToErrorLogAndConsole($"Exception occured: {ex}");
             }
         }
 

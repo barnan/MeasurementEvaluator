@@ -59,6 +59,8 @@ namespace Frame.ConfigHandler
                 _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
                 _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
 
+                bool differenceFound = false;
+
                 CreateConfigFileIfNotExisting(currentConfigFileName);
 
                 // load the required section in XElement format:
@@ -70,14 +72,15 @@ namespace Frame.ConfigHandler
                     currentSectionElement = CreateSectionXElement(sectionName, type);
                 }
 
-                //if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
-                //{
-                //    currentSectionElement = FixAssembylAttributeOfSection(currentSectionElement, type);
-                //}
+                if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
+                {
+                    currentSectionElement = FixAssembylAttributeOfSection(currentSectionElement, type);
+                    differenceFound = true;
+                }
 
                 // edit according to the received parameter object:
 
-                bool differenceFound = false;
+
 
                 FieldInfo currentObjectField = null;
                 FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
@@ -240,7 +243,7 @@ namespace Frame.ConfigHandler
         {
             string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
 
-            if (assemblyVersionInfo == null)
+            if (assemblyVersionInfo == null || assemblyVersionInfo != type.Assembly.FullName)
             {
                 return false;
             }
@@ -254,7 +257,7 @@ namespace Frame.ConfigHandler
 
             if (assemblyVersionInfo != null)
             {
-                foreach (XAttribute item in currentSectionElement.Attributes())
+                foreach (XAttribute item in currentSectionElement.Attributes(ASSEMBLY_ATTRIBUTE_NAME))
                 {
                     item.Remove();
                 }

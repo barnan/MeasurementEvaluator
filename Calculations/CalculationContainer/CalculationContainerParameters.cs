@@ -12,7 +12,7 @@ namespace Calculations.CalculationContainer
     internal class CalculationContainerParameters
     {
         [Configuration("AvailableCalculation", "AvailableCalculation", LoadComponent = false)]
-        private List<string> _availableCalculationsString = null;
+        private List<string> _availableCalculationsString = new List<string> { };
 
 
         private List<ICalculation> _availableCalculations;

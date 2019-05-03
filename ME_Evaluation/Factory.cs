@@ -22,7 +22,10 @@ namespace MeasurementEvaluator.ME_Evaluation
                         _dataCollectorDict.Add(name, instance);
                     }
                 }
-                return _dataCollectorDict[name];
+                else
+                {
+                    return _dataCollectorDict[name];
+                }
             }
             return null;
         }
