@@ -1,5 +1,6 @@
 ﻿using DataStructures.MeasuredData;
 using Interfaces;
+using Interfaces.Calculation;
 using Interfaces.Evaluation;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
@@ -21,7 +22,6 @@ namespace MeasurementEvaluator.ME_Evaluation
         private readonly AutoResetEvent _queueHandle = new AutoResetEvent(false);
         private Queue<QueueElement> _processorQueue;
         private CancellationTokenSource _tokenSource;
-        private const int WAITHANDLE_CYCLETIME_MS = 100;
 
 
 
@@ -44,6 +44,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         #endregion
 
+        #region ctor
 
         public Evaluation(EvaluationParameters parameters)
         {
@@ -51,6 +52,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             _parameters.Logger.MethodError("Instantiated.");
         }
 
+        #endregion
 
         #region IInitialized
 
@@ -73,7 +75,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                 {
                     return;
                 }
-                _parameters.DataCollector.UnSubscribeToResultReadyEvent(DataCollector_ResultReadyEvent);
+                _parameters.DataCollector.UnSubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
 
                 _tokenSource.Cancel();
                 _queueHandle.Reset();
@@ -106,7 +108,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                     _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");
                     return false;
                 }
-                _parameters.DataCollector.SubscribeToResultReadyEvent(DataCollector_ResultReadyEvent);
+                _parameters.DataCollector.SubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
 
                 _processorQueue = new Queue<QueueElement>();
                 _tokenSource = new CancellationTokenSource();
@@ -144,17 +146,17 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         #region private
 
-        private void DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
+        private void On_DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
         {
             if (e?.Result == null)
             {
-                _parameters.Logger.MethodError("Arrived result event args is null.");
+                _parameters.Logger.MethodError("Received result event args is null.");
                 return;
             }
 
             if (!(e.Result is IDataCollectorResult collectedData))
             {
-                _parameters.Logger.MethodError($"Arrived result event args is not {nameof(IDataCollectorResult)}");
+                _parameters.Logger.MethodError($"Received result event args is not {nameof(IDataCollectorResult)}");
                 return;
             }
 
@@ -183,7 +185,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             while (true)
             {
-                if (_queueHandle.WaitOne(WAITHANDLE_CYCLETIME_MS))
+                if (_queueHandle.WaitOne())
                 {
                     while (true)
                     {
@@ -236,18 +238,18 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             if (specification == null)
             {
-                _parameters.Logger.MethodError("Arrived specification is null.");
+                _parameters.Logger.MethodError("Received specification is null.");
                 return;
             }
 
             if (measurementDatas == null)
             {
-                _parameters.Logger.MethodError("Arrived measurement data is null.");
+                _parameters.Logger.MethodError("Received measurement data is null.");
                 return;
             }
 
-            _parameters.Logger.MethodInfo($"Started to evaluate arrived collectiondata: Specification name: {specification.Name}");
-            _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.Name ?? "No reference arrived"}.");
+            _parameters.Logger.MethodInfo($"Started to evaluate received collectordata: Specification name: {specification.Name}");
+            _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.Name ?? "No reference received"}.");
             _parameters.Logger.MethodInfo("Measurement data: ");
             foreach (IToolMeasurementData measurementData in measurementDatas)
             {
@@ -258,7 +260,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             DateTime fullStartTime = _parameters.DateTimeProvider.GetDateTime();
 
             // go through all quantity specifications:
-            foreach (IQuantitySpecification quantitySpec in specification.Specifications)
+            foreach (IQuantitySpecification quantitySpec in specification.QuantitySpecifications)
             {
                 List<IConditionEvaluationResult> conditionResultList = new List<IConditionEvaluationResult>(quantitySpec.Conditions.Count);
 
@@ -271,7 +273,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         if (condition == null)
                         {
-                            _parameters.Logger.MethodInfo("Arrived condition is null");
+                            _parameters.Logger.MethodInfo("Received condition is null");
                             conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
@@ -283,9 +285,9 @@ namespace MeasurementEvaluator.ME_Evaluation
                             continue;
                         }
 
-                        var calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
+                        ICalculation calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
 
-                        // find measurement data associated with the specification name from the matcher:
+                        // find measurement data associated with the condition name from the matcher:
                         List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
                         IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(condition.Name);
 
@@ -315,12 +317,11 @@ namespace MeasurementEvaluator.ME_Evaluation
                             {
                                 measPointList.AddRange(serie.MeasData);
                             }
-
                             calculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
                         }
 
                         // find reference associated with the specification
-                        string referenceName = _parameters.Matcher.GetreferenceName(condition.Name);
+                        string referenceName = _parameters.Matcher.GetReferenceName(condition.Name);
                         IReferenceValue referenceValue = referenceSample.ReferenceValues.FirstOrDefault(p => string.Equals(p.Name, referenceName));
 
                         // perform calculation:
@@ -383,9 +384,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             return new ConditionEvaluaitonResult(default(DateTime), default(DateTime), false, null, null, null, false, null);
         }
 
-
         #endregion
-
 
         private class QueueElement
         {

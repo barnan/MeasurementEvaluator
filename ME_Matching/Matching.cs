@@ -98,7 +98,7 @@ namespace MeasurementEvaluator.ME_Matching
         #endregion
 
 
-        public IEnumerable<string> GetMeasDataNames(string specificationName)
+        public IEnumerable<string> GetMeasDataNames(string conditionName)
         {
             lock (_lockObj)
             {
@@ -107,12 +107,12 @@ namespace MeasurementEvaluator.ME_Matching
                     _parameters.Logger.LogError("Not initialized yet.");
                     return null;
                 }
-                var result = _specificationMeasDataReferencePairs.Where(p => p.Key.Contains(specificationName)).SelectMany(p => p.Values);
+                IEnumerable<string> result = _specificationMeasDataReferencePairs.Where(p => p.ConditionName == conditionName).SelectMany(p => p.MeasDataNames);
                 return result;
             }
         }
 
-        public string GetreferenceName(string specificationName)
+        public string GetReferenceName(string conditionName)
         {
             lock (_lockObj)
             {
@@ -121,7 +121,7 @@ namespace MeasurementEvaluator.ME_Matching
                     _parameters.Logger.LogError("Not initialized yet.");
                     return null;
                 }
-                var result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.Key.Contains(specificationName))?.ReferenceName;
+                string result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.ConditionName == conditionName)?.ReferenceName;
                 return result;
             }
         }

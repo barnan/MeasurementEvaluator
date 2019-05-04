@@ -40,26 +40,31 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
 
+            DateTime endTime = _parameters.DateTimeProvider.GetDateTime();
+
             return new QCellsCalculationResult(cpk,
                                                usl,
                                                lsl,
                                                startTime,
-                                               _parameters.DateTimeProvider.GetDateTime(),
+                                               endTime,
                                                true);
         }
 
 
-        public override ICalculationSettings CreateSettings(ICondition specification, IReferenceSample sample)
+        public override ICalculationSettings CreateSettings(ICondition condition, IReferenceSample sample)
         {
-            if (!(specification is ICpkCondition cpkCondition))
+            if (!(condition is ICpkCondition cpkCondition))
             {
-                _parameters.Logger.Error($"Not valid condition received for settings creation.");
+                _parameters.Logger.Error($"Not valid condition received for {CalculationType} settings creation.");
                 return null;
             }
 
-            if
+            if (sample == null)
+            {
+                return new CpCalculationSettings(CalculationType, cpkCondition.HalfTolerance);
+            }
 
-            return new CpkCalculationSettings(CalculationType, cpkCondition.HalfTolerance);
+            return new CpkCalculationSettings(CalculationType, cpkCondition.HalfTolerance, sample.ReferenceValues);
         }
 
     }

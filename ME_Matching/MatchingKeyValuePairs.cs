@@ -8,15 +8,15 @@ namespace MeasurementEvaluator.ME_Matching
     {
 
         /// <summary>
-        /// Specification condition name
+        /// Specification condition name. E.g.: Thickness Average
         /// </summary>
-        public string Key { get; }
+        public string ConditionName { get; }
 
 
         /// <summary>
         /// assignable measurement data names
         /// </summary>
-        public IList<string> Values { get; }
+        public IList<string> MeasDataNames { get; }
 
 
         /// <summary>
@@ -33,10 +33,9 @@ namespace MeasurementEvaluator.ME_Matching
 
         public MatchingKeyValuePairs(string key, IList<string> values, string referenceName)
         {
-            Key = key;
-            Values = values;
+            ConditionName = key;
+            MeasDataNames = values;
             ReferenceName = referenceName;
         }
-
     }
 }

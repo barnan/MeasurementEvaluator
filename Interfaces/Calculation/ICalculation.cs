@@ -14,10 +14,9 @@ namespace Interfaces.Calculation
         /// Performs calculation
         /// </summary>
         /// <param name="measurementSerieData">input measurement data</param>
-        /// <param name="settings">settings for the calculation</param>
         /// <returns>Calculation results</returns>
         /// <exception cref="ArgumentException">Throws when input settings are not applicable</exception>
-        ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICalculationSettings settings = null);
+        ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
 
         /// <summary>
         /// Gives the type of the current calculation
@@ -28,7 +27,7 @@ namespace Interfaces.Calculation
         /// the calculation creates its own settings
         /// </summary>
         /// <returns>the empty settings</returns>
-        ICalculationSettings CreateSettings(ICondition condition, IReferenceSample sample);
+        ICalculationSettings CreateSettings(ICondition condition, IReferenceValue referenceValue);
     }
 
     public interface IAverageCalculation : ICalculation

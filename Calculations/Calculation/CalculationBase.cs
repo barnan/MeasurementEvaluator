@@ -22,7 +22,7 @@ namespace Calculations.Calculation
 
         public abstract CalculationTypes CalculationType { get; }
 
-        public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICalculationSettings settings = null)
+        public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (measurementSerieData?.MeasData == null)
             {
@@ -32,6 +32,8 @@ namespace Calculations.Calculation
 
             try
             {
+                ICalculationSettings settings = CreateSettings(condition, referenceValue);
+
                 return InternalCalculation(measurementSerieData, settings);
             }
             catch (Exception ex)
@@ -81,6 +83,6 @@ namespace Calculations.Calculation
             return Math.Sqrt(sumOfDerivationAverage - average * average);
         }
 
-        public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceSample sample);
+        public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceValue sample);
     }
 }

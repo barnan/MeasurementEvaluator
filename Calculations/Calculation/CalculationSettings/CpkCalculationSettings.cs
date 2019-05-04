@@ -3,16 +3,13 @@ using Interfaces.Calculation;
 
 namespace Calculations.Calculation.CalculationSettings
 {
-    internal class CpkCalculationSettings : CalculationSettingsBase, ICpkCalculationSettings
+    internal class CpkCalculationSettings : CpCalculationSettings, ICpkCalculationSettings
     {
         public CpkCalculationSettings(CalculationTypes calculationType, double halfTolerance, double referenceValue)
-            : base(calculationType)
+            : base(calculationType, halfTolerance)
         {
-            HalfTolerance = halfTolerance;
             ReferenceValue = referenceValue;
         }
-
-        public double HalfTolerance { get; }
 
         public double ReferenceValue { get; }
     }
