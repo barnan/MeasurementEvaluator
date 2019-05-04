@@ -3,6 +3,7 @@
 
     public interface ICalculationSettings
     {
+        CalculationTypes ValidCalculation { get; }
     }
 
 

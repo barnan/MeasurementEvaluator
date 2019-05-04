@@ -14,16 +14,19 @@ namespace Calculations.Calculation
         {
             if (t.IsAssignableFrom(typeof(CalculationBase)))
             {
-                //if (!_calculationDict.ContainsKey(name))
-                //{
-                //    CalculationParameters param = new CalculationParameters();
-                //    if (param.Load(name))
-                //    {
-                //        var instance = new (param);
-                //        _calculationDict.Add(name, instance);
-                //    }
-                //}
-                return _calculationDict[name];
+                if (!_calculationDict.ContainsKey(name))
+                {
+                    CalculationParameters param = new CalculationParameters();
+                    if (param.Load(name))
+                    {
+                        var instance = new (param);
+                        _calculationDict.Add(name, instance);
+                    }
+                }
+                else
+                {
+                    return _calculationDict[name];
+                }
             }
             return null;
         }

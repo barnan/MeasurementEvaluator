@@ -1,7 +1,10 @@
-﻿using Interfaces;
+﻿using Calculations.Calculation.CalculationSettings;
+using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -35,5 +38,10 @@ namespace Calculations.Calculation
                                                true);
         }
 
+
+        public override ICalculationSettings CreateSettings(ICondition specification, IReferenceSample sample)
+        {
+            return new CalculationSettingsBase(CalculationType);
+        }
     }
 }

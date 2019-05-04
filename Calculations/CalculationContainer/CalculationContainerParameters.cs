@@ -12,7 +12,7 @@ namespace Calculations.CalculationContainer
     internal class CalculationContainerParameters
     {
         [Configuration("AvailableCalculation", "AvailableCalculation", LoadComponent = false)]
-        private List<string> _availableCalculationsString = new List<string> { };
+        private List<string> _availableCalculationsList = new List<string> { };
 
 
         private List<ICalculation> _availableCalculations;
@@ -32,7 +32,7 @@ namespace Calculations.CalculationContainer
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             _availableCalculations = new List<ICalculation>();
-            foreach (string calculationName in _availableCalculationsString)
+            foreach (string calculationName in _availableCalculationsList)
             {
                 ICalculation calculation = PluginLoader.CreateInstance<ICalculation>(calculationName);
 

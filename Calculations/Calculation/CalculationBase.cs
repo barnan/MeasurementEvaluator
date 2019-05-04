@@ -1,7 +1,9 @@
 ﻿using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -25,11 +27,18 @@ namespace Calculations.Calculation
             if (measurementSerieData?.MeasData == null)
             {
                 _parameters.Logger.LogError("Received measdata is null.");
-
                 return null;
             }
 
-            return InternalCalculation(measurementSerieData, settings);
+            try
+            {
+                return InternalCalculation(measurementSerieData, settings);
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.LogError($"Exception occured:{ex.Message}");
+                return null;
+            }
         }
 
         #endregion
@@ -72,5 +81,6 @@ namespace Calculations.Calculation
             return Math.Sqrt(sumOfDerivationAverage - average * average);
         }
 
+        public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceSample sample);
     }
 }

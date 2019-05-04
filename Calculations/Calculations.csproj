@@ -50,6 +50,9 @@
     <Compile Include="Calculation\AverageCalculation1D.cs" />
     <Compile Include="CalculationContainer\Factory.cs" />
     <Compile Include="Calculation\CalculationResult.cs" />
+    <Compile Include="Calculation\CalculationSettings\CalculationSettingsBase.cs" />
+    <Compile Include="Calculation\CalculationSettings\CpCalculationSettings.cs" />
+    <Compile Include="Calculation\CalculationSettings\CpkCalculationSettings.cs" />
     <Compile Include="Calculation\CpkCalculation1D.cs" />
     <Compile Include="Calculation\CpCalculation1D.cs" />
     <Compile Include="Calculation\Factory.cs" />

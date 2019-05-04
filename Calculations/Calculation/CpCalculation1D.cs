@@ -1,7 +1,10 @@
-﻿using Interfaces;
+﻿using Calculations.Calculation.CalculationSettings;
+using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -15,8 +18,6 @@ namespace Calculations.Calculation
         {
         }
 
-
-
         public override CalculationTypes CalculationType => CalculationTypes.Cp;
 
 
@@ -28,20 +29,15 @@ namespace Calculations.Calculation
 
             if (cpSettings == null)
             {
-                _parameters.Logger.LogError($"Arrived settings is null or it is not {nameof(ICpCalculationSettings)}");
-                return null;
+                throw new ArgumentNullException($"Arrived settings is null or it is not {nameof(ICpCalculationSettings)}");
             }
 
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
-
             double std = GetStandardDeviation(validElementList);
-
             double usl = average + cpSettings.HalfTolerance;
-
             double lsl = average - cpSettings.HalfTolerance;
-
             double cp = (usl - lsl) / (6 * std);
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}.");
@@ -55,6 +51,16 @@ namespace Calculations.Calculation
         }
 
 
+        public override ICalculationSettings CreateSettings(ICondition specification, IReferenceSample sample)
+        {
+            if (!(specification is ICpkCondition cpkCondition))
+            {
+                _parameters.Logger.Error($"Not valid condition received for settings creation.");
+                return null;
+            }
+
+            return new CpCalculationSettings(CalculationType, cpkCondition.HalfTolerance);
+        }
 
     }
 }

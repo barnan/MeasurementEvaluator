@@ -1,7 +1,10 @@
-﻿using Interfaces;
+﻿using Calculations.Calculation.CalculationSettings;
+using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -24,20 +27,15 @@ namespace Calculations.Calculation
 
             if (!(settings is ICpkCalculationSettings cpkSettings))
             {
-                _parameters.Logger.LogError($"Arrived settings is null or it is not {nameof(ICpkCalculationSettings)}");
-                return null;
+                throw new ArgumentNullException($"Received settings is null or it is not {nameof(ICpkCalculationSettings)}");
             }
 
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
-
             double std = GetStandardDeviation(validElementList);
-
             double usl = cpkSettings.ReferenceValue + cpkSettings.HalfTolerance;
-
             double lsl = cpkSettings.ReferenceValue - cpkSettings.HalfTolerance;
-
             double cpk = Math.Min((average - usl) / (3 * std), (lsl - average) / (3 * std));
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
@@ -49,5 +47,20 @@ namespace Calculations.Calculation
                                                _parameters.DateTimeProvider.GetDateTime(),
                                                true);
         }
+
+
+        public override ICalculationSettings CreateSettings(ICondition specification, IReferenceSample sample)
+        {
+            if (!(specification is ICpkCondition cpkCondition))
+            {
+                _parameters.Logger.Error($"Not valid condition received for settings creation.");
+                return null;
+            }
+
+            if
+
+            return new CpkCalculationSettings(CalculationType, cpkCondition.HalfTolerance);
+        }
+
     }
 }
