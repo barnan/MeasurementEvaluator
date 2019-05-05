@@ -23,11 +23,11 @@ namespace Interfaces.Calculation
         /// </summary>
         CalculationTypes CalculationType { get; }
 
-        /// <summary>
-        /// the calculation creates its own settings
-        /// </summary>
-        /// <returns>the empty settings</returns>
-        ICalculationSettings CreateSettings(ICondition condition, IReferenceValue referenceValue);
+        ///// <summary>
+        ///// the calculation creates its own settings
+        ///// </summary>
+        ///// <returns>the empty settings</returns>
+        //ICalculationSettings CreateSettings(ICondition condition, IReferenceValue referenceValue);
     }
 
     public interface IAverageCalculation : ICalculation

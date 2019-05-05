@@ -322,10 +322,10 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         // find reference associated with the specification
                         string referenceName = _parameters.Matcher.GetReferenceName(condition.Name);
-                        IReferenceValue referenceValue = referenceSample.ReferenceValues.FirstOrDefault(p => string.Equals(p.Name, referenceName));
+                        IReferenceValue referenceValue = referenceSample?.ReferenceValues?.FirstOrDefault(p => string.Equals(p.Name, referenceName));
 
                         // perform calculation:
-                        ICalculationResult calcResult = calculation.Calculate(calculationInputData);
+                        ICalculationResult calcResult = calculation.Calculate(calculationInputData, condition, referenceValue);
 
                         if (!calcResult.Successful)
                         {

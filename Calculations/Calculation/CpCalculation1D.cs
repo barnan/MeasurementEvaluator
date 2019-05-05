@@ -1,5 +1,4 @@
-﻿using Calculations.Calculation.CalculationSettings;
-using Interfaces;
+﻿using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
@@ -21,23 +20,31 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.Cp;
 
 
-        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
-
-            ICpCalculationSettings cpSettings = settings as ICpCalculationSettings;
-
-            if (cpSettings == null)
+            if (!(condition is ICpkCondition cpkCondition))
             {
-                throw new ArgumentNullException($"Arrived settings is null or it is not {nameof(ICpCalculationSettings)}");
+                _parameters.Logger.Error($"No {nameof(cpkCondition)} condition received for settings creation.");
+                return null;
             }
 
+            if (condition.CalculationType != CalculationType)
+            {
+                throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
+            }
+
+            if (!(referenceValue is IReferenceValue<double> doubleReferenceValue))
+            {
+                throw new ArgumentException($"The received reference value is not {nameof(IReferenceValue<double>)}");
+            }
+
+            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
             double std = GetStandardDeviation(validElementList);
-            double usl = average + cpSettings.HalfTolerance;
-            double lsl = average - cpSettings.HalfTolerance;
+            double usl = average + cpkCondition.HalfTolerance;
+            double lsl = average - cpkCondition.HalfTolerance;
             double cp = (usl - lsl) / (6 * std);
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}.");
@@ -49,18 +56,5 @@ namespace Calculations.Calculation
                                                 _parameters.DateTimeProvider.GetDateTime(),
                                                 true);
         }
-
-
-        public override ICalculationSettings CreateSettings(ICondition specification, IReferenceSample sample)
-        {
-            if (!(specification is ICpkCondition cpkCondition))
-            {
-                _parameters.Logger.Error($"Not valid condition received for settings creation.");
-                return null;
-            }
-
-            return new CpCalculationSettings(CalculationType, cpkCondition.HalfTolerance);
-        }
-
     }
 }

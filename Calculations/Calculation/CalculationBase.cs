@@ -32,9 +32,7 @@ namespace Calculations.Calculation
 
             try
             {
-                ICalculationSettings settings = CreateSettings(condition, referenceValue);
-
-                return InternalCalculation(measurementSerieData, settings);
+                return InternalCalculation(measurementSerieData, condition, referenceValue);
             }
             catch (Exception ex)
             {
@@ -53,7 +51,7 @@ namespace Calculations.Calculation
         }
 
 
-        protected abstract ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings);
+        protected abstract ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
 
 
         protected virtual List<double> GetValidElementList(IMeasurementSerie measurementSerieData)
@@ -83,6 +81,6 @@ namespace Calculations.Calculation
             return Math.Sqrt(sumOfDerivationAverage - average * average);
         }
 
-        public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceValue sample);
+        //public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceValue sample);
     }
 }

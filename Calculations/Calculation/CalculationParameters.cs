@@ -1,6 +1,5 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
-using Interfaces;
 using Interfaces.Misc;
 using NLog;
 
@@ -14,12 +13,6 @@ namespace Calculations.Calculation
         [Configuration("DateTimeProvider", "DateTimeProvider", LoadComponent = true)]
         private IDateTimeProvider _dateTimeProvider = null;
         public IDateTimeProvider DateTimeProvider => _dateTimeProvider;
-
-
-        [Configuration("", "", LoadComponent = true)]
-        private CalculationTypes _calculationType;
-        public CalculationTypes CalculationType => _calculationType;
-
 
         internal bool Load(string sectionName)
         {
