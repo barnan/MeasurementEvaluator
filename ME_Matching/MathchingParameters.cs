@@ -9,7 +9,7 @@ namespace MeasurementEvaluator.ME_Matching
     {
         internal ILogger Logger { get; private set; }
 
-        [Configuration("Handles the reading of the matching file.", "Name of Matching Component", LoadComponent = true)]
+        [Configuration("Handles the reading of the matching file.", "File Reader", LoadComponent = true)]
         private string _matchingFileReader = null;
         internal IHDDFileReader MatchingFileReader { get; private set; }
 

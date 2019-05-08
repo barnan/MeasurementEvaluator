@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MatchingDictCreator.cs" />
+    <Compile Include="MatchingFileCreator.cs" />
     <Compile Include="ReferenceCreator.cs" />
     <Compile Include="SpecificationCreator.cs" />
     <Compile Include="DummyObjectCreator.cs" />

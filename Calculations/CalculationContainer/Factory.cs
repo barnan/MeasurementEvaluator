@@ -23,7 +23,10 @@ namespace Calculations.CalculationContainer
                         _calculationContainerDict.Add(name, instance);
                     }
                 }
-                return _calculationContainerDict[name];
+                else
+                {
+                    return _calculationContainerDict[name];
+                }
             }
             return null;
         }

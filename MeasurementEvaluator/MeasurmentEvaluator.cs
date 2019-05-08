@@ -1,7 +1,6 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Frame.PluginLoader.Interfaces;
-using Interfaces.DataAcquisition;
 using Interfaces.Evaluation;
 using Interfaces.Misc;
 using NLog;
@@ -21,10 +20,6 @@ namespace MeasurementEvaluator
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private string _mainWindowName = null;
-
-        [Configuration("Name of the data collector", "DataCollector Name", true)]
-        private string _dataCollectorName = null;
-        private IDataCollector DataCollector { get; set; }
 
         [Configuration("Name of the evaluator", "Evaluator Name", true)]
         private string _dataEvaluatorName = null;
@@ -71,13 +66,7 @@ namespace MeasurementEvaluator
                     return;
                 }
 
-                DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollectorName);
                 Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
-
-                if (DataCollector.Initiailze())
-                {
-                    PluginLoader.SendToErrorLogAndConsole($"{nameof(DataCollector)} could not been initialized.");
-                }
 
                 if (Evaluator.Initiailze())
                 {

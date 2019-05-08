@@ -219,7 +219,8 @@ namespace Frame.PluginLoader
                 return null;
             }
 
-            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))
+            //
+            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))    // todo
             {
                 _logger.Error($"ComponentList does not contain {name} {interfaceType}");
                 return null;
