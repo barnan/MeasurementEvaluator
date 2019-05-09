@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Calculations.Calculation
 {
-    class AverageCalculation1D : CalculationBase, IAverageCalculation
+    class AverageCalculation1D : CalculationBase, ICalculation
     {
 
         internal AverageCalculation1D(CalculationParameters parameters)

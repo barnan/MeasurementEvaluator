@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Calculations.Calculation
 {
-    class StdCalculation1D : CalculationBase, IStdCalculation
+    class StdCalculation1D : CalculationBase, ICalculation
     {
 
         internal StdCalculation1D(CalculationParameters parameters)

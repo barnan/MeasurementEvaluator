@@ -22,31 +22,6 @@ namespace Interfaces.Calculation
         /// Gives the type of the current calculation
         /// </summary>
         CalculationTypes CalculationType { get; }
-
-        ///// <summary>
-        ///// the calculation creates its own settings
-        ///// </summary>
-        ///// <returns>the empty settings</returns>
-        //ICalculationSettings CreateSettings(ICondition condition, IReferenceValue referenceValue);
-    }
-
-    public interface IAverageCalculation : ICalculation
-    {
-    }
-
-
-    public interface ICpkCalculation : ICalculation
-    {
-    }
-
-
-    public interface ICpCalculation : ICalculation
-    {
-    }
-
-
-    public interface IStdCalculation : ICalculation
-    {
     }
 
 }

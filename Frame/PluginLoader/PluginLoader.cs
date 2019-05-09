@@ -219,26 +219,25 @@ namespace Frame.PluginLoader
                 return null;
             }
 
-            //
-            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))    // todo
-            {
-                _logger.Error($"ComponentList does not contain {name} {interfaceType}");
-                return null;
-            }
-
-            var component = _componentList.Components.Where(p => p.Name == name).ToList();
-            if (component.Count > 1)
+            var components = _componentList.Components.Where(p => p.Name == name).ToList();
+            if (components.Count > 1)
             {
                 _logger.Error($"Ambiguity between components in the ComponentList. {name} appears more times.");
                 return null;
             }
-            if (component.Count < 1)
+            if (components.Count < 1)
             {
-                _logger.Error($"No componenet was found with the given name:{name} in the ComponentList.");
+                _logger.Error($"No component was found with the given name:{name} in the ComponentList.");
                 return null;
             }
 
-            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == component[0].AssemblyName).ToList();
+            //if (components[0].Interfaces.All(p => !(interfaceType.IsAssignableFrom(Type.GetType(p)))))
+            //{
+            //    _logger.Error($"The found compnent (with name: {name}) does not implement the given interface: {nameof(interfaceType)}. The implemented interfaces: {string.Join(",", components[0].Interfaces)}");
+            //    return null;
+            //}
+
+            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == components[0].AssemblyName).ToList();
 
             List<object> instances = new List<object>();
             foreach (var factory in fact)

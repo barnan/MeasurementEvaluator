@@ -1,5 +1,4 @@
 ﻿using Frame.PluginLoader.Interfaces;
-using Interfaces.Calculation;
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +22,7 @@ namespace Calculations.Calculation
                     {
                         var instance = new AverageCalculation1D(param);
                         _averageCalculationDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else
@@ -40,6 +40,7 @@ namespace Calculations.Calculation
                     {
                         var instance = new StdCalculation1D(param);
                         _stdCalculationDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else
@@ -57,6 +58,7 @@ namespace Calculations.Calculation
                     {
                         var instance = new CpkCalculation1D(param);
                         _cpkCalculationDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else
@@ -74,6 +76,7 @@ namespace Calculations.Calculation
                     {
                         var instance = new CpCalculation1D(param);
                         _cpCalculationDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else
