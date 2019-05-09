@@ -14,7 +14,6 @@ namespace Calculations.Calculation
         private IDateTimeProvider _dateTimeProvider = null;
         public IDateTimeProvider DateTimeProvider => _dateTimeProvider;
 
-
         internal bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();

@@ -10,11 +10,11 @@ namespace DataAcquisitions.ME_Repository
     {
         internal ILogger Logger { get; private set; }
 
-        [Configuration("File extension of the files used in the given repository folder", "File Extension", true)]
-        private List<string> _fileExtensionFilters = null;
+        [Configuration("File extension of the files used in the given repository folder", "File Extensions", true)]
+        private List<string> _fileExtensionFilters = new List<string> { "*.*" };
         internal List<string> FileExtensionFilters => _fileExtensionFilters;
 
-        [Configuration("Name of the reader writer component", "Name of the reader writer component", true)]
+        [Configuration("Name of the reader writer component", "Reader writer", true)]
         private string _hddDReaderWriter = null;
         internal IHDDFileReaderWriter HDDReaderWriter { get; private set; }
 

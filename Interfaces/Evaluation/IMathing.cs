@@ -18,6 +18,6 @@ namespace Interfaces.Evaluation
         /// </summary>
         /// <param name="specificationName">input specification name</param>
         /// <returns></returns>
-        string GetreferenceName(string specificationName);
+        string GetReferenceName(string specificationName);
     }
 }

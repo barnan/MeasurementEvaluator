@@ -59,6 +59,8 @@ namespace Frame.ConfigHandler
                 _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
                 _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
 
+                bool differenceFound = false;
+
                 CreateConfigFileIfNotExisting(currentConfigFileName);
 
                 // load the required section in XElement format:
@@ -70,9 +72,15 @@ namespace Frame.ConfigHandler
                     currentSectionElement = CreateSectionXElement(sectionName, type);
                 }
 
+                if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
+                {
+                    currentSectionElement = FixAssembylAttributeOfSection(currentSectionElement, type);
+                    differenceFound = true;
+                }
+
                 // edit according to the received parameter object:
 
-                bool differenceFound = false;
+
 
                 FieldInfo currentObjectField = null;
                 FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
@@ -231,6 +239,34 @@ namespace Frame.ConfigHandler
             return true;
         }
 
+        private bool CheckAssemblyAttributeOfSection(XElement currentSectionElement, Type type)
+        {
+            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
+
+            if (assemblyVersionInfo == null || assemblyVersionInfo != type.Assembly.FullName)
+            {
+                return false;
+            }
+
+            return true;    // todo befejezni
+        }
+
+        private XElement FixAssembylAttributeOfSection(XElement currentSectionElement, Type type)
+        {
+            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
+
+            if (assemblyVersionInfo != null)
+            {
+                foreach (XAttribute item in currentSectionElement.Attributes(ASSEMBLY_ATTRIBUTE_NAME))
+                {
+                    item.Remove();
+                }
+            }
+            XAttribute attrib = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
+            currentSectionElement.Add(attrib);
+            return currentSectionElement;
+        }
+
         internal XElement LoadXmlFromFile(string currentConfigFileName)
         {
             // read in the xml:
@@ -268,7 +304,7 @@ namespace Frame.ConfigHandler
             _logger.Info($"New {sectionName} section was created.");
 
             XAttribute sectionNameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, sectionName);
-            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Name);
+            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
 
             createdXElement.Add(sectionNameAttribute);
             createdXElement.Add(assemblyAttribute);

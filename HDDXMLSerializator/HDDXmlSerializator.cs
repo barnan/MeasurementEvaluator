@@ -4,6 +4,7 @@ using Interfaces.Misc;
 using System;
 using System.IO;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace DataAcquisitions.HDDXmlSerializator
 {
@@ -32,7 +33,25 @@ namespace DataAcquisitions.HDDXmlSerializator
                     }
 
                     XElement readElement = XElement.Load(fileNameAndPath);
-                    object createdObj = Activator.CreateInstance(Type.GetType(readElement.Name.LocalName));
+                    Type readType = Type.GetType(readElement.Name.LocalName);
+                    object createdObj = null;
+
+                    if (typeof(IXmlStorable).IsAssignableFrom(readType))
+                    {
+                        createdObj = Activator.CreateInstance(Type.GetType(readElement.Name.LocalName));
+                        (createdObj as IXmlStorable).LoadFromXml(readElement);
+                    }
+                    else
+                    {
+                        using (StreamReader sr = new StreamReader(fileNameAndPath))
+                        {
+                            XmlSerializer serializer = new XmlSerializer(readType);
+                            createdObj = serializer.Deserialize(sr);
+                            return true;
+                        }
+
+                    }
+
                     return createdObj;
                 }
                 catch (Exception ex)
@@ -50,17 +69,26 @@ namespace DataAcquisitions.HDDXmlSerializator
             {
                 try
                 {
+                    Type type = tobj.GetType();
+
                     if (tobj is IXmlStorable storable)
                     {
-                        Type type = tobj.GetType();
-
                         XElement element = new XElement(type.FullName);
                         storable.SaveToXml(element);
                         element.Save(fileNameAndPath);
                         return true;
                     }
 
+                    using (StreamWriter sw = new StreamWriter(fileNameAndPath))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(type);
+                        serializer.Serialize(sw, tobj);
+                        return true;
+                    }
+
                     _parameters.Logger.Error($"Received object is not {nameof(IXmlStorable)}");
+
+
                     return false;
                 }
                 catch (Exception ex)

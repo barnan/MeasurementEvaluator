@@ -64,7 +64,7 @@ namespace Frame.PluginLoader
             return message;
         }
 
-        public static string SendToErrrorLogAndConsole(string message)
+        public static string SendToErrorLogAndConsole(string message)
         {
             _logger?.Error(message);
             ConsoleColor cc = Console.ForegroundColor;
@@ -151,12 +151,12 @@ namespace Frame.PluginLoader
             }
             catch (ArgumentNullException ex)
             {
-                SendToErrrorLogAndConsole($"Problem with input variable: {ex.Message}");
+                SendToErrorLogAndConsole($"Problem with input variable: {ex.Message}");
                 return false;
             }
             catch (Exception ex)
             {
-                SendToErrrorLogAndConsole($"Exception occured: {ex.Message}");
+                SendToErrorLogAndConsole($"Exception occured: {ex.Message}");
                 return false;
             }
         }
@@ -204,7 +204,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Exception occured: {ex}");
+                    SendToErrorLogAndConsole($"Exception occured: {ex}");
                     return false;
                 }
             }
@@ -219,16 +219,22 @@ namespace Frame.PluginLoader
                 return null;
             }
 
-            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))
+            //
+            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))    // todo
             {
                 _logger.Error($"ComponentList does not contain {name} {interfaceType}");
                 return null;
             }
 
             var component = _componentList.Components.Where(p => p.Name == name).ToList();
-            if (component.Count != 1)
+            if (component.Count > 1)
             {
                 _logger.Error($"Ambiguity between components in the ComponentList. {name} appears more times.");
+                return null;
+            }
+            if (component.Count < 1)
+            {
+                _logger.Error($"No componenet was found with the given name:{name} in the ComponentList.");
                 return null;
             }
 
@@ -304,7 +310,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Could not load assemby from file: {dllFile} -> {ex}");
+                    SendToErrorLogAndConsole($"Could not load assemby from file: {dllFile} -> {ex}");
                 }
             }
 
@@ -332,7 +338,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                    SendToErrorLogAndConsole($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
                 }
             }
 
@@ -368,7 +374,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
+                    SendToErrorLogAndConsole($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
                 }
             }
             _factories = factories;

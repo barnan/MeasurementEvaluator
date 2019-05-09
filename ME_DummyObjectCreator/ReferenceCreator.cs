@@ -23,10 +23,6 @@ namespace ME_DummyObjectCreator
 
             readerWriter.WriteToFile(referenceSample1, Path.Combine(referencePath, $"TTR_Spec_1{_fileExtension}"));
 
-            //XElement referenceElement = new XElement(nameof(ReferenceSample));
-            //XElement output = referenceSample1.SaveToXml(referenceElement);
-            //output.Save(Path.Combine(referencePath, $"TTR_Spec_1{_fileExtension}"));
-
         }
     }
 }

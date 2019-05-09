@@ -14,7 +14,7 @@ namespace ME_DummyObjectCreator
 
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {
-            ICondition<double> condition1 = new SimpleCondition()
+            ICondition<double> thicknessAVGCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
@@ -26,7 +26,7 @@ namespace ME_DummyObjectCreator
                 ValidIf_Value = 0,
             };
 
-            ICondition<double> condition2 = new SimpleCondition()
+            ICondition<double> thicknessSTDCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -39,7 +39,7 @@ namespace ME_DummyObjectCreator
             };
 
             // resisitivity conditions
-            ICondition<double> condition3 = new SimpleCondition()
+            ICondition<double> resistivityAVGCondition = new SimpleCondition()
             {
                 Name = "Resistivity Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
@@ -51,7 +51,7 @@ namespace ME_DummyObjectCreator
                 ValidIf_Value = 0,
             };
 
-            ICondition<double> condition4 = new SimpleCondition()
+            ICondition<double> resistivitySTDCondition = new SimpleCondition()
             {
                 Name = "Resitivity Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -66,11 +66,11 @@ namespace ME_DummyObjectCreator
 
             IQuantitySpecificationHandler thicknessQuantitySpecification = new QuantitySpecification();
             thicknessQuantitySpecification.Quantity = new Quantity(Units.um, "Thickness Average");
-            thicknessQuantitySpecification.Conditions = new List<ICondition> { condition1, condition2 };
+            thicknessQuantitySpecification.Conditions = new List<ICondition> { thicknessAVGCondition, thicknessSTDCondition };
 
             IQuantitySpecificationHandler resistivityQuantitySpecification = new QuantitySpecification();
             resistivityQuantitySpecification.Quantity = new Quantity(Units.um, "Resistivity Average");
-            resistivityQuantitySpecification.Conditions = new List<ICondition> { condition3, condition4 };
+            resistivityQuantitySpecification.Conditions = new List<ICondition> { resistivityAVGCondition, resistivitySTDCondition };
 
 
             List<IQuantitySpecification> quanSpecList = new List<IQuantitySpecification>
@@ -84,15 +84,12 @@ namespace ME_DummyObjectCreator
             {
                 Name = "TTR Compliant Specification",
                 ToolName = ToolNames.TTR,
-                Specifications = quanSpecList
+                QuantitySpecifications = quanSpecList
             };
 
 
             readerWriter.WriteToFile(specificationHandler, Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
 
-            //XElement specificationElement = new XElement(nameof(ToolSpecification));
-            //XElement output = specificationHandler.SaveToXml(specificationElement);
-            //output.Save(Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
         }
     }
 }

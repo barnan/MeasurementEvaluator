@@ -10,6 +10,9 @@ namespace DataStructures.ToolSpecifications
 
         public Units Dimension { get; set; }
 
+        /// <summary>
+        /// name of the quantity. E.g.: Thickness
+        /// </summary>
         public string Name { get; set; }
 
 

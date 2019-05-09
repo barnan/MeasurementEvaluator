@@ -18,7 +18,7 @@ namespace DataStructures.ToolSpecifications
         #region IToolspecificationHandler
 
         private List<IQuantitySpecification> _specifications;
-        public IReadOnlyList<IQuantitySpecification> Specifications
+        public IReadOnlyList<IQuantitySpecification> QuantitySpecifications
         {
             get { return _specifications.AsReadOnly(); }
             set
@@ -53,7 +53,7 @@ namespace DataStructures.ToolSpecifications
             sb.AppendLine($"Name: {Name}");
             sb.AppendLine($"Tool: {ToolName}");
 
-            foreach (var item in Specifications)
+            foreach (var item in QuantitySpecifications)
             {
                 sb.Append(item);
                 sb.AppendLine();
@@ -101,15 +101,15 @@ namespace DataStructures.ToolSpecifications
                     return nameComparisonResult;
                 }
 
-                if (Specifications.Count != other.Specifications.Count)
+                if (QuantitySpecifications.Count != other.QuantitySpecifications.Count)
                 {
-                    return Specifications.Count > other.Specifications.Count ? 1 : -1;
+                    return QuantitySpecifications.Count > other.QuantitySpecifications.Count ? 1 : -1;
                 }
 
                 int summ = 0;
-                for (int i = 0; i < Specifications.Count; i++)
+                for (int i = 0; i < QuantitySpecifications.Count; i++)
                 {
-                    summ += Specifications[i].CompareTo(other.Specifications[i]);
+                    summ += QuantitySpecifications[i].CompareTo(other.QuantitySpecifications[i]);
                 }
 
                 if (summ != 0)
@@ -132,7 +132,7 @@ namespace DataStructures.ToolSpecifications
         {
             this.TrySave(Name, inputElement, nameof(Name));
             this.TrySave(ToolName, inputElement, nameof(ToolName));
-            this.TrySave(Specifications, inputElement, nameof(Specifications));
+            this.TrySave(QuantitySpecifications, inputElement, nameof(QuantitySpecifications));
             return inputElement;
         }
 
@@ -140,7 +140,7 @@ namespace DataStructures.ToolSpecifications
         {
             this.TryLoad(inputElement, nameof(Name));
             this.TryLoad(inputElement, nameof(ToolName));
-            this.TryLoad(inputElement, nameof(Specifications));
+            this.TryLoad(inputElement, nameof(QuantitySpecifications));
             return true;
         }
     }

@@ -22,7 +22,10 @@ namespace MeasurementEvaluator.ME_Matching
                         _matchingDict.Add(name, instance);
                     }
                 }
-                return _matchingDict[name];
+                else
+                {
+                    return _matchingDict[name];
+                }
             }
             return null;
         }

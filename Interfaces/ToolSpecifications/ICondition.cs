@@ -12,7 +12,6 @@ namespace Interfaces.ToolSpecifications
         /// </summary>
         CalculationTypes CalculationType { get; }
 
-
         /// <summary>
         /// Validity of the condition -> if false, the condition is switched off
         /// </summary>

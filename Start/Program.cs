@@ -55,7 +55,7 @@ namespace Start
                     _measurementDataFolder,
                     _resultFolder))
                 {
-                    PluginLoader.SendToErrrorLogAndConsole("Frame initialization was NOT successful.");
+                    PluginLoader.SendToErrorLogAndConsole("Frame initialization was NOT successful.");
                     return;
                 }
                 pluginLoader.Start();
@@ -144,12 +144,12 @@ namespace Start
         {
             if (string.IsNullOrEmpty(currentExeFolder) || string.IsNullOrEmpty(name))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrrorLogAndConsole("Received exefolder-path OR path-name is null."));
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole("Received exefolder-path OR path-name is null."));
             }
 
             if (string.IsNullOrEmpty(specialFolder))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrrorLogAndConsole($"{name} is null."));
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole($"{name} is null."));
             }
 
             if (Path.IsPathRooted(specialFolder))
