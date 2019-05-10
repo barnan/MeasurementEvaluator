@@ -23,6 +23,8 @@ namespace Interfaces.DataAcquisition
         bool Remove(object item);
 
         void RemoveRange(IEnumerable<object> items);
+
+        bool SetFolder(string path);
     }
 
 }

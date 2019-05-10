@@ -44,9 +44,9 @@ namespace DataAcquisitions.ME_Repository
                     return IsInitialized = false;
                 }
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = true;
-
-                OnInitialized();
+                OnInitStateChanged(IsInitialized, oldInitState);
 
                 _parameters.Logger.MethodInfo("Initialized.");
 
@@ -68,33 +68,23 @@ namespace DataAcquisitions.ME_Repository
                     return;
                 }
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = false;
-
-                OnClosed();
+                OnInitStateChanged(IsInitialized, oldInitState);
 
                 _parameters.Logger.MethodInfo("Closed.");
             }
         }
 
-        public event EventHandler<EventArgs> Initialized;
-        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<InitializationEventArgs> InitStateChanged;
 
         public bool IsInitialized { get; private set; }
 
 
-        private void OnInitialized()
+        private void OnInitStateChanged(bool newState, bool oldState)
         {
-            var initialized = Initialized;
-
-            initialized?.Invoke(this, new EventArgs());
-        }
-
-
-        private void OnClosed()
-        {
-            var closed = Closed;
-
-            closed?.Invoke(this, new EventArgs());
+            var initialized = InitStateChanged;
+            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
         }
 
         #endregion
@@ -333,6 +323,30 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
+
+        public bool SetFolder(string path)
+        {
+            lock (_lockObject)
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    _parameters.Logger.Error("The received path is null.");
+                    return false;
+                }
+
+                _repositoryPath = path;
+
+                if (!IsInitialized)
+                {
+                    return true;
+                }
+
+                Close();
+                Initiailze();
+            }
+
+            return true;
+        }
 
         #endregion
 

@@ -22,14 +22,23 @@ namespace Interfaces.Misc
         void Close();
 
         /// <summary>
-        /// Initialized eventhandler is fired when the the component is initialized. 
+        /// Initialized eventhandler is fired when the the initialization state of the component is changed
         /// </summary>
-        event EventHandler<EventArgs> Initialized;
-
-        /// <summary>
-        /// Closed eventhandler is fired when the the component is closed. 
-        /// </summary>
-        event EventHandler<EventArgs> Closed;
-
+        event EventHandler<InitializationEventArgs> InitStateChanged;
     }
+
+
+    public class InitializationEventArgs : EventArgs
+    {
+        public bool NewState { get; private set; }
+        public bool OldState { get; private set; }
+
+
+        public InitializationEventArgs(bool newState, bool oldState)
+        {
+            NewState = newState;
+            OldState = oldState;
+        }
+    }
+
 }

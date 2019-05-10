@@ -1,6 +1,8 @@
-﻿using Interfaces;
+﻿using Frame.PluginLoader;
+using Interfaces;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
+using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
@@ -28,6 +30,10 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             _parameters = dataGatheringParameters;
             _parameters.Logger.MethodInfo("Instantiated.");
+
+            _parameters.SpecificationRepository.SetFolder(PluginLoader.SpecificationFolder);
+            _parameters.ReferenceRepository.SetFolder(PluginLoader.ReferenceFolder);
+            _parameters.MeasurementDataRepository.SetFolder(PluginLoader.MeasurementDataFolder);
         }
 
 
@@ -54,9 +60,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         public bool IsInitialized { get; private set; }
 
-        public event EventHandler<EventArgs> Initialized;
-        public event EventHandler<EventArgs> Closed;
-
+        public event EventHandler<InitializationEventArgs> InitStateChanged;
 
         public void Close()
         {
@@ -80,8 +84,10 @@ namespace MeasurementEvaluator.ME_DataCollector
                 _parameters.ReferenceRepository.Close();
                 _parameters.MeasurementDataRepository.Close();
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = false;
-                OnClosed();
+                OnInitStateChanged(IsInitialized, oldInitState);
+
                 _parameters.Logger.MethodInfo("Closed.");
             }
         }
@@ -131,12 +137,21 @@ namespace MeasurementEvaluator.ME_DataCollector
                 };
                 thread.Start(_tokenSource.Token);
 
+
+                bool oldInitState = IsInitialized;
                 IsInitialized = true;
-                OnInitialized();
+                OnInitStateChanged(IsInitialized, oldInitState);
+
                 _parameters.Logger.MethodInfo("Initialized.");
 
                 return IsInitialized;
             }
+        }
+
+        private void OnInitStateChanged(bool newState, bool oldState)
+        {
+            var initialized = InitStateChanged;
+            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
         }
 
         #endregion
@@ -303,34 +318,6 @@ namespace MeasurementEvaluator.ME_DataCollector
                     _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                     break;
                 }
-            }
-        }
-
-
-        private void OnInitialized()
-        {
-            try
-            {
-                var initializedEvent = Initialized;
-                initializedEvent?.Invoke(this, new EventArgs());
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.Error($"Exception occured during subscribed method call: {ex.Message}");
-            }
-        }
-
-
-        private void OnClosed()
-        {
-            try
-            {
-                var closedEvent = Closed;
-                closedEvent?.Invoke(this, new EventArgs());
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.Error($"Exception occured during subscribed method call: {ex.Message}");
             }
         }
 

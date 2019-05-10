@@ -1,4 +1,5 @@
 ﻿using Interfaces.Evaluation;
+using Interfaces.Misc;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -49,8 +50,10 @@ namespace MeasurementEvaluator.ME_Matching
                     _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.BindingFilePath}");
                 }
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = true;
-                OnInitialized();
+                OnInitStateChanged(IsInitialized, oldInitState);
+
                 _parameters.Logger.MethodError("Initialized.");
                 return IsInitialized;
             }
@@ -72,27 +75,21 @@ namespace MeasurementEvaluator.ME_Matching
                     return;
                 }
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = false;
-                OnClosed();
+                OnInitStateChanged(IsInitialized, oldInitState);
+
                 _parameters.Logger.MethodError("Closed.");
             }
         }
 
-        public event EventHandler<EventArgs> Initialized;
-        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<InitializationEventArgs> InitStateChanged;
 
 
-        private void OnInitialized()
+        private void OnInitStateChanged(bool newState, bool oldState)
         {
-            var initialized = Initialized;
-            initialized?.Invoke(this, new EventArgs());
-        }
-
-
-        private void OnClosed()
-        {
-            var closed = Closed;
-            closed?.Invoke(this, new EventArgs());
+            var initialized = InitStateChanged;
+            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
         }
 
         #endregion

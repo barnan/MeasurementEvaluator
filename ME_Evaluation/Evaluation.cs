@@ -3,6 +3,7 @@ using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.Evaluation;
 using Interfaces.MeasuredData;
+using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
@@ -58,8 +59,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         public bool IsInitialized { get; private set; }
 
-        public event EventHandler<EventArgs> Initialized;
-        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<InitializationEventArgs> InitStateChanged;
 
 
         public void Close()
@@ -83,8 +83,10 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                 _parameters.DataCollector.Close();
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = false;
-                OnClosed();
+                OnInitStateChanged(IsInitialized, oldInitState);
+
                 _parameters.Logger.MethodError("Closed.");
             }
         }
@@ -120,27 +122,21 @@ namespace MeasurementEvaluator.ME_Evaluation
                 };
                 th.Start(_tokenSource.Token);
 
+                bool oldInitState = IsInitialized;
                 IsInitialized = true;
-                OnInitialized();
+                OnInitStateChanged(IsInitialized, oldInitState);
+
                 _parameters.Logger.MethodError("Initialized.");
                 return IsInitialized;
             }
 
         }
 
-        private void OnInitialized()
+        private void OnInitStateChanged(bool newState, bool oldState)
         {
-            var initialized = Initialized;
-            initialized?.Invoke(this, new EventArgs());
+            var initialized = InitStateChanged;
+            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
         }
-
-
-        private void OnClosed()
-        {
-            var closed = Closed;
-            closed?.Invoke(this, new EventArgs());
-        }
-
 
         #endregion
 

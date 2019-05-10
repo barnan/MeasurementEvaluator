@@ -89,12 +89,14 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
-                if (Evaluator.Initiailze())
+                if (!Evaluator.Initiailze())
                 {
                     PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
                 }
 
-                _uiFinishedEvent.WaitOne();
+                if ()
+
+                    _uiFinishedEvent.WaitOne();
 
                 PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
 
