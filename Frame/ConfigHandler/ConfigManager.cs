@@ -143,17 +143,24 @@ namespace Frame.ConfigHandler
                                 }
                                 currentObjectField.SetValue(inputObj, listobj);
                             }
-                            else    // not list, but a single lement was found
+                            else // not list, but a single lement was found
                             {
                                 object temporary;
                                 // if a string was found -> no conversion is needed:
-                                if (fieldType.GenericTypeArguments != null && fieldType.GenericTypeArguments.Length > 0 && fieldType.GenericTypeArguments[0] == typeof(System.String))
+                                if (fieldType.IsEnum && !string.IsNullOrEmpty(valueAttribute.Value))
                                 {
-                                    temporary = valueAttribute.Value;
+                                    temporary = Enum.Parse(fieldType, valueAttribute.Value);
                                 }
-                                else    // not string -> conversion is needed
+                                else
                                 {
-                                    temporary = Convert.ChangeType(valueAttribute.Value, fieldType);
+                                    if (fieldType.GenericTypeArguments != null && fieldType.GenericTypeArguments.Length > 0 && fieldType.GenericTypeArguments[0] == typeof(System.String))
+                                    {
+                                        temporary = valueAttribute.Value;
+                                    }
+                                    else // not string -> conversion is needed
+                                    {
+                                        temporary = Convert.ChangeType(valueAttribute.Value, fieldType);
+                                    }
                                 }
 
                                 currentObjectField.SetValue(inputObj, temporary);
@@ -169,7 +176,7 @@ namespace Frame.ConfigHandler
                     else // no section was found in the file for the searched field:
                     {
                         XElement newElement = CreateFieldSectionXElement(fieldConfigurationAttribute.Name, "");
-                        XComment comment = CreateXComment(fieldConfigurationAttribute.Description);
+                        XComment comment = CreateXComment(fieldConfigurationAttribute.Description, fieldInfo);
 
                         currentSectionElement.Add(comment);
                         currentSectionElement.Add(newElement);
@@ -438,14 +445,20 @@ namespace Frame.ConfigHandler
             return currentSection;
         }
 
-        internal XComment CreateXComment(string description)
+        internal XComment CreateXComment(string description, FieldInfo fieldInfo = null)
         {
+            string enumDescription = string.Empty;
+            if (fieldInfo?.FieldType.IsEnum ?? false)
+            {
+                enumDescription = $"EnumValues: {string.Join(",", Enum.GetNames(fieldInfo.FieldType))}";
+            }
+
             if (string.IsNullOrEmpty(description))
             {
                 _logger.Error("Received description is null or empty.");
                 return null;
             }
-            return new XComment(description);
+            return new XComment($"{description} {enumDescription}");
         }
 
         internal XElement CreateFieldSectionXElement(string name, string value)

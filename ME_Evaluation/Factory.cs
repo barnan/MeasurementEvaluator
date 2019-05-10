@@ -20,6 +20,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                     {
                         Evaluation instance = new Evaluation(param);
                         _dataCollectorDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else

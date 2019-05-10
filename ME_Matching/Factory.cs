@@ -20,6 +20,7 @@ namespace MeasurementEvaluator.ME_Matching
                     {
                         Matching instance = new Matching(param);
                         _matchingDict.Add(name, instance);
+                        return instance;
                     }
                 }
                 else

@@ -68,11 +68,6 @@ namespace MeasurementEvaluator
 
                 Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
 
-                if (Evaluator.Initiailze())
-                {
-                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
-                }
-
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
@@ -93,6 +88,11 @@ namespace MeasurementEvaluator
                 appThread.SetApartmentState(ApartmentState.STA);
                 appThread.IsBackground = true;
                 appThread.Start();
+
+                if (Evaluator.Initiailze())
+                {
+                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
+                }
 
                 _uiFinishedEvent.WaitOne();
 

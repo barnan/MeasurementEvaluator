@@ -17,7 +17,7 @@ namespace Calculations.Calculation
 
 
         [Configuration("CalculationType", "CalculationType", LoadComponent = true)]
-        private CalculationTypes _calculationType;
+        private CalculationTypes _calculationType = CalculationTypes.Unknown;
         public CalculationTypes CalculationType => _calculationType;
 
 

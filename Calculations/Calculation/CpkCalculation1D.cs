@@ -1,5 +1,4 @@
 ﻿using Interfaces;
-using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Calculations.Calculation
 {
-    internal class CpkCalculation1D : CpCalculation1D, ICpkCalculation
+    internal class CpkCalculation1D : CpCalculation1D
     {
         internal CpkCalculation1D(CalculationParameters parameters)
             : base(parameters)
