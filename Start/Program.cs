@@ -78,42 +78,42 @@ namespace Start
                 // cnfigurations:
                 if (settings[FolderSettingsKeys.ConfigurationFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.ConfigurationFolderKey, @".\Configuration");
+                    settings.Add(FolderSettingsKeys.ConfigurationFolderKey, @".\Configuration\");
                 }
                 _configurationFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ConfigurationFolderKey], nameof(_configurationFolder));
 
                 // specifications:
                 if (settings[FolderSettingsKeys.SpecificactionFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications");
+                    settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications\");
                 }
                 _specificationFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.SpecificactionFolderKey], nameof(_specificationFolder));
 
                 // references:
                 if (settings[FolderSettingsKeys.ReferenceFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References");
+                    settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References\");
                 }
                 _referenceFolderPath = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ReferenceFolderKey], nameof(_referenceFolderPath));
 
                 // meas data:
                 if (settings[FolderSettingsKeys.MeasurementDataFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements");
+                    settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements\");
                 }
                 _measurementDataFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.MeasurementDataFolderKey], nameof(_measurementDataFolder));
 
                 // result:
                 if (settings[FolderSettingsKeys.ResultFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results");
+                    settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results\");
                 }
                 _resultFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ResultFolderKey], nameof(_resultFolder));
 
                 // plugins:
                 if (settings[FolderSettingsKeys.PluginsFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins");
+                    settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins\");
                 }
                 _pluginsFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.PluginsFolderKey], nameof(_pluginsFolder));
 

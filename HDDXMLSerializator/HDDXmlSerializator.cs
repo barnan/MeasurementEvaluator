@@ -33,12 +33,17 @@ namespace DataAcquisitions.HDDXmlSerializator
                     }
 
                     XElement readElement = XElement.Load(fileNameAndPath);
-                    Type readType = Type.GetType(readElement.Name.LocalName);
+
+                    XAttribute assembylAttribute = readElement.Attribute("Assembly");
+
+                    string readTypeName = assembylAttribute?.Value ?? readElement.Name.LocalName;
+
+                    Type readType = Type.GetType(readTypeName);
                     object createdObj = null;
 
                     if (typeof(IXmlStorable).IsAssignableFrom(readType))
                     {
-                        createdObj = Activator.CreateInstance(Type.GetType(readElement.Name.LocalName));
+                        createdObj = Activator.CreateInstance(readType);
                         (createdObj as IXmlStorable).LoadFromXml(readElement);
                     }
                     else
@@ -73,8 +78,12 @@ namespace DataAcquisitions.HDDXmlSerializator
 
                     if (tobj is IXmlStorable storable)
                     {
-                        XElement element = new XElement(type.FullName);
+                        XElement element = new XElement(type.Name);
+                        XAttribute assemblyAttrib = new XAttribute("Assembly", type.AssemblyQualifiedName);
+                        element.Add(assemblyAttrib);
+
                         storable.SaveToXml(element);
+
                         element.Save(fileNameAndPath);
                         return true;
                     }

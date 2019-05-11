@@ -10,7 +10,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
     public class DataCollectorUIWPFParameters : ParameterBase
     {
 
-        [Configuration("Name of DataCollector component", "DataCollector Name", true)]
+        [Configuration("Name of DataCollector component", "DataCollector", true)]
         private string _dataCollectorName = null;
         internal IDataCollector DataCollector { get; private set; }
 

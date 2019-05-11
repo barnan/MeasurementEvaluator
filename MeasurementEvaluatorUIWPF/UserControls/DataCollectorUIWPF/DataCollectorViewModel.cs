@@ -1,5 +1,8 @@
-﻿using MeasurementEvaluatorUI.Base;
-using System.Collections.ObjectModel;
+﻿using Interfaces;
+using Interfaces.ReferenceSample;
+using Interfaces.ToolSpecifications;
+using MeasurementEvaluatorUI.Base;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
@@ -8,7 +11,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
     {
         #region fields
 
-        private DataCollectorUIWPFParameters _parameters;
+        private DataCollectorUIWPFParameters Parameters { get; }
 
         #endregion
 
@@ -16,8 +19,17 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         public DataCollectorViewModel(DataCollectorUIWPFParameters parameters)
         {
-            _parameters = parameters;
+            Parameters = parameters;
+            Parameters.InitializationCompleted += Parameters_InitializationCompleted;
         }
+
+        private void Parameters_InitializationCompleted(object sender, System.EventArgs e)
+        {
+            Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
+
+            AvailableToolList = Parameters.DataCollector.GetAvailableToolNames();
+        }
+
 
         #endregion
 
@@ -46,8 +58,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region properties
 
-        private ObservableCollection<string> _availableToolList;
-        private ObservableCollection<string> AvailableToolList
+        private List<ToolNames> _availableToolList;
+        private List<ToolNames> AvailableToolList
         {
             get { return _availableToolList; }
             set
@@ -57,8 +69,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             }
         }
 
-        private string _selectedToolName;
-        private string SelectedToolName
+        private ToolNames _selectedToolName;
+        private ToolNames SelectedToolName
         {
             get { return _selectedToolName; }
             set
@@ -69,8 +81,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         }
 
 
-        private ObservableCollection<string> _availableSpecificationList;
-        private ObservableCollection<string> AvailableSpecificationList
+        private List<IToolSpecification> _availableSpecificationList;
+        private List<IToolSpecification> AvailableSpecificationList
         {
             get { return _availableSpecificationList; }
             set
@@ -80,19 +92,19 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             }
         }
 
-        private string _selectedSpecificationName;
-        private string SelectedSpecificationName
+        private IToolSpecification _selectedSpecification;
+        private IToolSpecification SelectedSpecification
         {
-            get { return _selectedSpecificationName; }
+            get { return _selectedSpecification; }
             set
             {
-                _selectedSpecificationName = value;
+                _selectedSpecification = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<string> _availableReferenceFileList;
-        private ObservableCollection<string> AvailableReferenceFileList
+        private List<IReferenceSample> _availableReferenceFileList;
+        private List<IReferenceSample> AvailableReferenceFileList
         {
             get { return _availableReferenceFileList; }
             set
@@ -102,13 +114,13 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             }
         }
 
-        private string _selectedRefereneceName;
-        private string SelectedRefereneceName
+        private IReferenceSample _selectedReferenece;
+        private IReferenceSample SelectedReferenece
         {
-            get { return _selectedRefereneceName; }
+            get { return _selectedReferenece; }
             set
             {
-                _selectedRefereneceName = value;
+                _selectedReferenece = value;
                 OnPropertyChanged();
             }
         }

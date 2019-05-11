@@ -28,7 +28,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 
             DataCollectorUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_dataCollectorUIWPFName);
             ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultGridUIWPFName);
-            ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultHandlingUIWPFName);
+            ResultHandlingUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultHandlingUIWPFName);
 
             Name = sectionName;
 

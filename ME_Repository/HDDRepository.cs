@@ -252,7 +252,7 @@ namespace DataAcquisitions.ME_Repository
         {
             lock (_lockObject)
             {
-                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
+                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList( );
                 List<string> nameList = new List<string>();
                 foreach (KeyValuePair<string, object> pair in itemList)
                 {
@@ -389,7 +389,12 @@ namespace DataAcquisitions.ME_Repository
                     return null;
                 }
 
-                List<string> fileNameList = Directory.GetFiles(fullPath, $"*.{_parameters.FileExtensionFilters}").ToList();
+                List<string> fileNameList = new List<string>();
+                foreach (string filterItem in _parameters.FileExtensionFilters)
+                {
+                    fileNameList.AddRange(Directory.GetFiles(fullPath, $"*.{filterItem}"));
+                }
+
                 List<KeyValuePair<string, object>> fileContentDictionary = new List<KeyValuePair<string, object>>(fileNameList.Count);
 
                 foreach (string fileName in fileNameList)

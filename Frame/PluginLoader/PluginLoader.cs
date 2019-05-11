@@ -97,43 +97,43 @@ namespace Frame.PluginLoader
                     {
                         return false;
                     }
-                    ConfigurationFolder = configurationFolder;
+                    ConfigurationFolder = CheckDirectorySeparator(configurationFolder);
 
                     if (!IsPathFolder(currentExeFolder) || !Directory.Exists(currentExeFolder))
                     {
                         return false;
                     }
-                    CurrentExeFolder = currentExeFolder;
+                    CurrentExeFolder = CheckDirectorySeparator(currentExeFolder);
 
                     if (!IsPathFolder(pluginsFolder) || !Directory.Exists(pluginsFolder))
                     {
                         return false;
                     }
-                    PluginsFolder = pluginsFolder;
+                    PluginsFolder = CheckDirectorySeparator(pluginsFolder);
 
                     if (!IsPathFolder(specificationFolder) || !Directory.Exists(specificationFolder))
                     {
                         return false;
                     }
-                    SpecificationFolder = specificationFolder;
+                    SpecificationFolder = CheckDirectorySeparator(specificationFolder);
 
                     if (!IsPathFolder(referenceFolder) || !Directory.Exists(referenceFolder))
                     {
                         return false;
                     }
-                    ReferenceFolder = referenceFolder;
+                    ReferenceFolder = CheckDirectorySeparator(referenceFolder);
 
                     if (!IsPathFolder(measDataFolder) || !Directory.Exists(measDataFolder))
                     {
                         return false;
                     }
-                    MeasurementDataFolder = measDataFolder;
+                    MeasurementDataFolder = CheckDirectorySeparator(measDataFolder);
 
                     if (!IsPathFolder(resultFolder) || !Directory.Exists(resultFolder))
                     {
                         return false;
                     }
-                    ResultFolder = resultFolder;
+                    ResultFolder = CheckDirectorySeparator(resultFolder);
 
                     ConfigManager = new ConfigManager(ConfigurationFolder);
 
@@ -400,6 +400,20 @@ namespace Frame.PluginLoader
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private string CheckDirectorySeparator(string path)
+        {
+            if (path[path.Length - 1] != Path.DirectorySeparatorChar)
+            {
+                path = $"{path}{Path.DirectorySeparatorChar}";
+            }
+            return path;
         }
 
 

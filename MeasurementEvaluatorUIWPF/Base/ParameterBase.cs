@@ -7,6 +7,8 @@ namespace MeasurementEvaluatorUIWPF.Base
     {
         public string Name { get; internal set; }
 
+
+        // to call the initialization completed for all ui components
         private static event EventHandler _initializationCompleted;
         public event EventHandler InitializationCompleted
         {
