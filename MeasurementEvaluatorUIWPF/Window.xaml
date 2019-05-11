@@ -13,7 +13,6 @@
 
 
     <Grid>
-
         <Grid.Resources>
             <!--<Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="Header" Value="{Binding ID}"/>
@@ -39,14 +38,6 @@
                             Value="{Binding Content}" />
                 </Style>
             </TabControl.ItemContainerStyle>
-
-
-            <!--<TabItem Header="Evaluation">-->
-            <!--<ContentPresenter  Content="{Binding Parameters.TabPages}"/>-->
-            <!--</TabItem>-->
-            <!--<TabItem Header="Specification-file Editor" />
-            <TabItem Header="Reference-file Editor" />
-            <TabItem Header="Skew Calculation" />-->
         </TabControl>
 
         <GroupBox Grid.Row="1" Header="Messages">

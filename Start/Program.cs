@@ -60,7 +60,7 @@ namespace Start
                 }
                 pluginLoader.Start();
 
-                PluginLoader.SendToInfoLogAndConsole("Frame started successfully.");
+                PluginLoader.SendToInfoLogAndConsole($"Application {System.AppDomain.CurrentDomain.FriendlyName} terminated.");
             }
             catch (Exception ex)
             {

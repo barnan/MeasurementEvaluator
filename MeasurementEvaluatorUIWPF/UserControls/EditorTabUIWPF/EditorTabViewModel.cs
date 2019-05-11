@@ -9,6 +9,12 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF
         public EditorTabViewModel(EditorTabUIWPFParameters parameters)
         {
             Parameters = parameters;
+            Parameters.InitializationCompleted += Parameters_InitializationCompleted;
+        }
+
+        private void Parameters_InitializationCompleted(object sender, System.EventArgs e)
+        {
+            Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
         }
     }
 }

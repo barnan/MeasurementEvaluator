@@ -67,6 +67,10 @@ namespace MeasurementEvaluator
                 }
 
                 Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
+                if (!Evaluator.Initiailze())
+                {
+                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
+                }
 
                 // Start UI:
                 Thread appThread = new Thread(() =>
@@ -78,8 +82,16 @@ namespace MeasurementEvaluator
                     Window mainWindow = (Window)_window;
                     mainWindow.Closed += MainWindow_OnClosed;
 
-                    System.Windows.Application.Current.MainWindow = mainWindow;
+                    //System.Windows.Application.Current.MainWindow = mainWindow;
+                    application.MainWindow = mainWindow;
                     mainWindow.Show();
+
+                    if (!_window.InitializationCompleted())
+                    {
+                        _logger.Error($"InitializationCompleted failed.");
+                        return;
+                    }
+
                     application.Run(mainWindow);
 
                 });
@@ -89,14 +101,9 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
-                if (!Evaluator.Initiailze())
-                {
-                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
-                }
 
-                if ()
 
-                    _uiFinishedEvent.WaitOne();
+                _uiFinishedEvent.WaitOne();
 
                 PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
 
