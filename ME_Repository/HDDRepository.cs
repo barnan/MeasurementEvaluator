@@ -252,7 +252,7 @@ namespace DataAcquisitions.ME_Repository
         {
             lock (_lockObject)
             {
-                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList( );
+                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList();
                 List<string> nameList = new List<string>();
                 foreach (KeyValuePair<string, object> pair in itemList)
                 {
@@ -402,11 +402,17 @@ namespace DataAcquisitions.ME_Repository
 
                     object obj = _parameters.HDDReaderWriter.ReadFromFile(fileName);
 
-                    fileContentDictionary.Add(new KeyValuePair<string, object>(fileName, obj));
+                    string nameInDictionary = fileName;
+                    if (obj is INamed namedObject)
+                    {
+                        nameInDictionary = namedObject.Name;
+                    }
+
+                    fileContentDictionary.Add(new KeyValuePair<string, object>(nameInDictionary, obj));
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"File read: {fileName}");
+                        _parameters.Logger.MethodTrace($"File read: {fileName}, stored in dictionary as {nameInDictionary}");
                     }
                 }
 
