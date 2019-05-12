@@ -57,7 +57,8 @@ namespace DataStructures.ToolSpecifications
 
         public override XElement SaveToXml(XElement inputElement)
         {
-            inputElement.SetAttributeValue(nameof(Name), Name);
+            //inputElement.SetAttributeValue(nameof(Name), Name);
+            this.TrySave(Name, inputElement, nameof(Name));
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));

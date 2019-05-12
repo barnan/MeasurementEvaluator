@@ -241,7 +241,7 @@ namespace MeasurementEvaluator.ME_DataCollector
                 {
                     try
                     {
-                        var reference = (IReferenceSample)_parameters.SpecificationRepository.Get(sampleName);
+                        var reference = (IReferenceSample)_parameters.ReferenceRepository.Get(sampleName);
                         if (refList.Any(p => p.Name == reference.Name))
                         {
                             _parameters.Logger.Error($"The given specification name is already added: {reference.Name}");

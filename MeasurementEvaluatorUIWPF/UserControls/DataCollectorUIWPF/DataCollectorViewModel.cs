@@ -28,6 +28,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
 
             AvailableToolList = Parameters.DataCollector.GetAvailableToolNames();
+
+            AvailableReferenceFileList = Parameters.DataCollector.GetReferenceSamples();
         }
 
 
@@ -59,7 +61,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         #region properties
 
         private List<ToolNames> _availableToolList;
-        private List<ToolNames> AvailableToolList
+        public List<ToolNames> AvailableToolList
         {
             get { return _availableToolList; }
             set
@@ -70,19 +72,27 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         }
 
         private ToolNames _selectedToolName;
-        private ToolNames SelectedToolName
+        public ToolNames SelectedToolName
         {
             get { return _selectedToolName; }
             set
             {
+                if (_selectedToolName == value)
+                {
+                    return;
+                }
+
                 _selectedToolName = value;
                 OnPropertyChanged();
+
+                AvailableSpecificationList = Parameters.DataCollector.GetSpecifications(_selectedToolName);
+
             }
         }
 
 
         private List<IToolSpecification> _availableSpecificationList;
-        private List<IToolSpecification> AvailableSpecificationList
+        public List<IToolSpecification> AvailableSpecificationList
         {
             get { return _availableSpecificationList; }
             set
@@ -93,7 +103,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         }
 
         private IToolSpecification _selectedSpecification;
-        private IToolSpecification SelectedSpecification
+        public IToolSpecification SelectedSpecification
         {
             get { return _selectedSpecification; }
             set
@@ -104,7 +114,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         }
 
         private List<IReferenceSample> _availableReferenceFileList;
-        private List<IReferenceSample> AvailableReferenceFileList
+        public List<IReferenceSample> AvailableReferenceFileList
         {
             get { return _availableReferenceFileList; }
             set
@@ -115,7 +125,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         }
 
         private IReferenceSample _selectedReferenece;
-        private IReferenceSample SelectedReferenece
+        public IReferenceSample SelectedReferenece
         {
             get { return _selectedReferenece; }
             set

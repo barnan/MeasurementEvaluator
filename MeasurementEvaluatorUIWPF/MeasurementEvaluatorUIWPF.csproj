@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\ParameterBase.cs" />
+    <Compile Include="Converters\ToolNameConverter.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="MainWindowParameters.cs" />
     <Compile Include="MainWindowViewModel.cs" />

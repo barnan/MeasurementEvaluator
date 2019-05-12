@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
-             mc:Ignorable="d" 
+             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.Converters"
+             xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance local:DataCollectorViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="500" MinWidth="400">
 
     <Grid>
@@ -13,6 +16,8 @@
             <Style x:Key="MarginStyle" TargetType="Control">
                 <Setter Property="Margin" Value="10"/>
         </Style>
+
+        <converters:ToolNameConverter x:Key="ToolNameConverter" />
 
         </Grid.Resources>
 
@@ -39,19 +44,37 @@
 
         
         <!--Tool Selection combo box-->
-        <ComboBox Grid.Column="0" Grid.Row="0" Style="{StaticResource MarginStyle}">
-
+        <ComboBox Grid.Column="0" Grid.Row="0" Style="{StaticResource MarginStyle}"
+                  ItemsSource="{Binding AvailableToolList}"
+                  SelectedItem="{Binding SelectedToolName}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
         </ComboBox>
         
         <!--Toolspecification selection combo box:-->
-        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Style="{StaticResource MarginStyle}">
-
+        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Style="{StaticResource MarginStyle}"
+                  ItemsSource="{Binding AvailableSpecificationList}"
+                  SelectedItem="{Binding SelectedSpecification}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
         </ComboBox>
         
         
         <!--Reference file selection combo box-->
-        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Style="{StaticResource MarginStyle}">
-
+        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Style="{StaticResource MarginStyle}"
+                  ItemsSource="{Binding AvailableReferenceFileList}"
+                  SelectedItem="{Binding SelectedReferenece}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
         </ComboBox>
 
         <!--Collect measurement data-->

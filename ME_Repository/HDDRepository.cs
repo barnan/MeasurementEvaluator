@@ -188,7 +188,7 @@ namespace DataAcquisitions.ME_Repository
 
                     _parameters.Logger.MethodInfo($"Element with name: {name} was given back.");
 
-                    return itemList[0];
+                    return itemList[0].Value;
 
                 }
                 catch (Exception ex)
@@ -252,7 +252,7 @@ namespace DataAcquisitions.ME_Repository
         {
             lock (_lockObject)
             {
-                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList();
+                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
                 List<string> nameList = new List<string>();
                 foreach (KeyValuePair<string, object> pair in itemList)
                 {

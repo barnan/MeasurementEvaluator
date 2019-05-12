@@ -14,11 +14,13 @@ namespace ME_DummyObjectCreator
 
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {
+            // specification 01:
+
             ICondition<double> thicknessAVGCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
-                Value = 1,
+                Value = 200,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
@@ -30,7 +32,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Thickness Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
-                Value = 1,
+                Value = 0.5,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,
@@ -43,7 +45,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Resistivity Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
-                Value = 1,
+                Value = 1.5,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
@@ -87,8 +89,110 @@ namespace ME_DummyObjectCreator
                 QuantitySpecifications = quanSpecList
             };
 
+            readerWriter.WriteToFile(specificationHandler, Path.Combine(specificationPath, $"TTR_Spec_01{_fileExtension}"));
 
-            readerWriter.WriteToFile(specificationHandler, Path.Combine(specificationPath, $"TTR_Spec_1{_fileExtension}"));
+
+
+            // specification 02:
+
+            ICondition<double> thicknessAVGCondition2 = new SimpleCondition()
+            {
+                Name = "Thickness Average Avg Condition",
+                CalculationType = CalculationTypes.Average,
+                Value = 201,
+                ConditionRelation = Relations.EQUAL,
+                Enabled = true,
+                RelOrAbs = Relativity.Absolute,
+                ValidIf = Relations.ALLWAYS,
+                ValidIf_Value = 0,
+            };
+
+            ICondition<double> thicknessSTDCondition2 = new SimpleCondition()
+            {
+                Name = "Thickness Average Std Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                Value = 1,
+                ConditionRelation = Relations.LESSOREQUAL,
+                Enabled = true,
+                RelOrAbs = Relativity.Relative,
+                ValidIf = Relations.ALLWAYS,
+                ValidIf_Value = 0,
+            };
+
+            ICondition<double> thicknessCpkCondition2 = new CpkCondition()
+            {
+                Name = "Thickness Cpk Calculation",
+                CalculationType = CalculationTypes.Cpk,
+                Value = 1,
+                ConditionRelation = Relations.LESSOREQUAL,
+                Enabled = true,
+                RelOrAbs = Relativity.Relative,
+                HalfTolerance = 1
+            };
+
+            // resisitivity conditions
+            ICondition<double> resistivityAVGCondition2 = new SimpleCondition()
+            {
+                Name = "Resistivity Average Avg Condition",
+                CalculationType = CalculationTypes.Average,
+                Value = 1.7,
+                ConditionRelation = Relations.EQUAL,
+                Enabled = true,
+                RelOrAbs = Relativity.Absolute,
+                ValidIf = Relations.ALLWAYS,
+                ValidIf_Value = 0,
+            };
+
+            ICondition<double> resistivitySTDCondition2 = new SimpleCondition()
+            {
+                Name = "Resitivity Average Std Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                Value = 1,
+                ConditionRelation = Relations.LESSOREQUAL,
+                Enabled = true,
+                RelOrAbs = Relativity.Relative,
+                ValidIf = Relations.ALLWAYS,
+                ValidIf_Value = 0,
+            };
+
+            ICondition<double> resistivityCpkCondition2 = new CpkCondition()
+            {
+                Name = "Resitivity Average Std Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                Value = 1,
+                ConditionRelation = Relations.LESSOREQUAL,
+                Enabled = true,
+                RelOrAbs = Relativity.Relative,
+                HalfTolerance = 1
+            };
+
+
+
+            IQuantitySpecificationHandler thicknessQuantitySpecification2 = new QuantitySpecification();
+            thicknessQuantitySpecification2.Quantity = new Quantity(Units.um, "Thickness Average");
+            thicknessQuantitySpecification2.Conditions = new List<ICondition> { thicknessAVGCondition2, thicknessSTDCondition2, thicknessCpkCondition2 };
+
+            IQuantitySpecificationHandler resistivityQuantitySpecification2 = new QuantitySpecification();
+            resistivityQuantitySpecification2.Quantity = new Quantity(Units.um, "Resistivity Average");
+            resistivityQuantitySpecification2.Conditions = new List<ICondition> { resistivityAVGCondition2, resistivitySTDCondition2, resistivityCpkCondition2 };
+
+            List<IQuantitySpecification> quanSpecList2 = new List<IQuantitySpecification>
+            {
+                thicknessQuantitySpecification2,
+                resistivityQuantitySpecification2
+            };
+
+
+            IToolSpecificationHandler specificationHandler2 = new ToolSpecification
+            {
+                Name = "TTR Strict Specification",
+                ToolName = ToolNames.TTR,
+                QuantitySpecifications = quanSpecList2
+            };
+
+            readerWriter.WriteToFile(specificationHandler2, Path.Combine(specificationPath, $"TTR_Spec_02{_fileExtension}"));
+
+
 
         }
     }

@@ -14,14 +14,34 @@ namespace ME_DummyObjectCreator
 
         internal void Create(string referencePath, IHDDFileReaderWriter readerWriter)
         {
+            // sample1:
             ReferenceValue refVal1 = new ReferenceValue("Thickness Average", Interfaces.Units.um, 200);
             ReferenceValue refVal2 = new ReferenceValue("Resistivity Average", Interfaces.Units.Ohmcm, 1.5);
 
-            List<IReferenceValue> referenceValues = new List<IReferenceValue> { refVal1, refVal2 };
+            List<IReferenceValue> referenceValues1 = new List<IReferenceValue> { refVal1, refVal2 };
+            ReferenceSample referenceSample1 = new ReferenceSample("TTR Reference 01", referenceValues1);
+            readerWriter.WriteToFile(referenceSample1, Path.Combine(referencePath, $"TTR_Ref_01{_fileExtension}"));
 
-            ReferenceSample referenceSample1 = new ReferenceSample("Thisckness Reference 500", referenceValues);
 
-            readerWriter.WriteToFile(referenceSample1, Path.Combine(referencePath, $"TTR_Spec_1{_fileExtension}"));
+            // sample2:
+            ReferenceValue refVal11 = new ReferenceValue("Thickness Average", Interfaces.Units.um, 190);
+            ReferenceValue refVal12 = new ReferenceValue("Resistivity Average", Interfaces.Units.Ohmcm, 1.4);
+
+            List<IReferenceValue> referenceValues11 = new List<IReferenceValue> { refVal11, refVal12 };
+            ReferenceSample referenceSample11 = new ReferenceSample("TTR Reference 02", referenceValues11);
+            readerWriter.WriteToFile(referenceSample11, Path.Combine(referencePath, $"TTR_Ref_02{_fileExtension}"));
+
+
+            // sample2:
+            ReferenceValue refVal21 = new ReferenceValue("Thickness Average", Interfaces.Units.um, 210);
+            ReferenceValue refVal22 = new ReferenceValue("Resistivity Average", Interfaces.Units.Ohmcm, 1.6);
+
+            List<IReferenceValue> referenceValues21 = new List<IReferenceValue> { refVal21, refVal22 };
+
+            ReferenceSample referenceSample21 = new ReferenceSample("TTR Reference 03", referenceValues21);
+
+            readerWriter.WriteToFile(referenceSample21, Path.Combine(referencePath, $"TTR_Ref_03{_fileExtension}"));
+
 
         }
     }
