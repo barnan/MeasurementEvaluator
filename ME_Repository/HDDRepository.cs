@@ -14,6 +14,7 @@ namespace DataAcquisitions.ME_Repository
         private readonly HDDRepositoryParameters _parameters;
         private readonly object _lockObject = new object();
         private string _repositoryPath;
+        private List<KeyValuePair<string, object>> _fileContentDictionaryCache;
 
 
         internal HDDRepository(HDDRepositoryParameters parameters)
@@ -76,6 +77,7 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
+
         public event EventHandler<InitializationEventArgs> InitStateChanged;
 
         public bool IsInitialized { get; private set; }
@@ -89,10 +91,9 @@ namespace DataAcquisitions.ME_Repository
 
         #endregion
 
-
         #region IRepository<object>
 
-        public virtual IEnumerable<object> Find(Predicate<object> predicate)
+        public IEnumerable<object> Find(Predicate<object> predicate)
         {
             lock (_lockObject)
             {
@@ -102,23 +103,21 @@ namespace DataAcquisitions.ME_Repository
                     return null;
                 }
 
-                IEnumerable<object> itemList = GetItemList(_repositoryPath).Select(P => P.Value);
-                List<object> hitList = new List<object>();
+                List<object> hitList = GetHitListByPredicate(_fileContentDictionaryCache, predicate);
 
-                foreach (object item in itemList)
+                if (hitList.Count > 0)
                 {
-                    if (predicate(item))
-                    {
-                        hitList.Add(item);
-                    }
+                    return hitList;
                 }
 
+                _fileContentDictionaryCache = GetItemList(_repositoryPath);
+                hitList = GetHitListByPredicate(_fileContentDictionaryCache, predicate);
                 return hitList;
             }
         }
 
 
-        public virtual object Get(int index, IComparer<object> comparer = null)
+        public object Get(int index, IComparer<object> comparer = null)
         {
             lock (_lockObject)
             {
@@ -130,27 +129,16 @@ namespace DataAcquisitions.ME_Repository
                         return null;
                     }
 
-                    List<object> itemList = GetItemList(_repositoryPath).Select(p => p.Value).ToList();
+                    object hit = GetHitByIndex(_fileContentDictionaryCache, index, comparer);
 
-                    if (index > itemList.Count)
+                    if (hit != null)
                     {
-                        _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
-                        return null;
+                        return hit;
                     }
 
-                    if (comparer == null)
-                    {
-                        itemList.Sort();
-                    }
-                    else
-                    {
-                        itemList.Sort(comparer);
-                    }
-
-                    _parameters.Logger.MethodInfo($"Element with index: {index} was given back.");
-
-                    return itemList[index];
-
+                    _fileContentDictionaryCache = GetItemList(_repositoryPath);
+                    hit = GetHitByIndex(_fileContentDictionaryCache, index, comparer);
+                    return hit;
                 }
                 catch (Exception ex)
                 {
@@ -160,7 +148,8 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
-        public virtual object Get(string name)
+
+        public object Get(string name)
         {
             lock (_lockObject)
             {
@@ -168,19 +157,27 @@ namespace DataAcquisitions.ME_Repository
                 {
                     if (string.IsNullOrEmpty(name))
                     {
-                        _parameters.Logger.MethodError($"Received name null or empty.");
+                        _parameters.Logger.MethodError("Received name null or empty.");
                         return null;
                     }
 
-                    List<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath).Where(p => p.Key == name).ToList();
+                    List<object> hitList = GetHitListByName(_fileContentDictionaryCache, name);
 
-                    if (itemList.Count == 0)
+                    if (hitList.Count == 1)
+                    {
+                        return hitList;
+                    }
+
+                    _fileContentDictionaryCache = GetItemList(_repositoryPath);
+                    hitList = GetHitListByName(_fileContentDictionaryCache, name);
+
+                    if (hitList.Count == 0)
                     {
                         _parameters.Logger.MethodError($"No element was found with the given name: {name}.");
                         return null;
                     }
 
-                    if (itemList.Count > 1)
+                    if (hitList.Count > 1)
                     {
                         _parameters.Logger.MethodError($"More elements were found with the given name: {name}.");
                         return null;
@@ -188,7 +185,27 @@ namespace DataAcquisitions.ME_Repository
 
                     _parameters.Logger.MethodInfo($"Element with name: {name} was given back.");
 
-                    return itemList[0].Value;
+                    return hitList[0];
+                }
+                catch (Exception ex)
+                {
+                    _parameters.Logger.MethodError($"Exception occured: {ex}");
+                    return null;
+                }
+            }
+        }
+
+
+        public IEnumerable<object> GetAllElement()
+        {
+            lock (_lockObject)
+            {
+                try
+                {
+                    _fileContentDictionaryCache = GetItemList(_repositoryPath);
+                    var valueList = _fileContentDictionaryCache.Select(x => x.Value);
+
+                    return valueList;
 
                 }
                 catch (Exception ex)
@@ -200,14 +217,13 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual bool Add(object item)
+        public bool Add(object item)
         {
             lock (_lockObject)
             {
                 try
                 {
                     INamed named = item as INamed;
-
                     if (string.IsNullOrEmpty(named?.Name))
                     {
                         _parameters.Logger.MethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
@@ -239,7 +255,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual void AddRange(IEnumerable<object> items)
+        public void AddRange(IEnumerable<object> items)
         {
             foreach (var item in items)
             {
@@ -248,12 +264,13 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual IEnumerable<string> GetAllNames()
+        public IEnumerable<string> GetAllNames()
         {
             lock (_lockObject)
             {
                 IEnumerable<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
                 List<string> nameList = new List<string>();
+
                 foreach (KeyValuePair<string, object> pair in itemList)
                 {
                     if (pair.Value is INamed namedPairValue)
@@ -268,7 +285,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual bool Remove(object item)
+        public bool Remove(object item)
         {
             lock (_lockObject)
             {
@@ -282,14 +299,9 @@ namespace DataAcquisitions.ME_Repository
                         return false;
                     }
 
-                    List<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
+                    Refresh();
 
-                    var selectedItem = itemList.Where(p => p.Key == named.Name).ToList();
-                    if (selectedItem.Count > 1)
-                    {
-                        _parameters.Logger.MethodError($"More files contain {named.Name} -> {string.Join(",", selectedItem.Select(p => p.Key))}");
-                        return false;
-                    }
+                    var selectedItem = _fileContentDictionaryCache.Where(p => p.Key == named.Name).ToList();
 
                     if (selectedItem.Count < 1)
                     {
@@ -297,12 +309,22 @@ namespace DataAcquisitions.ME_Repository
                         return false;
                     }
 
-                    File.Delete(selectedItem[0].Key);
+                    if (selectedItem.Count > 1)
+                    {
+                        _parameters.Logger.MethodError($"More files contain {named.Name} -> {string.Join(",", selectedItem.Select(p => p.Key))}");
+                    }
+
+                    foreach (KeyValuePair<string, object> pair in selectedItem)
+                    {
+                        File.Delete(pair.Key);
+                    }
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
                         _parameters.Logger.MethodTrace($"Item removed: {selectedItem[0].Key}");
                     }
+
+                    Refresh();
 
                     return true;
                 }
@@ -315,7 +337,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public virtual void RemoveRange(IEnumerable<object> items)
+        public void RemoveRange(IEnumerable<object> items)
         {
             foreach (var item in items)
             {
@@ -348,8 +370,20 @@ namespace DataAcquisitions.ME_Repository
             return true;
         }
 
+
+        public bool Refresh()
+        {
+            lock (_lockObject)
+            {
+                _fileContentDictionaryCache = GetItemList(_repositoryPath);
+                return _fileContentDictionaryCache != null;
+            }
+        }
+
+
         #endregion
 
+        #region private
 
         private bool CheckFolder(string fullPath)
         {
@@ -359,15 +393,15 @@ namespace DataAcquisitions.ME_Repository
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(Path.GetFileName(fullPath)))
+            if (!Directory.Exists(fullPath))
             {
-                _parameters.Logger.MethodError($"The given path ({fullPath}) contains filename too, it is not a folder.");
+                _parameters.Logger.MethodError($"The given path does not exists: {fullPath}.");
                 return false;
             }
 
-            if (!Directory.Exists(fullPath))
+            if (!string.IsNullOrEmpty(Path.GetFileName(fullPath)))
             {
-                _parameters.Logger.MethodError($"The given folder does not exists: {fullPath}.");
+                _parameters.Logger.MethodError($"The given path ({fullPath}) contains filename too, it is not valid folder path.");
                 return false;
             }
 
@@ -378,6 +412,7 @@ namespace DataAcquisitions.ME_Repository
 
             return true;
         }
+
 
         private List<KeyValuePair<string, object>> GetItemList(string fullPath)
         {
@@ -392,6 +427,12 @@ namespace DataAcquisitions.ME_Repository
                 List<string> fileNameList = new List<string>();
                 foreach (string filterItem in _parameters.FileExtensionFilters)
                 {
+                    if (string.IsNullOrEmpty(filterItem))
+                    {
+                        _parameters.Logger.Error("Empty file extension filter element found.");
+                        continue;
+                    }
+
                     fileNameList.AddRange(Directory.GetFiles(fullPath, $"*.{filterItem}"));
                 }
 
@@ -399,7 +440,6 @@ namespace DataAcquisitions.ME_Repository
 
                 foreach (string fileName in fileNameList)
                 {
-
                     object obj = _parameters.HDDReaderWriter.ReadFromFile(fileName);
 
                     string nameInDictionary = fileName;
@@ -416,13 +456,7 @@ namespace DataAcquisitions.ME_Repository
                     }
                 }
 
-                if (_parameters.Logger.IsTraceEnabled)
-                {
-                    foreach (var item in fileContentDictionary)
-                    {
-                        _parameters.Logger.MethodTrace($"Items: {item}");
-                    }
-                }
+                _fileContentDictionaryCache = fileContentDictionary;
 
                 return fileContentDictionary;
             }
@@ -433,16 +467,68 @@ namespace DataAcquisitions.ME_Repository
             }
         }
 
+
         private string CreateFileNameFromName(string name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Received name is not appropriate.");
+                throw new ArgumentException("Received name is not appropriate, it is null or empty.");
             }
 
+            // todo: make loinger name
             string[] nameElements = name.Split(' ');
             return nameElements[0];
         }
 
+
+        private List<object> GetHitListByPredicate(List<KeyValuePair<string, object>> itemList, Predicate<object> predicate)
+        {
+            IEnumerable<object> valueList = itemList.Select(p => p.Value);
+            List<object> hitList = new List<object>();
+
+            foreach (object val in valueList)
+            {
+                if (predicate(val))
+                {
+                    hitList.Add(val);
+                }
+            }
+
+            return hitList;
+        }
+
+
+        private List<object> GetHitListByName(List<KeyValuePair<string, object>> itemList, string name)
+        {
+            List<KeyValuePair<string, object>> hitList = itemList.Where(p => p.Key == name).ToList();
+            return hitList.Select(x => x.Value).ToList();
+        }
+
+
+        private object GetHitByIndex(List<KeyValuePair<string, object>> itemList, int index, IComparer<object> comparer = null)
+        {
+            List<object> valueList = itemList.Select(p => p.Value).ToList();
+
+            if (index > valueList.Count)
+            {
+                _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
+                return null;
+            }
+
+            if (comparer == null)
+            {
+                valueList.Sort();
+            }
+            else
+            {
+                valueList.Sort(comparer);
+            }
+
+            _parameters.Logger.MethodInfo($"Element with index: {index} was given back.");
+
+            return valueList[index];
+        }
+
+        #endregion
     }
 }

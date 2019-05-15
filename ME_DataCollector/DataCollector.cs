@@ -137,7 +137,6 @@ namespace MeasurementEvaluator.ME_DataCollector
                 };
                 thread.Start(_tokenSource.Token);
 
-
                 bool oldInitState = IsInitialized;
                 IsInitialized = true;
                 OnInitStateChanged(IsInitialized, oldInitState);

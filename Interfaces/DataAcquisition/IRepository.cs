@@ -12,6 +12,8 @@ namespace Interfaces.DataAcquisition
 
         object Get(string name);
 
+        IEnumerable<object> GetAllElement();
+
         IEnumerable<string> GetAllNames();
 
         IEnumerable<object> Find(Predicate<object> predicate);
@@ -25,6 +27,8 @@ namespace Interfaces.DataAcquisition
         void RemoveRange(IEnumerable<object> items);
 
         bool SetFolder(string path);
+
+        bool Refresh();
     }
 
 }
