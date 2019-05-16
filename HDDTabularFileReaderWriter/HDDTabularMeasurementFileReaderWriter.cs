@@ -21,21 +21,16 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
             _parameters = parameter;
         }
 
-
-
         public bool WriteToFile(object obj, string fileNameAndPath)
         {
             throw new NotImplementedException();
         }
 
 
-
         public object ReadFromFile(string fileNameAndPath, ToolNames toolName = null)
         {
             lock (_lockObject)
             {
-                object data;
-
                 try
                 {
                     if (!CanRead(fileNameAndPath))
@@ -44,19 +39,15 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
                         return null;
                     }
 
-                    data = ReadTabularDataFile(fileNameAndPath, toolName);
+                    return ReadTabularDataFile(fileNameAndPath, toolName);
                 }
                 catch (Exception ex)
                 {
                     _parameters.Logger.MethodError($"Exception occured: {ex}");
                     return null;
                 }
-
-                return data;
             }
         }
-
-
 
         private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, ToolNames toolName)
         {
@@ -138,9 +129,6 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
             return toolMeasData;
         }
 
-
-
-
         public bool CanRead(string fileNameAndPath)
         {
             if (string.IsNullOrEmpty(fileNameAndPath))
@@ -157,7 +145,5 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
             }
             return false;
         }
-
     }
-
 }

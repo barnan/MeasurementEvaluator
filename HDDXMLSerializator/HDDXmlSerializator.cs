@@ -94,11 +94,6 @@ namespace DataAcquisitions.HDDXmlSerializator
                         serializer.Serialize(sw, tobj);
                         return true;
                     }
-
-                    _parameters.Logger.Error($"Received object is not {nameof(IXmlStorable)}");
-
-
-                    return false;
                 }
                 catch (Exception ex)
                 {

@@ -2,7 +2,10 @@
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using MeasurementEvaluatorUI.Base;
+using MeasurementEvaluatorUI.Commands;
+using Microsoft.Win32;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
@@ -21,6 +24,9 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         {
             Parameters = parameters;
             Parameters.InitializationCompleted += Parameters_InitializationCompleted;
+
+            BrowseMeasurementDataCommand = new RelayCommand(ExecuteBrowse);
+            CalculateCommand = new RelayCommand(ExecuteMeasure);
         }
 
         private void Parameters_InitializationCompleted(object sender, System.EventArgs e)
@@ -28,13 +34,10 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
 
             AvailableToolList = Parameters.DataCollector.GetAvailableToolNames();
-
             AvailableReferenceFileList = Parameters.DataCollector.GetReferenceSamples();
         }
 
-
         #endregion
-
 
         #region commands
 
@@ -42,23 +45,29 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         public ICommand CalculateCommand
         {
             get { return _calculateCommand; }
-            set { _calculateCommand = value; }
+            set
+            {
+                _calculateCommand = value;
+                OnPropertyChanged();
+            }
         }
 
-
         private ICommand _browseMeasurementDataCommand;
-
-
         public ICommand BrowseMeasurementDataCommand
         {
             get { return _browseMeasurementDataCommand; }
-            set { _browseMeasurementDataCommand = value; }
+            set
+            {
+                _browseMeasurementDataCommand = value;
+                OnPropertyChanged();
+            }
         }
 
         #endregion
 
-
         #region properties
+
+        #region tool
 
         private List<ToolNames> _availableToolList;
         public List<ToolNames> AvailableToolList
@@ -81,15 +90,16 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
                 {
                     return;
                 }
-
                 _selectedToolName = value;
                 OnPropertyChanged();
 
                 AvailableSpecificationList = Parameters.DataCollector.GetSpecifications(_selectedToolName);
-
             }
         }
 
+        #endregion tool
+
+        #region specification
 
         private List<IToolSpecification> _availableSpecificationList;
         public List<IToolSpecification> AvailableSpecificationList
@@ -113,6 +123,10 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             }
         }
 
+        #endregion specification
+
+        #region referenece sample
+
         private List<IReferenceSample> _availableReferenceFileList;
         public List<IReferenceSample> AvailableReferenceFileList
         {
@@ -135,6 +149,42 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             }
         }
 
+        #endregion referenece sample
+
+        #region measurement data
+
+        private List<string> _selectedMeasurementFiles;
+        public List<string> SelectedMeasurementFiles
+        {
+            get { return _selectedMeasurementFiles; }
+            set
+            {
+                _selectedMeasurementFiles = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
+
+        #endregion
+
+        #region private
+
+        private void ExecuteMeasure()
+        {
+
+        }
+
+        private void ExecuteBrowse()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog { Multiselect = true };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                SelectedMeasurementFiles = openFileDialog.FileNames.ToList();
+            }
+        }
+
+        #endregion
+
     }
 }

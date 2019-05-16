@@ -12,7 +12,7 @@ namespace Calculations.Calculation
 
 
         [Configuration("DateTimeProvider", "DateTimeProvider", LoadComponent = true)]
-        private string _dateTimeProviderName;
+        private string _dateTimeProviderName = null;
         public IDateTimeProvider DateTimeProvider;
 
 

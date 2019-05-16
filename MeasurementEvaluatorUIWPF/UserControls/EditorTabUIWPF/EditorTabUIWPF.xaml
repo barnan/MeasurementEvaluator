@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450">
     <Grid>
             
     </Grid>

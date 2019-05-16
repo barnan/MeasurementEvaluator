@@ -50,6 +50,15 @@ namespace MeasurementEvaluatorUI.Commands
             {
                 _isEnabled = value;
                 OnPropertyChanged();
+
+                try
+                {
+                    var eventHandlerToCall = CanExecuteChanged;
+                    eventHandlerToCall?.Invoke(this, new EventArgs());
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -57,11 +66,11 @@ namespace MeasurementEvaluatorUI.Commands
 
         #region ICommand
 
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }       // todo: look after -> what is CommandManager
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        public event EventHandler CanExecuteChanged;
+        //{
+        //    add { CommandManager.RequerySuggested += value; }       // todo: look after -> what is CommandManager
+        //    remove { CommandManager.RequerySuggested -= value; }
+        //}
 
         public bool CanExecute(object parameter)
         {
@@ -71,7 +80,6 @@ namespace MeasurementEvaluatorUI.Commands
         public void Execute(object parameter)
         {
             _simpleAction?.Invoke();
-
             _parameterizedAction?.Invoke(parameter);
         }
 
