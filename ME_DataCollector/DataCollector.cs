@@ -204,27 +204,18 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             lock (_lockObj)
             {
-                IEnumerable<string> specificationNames = _parameters.SpecificationRepository.GetAllNames();
-                List<IToolSpecification> specList = new List<IToolSpecification>();
-
-                foreach (string specificationName in specificationNames)
+                try
                 {
-                    try
-                    {
-                        var specification = (IToolSpecification)_parameters.SpecificationRepository.Get(specificationName);
-                        if (specList.Any(p => p.Name == specification.Name))
-                        {
-                            _parameters.Logger.Error($"The given specification name is already added: {specification.Name}");
-                            continue;
-                        }
-                        specList.Add(specification);
-                    }
-                    catch (Exception ex)
-                    {
-                        _parameters.Logger.Error($"Exception occured: {ex}");
-                    }
+                    IEnumerable<IToolSpecification> specifications = Enumerable.Cast<IToolSpecification>(_parameters.SpecificationRepository.GetAllElement());
+                    List<IToolSpecification> specList = specifications.Where(p => p.ToolName == toolName).ToList();
+                    return specList;
                 }
-                return specList;
+                catch (Exception ex)
+                {
+                    _parameters.Logger.Error($"Exception occured: {ex}");
+                    return null;
+                }
+
             }
         }
 
@@ -233,27 +224,16 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             lock (_lockObj)
             {
-                IEnumerable<string> sampleNames = _parameters.ReferenceRepository.GetAllNames();
-                List<IReferenceSample> refList = new List<IReferenceSample>();
-
-                foreach (string sampleName in sampleNames)
+                try
                 {
-                    try
-                    {
-                        var reference = (IReferenceSample)_parameters.ReferenceRepository.Get(sampleName);
-                        if (refList.Any(p => p.Name == reference.Name))
-                        {
-                            _parameters.Logger.Error($"The given specification name is already added: {reference.Name}");
-                            continue;
-                        }
-                        refList.Add(reference);
-                    }
-                    catch (Exception ex)
-                    {
-                        _parameters.Logger.Error($"Exception occured: {ex}");
-                    }
+                    List<IReferenceSample> samples = Enumerable.Cast<IReferenceSample>(_parameters.ReferenceRepository.GetAllElement()).ToList();
+                    return samples;
                 }
-                return refList;
+                catch (Exception ex)
+                {
+                    _parameters.Logger.Error($"Exception occured: {ex}");
+                    return null;
+                }
             }
         }
 

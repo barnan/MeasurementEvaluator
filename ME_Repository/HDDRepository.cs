@@ -165,7 +165,7 @@ namespace DataAcquisitions.ME_Repository
 
                     if (hitList.Count == 1)
                     {
-                        return hitList;
+                        return hitList[0];
                     }
 
                     _fileContentDictionaryCache = GetItemList(_repositoryPath);
@@ -268,10 +268,10 @@ namespace DataAcquisitions.ME_Repository
         {
             lock (_lockObject)
             {
-                IEnumerable<KeyValuePair<string, object>> itemList = GetItemList(_repositoryPath);
+                _fileContentDictionaryCache = GetItemList(_repositoryPath);
                 List<string> nameList = new List<string>();
 
-                foreach (KeyValuePair<string, object> pair in itemList)
+                foreach (KeyValuePair<string, object> pair in _fileContentDictionaryCache)
                 {
                     if (pair.Value is INamed namedPairValue)
                     {

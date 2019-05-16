@@ -265,6 +265,38 @@ namespace Interfaces
             return null;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (!(obj is ToolNames toolNameParam))
+            {
+                return false;
+            }
+
+            return Value == toolNameParam.Value && Name == toolNameParam.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode() + Name.GetHashCode();
+        }
+
+        public static bool operator ==(ToolNames toolName1, ToolNames toolName2)
+        {
+            if (object.Equals(toolName1, null) && object.Equals(toolName2, null))
+                return true;
+
+            return !object.Equals(toolName1, null) && !object.Equals(toolName2, null) && toolName1.Value == toolName2.Value && toolName1.Name == toolName2.Name;
+        }
+
+        public static bool operator !=(ToolNames toolName1, ToolNames ToolName2)
+        {
+            return !(toolName1 == ToolName2);
+        }
     }
 
 
