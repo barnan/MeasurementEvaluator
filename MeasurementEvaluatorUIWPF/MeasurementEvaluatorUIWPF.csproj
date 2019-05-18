@@ -75,6 +75,8 @@
     <Compile Include="MainWindowParameters.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="TabItem.cs" />
+    <Compile Include="Themes\LeftMarginMultiplierConverter.cs" />
+    <Compile Include="Themes\TreeViewItemExtensions.cs" />
     <Compile Include="UserControls\EditorTabUIWPF\EditorTabUIWPF.xaml.cs">
       <DependentUpon>EditorTabUIWPF.xaml</DependentUpon>
     </Compile>
@@ -118,6 +120,34 @@
       <DependentUpon>SampleOrientationUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SampleOrientationUIWPF\SampleOrientationViewModel.cs" />
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ExpressionDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\MetroDark.MSControls.Core.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\MetroDark.MSControls.Toolkit.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\Styles.Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\Styles.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MetroDark\Theme.Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Metro\Metro.MSControls.Core.Implicit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -135,6 +165,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Metro\Theme.Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -217,6 +251,9 @@
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Themes\MetroDark\HowToApplyTheme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />

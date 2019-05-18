@@ -9,17 +9,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance local:DataCollectorViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" Width="400">
-
-    <base:UserControlBase.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source=",/Themes/Metro/Metro.MSControls.Core.Implicit.xaml"/>
-                <!--<ResourceDictionary Source="pack://application:,;Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml"/>-->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </base:UserControlBase.Resources>
-    
-    
+        
     <Grid>
         <Grid.Resources>
             
@@ -39,7 +29,6 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -100,7 +89,7 @@
 
         <!--calculate-->
         <Button Grid.Column="3" Grid.Row="4" Content="Calculate" Command="{Binding CalculateCommand}" 
-                Style="{StaticResource MarginStyle}"/>
+                Style="{StaticResource MarginStyle}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10"/>
 
         <!--image control to show the rotation-->
         <Image Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="8" Margin="10" >

@@ -18,6 +18,9 @@ namespace MeasurementEvaluatorUIWPF
             InitializeComponent();
 
             this.DataContext = new MainWindowViewModel(param);
+
+            //Style style = Application.Current.FindResource("CustomWindowStyle") as Style;
+            //this.Style = style;
         }
 
         public bool InitializationCompleted()

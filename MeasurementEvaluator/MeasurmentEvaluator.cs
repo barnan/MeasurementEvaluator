@@ -75,9 +75,11 @@ namespace MeasurementEvaluator
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
-                    _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
-
                     Application application = new Application();
+                    //var myResourceDictionary = new ResourceDictionary { Source = new Uri("/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml", UriKind.RelativeOrAbsolute) };
+                    //application.Resources.MergedDictionaries.Add(myResourceDictionary);
+
+                    _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
 
                     Window mainWindow = (Window)_window;
                     mainWindow.Closed += MainWindow_OnClosed;

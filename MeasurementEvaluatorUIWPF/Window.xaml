@@ -12,14 +12,16 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Core.Implicit.xaml" />
-                <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml" />
+            <ResourceDictionary.MergedDictionaries>               
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml" />-->
+                <ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/ExpressionDark.xaml" />
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>
+                <ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
     
-
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>

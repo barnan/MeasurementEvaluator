@@ -8,7 +8,7 @@
              d:DataContext="{d:DesignInstance local:EvaluationTabViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450">
-
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
