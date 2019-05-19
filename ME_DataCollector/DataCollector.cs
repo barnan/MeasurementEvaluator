@@ -157,7 +157,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         #region IDataCollector
 
-        public void GatherData(string specificationName, List<string> measurementDataFileNames, string referenceName = null)
+        public void GatherData(IToolSpecification specification, List<string> measurementDataFileNames, IReferenceSample reference = null)
         {
             lock (_lockObj)
             {
@@ -167,8 +167,8 @@ namespace MeasurementEvaluator.ME_DataCollector
                     return;
                 }
 
-                _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specificationName, referenceName, measurementDataFileNames, ResultReadyEvent));
-
+                _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specification, reference, measurementDataFileNames, ResultReadyEvent));
+                _processQueueResetEvent.Set();
             }
         }
 
@@ -320,17 +320,17 @@ namespace MeasurementEvaluator.ME_DataCollector
 
     internal class GetDataQueueElement : QueueElement
     {
-        private string _specificationName;
-        private string _referenceName;
+        private IToolSpecification _specification;
+        private IReferenceSample _reference;
         private List<string> _measurementDataFileNames;
         private EventHandler<ResultEventArgs> _resultReadyEvent;
 
 
-        public GetDataQueueElement(DataCollectorParameters parameters, string specificationName, string referenceName, List<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
+        public GetDataQueueElement(DataCollectorParameters parameters, IToolSpecification specification, IReferenceSample reference, List<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
             : base(parameters)
         {
-            _specificationName = specificationName;
-            _referenceName = referenceName;
+            _specification = specification;
+            _reference = reference;
             _measurementDataFileNames = measurementDataFileNames;
             _resultReadyEvent = resultReadyEvent;
         }
@@ -340,12 +340,12 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
 
-            IToolSpecification specification = (IToolSpecification)_parameters.SpecificationRepository.Get(_specificationName);
-            if (specification == null)
-            {
-                _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
-                return;
-            }
+            //IToolSpecification specification = (IToolSpecification)_parameters.SpecificationRepository.Get(_specification);
+            //if (specification == null)
+            //{
+            //    _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
+            //    return;
+            //}
 
             List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
             foreach (string name in _measurementDataFileNames)
@@ -358,19 +358,19 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return;
             }
 
-            IReferenceSample reference = (IReferenceSample)_parameters.ReferenceRepository.Get(_referenceName);
-            if (reference == null)
-            {
-                _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
-            }
+            //IReferenceSample reference = (IReferenceSample)_parameters.ReferenceRepository.Get(_reference);
+            //if (reference == null)
+            //{
+            //    _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
+            //}
 
             var localResultreadyevent = _resultReadyEvent;
             localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
                                                                                         _parameters.DateTimeProvider.GetDateTime(),
                                                                                         true,
-                                                                                        specification,
+                                                                                        _specification,
                                                                                         measurementDatas,
-                                                                                        reference)));
+                                                                                        _reference)));
         }
     }
 

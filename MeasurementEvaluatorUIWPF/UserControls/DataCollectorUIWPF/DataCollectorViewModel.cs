@@ -26,7 +26,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             Parameters.InitializationCompleted += Parameters_InitializationCompleted;
 
             BrowseMeasurementDataCommand = new RelayCommand(ExecuteBrowse);
-            CalculateCommand = new RelayCommand(ExecuteMeasure);
+            CalculateCommand = new RelayCommand(ExecuteCalculate);
         }
 
         private void Parameters_InitializationCompleted(object sender, System.EventArgs e)
@@ -170,9 +170,9 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region private
 
-        private void ExecuteMeasure()
+        private void ExecuteCalculate()
         {
-
+            Parameters.DataCollector.GatherData(SelectedSpecification, SelectedMeasurementFiles, SelectedReferenece);
         }
 
         private void ExecuteBrowse()

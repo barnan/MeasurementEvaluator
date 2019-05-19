@@ -105,7 +105,7 @@ namespace DataAcquisitions.ME_Repository
 
                 List<object> hitList = GetHitListByPredicate(_fileContentDictionaryCache, predicate);
 
-                if (hitList.Count > 0)
+                if (hitList?.Count > 0)
                 {
                     return hitList;
                 }
@@ -163,7 +163,7 @@ namespace DataAcquisitions.ME_Repository
 
                     List<object> hitList = GetHitListByName(_fileContentDictionaryCache, name);
 
-                    if (hitList.Count == 1)
+                    if (hitList?.Count == 1)
                     {
                         return hitList[0];
                     }
@@ -483,6 +483,11 @@ namespace DataAcquisitions.ME_Repository
 
         private List<object> GetHitListByPredicate(List<KeyValuePair<string, object>> itemList, Predicate<object> predicate)
         {
+            if (itemList == null)
+            {
+                return null;
+            }
+
             IEnumerable<object> valueList = itemList.Select(p => p.Value);
             List<object> hitList = new List<object>();
 
@@ -500,6 +505,11 @@ namespace DataAcquisitions.ME_Repository
 
         private List<object> GetHitListByName(List<KeyValuePair<string, object>> itemList, string name)
         {
+            if (itemList == null)
+            {
+                return null;
+            }
+
             List<KeyValuePair<string, object>> hitList = itemList.Where(p => p.Key == name).ToList();
             return hitList.Select(x => x.Value).ToList();
         }
@@ -507,6 +517,11 @@ namespace DataAcquisitions.ME_Repository
 
         private object GetHitByIndex(List<KeyValuePair<string, object>> itemList, int index, IComparer<object> comparer = null)
         {
+            if (itemList == null)
+            {
+                return null;
+            }
+
             List<object> valueList = itemList.Select(p => p.Value).ToList();
 
             if (index > valueList.Count)

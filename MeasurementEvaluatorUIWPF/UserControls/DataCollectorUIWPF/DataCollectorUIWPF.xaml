@@ -8,8 +8,20 @@
              xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance local:DataCollectorViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="450" Width="400">
-        
+             d:DesignHeight="450" Width="380">
+
+    <base:UserControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml" />-->
+                <ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/ExpressionDark.xaml" />
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>-->
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </base:UserControlBase.Resources>
+
+
     <Grid>
         <Grid.Resources>
             

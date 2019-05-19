@@ -1,3 +1,10 @@
+
+
+
+
+
+
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -34,7 +41,7 @@
   
   <meta name="pjax-timeout" content="1000">
   
-  <meta name="request-id" content="C9F4:2416C:32A8DAF:4CF4269:5CE07084" data-pjax-transient>
+  <meta name="request-id" content="EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8" data-pjax-transient>
 
 
   
@@ -45,7 +52,7 @@
     <meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
     <meta name="google-site-verification" content="GXs5KoUUkNCoaAZn7wPN-t01Pywp9M3sEjnt_3_ZWPc">
 
-  <meta name="octolytics-host" content="collector.githubapp.com" /><meta name="octolytics-app-id" content="github" /><meta name="octolytics-event-url" content="https://collector.githubapp.com/github-external/browser_event" /><meta name="octolytics-dimension-request_id" content="C9F4:2416C:32A8DAF:4CF4269:5CE07084" /><meta name="octolytics-dimension-region_edge" content="ams" /><meta name="octolytics-dimension-region_render" content="iad" />
+  <meta name="octolytics-host" content="collector.githubapp.com" /><meta name="octolytics-app-id" content="github" /><meta name="octolytics-event-url" content="https://collector.githubapp.com/github-external/browser_event" /><meta name="octolytics-dimension-request_id" content="EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8" /><meta name="octolytics-dimension-region_edge" content="ams" /><meta name="octolytics-dimension-region_render" content="iad" />
 <meta name="analytics-location" content="/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show" data-pjax-transient="true" />
 
 
@@ -63,7 +70,7 @@
     <meta name="user-login" content="">
 
       <meta name="expected-hostname" content="github.com">
-    <meta name="js-proxy-site-detection-payload" content="NDk4NmYyNTFkNzlmYmI3MjA4Zjk2YWNiZGFlODI4ZTQ1MDJlNDQyMDdlMTEyZjEzYjE1MTIzMTM5ZWVjMzAyNXx7InJlbW90ZV9hZGRyZXNzIjoiODAuOTkuNDQuMjM3IiwicmVxdWVzdF9pZCI6IkM5RjQ6MjQxNkM6MzJBOERBRjo0Q0Y0MjY5OjVDRTA3MDg0IiwidGltZXN0YW1wIjoxNTU4MjEyNzQ5LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
+    <meta name="js-proxy-site-detection-payload" content="NGJkOTQxYTdhYWNjZTA4Nzc2MWQ3OGNjMzNhNDJlMmJlNTFmZjkzODJiODg3YmM5MGMxY2ZlODRhYjkwOTc2MHx7InJlbW90ZV9hZGRyZXNzIjoiODAuOTkuNDQuMjM3IiwicmVxdWVzdF9pZCI6IkVGNjg6MTFFRTc6NEUxRDdDRDo3NUVBMzk1OjVDRTBGQUU4IiwidGltZXN0YW1wIjoxNTU4MjQ4MTY5LCJob3N0IjoiZ2l0aHViLmNvbSJ9">
 
     <meta name="enabled-features" content="UNIVERSE_BANNER,MARKETPLACE_INVOICED_BILLING,MARKETPLACE_SOCIAL_PROOF_CUSTOMERS,MARKETPLACE_TRENDING_SOCIAL_PROOF,MARKETPLACE_RECOMMENDATIONS">
 
@@ -129,7 +136,7 @@
           </div>
 
         <div class="d-flex flex-items-center">
-            <a class="d-inline-block d-lg-none f5 text-white no-underline border border-gray-dark rounded-2 px-2 py-1 mr-3 mr-sm-5" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="37505685644aacbbf9e9ea596c42b267999be76cb76d7bfc5a2187fd4aeaf0ef" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up" href="/join?source=header-repo">
+            <a class="d-inline-block d-lg-none f5 text-white no-underline border border-gray-dark rounded-2 px-2 py-1 mr-3 mr-sm-5" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="db4a6952d8b00e9417529117340be65aa3a6638a8652fc32d27222209f870859" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up" href="/join?source=header-repo">
               Sign&nbsp;up
 </a>
           <button class="btn-link d-lg-none mt-1 js-details-target" type="button" aria-label="Toggle navigation" aria-expanded="false">
@@ -268,7 +275,7 @@
           aria-autocomplete="list"
           aria-controls="jump-to-results"
           aria-label="Search"
-          data-jump-to-suggestions-path="/_graphql/GetSuggestedNavigationDestinations#csrf-token=w+SJpDzfB41wrcawud+YLSg9uj6y6LYmeXbgo85doduaZjeqN2O7Uf3D41VqitTQRPvQ1+wXYBve1qXGXD+vYg=="
+          data-jump-to-suggestions-path="/_graphql/GetSuggestedNavigationDestinations#csrf-token=eI985SXn4VQId+nKcn//DGJhsjuKfIZwBH04h+aMjhYhDcLrLltdiIUZzC+hKrPxDqfY0tSDUE2j3X3idO6Arw=="
           spellcheck="false"
           autocomplete="off"
           >
@@ -393,9 +400,9 @@
 
           </div>
 
-        <a class="HeaderMenu-link no-underline mr-3" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="9725301e0f1aa92eff9adae5f197a409d332afa1c95bd9a1875b1144922a828f" data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in" href="/login?return_to=%2Fsteto-scope%2FMonotone%2Fblob%2Fmaster%2FMonotoneTheme%2FMonotone.AvalonDock.xaml">
+        <a class="HeaderMenu-link no-underline mr-3" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="0a89aae71401514a6a71c19b3c61af812317f910031c99ec73488b18dae203c9" data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in" href="/login?return_to=%2Fsteto-scope%2FMonotone%2Fblob%2Fmaster%2FMonotoneTheme%2FMonotone.AvalonDock.xaml">
           Sign&nbsp;in
-</a>          <a class="HeaderMenu-link d-inline-block no-underline border border-gray-dark rounded-1 px-2 py-1" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="2a5bbc3819fac835cde63d5fb779adb4bdc6db9a5071ca25d2edd7b5788de5b3" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up" href="/join?source=header-repo">
+</a>          <a class="HeaderMenu-link d-inline-block no-underline border border-gray-dark rounded-1 px-2 py-1" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="22d6af1c91c6d32e1cbb5da0ca1559fd4e565371c66b13fd52451e29c7dc8658" data-ga-click="(Logged out) Header, clicked Sign up, text:sign-up" href="/join?source=header-repo">
             Sign&nbsp;up
 </a>      </div>
     </div>
@@ -436,7 +443,7 @@
 
   <li>
     
-  <a class="tooltipped tooltipped-s btn btn-sm btn-with-count" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="20750709282a6bd96e25be92c629cfaf7b1314ed90094b54197e3f6f905d8249" href="/login?return_to=%2Fsteto-scope%2FMonotone">
+  <a class="tooltipped tooltipped-s btn btn-sm btn-with-count" aria-label="You must be signed in to watch a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="5bcdce5345522464e93a63b44ba1543af8fcb6f10fc83ac4eb56a23ad1e317d1" href="/login?return_to=%2Fsteto-scope%2FMonotone">
     <svg class="octicon octicon-eye v-align-text-bottom" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.06 2C3 2 0 8 0 8s3 6 8.06 6C13 14 16 8 16 8s-3-6-7.94-6zM8 12c-2.2 0-4-1.78-4-4 0-2.2 1.8-4 4-4 2.22 0 4 1.8 4 4 0 2.22-1.78 4-4 4zm2-4c0 1.11-.89 2-2 2-1.11 0-2-.89-2-2 0-1.11.89-2 2-2 1.11 0 2 .89 2 2z"/></svg>
     Watch
 </a>    <a class="social-count" href="/steto-scope/Monotone/watchers"
@@ -447,7 +454,7 @@
   </li>
 
   <li>
-        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:104946607,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="80e5ea38161462e5b9ab33c99b9be169d8823b3e1cdba41b1d06a8fef936c6ed" href="/login?return_to=%2Fsteto-scope%2FMonotone">
+        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:104946607,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="dbd140f92b9db766a937415aeca5730cdedeb0e24969692406e700b5234227fb" href="/login?return_to=%2Fsteto-scope%2FMonotone">
       <svg class="octicon octicon-star v-align-text-bottom" viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"/></svg>
       Star
 </a>
@@ -459,7 +466,7 @@
   </li>
 
   <li>
-      <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:104946607,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="71c7cbcfd5a49dcb6fe30cc6cfad1c774b84ff9e179c2397f7612d754529f237" href="/login?return_to=%2Fsteto-scope%2FMonotone">
+      <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:104946607,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ee95e2b7a24269f69452948304786068deba4bf910136024192a47b8c5e2e882" href="/login?return_to=%2Fsteto-scope%2FMonotone">
         <svg class="octicon octicon-repo-forked v-align-text-bottom" viewBox="0 0 10 16" version="1.1" width="10" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"/></svg>
         Fork
 </a>
@@ -584,13 +591,13 @@
           <div class="signup-prompt-bg rounded-1">
       <div class="signup-prompt p-4 text-center mb-4 rounded-1">
         <div class="position-relative">
-          <!-- '"` --><!-- </textarea></xmp> --></option></form><form action="/prompt_dismissals/signup" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="YnhjhfrypOiTj8nk20Hay7vpINSVnzZQ1bKgZn+uWtXBWyuQB6uH+m7qoMVZGS+7iVuKiPd3S4o1n81gGusvLw==" />
+          <!-- '"` --><!-- </textarea></xmp> --></option></form><form action="/prompt_dismissals/signup" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="MqbQK/82ae+56spEEHBB6C8n6FR4XbnkEmAG+Pwv6emRhZg+Am9K/USPo2WSKLSYHZVCCBq1xD7yTWv+mWqcEw==" />
             <button type="submit" class="position-absolute top-0 right-0 btn-link link-gray" data-ga-click="(Logged out) Sign up prompt, clicked Dismiss, text:dismiss">
               Dismiss
             </button>
 </form>          <h3 class="pt-2">Join GitHub today</h3>
           <p class="col-6 mx-auto">GitHub is home to over 36 million developers working together to host and review code, manage projects, and build software together.</p>
-          <a class="btn btn-primary" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;files signup prompt&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;C9F4:2416C:32A8DAF:4CF4269:5CE07084&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:&quot;https://github.com/steto-scope/Monotone/tree/master/MonotoneTheme&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="8a7b18b9bea04c01b81e2eee36ca690335d4ca33d4274df40f624d35658361cd" data-ga-click="(Logged out) Sign up prompt, clicked Sign up, text:sign-up" href="/join?source=prompt-blob-show">Sign up</a>
+          <a class="btn btn-primary" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;files signup prompt&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;client_id&quot;:&quot;1130711274.1542738119&quot;,&quot;originating_request_id&quot;:&quot;EF68:11EE7:4E1D7CD:75EA395:5CE0FAE8&quot;,&quot;originating_url&quot;:&quot;https://github.com/steto-scope/Monotone/blob/master/MonotoneTheme/Monotone.AvalonDock.xaml&quot;,&quot;referrer&quot;:null,&quot;user_id&quot;:null}}" data-hydro-click-hmac="c0ea697872e58cee1f4c156a1b79e92b08a5c91d30b5faeeb25f2b092ceab2d3" data-ga-click="(Logged out) Sign up prompt, clicked Sign up, text:sign-up" href="/join?source=prompt-blob-show">Sign up</a>
         </div>
       </div>
     </div>
@@ -7660,7 +7667,7 @@
 <div class="footer container-lg width-full p-responsive" role="contentinfo">
   <div class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
     <ul class="list-style-none d-flex flex-wrap col-12 col-lg-5 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
-      <li class="mr-3 mr-lg-0">&copy; 2019 <span title="0.24788s from unicorn-59dff544fd-qt9q8">GitHub</span>, Inc.</li>
+      <li class="mr-3 mr-lg-0">&copy; 2019 <span title="0.22126s from unicorn-59dff544fd-t59vn">GitHub</span>, Inc.</li>
         <li class="mr-3 mr-lg-0"><a data-ga-click="Footer, go to terms, text:terms" href="https://github.com/site/terms">Terms</a></li>
         <li class="mr-3 mr-lg-0"><a data-ga-click="Footer, go to privacy, text:privacy" href="https://github.com/site/privacy">Privacy</a></li>
         <li class="mr-3 mr-lg-0"><a data-ga-click="Footer, go to security, text:security" href="https://github.com/security">Security</a></li>

@@ -65,14 +65,14 @@
   <!-- *********************************  TextBlock Style  ********************************* -->
   <Style x:Key="TextBlockStyle" TargetType="TextBlock">
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
-    <Setter Property="FontSize" Value="13.333" />
+    <Setter Property="FontSize" Value="11" />
     <Setter Property="FontFamily" Value="Segoe UI" />
   </Style>
 
   <!-- *********************************  Label Style  ********************************* -->
   <Style x:Key="LabelStyle" TargetType="{x:Type Label}">
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="13.333" />
+    <Setter Property="FontSize" Value="11" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="IsTabStop" Value="False" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -284,7 +284,7 @@
   <!-- *********************************  RepeatButton Style  ********************************* -->
   <Style x:Key="RepeatButtonStyle" TargetType="{x:Type RepeatButton}">
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="14.667" />
+    <Setter Property="FontSize" Value="12" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="Padding" Value="10,0,10,2" />
     <Setter Property="MinHeight" Value="30" />
@@ -471,7 +471,7 @@
   <!-- ********************************** PasswordBox Style **********************************-->
   <Style x:Key="PasswordBoxStyle" TargetType="{x:Type PasswordBox}">
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="13.333" />
+    <Setter Property="FontSize" Value="11" />
     <Setter Property="Foreground" Value="{StaticResource PasswordBoxForegroundBrush}" />
     <Setter Property="Background" Value="{StaticResource TextBoxBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorderBrush}" />
@@ -524,7 +524,7 @@
   <Style x:Key="{x:Type ToolTip}" TargetType="ToolTip">
     <Setter Property="OverridesDefaultStyle" Value="true" />
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="14.667" />
+    <Setter Property="FontSize" Value="12" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="Background" Value="{StaticResource TooltipBackgroundBrush}" />
     <Setter Property="BorderBrush" Value="{StaticResource TooltipBorderBrush}" />
@@ -724,7 +724,7 @@
   <!-- *********************************  Expander Style  ********************************* -->
   <Style x:Key="ExpanderStyle" TargetType="{x:Type Expander}">
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="14.667" />
+    <Setter Property="FontSize" Value="12" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -769,7 +769,7 @@
   <!-- *********************************  ToggleButton Style  ********************************* -->
   <Style x:Key="ToggleButtonStyle" TargetType="{x:Type ToggleButton}">
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="14.667" />
+    <Setter Property="FontSize" Value="12" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="Padding" Value="10,0,10,2" />
     <Setter Property="MinHeight" Value="30" />
@@ -866,7 +866,7 @@
   <BorderGapMaskConverter x:Key="BorderGapMaskConverter" />
   <Style x:Key="GroupBoxStyle" TargetType="{x:Type GroupBox}">
     <Setter Property="FontFamily" Value="Segoe UI" />
-    <Setter Property="FontSize" Value="14.667" />
+    <Setter Property="FontSize" Value="12" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="BorderBrush" Value="{StaticResource GroupBoxBorderBrush}" />
     <Setter Property="BorderThickness" Value="1" />
