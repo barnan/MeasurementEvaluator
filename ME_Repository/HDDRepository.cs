@@ -438,8 +438,10 @@ namespace DataAcquisitions.ME_Repository
 
                 List<KeyValuePair<string, object>> fileContentDictionary = new List<KeyValuePair<string, object>>(fileNameList.Count);
 
-                foreach (string fileName in fileNameList)
+                foreach (string rawFileName in fileNameList)
                 {
+                    FileInfo finfo = new FileInfo(rawFileName);
+                    string fileName = finfo.FullName;
                     object obj = _parameters.HDDReaderWriter.ReadFromFile(fileName);
 
                     string nameInDictionary = fileName;
