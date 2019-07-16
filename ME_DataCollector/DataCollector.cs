@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace MeasurementEvaluator.ME_DataCollector
 {
-    internal class DataCollector : IDataCollector
+    internal class DataCollector : InitializableBase, IDataCollector
     {
 
         private readonly DataCollectorParameters _parameters;
@@ -27,6 +27,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
 
         public DataCollector(DataCollectorParameters dataGatheringParameters)
+            : base(dataGatheringParameters.Logger)
         {
             _parameters = dataGatheringParameters;
             _parameters.Logger.MethodInfo("Instantiated.");
@@ -43,14 +44,16 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         public void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
         {
-            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
             ResultReadyEvent += method;
+
+            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
         }
 
         public void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
         {
-            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
             ResultReadyEvent -= method;
+
+            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
         }
 
 
@@ -58,122 +61,86 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         #region IInitializable
 
-        public bool IsInitialized { get; private set; }
 
-        public event EventHandler<InitializationEventArgs> InitStateChanged;
-
-        public void Close()
+        protected override void InternalInit()
         {
-            if (!IsInitialized)
+            if (!_parameters.SpecificationRepository.Initiailze())
             {
+                _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
                 return;
             }
 
-            lock (_lockObj)
+            if (!_parameters.ReferenceRepository.Initiailze())
             {
-                if (!IsInitialized)
-                {
-                    return;
-                }
-
-                _tokenSource.Cancel();
-                _processQueueResetEvent.Reset();
-                _processorQueue.Clear();
-
-                _parameters.SpecificationRepository.Close();
-                _parameters.ReferenceRepository.Close();
-                _parameters.MeasurementDataRepository.Close();
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = false;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodInfo("Closed.");
+                _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
+                return;
             }
+
+            if (!_parameters.MeasurementDataRepository.Initiailze())
+            {
+                _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
+                return;
+            }
+
+            _processorQueue = new Queue<QueueElement>();
+            _tokenSource = new CancellationTokenSource();
+
+            // start queue procesor thread:
+            Thread thread = new Thread(ProcessQueueElements)
+            {
+                IsBackground = false,
+                Name = "DataCollectorQueueElementProcessor"
+            };
+            thread.Start(_tokenSource.Token);
+
+            InitializationState = InitializationStates.Initialized;
+
+            _parameters.Logger.MethodInfo("Initialized.");
         }
 
-
-        public bool Initiailze()
+        protected override void InternalClose()
         {
-            if (IsInitialized)
-            {
-                return true;
-            }
+            _tokenSource.Cancel();
+            _processQueueResetEvent.Reset();
+            _processorQueue.Clear();
 
-            lock (_lockObj)
-            {
-                if (IsInitialized)
-                {
-                    return true;
-                }
+            _parameters.SpecificationRepository.Close();
+            _parameters.ReferenceRepository.Close();
+            _parameters.MeasurementDataRepository.Close();
 
-                if (!_parameters.SpecificationRepository.Initiailze())
-                {
-                    _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
+            InitializationState = InitializationStates.NotInitialized;
 
-                    return false;
-                }
-
-                if (!_parameters.ReferenceRepository.Initiailze())
-                {
-                    _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
-                    return false;
-                }
-
-                if (!_parameters.MeasurementDataRepository.Initiailze())
-                {
-                    _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
-                    return false;
-                }
-
-                _processorQueue = new Queue<QueueElement>();
-                _tokenSource = new CancellationTokenSource();
-
-                // start queue procesor thread:
-                Thread thread = new Thread(ProcessQueueElements)
-                {
-                    IsBackground = false,
-                    Name = "DataCollectorQueueElementProcessor"
-                };
-                thread.Start(_tokenSource.Token);
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = true;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodInfo("Initialized.");
-
-                return IsInitialized;
-            }
+            _parameters.Logger.MethodInfo("Closed.");
         }
 
-        private void OnInitStateChanged(bool newState, bool oldState)
-        {
-            var initialized = InitStateChanged;
-            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
-        }
 
         #endregion
 
         #region IDataCollector
 
-        public void GatherData(IToolSpecification specification, List<string> measurementDataFileNames, IReferenceSample reference = null)
+        public void GatherData(IToolSpecification specification, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null)
         {
+            if (!IsInitialized)
+            {
+                _parameters.Logger.LogError("Not initialized yet.");
+                return;
+            }
+
             lock (_lockObj)
             {
-                if (!IsInitialized)
-                {
-                    _parameters.Logger.LogError("Not initialized yet.");
-                    return;
-                }
-
                 _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specification, reference, measurementDataFileNames, ResultReadyEvent));
                 _processQueueResetEvent.Set();
             }
         }
 
-        public List<ToolNames> GetAvailableToolNames()
+        public IEnumerable<ToolNames> GetAvailableToolNames()
         {
+            if (!IsInitialized)
+            {
+                _parameters.Logger.LogError("Not initialized yet.");
+                return null;
+            }
+
             lock (_lockObj)
             {
                 IEnumerable<string> specificationNames = _parameters.SpecificationRepository.GetAllNames();
@@ -200,7 +167,7 @@ namespace MeasurementEvaluator.ME_DataCollector
         }
 
 
-        public List<IToolSpecification> GetSpecifications(ToolNames toolName)
+        public IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName)
         {
             lock (_lockObj)
             {
@@ -220,8 +187,14 @@ namespace MeasurementEvaluator.ME_DataCollector
         }
 
 
-        public List<IReferenceSample> GetReferenceSamples()
+        public IEnumerable<IReferenceSample> GetReferenceSamples()
         {
+            if (!IsInitialized)
+            {
+                _parameters.Logger.LogError("Not initialized yet.");
+                return null;
+            }
+
             lock (_lockObj)
             {
                 try
@@ -303,6 +276,16 @@ namespace MeasurementEvaluator.ME_DataCollector
         #endregion
 
     }
+
+
+
+
+
+
+
+
+
+
 
 
     internal abstract class QueueElement

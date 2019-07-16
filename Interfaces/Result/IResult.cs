@@ -6,14 +6,9 @@ namespace Interfaces.Result
     public interface IResult : IXmlStorable
     {
         /// <summary>
-        /// Contains start time of the calculation 
-        /// </summary>
-        DateTime StartTime { get; }
-
-        /// <summary>
         /// Contains the calculation end time
         /// </summary>
-        DateTime EndTime { get; }
+        DateTime RecordTime { get; }
 
 
         /// <summary>

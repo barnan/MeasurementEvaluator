@@ -11,15 +11,15 @@ namespace Interfaces.DataAcquisition
         /// <summary>
         /// Gatheres the data with the given name inputs. When ready calls its ResultReady event.
         /// </summary>
-        /// <param name="specifaction">name of the required specification</param>
-        /// <param name="measurementDataFileNames">names of the required measurement data files</param>
-        /// <param name="reference">names of required reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
-        void GatherData(IToolSpecification specifaction, List<string> measurementDataFileNames, IReferenceSample reference = null);
+        /// <param name="specifaction">specification</param>
+        /// <param name="measurementDataFileNames">measurement data files</param>
+        /// <param name="reference">reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
+        void GatherData(IToolSpecification specifaction, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null);
 
-        List<ToolNames> GetAvailableToolNames();
+        IEnumerable<ToolNames> GetAvailableToolNames();
 
-        List<IToolSpecification> GetSpecifications(ToolNames toolName);
+        IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName);
 
-        List<IReferenceSample> GetReferenceSamples();
+        IEnumerable<IReferenceSample> GetReferenceSamples();
     }
 }

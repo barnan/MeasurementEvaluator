@@ -9,12 +9,12 @@ namespace DataStructures
         protected ResultBase(DateTime startTime, DateTime endTime, bool successful)
         {
             StartTime = startTime;
-            EndTime = endTime;
+            RecordTime = endTime;
             Successful = successful;
         }
 
         public virtual DateTime StartTime { get; }
-        public virtual DateTime EndTime { get; }
+        public virtual DateTime RecordTime { get; }
         public virtual bool Successful { get; }
 
         public XElement SaveToXml(XElement input)

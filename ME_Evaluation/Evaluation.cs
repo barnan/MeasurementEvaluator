@@ -311,7 +311,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                             List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
                             foreach (IMeasurementSerie serie in coherentMeasurementData)
                             {
-                                measPointList.AddRange(serie.MeasData);
+                                measPointList.AddRange(serie.MeasuredPoints);
                             }
                             calculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
                         }
@@ -349,9 +349,9 @@ namespace MeasurementEvaluator.ME_Evaluation
                         {
                             _parameters.Logger.MethodTrace("The evaluation result:");
                             _parameters.Logger.MethodTrace($"   Start time: {conditionResult.StartTime}");
-                            _parameters.Logger.MethodTrace($"   End time: {conditionResult.EndTime}");
+                            _parameters.Logger.MethodTrace($"   End time: {conditionResult.RecordTime}");
                             _parameters.Logger.MethodTrace($"   The calculation was {(conditionResult.Successful ? "" : "NOT")} successful.");
-                            _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasData.Count}");
+                            _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasuredPoints.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");
                             _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult ? "" : "NOT")} acceptable.");

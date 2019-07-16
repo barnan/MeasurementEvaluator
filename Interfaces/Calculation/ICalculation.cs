@@ -11,15 +11,17 @@ namespace Interfaces.Calculation
     public interface ICalculation
     {
         /// <summary>
-        /// Performs calculation
+        /// Performs a calculation
         /// </summary>
         /// <param name="measurementSerieData">input measurement data</param>
+        /// <param name="condition"></param>
+        /// <param name="referenceValue"></param>
         /// <returns>Calculation results</returns>
         /// <exception cref="ArgumentException">Throws when input settings are not applicable</exception>
         ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
 
         /// <summary>
-        /// Gives the type of the current calculation
+        /// type of the current calculation
         /// </summary>
         CalculationTypes CalculationType { get; }
     }

@@ -1,5 +1,4 @@
 ﻿using Interfaces.Misc;
-using Interfaces.Result;
 
 namespace Interfaces.ToolSpecifications
 {
@@ -18,20 +17,14 @@ namespace Interfaces.ToolSpecifications
         bool Enabled { get; }
 
         /// <summary>
-        /// Checks the condition. The calculatin result contains the approppriate result
-        /// </summary>
-        /// <param name="calculationResult">the calculation result which will be used in the condition comparison</param>
-        /// <returns></returns>
-        bool Compare(ICalculationResult calculationResult);
-
-        /// <summary>
         /// Defines whether relative or absolute condition
         /// </summary>
         Relativity RelOrAbs { get; }
     }
 
 
-    public interface ICondition<out T> : ICondition
+
+    public interface ICondition<T> : ICondition
         where T : struct
     {
         /// <summary>
@@ -42,9 +35,15 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
-        T Value { get; }
-    }
+        T LeftValue { get; }
 
+        /// <summary>
+        /// Checks the condition. The calculatin result contains the approppriate result
+        /// </summary>
+        /// <param name="rightValue">the calculation result which will be used in the condition comparison</param>
+        /// <returns>the relation is met (true) or not (false)</returns>
+        bool Compare(T rightValue);
+    }
 
 
 
@@ -63,7 +62,7 @@ namespace Interfaces.ToolSpecifications
     {
         new Relations ConditionRelation { get; set; }
 
-        new T Value { get; set; }
+        new T LeftValue { get; set; }
     }
 
 }

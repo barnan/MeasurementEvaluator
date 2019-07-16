@@ -2,17 +2,8 @@
 
 namespace Interfaces.MeasuredData
 {
-    public interface IMeasurementPoint
+    public interface IMeasurementPoint : IGenericMeasurementPoint<double>
     {
-        /// <summary>
-        /// it shows whether the measured data point is valid or not
-        /// </summary>
-        bool Valid { get; }
-
-        /// <summary>
-        /// The value of one individual measurement
-        ///  </summary>
-        double Value { get; }
     }
 
 

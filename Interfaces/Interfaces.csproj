@@ -43,6 +43,7 @@
     <Compile Include="DataAcquisition\IDataCollector.cs" />
     <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IMathing.cs" />
+    <Compile Include="MeasuredData\IGenericMeasurementPoint.cs" />
     <Compile Include="Misc\IComponent.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />
     <Compile Include="Misc\IDummyObjectCreator.cs" />

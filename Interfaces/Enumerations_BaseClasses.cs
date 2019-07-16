@@ -92,10 +92,7 @@ namespace Interfaces
             return null;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
         public override bool Equals(object other)
         {
@@ -139,10 +136,17 @@ namespace Interfaces
     /// </summary>
     public enum SampleOrientation
     {
+        [Description("0 degree")]
         Orientation_0 = 0,
+
+        [Description("90 degree")]
         Orientation_90 = 90,
-        Orientation_180 = 270,
-        Orientation_270 = 360
+
+        [Description("180 degree")]
+        Orientation_180 = 180,
+
+        [Description("270 degree")]
+        Orientation_270 = 270
     };
 
 

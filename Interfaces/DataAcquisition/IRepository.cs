@@ -7,7 +7,6 @@ namespace Interfaces.DataAcquisition
 
     public interface IRepository : IInitializable
     {
-
         object Get(int index, IComparer<object> comparer = null);
 
         object Get(string name);
@@ -27,8 +26,6 @@ namespace Interfaces.DataAcquisition
         void RemoveRange(IEnumerable<object> items);
 
         bool SetFolder(string path);
-
-        bool Refresh();
     }
 
 }

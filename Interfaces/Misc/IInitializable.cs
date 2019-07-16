@@ -2,6 +2,16 @@
 
 namespace Interfaces.Misc
 {
+
+    public enum InitializationStates
+    {
+        NotInitialized = 0,
+        Initializing = 1,
+        Closing = 2,
+        Initialized = 3,
+        InitializationFailed = 4
+    }
+
     public interface IInitializable
     {
 
@@ -17,6 +27,11 @@ namespace Interfaces.Misc
         bool IsInitialized { get; }
 
         /// <summary>
+        /// The current initialization state of the component
+        /// </summary>
+        InitializationStates InitializationState { get; }
+
+        /// <summary>
         /// It is contrary of the inititalization. It contains the memory deallocation or disposing is necessary.
         /// </summary>
         void Close();
@@ -30,11 +45,11 @@ namespace Interfaces.Misc
 
     public class InitializationEventArgs : EventArgs
     {
-        public bool NewState { get; private set; }
-        public bool OldState { get; private set; }
+        public InitializationStates NewState { get; private set; }
+        public InitializationStates OldState { get; private set; }
 
 
-        public InitializationEventArgs(bool newState, bool oldState)
+        public InitializationEventArgs(InitializationStates newState, InitializationStates oldState)
         {
             NewState = newState;
             OldState = oldState;

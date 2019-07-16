@@ -24,7 +24,7 @@ namespace Calculations.Calculation
 
         public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            if (measurementSerieData?.MeasData == null)
+            if (measurementSerieData?.MeasuredPoints == null)
             {
                 _parameters.Logger.LogError("Received measdata is null.");
                 return null;
@@ -56,7 +56,7 @@ namespace Calculations.Calculation
 
         protected virtual List<double> GetValidElementList(IMeasurementSerie measurementSerieData)
         {
-            return measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).ToList();
+            return measurementSerieData.MeasuredPoints.Where(p => p.Valid).Select(p => p.Value).ToList();
         }
 
 

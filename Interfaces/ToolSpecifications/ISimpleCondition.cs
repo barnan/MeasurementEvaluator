@@ -3,7 +3,7 @@
     public interface ISimpleCondition : ICondition<double>
     {
         /// <summary>
-        /// The condition is valid if the absolute value of the measurement data meets this relation
+        /// The condition is valid if the average value of the measurement data meets this relation
         /// </summary>
         Relations ValidIf { get; }
 

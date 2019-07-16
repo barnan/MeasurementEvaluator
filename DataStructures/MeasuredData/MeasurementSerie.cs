@@ -6,7 +6,7 @@ namespace DataStructures.MeasuredData
 {
     public class MeasurementSerie : IMeasurementSerie
     {
-        public IReadOnlyList<IMeasurementPoint> MeasData { get; }
+        public IReadOnlyList<IMeasurementPoint> MeasuredPoints { get; }
 
         public Units Dimension { get; }
 
@@ -15,12 +15,12 @@ namespace DataStructures.MeasuredData
         public MeasurementSerie(string measuredquantityname, List<IMeasurementPoint> measData, Units dimension = Units.ADU)
         {
             Name = measuredquantityname;
-            MeasData = measData;
+            MeasuredPoints = measData;
             Dimension = dimension;
         }
 
 
-        public IMeasurementPoint this[int i] => MeasData[i];
+        public IMeasurementPoint this[int i] => MeasuredPoints[i];
 
     }
 }

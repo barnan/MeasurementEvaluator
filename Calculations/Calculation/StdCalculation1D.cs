@@ -30,7 +30,7 @@ namespace Calculations.Calculation
             }
 
             DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
-            List<double> validElementList = measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).ToList();
+            List<double> validElementList = measurementSerieData.MeasuredPoints.Where(p => p.Valid).Select(p => p.Value).ToList();
             double std = GetStandardDeviation(validElementList);
 
             _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}.");

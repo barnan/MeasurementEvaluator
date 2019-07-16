@@ -93,7 +93,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
                 _selectedToolName = value;
                 OnPropertyChanged();
 
-                AvailableSpecificationList = Parameters.DataCollector.GetSpecifications(_selectedToolName);
+                AvailableSpecificationList = Parameters.DataCollector.GetSpecificationsByToolName(_selectedToolName);
             }
         }
 
@@ -101,8 +101,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region specification
 
-        private List<IToolSpecification> _availableSpecificationList;
-        public List<IToolSpecification> AvailableSpecificationList
+        private IEnumerable<IToolSpecification> _availableSpecificationList;
+        public IEnumerable<IToolSpecification> AvailableSpecificationList
         {
             get { return _availableSpecificationList; }
             set
@@ -127,8 +127,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region referenece sample
 
-        private List<IReferenceSample> _availableReferenceFileList;
-        public List<IReferenceSample> AvailableReferenceFileList
+        private IEnumerable<IReferenceSample> _availableReferenceFileList;
+        public IEnumerable<IReferenceSample> AvailableReferenceFileList
         {
             get { return _availableReferenceFileList; }
             set
@@ -153,8 +153,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region measurement data
 
-        private List<string> _selectedMeasurementFiles;
-        public List<string> SelectedMeasurementFiles
+        private IEnumerable<string> _selectedMeasurementFiles;
+        public IEnumerable<string> SelectedMeasurementFiles
         {
             get { return _selectedMeasurementFiles; }
             set
