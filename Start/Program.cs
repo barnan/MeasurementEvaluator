@@ -35,6 +35,13 @@ namespace Start
             try
             {
                 _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                if (string.IsNullOrEmpty(_currentExeFolder))
+                {
+                    PluginLoader.SendToErrorLogAndConsole("Received exefolder-path OR path-name is null.");
+                    return;
+                }
+
                 PluginLoader.SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
                 PluginLoader.SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
 
@@ -142,9 +149,9 @@ namespace Start
 
         private static string CreateFinalPath(string currentExeFolder, string specialFolder, string name)
         {
-            if (string.IsNullOrEmpty(currentExeFolder) || string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole("Received exefolder-path OR path-name is null."));
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole("Received path-name is null."));
             }
 
             if (string.IsNullOrEmpty(specialFolder))

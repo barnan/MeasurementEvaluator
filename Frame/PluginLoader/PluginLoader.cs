@@ -437,7 +437,7 @@ namespace Frame.PluginLoader
                     componentListSection = ConfigManager.CreateSectionXElement(_COMPONENT_SECTION_NAME, typeof(ComponentList));
                 }
 
-                if (!componentList.Load(componentListSection))
+                if (!componentList.Load(componentListSection, _logger))
                 {
                     ConfigManager.Save(componentListFileName, _COMPONENT_SECTION_NAME, componentListSection, typeof(ComponentList));
                 }

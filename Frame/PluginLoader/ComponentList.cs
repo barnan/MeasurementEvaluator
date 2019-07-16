@@ -1,4 +1,5 @@
 ﻿using Frame.PluginLoader.Interfaces;
+using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -21,7 +22,7 @@ namespace Frame.PluginLoader
         /// <param name="xmlDoc"></param>
         /// <param name="inputElement">input xml element</param>
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
-        internal bool Load(XElement inputElement)
+        internal bool Load(XElement inputElement, ILogger logger)
         {
             Components = new List<Component>();
 
@@ -59,6 +60,8 @@ namespace Frame.PluginLoader
                         {
                             string[] interfaces = interfaceText.Split(';');
                             Components.Add(new Component { Name = nameText, Interfaces = interfaces.ToList(), AssemblyName = assemblyText });
+
+                            logger.Info($"{nameText} {assemblyText} {string.Join(",", interfaces)} added to the component list.");
                         }
                     }
                 }
