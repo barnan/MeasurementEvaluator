@@ -23,6 +23,7 @@ namespace MeasurementEvaluator.ME_DataCollector
         private Queue<QueueElement> _processorQueue;
         private AutoResetEvent _processQueueResetEvent = new AutoResetEvent(false);
         private CancellationTokenSource _tokenSource;
+        private string _measurementDataFolder;
         private const int WAITHANDLE_CYCLETIME_MS = 100;
 
 
@@ -196,6 +197,8 @@ namespace MeasurementEvaluator.ME_DataCollector
             }
             return samples;
         }
+
+        public string MeasurementFolderPath => PluginLoader.MeasurementDataFolder;
 
         #endregion
 

@@ -36,5 +36,16 @@ namespace MeasurementEvaluatorUIWPF
             }
 
         }
+
+        private void Window_OnClosed(object sender, EventArgs e)
+        {
+            try
+            {
+                Parameter.OnClosed();
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

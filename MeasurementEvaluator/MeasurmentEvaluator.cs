@@ -90,7 +90,7 @@ namespace MeasurementEvaluator
 
                     if (!_window.InitializationCompleted())
                     {
-                        _logger.Error($"InitializationCompleted failed.");
+                        _logger.Error("InitializationCompleted failed.");
                         return;
                     }
 
@@ -110,6 +110,8 @@ namespace MeasurementEvaluator
                 PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
 
                 Thread.Sleep(10);
+
+                Environment.Exit(0);
             }
             catch (Exception ex)
             {

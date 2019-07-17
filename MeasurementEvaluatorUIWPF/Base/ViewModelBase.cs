@@ -7,6 +7,5 @@ namespace MeasurementEvaluatorUI.Base
         protected virtual void Visibilitychanged(object sender, EventArgs args)
         { }
 
-
     }
 }

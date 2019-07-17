@@ -97,43 +97,43 @@ namespace Frame.PluginLoader
                     {
                         return false;
                     }
-                    ConfigurationFolder = CheckDirectorySeparator(configurationFolder);
+                    ConfigurationFolder = CheckDirectoryPath(configurationFolder);
 
                     if (!IsPathFolder(currentExeFolder) || !Directory.Exists(currentExeFolder))
                     {
                         return false;
                     }
-                    CurrentExeFolder = CheckDirectorySeparator(currentExeFolder);
+                    CurrentExeFolder = CheckDirectoryPath(currentExeFolder);
 
                     if (!IsPathFolder(pluginsFolder) || !Directory.Exists(pluginsFolder))
                     {
                         return false;
                     }
-                    PluginsFolder = CheckDirectorySeparator(pluginsFolder);
+                    PluginsFolder = CheckDirectoryPath(pluginsFolder);
 
                     if (!IsPathFolder(specificationFolder) || !Directory.Exists(specificationFolder))
                     {
                         return false;
                     }
-                    SpecificationFolder = CheckDirectorySeparator(specificationFolder);
+                    SpecificationFolder = CheckDirectoryPath(specificationFolder);
 
                     if (!IsPathFolder(referenceFolder) || !Directory.Exists(referenceFolder))
                     {
                         return false;
                     }
-                    ReferenceFolder = CheckDirectorySeparator(referenceFolder);
+                    ReferenceFolder = CheckDirectoryPath(referenceFolder);
 
                     if (!IsPathFolder(measDataFolder) || !Directory.Exists(measDataFolder))
                     {
                         return false;
                     }
-                    MeasurementDataFolder = CheckDirectorySeparator(measDataFolder);
+                    MeasurementDataFolder = CheckDirectoryPath(measDataFolder);
 
                     if (!IsPathFolder(resultFolder) || !Directory.Exists(resultFolder))
                     {
                         return false;
                     }
-                    ResultFolder = CheckDirectorySeparator(resultFolder);
+                    ResultFolder = CheckDirectoryPath(resultFolder);
 
                     ConfigManager = new ConfigManager(ConfigurationFolder);
 
@@ -222,7 +222,7 @@ namespace Frame.PluginLoader
             var components = _componentList.Components.Where(p => p.Name == name).ToList();
             if (components.Count > 1)
             {
-                _logger.Error($"Ambiguity between components in the ComponentList. {name} appears more times.");
+                _logger.Error($"Ambiguity between components. {name} appears more than once in the ComponentList.");
                 return null;
             }
             if (components.Count < 1)
@@ -253,13 +253,13 @@ namespace Frame.PluginLoader
 
             if (instances.Count == 0)
             {
-                _logger.Error($"No factory was found to create: {interfaceType}");
+                SendToErrorLogAndConsole($"No factory was found to create: {name}({interfaceType})");
                 return null;
             }
 
             if (instances.Count > 1)
             {
-                _logger.Error($"More than one factories was found to create: {interfaceType}");
+                SendToErrorLogAndConsole($"More than one factories was found to create: {name}({interfaceType})");
                 return null;
             }
 
@@ -402,17 +402,15 @@ namespace Frame.PluginLoader
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private string CheckDirectorySeparator(string path)
+
+        private string CheckDirectoryPath(string path)
         {
-            if (path[path.Length - 1] != Path.DirectorySeparatorChar)
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            if (dirInfo.FullName != path)
             {
-                path = $"{path}{Path.DirectorySeparatorChar}";
+                return dirInfo.FullName;
             }
+
             return path;
         }
 

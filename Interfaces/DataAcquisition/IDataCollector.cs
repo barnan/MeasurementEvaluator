@@ -21,5 +21,7 @@ namespace Interfaces.DataAcquisition
         IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName);
 
         IEnumerable<IReferenceSample> GetReferenceSamples();
+
+        string MeasurementFolderPath { get; }
     }
 }

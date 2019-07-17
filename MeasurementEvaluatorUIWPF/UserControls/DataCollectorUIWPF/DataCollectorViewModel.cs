@@ -41,6 +41,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
             foreach (IToolSpecification specification in _availableToolSpecifications)
             {
+                AvailableToolList = new ObservableCollection<ToolNames>();
                 if (!AvailableToolList.Contains(specification.ToolName))
                 {
                     AvailableToolList.Add(specification.ToolName);
@@ -188,7 +189,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         private void ExecuteBrowse()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Multiselect = true };
+            OpenFileDialog openFileDialog = new OpenFileDialog { Multiselect = true, InitialDirectory = Parameters.DataCollector.MeasurementFolderPath};
             if (openFileDialog.ShowDialog() == true)
             {
                 SelectedMeasurementFiles = openFileDialog.FileNames.ToList();

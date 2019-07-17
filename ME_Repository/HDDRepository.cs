@@ -349,12 +349,6 @@ namespace DataAcquisitions.ME_Repository
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(Path.GetFileName(fullPath)))
-            {
-                _parameters.Logger.MethodError($"The given path ({fullPath}) contains filename too, it is not valid folder path.");
-                return false;
-            }
-
             if (_parameters.Logger.IsTraceEnabled)
             {
                 _parameters.Logger.MethodTrace($"The given directory path ({fullPath}) checked.");
