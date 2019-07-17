@@ -23,6 +23,8 @@ namespace MeasurementEvaluator.ME_Evaluation
         private readonly AutoResetEvent _queueHandle = new AutoResetEvent(false);
         private Queue<QueueElement> _processorQueue;
         private CancellationTokenSource _tokenSource;
+        private Thread _processThread;
+        private const int _PROCESS_THREAD_JOINT_TIMEOUT_MS = 500;
 
 
         #region ctor
@@ -70,12 +72,12 @@ namespace MeasurementEvaluator.ME_Evaluation
             _processorQueue = new Queue<QueueElement>();
             _tokenSource = new CancellationTokenSource();
 
-            Thread th = new Thread(ProcessEvaluation)
+            _processThread = new Thread(ProcessEvaluation)
             {
-                Name = "EvaluatorThread",
+                Name = "EvaluatorQueueProcesorThread",
                 IsBackground = false
             };
-            th.Start(_tokenSource.Token);
+            _processThread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
         }
@@ -88,6 +90,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             _processorQueue.Clear();
 
             _parameters.DataCollector.Close();
+            _processThread.Join(_PROCESS_THREAD_JOINT_TIMEOUT_MS);
 
             InitializationState = InitializationStates.NotInitialized;
         }
@@ -133,46 +136,47 @@ namespace MeasurementEvaluator.ME_Evaluation
                 return;
             }
 
+            WaitHandle[] handles = new WaitHandle[] { _queueHandle, token.WaitHandle };
+
             while (true)
             {
-                if (_queueHandle.WaitOne())
-                {
-                    while (true)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
-                            break;
-                        }
-
-                        QueueElement item = null;
-                        lock (_queueLockObj)
-                        {
-                            if (_processorQueue.Count > 0)
-                            {
-                                _parameters.Logger.LogTrace("New queue element arrived!");
-                                item = _processorQueue.Dequeue();
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-
-                        if (item == null)
-                        {
-                            _parameters.Logger.MethodError("Started to process item, but it is null");
-                            continue;
-                        }
-
-                        Evaluate(item);
-                    }
-                }
+                WaitHandle.WaitAny(handles);
 
                 if (token.IsCancellationRequested)
                 {
                     _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                     break;
+                }
+
+                while (true)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                        break;
+                    }
+
+                    QueueElement item = null;
+                    lock (_queueLockObj)
+                    {
+                        if (_processorQueue.Count > 0)
+                        {
+                            _parameters.Logger.LogTrace("New queue element arrived!");
+                            item = _processorQueue.Dequeue();
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (item == null)
+                    {
+                        _parameters.Logger.MethodError("Started to process item, but it is null");
+                        continue;
+                    }
+
+                    Evaluate(item);
                 }
             }
         }

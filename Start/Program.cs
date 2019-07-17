@@ -72,9 +72,7 @@ namespace Start
                 }
                 pluginLoader.Start();
 
-                PluginLoader.SendToInfoLogAndConsole($"Application {System.AppDomain.CurrentDomain.FriendlyName} terminated.");
-
-                currentprocess.Kill();
+                PluginLoader.SendToInfoLogAndConsole($"Process {currentprocess} ended.");
             }
             catch (Exception ex)
             {

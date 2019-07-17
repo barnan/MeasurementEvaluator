@@ -112,7 +112,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
                 _selectedToolName = value;
                 OnPropertyChanged();
 
-                AvailableSpecificationList = Parameters.DataCollector.GetSpecificationsByToolName(_selectedToolName);
+                //AvailableSpecificationList = Parameters.DataCollector.GetSpecificationsByToolName(_selectedToolName);
+                AvailableSpecificationList = _availableToolSpecifications.Where(p => p.ToolName == SelectedToolName);
             }
         }
 

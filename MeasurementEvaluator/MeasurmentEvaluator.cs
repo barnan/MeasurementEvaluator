@@ -106,8 +106,7 @@ namespace MeasurementEvaluator
 
 
                 _uiFinishedEvent.WaitOne();
-                PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
-
+                PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) was shut down.");
             }
             catch (Exception ex)
             {
@@ -117,10 +116,11 @@ namespace MeasurementEvaluator
 
         private void MainWindow_OnClosed(object sender, EventArgs eventArgs)
         {
-            // todo: null mainwindow??
-            PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
-
+            Evaluator.Close();
+            _application.Shutdown();
             Task.Run(() => _uiFinishedEvent.Set());
+
+            PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
         }
 
     }

@@ -23,8 +23,8 @@ namespace MeasurementEvaluator.ME_DataCollector
         private Queue<QueueElement> _processorQueue;
         private AutoResetEvent _processQueueResetEvent = new AutoResetEvent(false);
         private CancellationTokenSource _tokenSource;
-        private string _measurementDataFolder;
-        private const int WAITHANDLE_CYCLETIME_MS = 100;
+        private Thread _processThread;
+        private const int _PROCESS_THREAD_JOINT_TIMEOUT_MS = 500;
 
 
         #region ctor
@@ -94,12 +94,12 @@ namespace MeasurementEvaluator.ME_DataCollector
             _tokenSource = new CancellationTokenSource();
 
             // start queue procesor thread:
-            Thread thread = new Thread(ProcessQueueElements)
+            _processThread = new Thread(ProcessQueueElements)
             {
                 IsBackground = false,
                 Name = "DataCollectorQueueElementProcessor"
             };
-            thread.Start(_tokenSource.Token);
+            _processThread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
         }
@@ -113,9 +113,10 @@ namespace MeasurementEvaluator.ME_DataCollector
             _parameters.ReferenceRepository.Close();
             _parameters.MeasurementDataRepository.Close();
 
+            _processThread.Join(_PROCESS_THREAD_JOINT_TIMEOUT_MS);
+
             InitializationState = InitializationStates.NotInitialized;
         }
-
 
         #endregion
 
@@ -219,55 +220,56 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return;
             }
 
+            WaitHandle[] handles = new WaitHandle[] { _processQueueResetEvent, token.WaitHandle };
+
             while (true)
             {
-                if (_processQueueResetEvent.WaitOne(WAITHANDLE_CYCLETIME_MS))
-                {
-                    while (true)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
-                            break;
-                        }
-
-                        QueueElement item;
-                        lock (_queueLockObj)
-                        {
-                            if (_processorQueue.Count > 0)
-                            {
-                                _parameters.Logger.LogTrace("New queue element arrived!");
-                                item = _processorQueue.Dequeue();
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-
-                        if (item == null)
-                        {
-                            _parameters.Logger.MethodError("Started to process item, but it is null");
-                            continue;
-                        }
-
-                        item.Process();
-                    }
-                }
+                WaitHandle.WaitAny(handles);
 
                 if (token.IsCancellationRequested)
                 {
                     _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                     break;
                 }
+
+                while (true)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                        break;
+                    }
+
+                    QueueElement item;
+                    lock (_queueLockObj)
+                    {
+                        if (_processorQueue.Count > 0)
+                        {
+                            _parameters.Logger.LogTrace("New queue element arrived!");
+                            item = _processorQueue.Dequeue();
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (item == null)
+                    {
+                        _parameters.Logger.MethodError("Started to process item, but it is null");
+                        continue;
+                    }
+
+                    item.Process();     // todo: exception védelem
+                }
+
+
             }
         }
 
         #endregion
 
     }
-
-
 
 
 
