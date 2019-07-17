@@ -16,15 +16,25 @@ using System.Threading;
 
 namespace MeasurementEvaluator.ME_Evaluation
 {
-    internal class Evaluation : IEvaluation
+    internal class Evaluation : InitializableBase, IEvaluation
     {
-        private readonly object _lockObj = new object();
+        private readonly object _queueLockObj = new object();
         private readonly EvaluationParameters _parameters;
         private readonly AutoResetEvent _queueHandle = new AutoResetEvent(false);
         private Queue<QueueElement> _processorQueue;
         private CancellationTokenSource _tokenSource;
 
 
+        #region ctor
+
+        public Evaluation(EvaluationParameters parameters)
+            : base(parameters.Logger)
+        {
+            _parameters = parameters;
+            _parameters.Logger.MethodError("Instantiated.");
+        }
+
+        #endregion
 
         #region IResultProvider
 
@@ -45,97 +55,41 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         #endregion
 
-        #region ctor
-
-        public Evaluation(EvaluationParameters parameters)
-        {
-            _parameters = parameters;
-            _parameters.Logger.MethodError("Instantiated.");
-        }
-
-        #endregion
-
         #region IInitialized
 
-        public bool IsInitialized { get; private set; }
-
-        public event EventHandler<InitializationEventArgs> InitStateChanged;
-
-
-        public void Close()
+        protected override void InternalInit()
         {
-            if (!IsInitialized)
+            if (!_parameters.DataCollector.Initiailze())
             {
+                _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");
+                InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
+            _parameters.DataCollector.SubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
 
-            lock (_lockObj)
+            _processorQueue = new Queue<QueueElement>();
+            _tokenSource = new CancellationTokenSource();
+
+            Thread th = new Thread(ProcessEvaluation)
             {
-                if (!IsInitialized)
-                {
-                    return;
-                }
-                _parameters.DataCollector.UnSubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
+                Name = "EvaluatorThread",
+                IsBackground = false
+            };
+            th.Start(_tokenSource.Token);
 
-                _tokenSource.Cancel();
-                _queueHandle.Reset();
-                _processorQueue.Clear();
-
-                _parameters.DataCollector.Close();
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = false;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodError("Closed.");
-            }
+            InitializationState = InitializationStates.Initialized;
         }
 
-
-        public bool Initiailze()
+        protected override void InternalClose()
         {
-            if (IsInitialized)
-            {
-                return true;
-            }
+            _parameters.DataCollector.UnSubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
 
-            lock (_lockObj)
-            {
-                if (IsInitialized)
-                {
-                    return true;
-                }
-                if (!_parameters.DataCollector.Initiailze())
-                {
-                    _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");
-                    return false;
-                }
-                _parameters.DataCollector.SubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
+            _tokenSource.Cancel();
+            _processorQueue.Clear();
 
-                _processorQueue = new Queue<QueueElement>();
-                _tokenSource = new CancellationTokenSource();
+            _parameters.DataCollector.Close();
 
-                Thread th = new Thread(Process)
-                {
-                    Name = "EvaluatorThread",
-                    IsBackground = false
-                };
-                th.Start(_tokenSource.Token);
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = true;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodError("Initialized.");
-                return IsInitialized;
-            }
-
-        }
-
-        private void OnInitStateChanged(bool newState, bool oldState)
-        {
-            var initialized = InitStateChanged;
-            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
+            InitializationState = InitializationStates.NotInitialized;
         }
 
         #endregion
@@ -156,7 +110,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                 return;
             }
 
-            lock (_lockObj)
+            lock (_queueLockObj)
             {
                 _processorQueue.Enqueue(new QueueElement(collectedData));
                 _queueHandle.Set();
@@ -164,7 +118,7 @@ namespace MeasurementEvaluator.ME_Evaluation
         }
 
 
-        private void Process(object obj)
+        private void ProcessEvaluation(object obj)
         {
             _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
 
@@ -192,7 +146,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         }
 
                         QueueElement item = null;
-                        lock (_lockObj)
+                        lock (_queueLockObj)
                         {
                             if (_processorQueue.Count > 0)
                             {
@@ -246,14 +200,13 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             _parameters.Logger.MethodInfo($"Started to evaluate received collectordata: Specification name: {specification.Name}");
             _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.Name ?? "No reference received"}.");
-            _parameters.Logger.MethodInfo("Measurement data: ");
+            _parameters.Logger.MethodInfo("Measurement datas: ");
             foreach (IToolMeasurementData measurementData in measurementDatas)
             {
                 _parameters.Logger.MethodInfo(measurementData.Name);
             }
 
             List<IQuantityEvaluationResult> quantityEvaluationList = new List<IQuantityEvaluationResult>();
-            DateTime fullStartTime = _parameters.DateTimeProvider.GetDateTime();
 
             // go through all quantity specifications:
             foreach (IQuantitySpecification quantitySpec in specification.QuantitySpecifications)
@@ -265,8 +218,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                 {
                     try
                     {
-                        DateTime conditionEvaluationStartTime = _parameters.DateTimeProvider.GetDateTime();
-
+                        // skip condition if condition is null:
                         if (condition == null)
                         {
                             _parameters.Logger.MethodInfo("Received condition is null");
@@ -278,15 +230,16 @@ namespace MeasurementEvaluator.ME_Evaluation
                         if (!condition.Enabled)
                         {
                             _parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name} {condition.Name} is not enabled -> condition check skipped.");
+                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
+                        // get the calculation:
                         ICalculation calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
 
                         // find measurement data associated with the condition name from the matcher:
-                        List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
                         IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(condition.Name);
-
+                        List<IMeasurementSerie> coherentMeasurementData = new List<IMeasurementSerie>();
                         foreach (var item in measurementDatas)
                         {
                             coherentMeasurementData.AddRange(item.Results.Where(p => coherentMeasurementDataNames.Contains(p.Name)));
@@ -321,7 +274,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         IReferenceValue referenceValue = referenceSample?.ReferenceValues?.FirstOrDefault(p => string.Equals(p.Name, referenceName));
 
                         // perform calculation:
-                        ICalculationResult calcResult = calculation.Calculate(calculationInputData, condition, referenceValue);
+                        IResult calcResult = calculation.Calculate(calculationInputData, condition, referenceValue);
 
                         if (!calcResult.Successful)
                         {
@@ -332,7 +285,6 @@ namespace MeasurementEvaluator.ME_Evaluation
                         bool conditionEvaluationResult = condition.Compare(calcResult);
 
                         IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
-                            conditionEvaluationStartTime,
                             _parameters.DateTimeProvider.GetDateTime(),
                             calcResult.Successful,
                             calculationInputData,
@@ -348,8 +300,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         if (_parameters.Logger.IsTraceEnabled)
                         {
                             _parameters.Logger.MethodTrace("The evaluation result:");
-                            _parameters.Logger.MethodTrace($"   Start time: {conditionResult.StartTime}");
-                            _parameters.Logger.MethodTrace($"   End time: {conditionResult.RecordTime}");
+                            _parameters.Logger.MethodTrace($"   End time: {conditionResult.CreationTime}");
                             _parameters.Logger.MethodTrace($"   The calculation was {(conditionResult.Successful ? "" : "NOT")} successful.");
                             _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasuredPoints.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
@@ -367,7 +318,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                 quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList));
             }
-            IEvaluationResult evaluationResult = new EvaluationResult(fullStartTime, _parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList);
+            IEvaluationResult evaluationResult = new EvaluationResult(_parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList);
 
             var resultreadyevent = ResultReadyEvent;
             resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
@@ -377,10 +328,14 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         private IConditionEvaluationResult CreateNOTSuccessfulConditionResult()
         {
-            return new ConditionEvaluaitonResult(default(DateTime), default(DateTime), false, null, null, null, false, null);
+            return new ConditionEvaluaitonResult(default(DateTime), false, null, null, null, false, null);
         }
 
         #endregion
+
+
+
+
 
         private class QueueElement
         {

@@ -20,7 +20,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Thickness Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
-                Value = 200,
+                LeftValue = 200,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
@@ -32,7 +32,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Thickness Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
-                Value = 0.5,
+                LeftValue = 0.5,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,
@@ -45,7 +45,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Resistivity Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
-                Value = 1.5,
+                LeftValue = 1.5,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
@@ -57,7 +57,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Resitivity Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
-                Value = 1,
+                LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,
@@ -99,7 +99,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Thickness Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
-                Value = 201,
+                LeftValue = 201,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
@@ -111,7 +111,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Thickness Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
-                Value = 1,
+                LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,
@@ -123,7 +123,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Thickness Cpk Calculation",
                 CalculationType = CalculationTypes.Cpk,
-                Value = 1,
+                LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,
@@ -135,7 +135,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Resistivity Average Avg Condition",
                 CalculationType = CalculationTypes.Average,
-                Value = 1.7,
+                LeftValue = 1.7,
                 ConditionRelation = Relations.EQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
@@ -147,7 +147,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Resitivity Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
-                Value = 1,
+                LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,
@@ -159,7 +159,7 @@ namespace ME_DummyObjectCreator
             {
                 Name = "Resitivity Average Std Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
-                Value = 1,
+                LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Relative,

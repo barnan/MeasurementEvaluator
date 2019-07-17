@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DataAcquisitions.ME_Repository
 {
-    internal class HDDRepository : IRepository
+    internal class HDDRepository : InitializableBase, IRepository
     {
 
         private readonly HDDRepositoryParameters _parameters;
@@ -18,6 +18,7 @@ namespace DataAcquisitions.ME_Repository
 
 
         internal HDDRepository(HDDRepositoryParameters parameters)
+            : base(parameters.Logger)
         {
             _parameters = parameters;
         }
@@ -25,68 +26,20 @@ namespace DataAcquisitions.ME_Repository
 
         #region IInitializable
 
-        public bool Initiailze()
+        protected override void InternalInit()
         {
-            if (IsInitialized)
+            if (!Directory.Exists(_repositoryPath))
             {
-                return true;
+                _parameters.Logger.MethodError($"The given directory ({_repositoryPath}) does not exists.");
+                InitializationState = InitializationStates.InitializationFailed;
             }
 
-            lock (_lockObject)
-            {
-                if (IsInitialized)
-                {
-                    return true;
-                }
-
-                if (!Directory.Exists(_repositoryPath))
-                {
-                    _parameters.Logger.MethodError($"The given directory ({_repositoryPath}) does not exists.");
-                    return IsInitialized = false;
-                }
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = true;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodInfo("Initialized.");
-
-                return IsInitialized;
-            }
+            InitializationState = InitializationStates.Initialized;
         }
 
-        public void Close()
+        protected override void InternalClose()
         {
-            if (!IsInitialized)
-            {
-                return;
-            }
-
-            lock (_lockObject)
-            {
-                if (!IsInitialized)
-                {
-                    return;
-                }
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = false;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodInfo("Closed.");
-            }
-        }
-
-
-        public event EventHandler<InitializationEventArgs> InitStateChanged;
-
-        public bool IsInitialized { get; private set; }
-
-
-        private void OnInitStateChanged(bool newState, bool oldState)
-        {
-            var initialized = InitStateChanged;
-            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
+            InitializationState = InitializationStates.NotInitialized;
         }
 
         #endregion
@@ -196,7 +149,7 @@ namespace DataAcquisitions.ME_Repository
         }
 
 
-        public IEnumerable<object> GetAllElement()
+        public IEnumerable<object> GetAllElements()
         {
             lock (_lockObject)
             {

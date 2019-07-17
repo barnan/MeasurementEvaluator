@@ -30,7 +30,7 @@ namespace DataStructures.ToolSpecifications
             ValidIf_Value = validIfValue;
         }
 
-        protected override bool EvaluateCondition(ICalculationResult calculationResult)
+        protected override bool EvaluateCondition(IResult calculationResult)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {
@@ -42,7 +42,7 @@ namespace DataStructures.ToolSpecifications
                 return false;
             }
 
-            return Compare(simpleResult.Result);
+            return Compare(simpleResult.ResultValue);
         }
 
 
@@ -62,7 +62,7 @@ namespace DataStructures.ToolSpecifications
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
-            this.TrySave(Value, inputElement, nameof(Value));
+            this.TrySave(LeftValue, inputElement, nameof(LeftValue));
             this.TrySave(ValidIf, inputElement, nameof(ValidIf));
             this.TrySave(ValidIf_Value, inputElement, nameof(ValidIf_Value));
 
@@ -75,7 +75,7 @@ namespace DataStructures.ToolSpecifications
             this.TryLoad(inputElement, nameof(CalculationType));
             this.TryLoad(inputElement, nameof(ConditionRelation));
             this.TryLoad(inputElement, nameof(RelOrAbs));
-            this.TryLoad(inputElement, nameof(Value));
+            this.TryLoad(inputElement, nameof(LeftValue));
             this.TryLoad(inputElement, nameof(ValidIf));
             this.TryLoad(inputElement, nameof(ValidIf_Value));
             return true;

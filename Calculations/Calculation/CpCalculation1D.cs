@@ -19,7 +19,7 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.Cp;
 
 
-        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
+        protected override IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (!(condition is ICpkCondition cpkCondition))
             {
@@ -37,7 +37,6 @@ namespace Calculations.Calculation
                 throw new ArgumentException($"The received reference value is not {nameof(IReferenceValue<double>)}");
             }
 
-            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
@@ -51,7 +50,6 @@ namespace Calculations.Calculation
             return new QCellsCalculationResult(cp,
                                                 usl,
                                                 lsl,
-                                                startTime,
                                                 _parameters.DateTimeProvider.GetDateTime(),
                                                 true);
         }

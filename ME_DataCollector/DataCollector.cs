@@ -18,7 +18,7 @@ namespace MeasurementEvaluator.ME_DataCollector
     {
 
         private readonly DataCollectorParameters _parameters;
-        private readonly object _lockObj = new object();
+        private readonly object _queueLockObj = new object();
 
         private Queue<QueueElement> _processorQueue;
         private AutoResetEvent _processQueueResetEvent = new AutoResetEvent(false);
@@ -26,17 +26,21 @@ namespace MeasurementEvaluator.ME_DataCollector
         private const int WAITHANDLE_CYCLETIME_MS = 100;
 
 
-        public DataCollector(DataCollectorParameters dataGatheringParameters)
-            : base(dataGatheringParameters.Logger)
+        #region ctor
+
+        public DataCollector(DataCollectorParameters parameters)
+            : base(parameters.Logger)
         {
-            _parameters = dataGatheringParameters;
-            _parameters.Logger.MethodInfo("Instantiated.");
+            _parameters = parameters;
 
             _parameters.SpecificationRepository.SetFolder(PluginLoader.SpecificationFolder);
             _parameters.ReferenceRepository.SetFolder(PluginLoader.ReferenceFolder);
             _parameters.MeasurementDataRepository.SetFolder(PluginLoader.MeasurementDataFolder);
+
+            _parameters.Logger.MethodInfo("Instantiated.");
         }
 
+        #endregion
 
         #region IResultProvider
 
@@ -67,18 +71,21 @@ namespace MeasurementEvaluator.ME_DataCollector
             if (!_parameters.SpecificationRepository.Initiailze())
             {
                 _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
+                InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
 
             if (!_parameters.ReferenceRepository.Initiailze())
             {
                 _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
+                InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
 
             if (!_parameters.MeasurementDataRepository.Initiailze())
             {
                 _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
+                InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
 
@@ -94,14 +101,11 @@ namespace MeasurementEvaluator.ME_DataCollector
             thread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
-
-            _parameters.Logger.MethodInfo("Initialized.");
         }
 
         protected override void InternalClose()
         {
             _tokenSource.Cancel();
-            _processQueueResetEvent.Reset();
             _processorQueue.Clear();
 
             _parameters.SpecificationRepository.Close();
@@ -109,8 +113,6 @@ namespace MeasurementEvaluator.ME_DataCollector
             _parameters.MeasurementDataRepository.Close();
 
             InitializationState = InitializationStates.NotInitialized;
-
-            _parameters.Logger.MethodInfo("Closed.");
         }
 
 
@@ -126,14 +128,14 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return;
             }
 
-            lock (_lockObj)
+            lock (_queueLockObj)
             {
                 _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specification, reference, measurementDataFileNames, ResultReadyEvent));
                 _processQueueResetEvent.Set();
             }
         }
 
-        public IEnumerable<ToolNames> GetAvailableToolNames()
+        public IEnumerable<IToolSpecification> GetAvailableToolSpecifications()
         {
             if (!IsInitialized)
             {
@@ -141,49 +143,35 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return null;
             }
 
-            lock (_lockObj)
+            IEnumerable<IToolSpecification> specifications = null;
+            try
             {
-                IEnumerable<string> specificationNames = _parameters.SpecificationRepository.GetAllNames();
-                List<ToolNames> toolList = new List<ToolNames>();
-
-                foreach (string specificationName in specificationNames)
-                {
-                    try
-                    {
-                        var specification = (IToolSpecification)_parameters.SpecificationRepository.Get(specificationName);
-                        if (!toolList.Contains(specification.ToolName))
-                        {
-                            toolList.Add(specification.ToolName);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _parameters.Logger.Error($"Exception occured: {ex}");
-                    }
-                }
-
-                return toolList;
+                IEnumerable<object> specificationObjects = _parameters.SpecificationRepository.GetAllElements();
+                specifications = specificationObjects.Cast<IToolSpecification>();
             }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured: {ex}");
+            }
+            return specifications;
         }
 
 
         public IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName)
         {
-            lock (_lockObj)
+            List<IToolSpecification> specList = null;
+            try
             {
-                try
-                {
-                    IEnumerable<IToolSpecification> specifications = Enumerable.Cast<IToolSpecification>(_parameters.SpecificationRepository.GetAllElement());
-                    List<IToolSpecification> specList = specifications.Where(p => p.ToolName == toolName).ToList();
-                    return specList;
-                }
-                catch (Exception ex)
-                {
-                    _parameters.Logger.Error($"Exception occured: {ex}");
-                    return null;
-                }
+                IEnumerable<object> specificationObjects = _parameters.SpecificationRepository.GetAllElements();
+                IEnumerable<IToolSpecification> specifications = specificationObjects.Cast<IToolSpecification>();
+                specList = specifications.Where(p => p.ToolName == toolName).ToList();
 
             }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured: {ex}");
+            }
+            return specList;
         }
 
 
@@ -195,19 +183,18 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return null;
             }
 
-            lock (_lockObj)
+            IEnumerable<IReferenceSample> samples = null;
+            try
             {
-                try
-                {
-                    List<IReferenceSample> samples = Enumerable.Cast<IReferenceSample>(_parameters.ReferenceRepository.GetAllElement()).ToList();
-                    return samples;
-                }
-                catch (Exception ex)
-                {
-                    _parameters.Logger.Error($"Exception occured: {ex}");
-                    return null;
-                }
+                IEnumerable<object> sampleObjects = _parameters.ReferenceRepository.GetAllElements();
+                samples = sampleObjects.Cast<IReferenceSample>();
+
             }
+            catch (Exception ex)
+            {
+                _parameters.Logger.Error($"Exception occured: {ex}");
+            }
+            return samples;
         }
 
         #endregion
@@ -225,7 +212,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             }
             catch (Exception ex)
             {
-                _parameters.Logger.MethodError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+                _parameters.Logger.MethodError($"Received parameter is not {nameof(CancellationToken)}. Exception: {ex}");
                 return;
             }
 
@@ -242,7 +229,7 @@ namespace MeasurementEvaluator.ME_DataCollector
                         }
 
                         QueueElement item;
-                        lock (_lockObj)
+                        lock (_queueLockObj)
                         {
                             if (_processorQueue.Count > 0)
                             {
@@ -283,11 +270,6 @@ namespace MeasurementEvaluator.ME_DataCollector
 
 
 
-
-
-
-
-
     internal abstract class QueueElement
     {
         protected DataCollectorParameters _parameters;
@@ -303,13 +285,13 @@ namespace MeasurementEvaluator.ME_DataCollector
 
     internal class GetDataQueueElement : QueueElement
     {
-        private IToolSpecification _specification;
-        private IReferenceSample _reference;
-        private List<string> _measurementDataFileNames;
-        private EventHandler<ResultEventArgs> _resultReadyEvent;
+        private readonly IToolSpecification _specification;
+        private readonly IReferenceSample _reference;
+        private readonly IEnumerable<string> _measurementDataFileNames;
+        private readonly EventHandler<ResultEventArgs> _resultReadyEvent;
 
 
-        public GetDataQueueElement(DataCollectorParameters parameters, IToolSpecification specification, IReferenceSample reference, List<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
+        public GetDataQueueElement(DataCollectorParameters parameters, IToolSpecification specification, IReferenceSample reference, IEnumerable<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
             : base(parameters)
         {
             _specification = specification;
@@ -321,15 +303,6 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         internal override void Process()
         {
-            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
-
-            //IToolSpecification specification = (IToolSpecification)_parameters.SpecificationRepository.Get(_specification);
-            //if (specification == null)
-            //{
-            //    _parameters.Logger.LogInfo("There are no specification files with the given name arrived.");
-            //    return;
-            //}
-
             List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
             foreach (string name in _measurementDataFileNames)
             {
@@ -341,19 +314,8 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return;
             }
 
-            //IReferenceSample reference = (IReferenceSample)_parameters.ReferenceRepository.Get(_reference);
-            //if (reference == null)
-            //{
-            //    _parameters.Logger.LogInfo("There are no reference files with the given name or no reference name arrived.");
-            //}
-
             var localResultreadyevent = _resultReadyEvent;
-            localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(startTime,
-                                                                                        _parameters.DateTimeProvider.GetDateTime(),
-                                                                                        true,
-                                                                                        _specification,
-                                                                                        measurementDatas,
-                                                                                        _reference)));
+            localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(_parameters.DateTimeProvider.GetDateTime(), true, _specification, measurementDatas, _reference)));
         }
     }
 

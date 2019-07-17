@@ -6,15 +6,13 @@ namespace DataStructures
 {
     public abstract class ResultBase : IResult
     {
-        protected ResultBase(DateTime startTime, DateTime endTime, bool successful)
+        protected ResultBase(DateTime creationTime, bool successful)
         {
-            StartTime = startTime;
-            RecordTime = endTime;
+            CreationTime = creationTime;
             Successful = successful;
         }
 
-        public virtual DateTime StartTime { get; }
-        public virtual DateTime RecordTime { get; }
+        public virtual DateTime CreationTime { get; }
         public virtual bool Successful { get; }
 
         public XElement SaveToXml(XElement input)

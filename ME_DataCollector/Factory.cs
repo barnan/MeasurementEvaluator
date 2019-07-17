@@ -1,4 +1,5 @@
 ﻿using Frame.PluginLoader.Interfaces;
+using Interfaces.DataAcquisition;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         public object Create(Type t, string name)
         {
-            if (t.IsAssignableFrom(typeof(DataCollector)))
+            if (t.IsAssignableFrom(typeof(IDataCollector)))
             {
                 if (!_dataCollectorDict.ContainsKey(name))
                 {
@@ -22,13 +23,9 @@ namespace MeasurementEvaluator.ME_DataCollector
                     {
                         DataCollector instance = new DataCollector(param);
                         _dataCollectorDict.Add(name, instance);
-                        return instance;
                     }
                 }
-                else
-                {
-                    return _dataCollectorDict[name];
-                }
+                return _dataCollectorDict[name];
             }
             return null;
         }

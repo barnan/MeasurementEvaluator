@@ -1,21 +1,20 @@
 ﻿using Interfaces.Evaluation;
 using Interfaces.Misc;
 using Miscellaneous;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MeasurementEvaluator.ME_Matching
 {
-    internal class Matching : IMathing
+    internal class Matching : InitializableBase, IMathing
     {
 
-        private readonly object _lockObj = new object();
         private readonly MathchingParameters _parameters;
         private List<MatchingKeyValuePairs> _specificationMeasDataReferencePairs;
 
 
         public Matching(MathchingParameters parameters)
+            : base(parameters.Logger)
         {
             _parameters = parameters;
             _parameters.Logger.Info($"{nameof(Matching)} Instantiated.");
@@ -24,72 +23,28 @@ namespace MeasurementEvaluator.ME_Matching
 
         #region intialized
 
-        public bool Initiailze()
+        protected override void InternalInit()
         {
-            if (IsInitialized)
+            if (_parameters.MatchingFileReader == null)
             {
-                return true;
-            }
-
-            lock (_lockObj)
-            {
-                if (IsInitialized)
-                {
-                    return true;
-                }
-                if (_parameters.MatchingFileReader == null)
-                {
-                    _parameters.Logger.LogError($"{nameof(_parameters.MatchingFileReader)} is null");
-                    return false;
-                }
-
-                // todo: check type
-                _specificationMeasDataReferencePairs = (List<MatchingKeyValuePairs>)_parameters.MatchingFileReader.ReadFromFile(_parameters.BindingFilePath);
-                if (_specificationMeasDataReferencePairs == null)
-                {
-                    _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.BindingFilePath}");
-                }
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = true;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodError("Initialized.");
-                return IsInitialized;
-            }
-        }
-
-        public bool IsInitialized { get; private set; }
-
-        public void Close()
-        {
-            if (!IsInitialized)
-            {
+                _parameters.Logger.LogError($"{nameof(_parameters.MatchingFileReader)} is null");
+                InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
 
-            lock (_lockObj)
+            // todo: check type
+            _specificationMeasDataReferencePairs = (List<MatchingKeyValuePairs>)_parameters.MatchingFileReader.ReadFromFile(_parameters.BindingFilePath);
+            if (_specificationMeasDataReferencePairs == null)
             {
-                if (!IsInitialized)
-                {
-                    return;
-                }
-
-                bool oldInitState = IsInitialized;
-                IsInitialized = false;
-                OnInitStateChanged(IsInitialized, oldInitState);
-
-                _parameters.Logger.MethodError("Closed.");
+                _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.BindingFilePath}");
             }
+
+            InitializationState = InitializationStates.Initialized;
         }
 
-        public event EventHandler<InitializationEventArgs> InitStateChanged;
-
-
-        private void OnInitStateChanged(bool newState, bool oldState)
+        protected override void InternalClose()
         {
-            var initialized = InitStateChanged;
-            initialized?.Invoke(this, new InitializationEventArgs(newState, oldState));
+            InitializationState = InitializationStates.NotInitialized;
         }
 
         #endregion
@@ -97,30 +52,25 @@ namespace MeasurementEvaluator.ME_Matching
 
         public IEnumerable<string> GetMeasDataNames(string conditionName)
         {
-            lock (_lockObj)
+            if (!IsInitialized)
             {
-                if (!IsInitialized)
-                {
-                    _parameters.Logger.LogError("Not initialized yet.");
-                    return null;
-                }
-                IEnumerable<string> result = _specificationMeasDataReferencePairs.Where(p => p.ConditionName == conditionName).SelectMany(p => p.MeasDataNames);
-                return result;
+                _parameters.Logger.LogError("Not initialized yet.");
+                return null;
             }
+            IEnumerable<string> result = _specificationMeasDataReferencePairs.Where(p => p.ConditionName == conditionName).SelectMany(p => p.MeasDataNames);
+
+            return result;
         }
 
         public string GetReferenceName(string conditionName)
         {
-            lock (_lockObj)
+            if (!IsInitialized)
             {
-                if (!IsInitialized)
-                {
-                    _parameters.Logger.LogError("Not initialized yet.");
-                    return null;
-                }
-                string result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.ConditionName == conditionName)?.ReferenceName;
-                return result;
+                _parameters.Logger.LogError("Not initialized yet.");
+                return null;
             }
+            string result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.ConditionName == conditionName)?.ReferenceName;
+            return result;
         }
 
     }

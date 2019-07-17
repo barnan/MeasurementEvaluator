@@ -1,4 +1,5 @@
 ﻿using Interfaces.Misc;
+using Interfaces.Result;
 
 namespace Interfaces.ToolSpecifications
 {
@@ -20,6 +21,13 @@ namespace Interfaces.ToolSpecifications
         /// Defines whether relative or absolute condition
         /// </summary>
         Relativity RelOrAbs { get; }
+
+        /// <summary>
+        /// Checks the condition. The calculation result contains the approppriate result
+        /// </summary>
+        /// <param name="resultToCompare">the "external calculation" result which will be used in the condition comparison</param>
+        /// <returns>the relation is met (true) or not (false)</returns>
+        bool Compare(IResult resultToCompare);
     }
 
 
@@ -36,13 +44,6 @@ namespace Interfaces.ToolSpecifications
         /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
         T LeftValue { get; }
-
-        /// <summary>
-        /// Checks the condition. The calculatin result contains the approppriate result
-        /// </summary>
-        /// <param name="rightValue">the calculation result which will be used in the condition comparison</param>
-        /// <returns>the relation is met (true) or not (false)</returns>
-        bool Compare(T rightValue);
     }
 
 

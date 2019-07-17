@@ -4,13 +4,13 @@ using System;
 
 namespace Calculations.Calculation
 {
-    class CalculationResult : ResultBase, ICalculationResult
+    class CalculationResult<T> : ResultBase, ICalculationResult<T>
     {
-
-        public CalculationResult(DateTime startTime, DateTime endTime, bool successful)
-        : base(startTime, endTime, successful)
+        public CalculationResult(DateTime creationTime, bool successful)
+            : base(creationTime, successful)
         {
         }
 
+        public T ResultValue { get; protected set; }
     }
 }

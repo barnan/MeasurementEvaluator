@@ -11,7 +11,7 @@ namespace Interfaces.DataAcquisition
 
         object Get(string name);
 
-        IEnumerable<object> GetAllElement();
+        IEnumerable<object> GetAllElements();
 
         IEnumerable<string> GetAllNames();
 

@@ -38,7 +38,7 @@ namespace DataStructures.ToolSpecifications
         public Relativity RelOrAbs { get; set; }
 
 
-        public bool Compare(ICalculationResult calculationResult)
+        public bool Compare(IResult calculationResult)
         {
             if (calculationResult == null)
             {
@@ -47,7 +47,7 @@ namespace DataStructures.ToolSpecifications
             return EvaluateCondition(calculationResult);
         }
 
-        protected abstract bool EvaluateCondition(ICalculationResult calculationResult);
+        protected abstract bool EvaluateCondition(IResult calculationResult);
 
         #endregion
 
@@ -70,29 +70,29 @@ namespace DataStructures.ToolSpecifications
     public abstract class ConditionBase<T> : ConditionBase, IConditionHandler<T>
         where T : struct
     {
-        public T Value { get; set; }
+        public T LeftValue { get; set; }
 
 
         public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled, Relativity relorabs)
             : base(name, calculationtype, relation, enabled, relorabs)
         {
-            Value = value;
+            LeftValue = value;
         }
 
 
         public ConditionBase()
         {
-            Value = default(T);
+            LeftValue = default(T);
         }
 
 
         // evaluation calls it from derived classes:
         protected bool Compare(T leftValue)
         {
-            bool equality = EqualityComparer<T>.Default.Equals(leftValue, Value);
-            int compResult = Comparer<T>.Default.Compare(leftValue, Value);
+            bool equality = EqualityComparer<T>.Default.Equals(leftValue, LeftValue);
+            int compResult = Comparer<T>.Default.Compare(leftValue, LeftValue);
 
-            switch (ConditionRelation.Value)
+            switch (ConditionRelation)
             {
                 case Relations.RelationsEnumValues.LESS:
                     return compResult == -1;
@@ -111,7 +111,7 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        protected bool CheckCalculationType(ICalculationResult calculationResult, CalculationTypes calculationType)
+        protected bool CheckCalculationType(IResult calculationResult, CalculationTypes calculationType)
         {
             switch (calculationType)
             {
@@ -137,7 +137,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"{base.ToString()}{Environment.NewLine}True, if {ConditionRelation} than {Value}";
+            return $"{base.ToString()}{Environment.NewLine}True, if {ConditionRelation} than {LeftValue}";
         }
 
         #endregion

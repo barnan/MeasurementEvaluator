@@ -8,7 +8,7 @@ namespace Interfaces.Result
         /// <summary>
         /// Contains the calculation end time
         /// </summary>
-        DateTime RecordTime { get; }
+        DateTime CreationTime { get; }
 
 
         /// <summary>

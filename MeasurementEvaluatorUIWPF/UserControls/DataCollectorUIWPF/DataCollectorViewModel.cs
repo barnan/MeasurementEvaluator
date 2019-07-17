@@ -5,6 +5,7 @@ using MeasurementEvaluatorUI.Base;
 using MeasurementEvaluatorUI.Commands;
 using Microsoft.Win32;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -15,6 +16,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         #region fields
 
         private DataCollectorUIWPFParameters Parameters { get; }
+        private IEnumerable<IToolSpecification> _availableToolSpecifications;
 
         #endregion
 
@@ -33,8 +35,17 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         {
             Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
 
-            AvailableToolList = Parameters.DataCollector.GetAvailableToolNames();
+            _availableToolSpecifications = Parameters.DataCollector.GetAvailableToolSpecifications();
+
             AvailableReferenceFileList = Parameters.DataCollector.GetReferenceSamples();
+
+            foreach (IToolSpecification specification in _availableToolSpecifications)
+            {
+                if (!AvailableToolList.Contains(specification.ToolName))
+                {
+                    AvailableToolList.Add(specification.ToolName);
+                }
+            }
         }
 
         #endregion
@@ -69,8 +80,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region tool
 
-        private List<ToolNames> _availableToolList;
-        public List<ToolNames> AvailableToolList
+        private ObservableCollection<ToolNames> _availableToolList;
+        public ObservableCollection<ToolNames> AvailableToolList
         {
             get { return _availableToolList; }
             set

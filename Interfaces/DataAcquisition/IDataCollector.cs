@@ -16,7 +16,7 @@ namespace Interfaces.DataAcquisition
         /// <param name="reference">reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
         void GatherData(IToolSpecification specifaction, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null);
 
-        IEnumerable<ToolNames> GetAvailableToolNames();
+        IEnumerable<IToolSpecification> GetAvailableToolSpecifications();
 
         IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName);
 

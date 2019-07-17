@@ -37,7 +37,7 @@ namespace DataStructures.ToolSpecifications
 
         #region protected
 
-        protected override bool EvaluateCondition(ICalculationResult calculationResult)
+        protected override bool EvaluateCondition(IResult calculationResult)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {
@@ -49,7 +49,7 @@ namespace DataStructures.ToolSpecifications
                 return false;
             }
 
-            return Compare(qcellsResult.Result);
+            return Compare(qcellsResult.ResultValue);
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace DataStructures.ToolSpecifications
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
-            this.TrySave(Value, inputElement, nameof(Value));
+            this.TrySave(LeftValue, inputElement, nameof(LeftValue));
             this.TrySave(HalfTolerance, inputElement, nameof(HalfTolerance));
 
             return inputElement;
@@ -74,7 +74,7 @@ namespace DataStructures.ToolSpecifications
             this.TryLoad(inputElement, nameof(CalculationType));
             this.TryLoad(inputElement, nameof(ConditionRelation));
             this.TryLoad(inputElement, nameof(RelOrAbs));
-            this.TryLoad(inputElement, nameof(Value));
+            this.TryLoad(inputElement, nameof(LeftValue));
             this.TryLoad(inputElement, nameof(HalfTolerance));
             return true;
         }
