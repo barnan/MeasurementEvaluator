@@ -58,7 +58,6 @@
     <Compile Include="DataAcquisition\IHDDFileReaderWriter.cs" />
     <Compile Include="DataAcquisition\IRepository.cs" />
     <Compile Include="DataAcquisition\IStoredData.cs" />
-    <Compile Include="DataAcquisition\IHDDXmlSerializator.cs" />
     <Compile Include="Evaluation\IEvaluation.cs" />
     <Compile Include="MeasuredData\IMeasurementPoint.cs" />
     <Compile Include="Misc\IInitializable.cs" />

@@ -1,7 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,8 +11,6 @@ namespace DataStructures.ToolSpecifications
 
     public class ToolSpecification : IToolSpecificationHandler
     {
-        private readonly ILogger _logger;
-
 
         #region IToolspecificationHandler
 
@@ -38,9 +35,6 @@ namespace DataStructures.ToolSpecifications
 
         public ToolSpecification()
         {
-            _logger = LogManager.GetCurrentClassLogger();
-
-            _logger.MethodInfo($"Specification created.");
         }
 
         #endregion
@@ -81,7 +75,7 @@ namespace DataStructures.ToolSpecifications
 
                 if (other.ToolName == null)
                 {
-                    _logger.Error("Tool Name is null in Arrived data.");
+                    //logger.Error("Tool Name is null in received data.");
                     return 0;
                 }
 
@@ -121,7 +115,7 @@ namespace DataStructures.ToolSpecifications
             }
             catch (Exception ex)
             {
-                _logger.MethodError($"Exception occured: {ex}");
+                //logger.MethodError($"Exception occured: {ex}");
                 return 0;
             }
         }

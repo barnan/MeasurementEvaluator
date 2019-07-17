@@ -119,11 +119,5 @@ namespace DataAcquisitions.HDDXmlSerializator
             return false;
         }
 
-
-        private bool CheckFilePath(string fileNameAndPath)
-        {
-            return File.Exists(fileNameAndPath);
-        }
-
     }
 }

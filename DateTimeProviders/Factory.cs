@@ -54,7 +54,7 @@ namespace DateTimeProviders
             {
                 if (!_standardDateTimeProviderDict.ContainsKey(name))
                 {
-                    IDateTimeProvider instance = new StandardDateTimeProvider();
+                    IDateTimeProvider instance = new StandardDateTimeProvider(name);
                     _standardDateTimeProviderDict.Add(name, instance);
                     return instance;
                 }

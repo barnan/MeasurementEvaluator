@@ -34,9 +34,7 @@ namespace Calculations.Calculation
 
             _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}.");
 
-            return new SimpleCalculationResult(std,
-                                               _parameters.DateTimeProvider.GetDateTime(),
-                                               true);
+            return new SimpleCalculationResult(std, _parameters.DateTimeProvider.GetDateTime(), true);
         }
     }
 }

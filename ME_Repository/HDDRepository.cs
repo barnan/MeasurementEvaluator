@@ -323,20 +323,17 @@ namespace DataAcquisitions.ME_Repository
             return true;
         }
 
+        #endregion
 
-        public bool Refresh()
+        #region private
+
+        private void Refresh()
         {
             lock (_lockObject)
             {
                 _fileContentDictionaryCache = GetItemList(_repositoryPath);
-                return _fileContentDictionaryCache != null;
             }
         }
-
-
-        #endregion
-
-        #region private
 
         private bool CheckFolder(string fullPath)
         {
@@ -430,7 +427,7 @@ namespace DataAcquisitions.ME_Repository
                 throw new ArgumentException("Received name is not appropriate, it is null or empty.");
             }
 
-            // todo: make loinger name
+            // todo: make longer name
             string[] nameElements = name.Split(' ');
             return nameElements[0];
         }

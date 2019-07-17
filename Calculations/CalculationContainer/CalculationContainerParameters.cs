@@ -27,7 +27,7 @@ namespace Calculations.CalculationContainer
 
         internal bool Load(string sectionName)
         {
-            Logger = LogManager.GetCurrentClassLogger();
+            Logger = LogManager.GetLogger(sectionName);
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 

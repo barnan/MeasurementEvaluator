@@ -52,13 +52,7 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
 
-            DateTime endTime = _parameters.DateTimeProvider.GetDateTime();
-
-            return new QCellsCalculationResult(cpk,
-                                               usl,
-                                               lsl,
-                                               endTime,
-                                               true);
+            return new QCellsCalculationResult(cpk, usl, lsl, _parameters.DateTimeProvider.GetDateTime(), true);
         }
     }
 }

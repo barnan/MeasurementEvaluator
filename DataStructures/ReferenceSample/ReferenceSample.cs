@@ -1,7 +1,6 @@
 ﻿using Interfaces;
 using Interfaces.ReferenceSample;
 using Miscellaneous;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -10,8 +9,6 @@ namespace DataStructures.ReferenceSample
 {
     public class ReferenceSample : IReferenceSampleHandler
     {
-        private readonly ILogger _logger;
-
         #region INamed
 
         public string Name { get; set; }
@@ -31,7 +28,6 @@ namespace DataStructures.ReferenceSample
 
         public ReferenceSample()
         {
-            _logger = LogManager.GetCurrentClassLogger();
         }
 
         public ReferenceSample(string name, IReadOnlyList<IReferenceValue> referenceValues)
@@ -60,7 +56,7 @@ namespace DataStructures.ReferenceSample
 
                 if (other.Name == null)
                 {
-                    _logger.Error("Sample ID is null in Arrived data.");
+                    //logger.Error("Sample ID is null in Arrived data.");
                     return 0;
                 }
 
@@ -92,7 +88,7 @@ namespace DataStructures.ReferenceSample
             }
             catch (Exception ex)
             {
-                _logger.MethodError($"Exception occured: {ex}");
+                //logger.MethodError($"Exception occured: {ex}");
                 return 0;
             }
         }

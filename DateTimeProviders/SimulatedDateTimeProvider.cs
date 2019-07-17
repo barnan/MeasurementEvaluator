@@ -45,7 +45,7 @@ namespace DateTimeProviders
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            Logger = LogManager.GetCurrentClassLogger();
+            Logger = LogManager.GetLogger(sectionName);
 
             return true;
         }
