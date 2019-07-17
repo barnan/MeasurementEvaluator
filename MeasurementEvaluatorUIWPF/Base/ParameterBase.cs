@@ -33,7 +33,7 @@ namespace MeasurementEvaluatorUIWPF.Base
 
         public void OnClosed()
         {
-            var eventhandlers = _initializationCompleted;
+            var eventhandlers = _closed;
             eventhandlers?.Invoke(this, new EventArgs());
         }
 

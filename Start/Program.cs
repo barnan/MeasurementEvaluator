@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -34,7 +35,11 @@ namespace Start
 
             try
             {
+                Process currentprocess = Process.GetCurrentProcess();
+
                 _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+
 
                 if (string.IsNullOrEmpty(_currentExeFolder))
                 {
@@ -68,6 +73,8 @@ namespace Start
                 pluginLoader.Start();
 
                 PluginLoader.SendToInfoLogAndConsole($"Application {System.AppDomain.CurrentDomain.FriendlyName} terminated.");
+
+                currentprocess.Kill();
             }
             catch (Exception ex)
             {

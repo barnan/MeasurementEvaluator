@@ -56,7 +56,7 @@ namespace Miscellaneous
 
         public void Close()
         {
-            if (IsInitialized)
+            if (!IsInitialized)
             {
                 _logger.Info("Not initialized yet.");
                 return;
@@ -65,7 +65,7 @@ namespace Miscellaneous
             Monitor.Enter(_initLock);
             try
             {
-                if (InitializationState == InitializationStates.Initialized)
+                if (!IsInitialized)
                 {
                     _logger.Info("Not initialized yet.");
                     return;

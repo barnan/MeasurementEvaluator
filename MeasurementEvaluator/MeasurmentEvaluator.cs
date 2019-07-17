@@ -15,8 +15,9 @@ namespace MeasurementEvaluator
 {
     internal class MeasurmentEvaluator : IRunable
     {
-        private ILogger _logger;
-        private ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
+        private Application _application;
+        private readonly ILogger _logger;
+        private readonly ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private string _mainWindowName = null;
@@ -75,7 +76,7 @@ namespace MeasurementEvaluator
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
-                    Application application = new Application();
+                    _application = new Application();
                     //var myResourceDictionary = new ResourceDictionary { Source = new Uri("/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml", UriKind.RelativeOrAbsolute) };
                     //application.Resources.MergedDictionaries.Add(myResourceDictionary);
 
@@ -85,7 +86,7 @@ namespace MeasurementEvaluator
                     mainWindow.Closed += MainWindow_OnClosed;
 
                     //System.Windows.Application.Current.MainWindow = mainWindow;
-                    application.MainWindow = mainWindow;
+                    _application.MainWindow = mainWindow;
                     mainWindow.Show();
 
                     if (!_window.InitializationCompleted())
@@ -94,7 +95,7 @@ namespace MeasurementEvaluator
                         return;
                     }
 
-                    application.Run(mainWindow);
+                    _application.Run(mainWindow);
 
                 });
                 Debug.Assert(appThread != null);
@@ -104,14 +105,9 @@ namespace MeasurementEvaluator
                 appThread.Start();
 
 
-
                 _uiFinishedEvent.WaitOne();
-
                 PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
 
-                Thread.Sleep(10);
-
-                Environment.Exit(0);
             }
             catch (Exception ex)
             {

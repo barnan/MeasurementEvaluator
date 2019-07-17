@@ -1,6 +1,5 @@
 ﻿using Interfaces.Misc;
 using MeasurementEvaluatorUI.Base;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -31,8 +30,6 @@ namespace MeasurementEvaluatorUIWPF
         {
             Parameters = parameters;
 
-            Parameters.Closed += Parameters_OnClosed;
-
             Tabs = new ObservableCollection<TabItem>();
 
             foreach (ITabUIWPF tabUiwpf in parameters.Tabs)
@@ -43,10 +40,5 @@ namespace MeasurementEvaluatorUIWPF
             SelectedTabItem = Tabs[0];
         }
 
-        private void Parameters_OnClosed(object sender, EventArgs eventArgs)
-        {
-
-
-        }
     }
 }

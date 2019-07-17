@@ -4,6 +4,7 @@ using Interfaces.ToolSpecifications;
 using MeasurementEvaluatorUI.Base;
 using MeasurementEvaluatorUI.Commands;
 using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,9 +27,15 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         {
             Parameters = parameters;
             Parameters.InitializationCompleted += Parameters_InitializationCompleted;
+            Parameters.Closed += Parameters_Closed;
 
             BrowseMeasurementDataCommand = new RelayCommand(ExecuteBrowse);
             CalculateCommand = new RelayCommand(ExecuteCalculate);
+        }
+
+        private void Parameters_Closed(object sender, EventArgs e)
+        {
+            Parameters.DataCollector.Close();
         }
 
         private void Parameters_InitializationCompleted(object sender, System.EventArgs e)
@@ -189,7 +196,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         private void ExecuteBrowse()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Multiselect = true, InitialDirectory = Parameters.DataCollector.MeasurementFolderPath};
+            OpenFileDialog openFileDialog = new OpenFileDialog { Multiselect = true, InitialDirectory = Parameters.DataCollector.MeasurementFolderPath };
             if (openFileDialog.ShowDialog() == true)
             {
                 SelectedMeasurementFiles = openFileDialog.FileNames.ToList();
