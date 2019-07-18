@@ -59,6 +59,7 @@ namespace DataStructures.ToolSpecifications
         public override XElement SaveToXml(XElement inputElement)
         {
             this.TrySave(Name, inputElement, nameof(Name));
+            this.TrySave(Enabled, inputElement, nameof(Enabled));
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
@@ -72,6 +73,7 @@ namespace DataStructures.ToolSpecifications
         public override bool LoadFromXml(XElement inputElement)
         {
             this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(Enabled));
             this.TryLoad(inputElement, nameof(CalculationType));
             this.TryLoad(inputElement, nameof(ConditionRelation));
             this.TryLoad(inputElement, nameof(RelOrAbs));
