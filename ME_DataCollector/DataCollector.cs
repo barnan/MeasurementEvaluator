@@ -311,7 +311,9 @@ namespace MeasurementEvaluator.ME_DataCollector
             List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
             foreach (string name in _measurementDataFileNames)
             {
-                measurementDatas.Add((IToolMeasurementData)_parameters.MeasurementDataRepository.Get(name));
+                IToolMeasurementData measData = (IToolMeasurementData)_parameters.MeasurementDataRepository.Get(name);
+
+                measurementDatas.Add(measData);
             }
             if (measurementDatas.Count < 1)
             {
