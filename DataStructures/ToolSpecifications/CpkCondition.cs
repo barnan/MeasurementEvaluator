@@ -1,7 +1,9 @@
 ﻿using Interfaces;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
+using Miscellaneous;
 using System;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
@@ -17,8 +19,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, RELATIVEORABSOLUTE relativeorabsolute, double halfTolerance)
-            : base(name, calculationtype, value, relation, enabled, relativeorabsolute)
+        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relativity relativity, double halfTolerance)
+            : base(name, calculationtype, value, relation, enabled, relativity)
         {
             HalfTolerance = halfTolerance;
         }
@@ -35,7 +37,7 @@ namespace DataStructures.ToolSpecifications
 
         #region protected
 
-        protected override bool EvaluateCondition(ICalculationResult calculationResult)
+        protected override bool EvaluateCondition(IResult calculationResult)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {
@@ -47,11 +49,37 @@ namespace DataStructures.ToolSpecifications
                 return false;
             }
 
-            return Compare(qcellsResult.Result);
+            return Compare(qcellsResult.ResultValue);
         }
 
         #endregion
 
+
+        public override XElement SaveToXml(XElement inputElement)
+        {
+            //inputElement.SetAttributeValue(nameof(Name), Name);
+            this.TrySave(Name, inputElement, nameof(Name));
+            this.TrySave(Enabled, inputElement, nameof(Enabled));
+            this.TrySave(CalculationType, inputElement, nameof(CalculationType));
+            this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
+            this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
+            this.TrySave(LeftValue, inputElement, nameof(LeftValue));
+            this.TrySave(HalfTolerance, inputElement, nameof(HalfTolerance));
+
+            return inputElement;
+        }
+
+        public override bool LoadFromXml(XElement inputElement)
+        {
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(Enabled));
+            this.TryLoad(inputElement, nameof(CalculationType));
+            this.TryLoad(inputElement, nameof(ConditionRelation));
+            this.TryLoad(inputElement, nameof(RelOrAbs));
+            this.TryLoad(inputElement, nameof(LeftValue));
+            this.TryLoad(inputElement, nameof(HalfTolerance));
+            return true;
+        }
     }
 
 }

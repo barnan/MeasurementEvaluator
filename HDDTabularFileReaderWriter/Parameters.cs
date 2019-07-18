@@ -7,7 +7,7 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
     internal class Parameters
     {
         [Configuration("Separator", "Separator", LoadComponent = false)]
-        private char _separator;
+        private char _separator = default(char);
         internal char Separator => _separator;
 
         public ILogger Logger { get; private set; }
@@ -15,7 +15,7 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 
         internal bool Load(string sectionName)
         {
-            Logger = LogManager.GetCurrentClassLogger();
+            Logger = LogManager.GetLogger(sectionName);
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 

@@ -1,23 +1,21 @@
 ﻿using Interfaces;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
 {
 
     public class ToolSpecification : IToolSpecificationHandler
     {
-        private readonly ILogger _logger;
-
 
         #region IToolspecificationHandler
 
         private List<IQuantitySpecification> _specifications;
-        public IReadOnlyList<IQuantitySpecification> Specifications
+        public IReadOnlyList<IQuantitySpecification> QuantitySpecifications
         {
             get { return _specifications.AsReadOnly(); }
             set
@@ -34,11 +32,9 @@ namespace DataStructures.ToolSpecifications
 
         #region ctor
 
+
         public ToolSpecification()
         {
-            _logger = LogManager.GetCurrentClassLogger();
-
-            _logger.MethodInfo($"Specification created.");
         }
 
         #endregion
@@ -51,7 +47,7 @@ namespace DataStructures.ToolSpecifications
             sb.AppendLine($"Name: {Name}");
             sb.AppendLine($"Tool: {ToolName}");
 
-            foreach (var item in Specifications)
+            foreach (var item in QuantitySpecifications)
             {
                 sb.Append(item);
                 sb.AppendLine();
@@ -79,7 +75,7 @@ namespace DataStructures.ToolSpecifications
 
                 if (other.ToolName == null)
                 {
-                    _logger.Error("Tool Name is null in Arrived data.");
+                    //logger.Error("Tool Name is null in received data.");
                     return 0;
                 }
 
@@ -99,15 +95,15 @@ namespace DataStructures.ToolSpecifications
                     return nameComparisonResult;
                 }
 
-                if (Specifications.Count != other.Specifications.Count)
+                if (QuantitySpecifications.Count != other.QuantitySpecifications.Count)
                 {
-                    return Specifications.Count > other.Specifications.Count ? 1 : -1;
+                    return QuantitySpecifications.Count > other.QuantitySpecifications.Count ? 1 : -1;
                 }
 
                 int summ = 0;
-                for (int i = 0; i < Specifications.Count; i++)
+                for (int i = 0; i < QuantitySpecifications.Count; i++)
                 {
-                    summ += Specifications[i].CompareTo(other.Specifications[i]);
+                    summ += QuantitySpecifications[i].CompareTo(other.QuantitySpecifications[i]);
                 }
 
                 if (summ != 0)
@@ -119,11 +115,27 @@ namespace DataStructures.ToolSpecifications
             }
             catch (Exception ex)
             {
-                _logger.MethodError($"Exception occured: {ex}");
+                //logger.MethodError($"Exception occured: {ex}");
                 return 0;
             }
         }
 
         #endregion
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            this.TrySave(Name, inputElement, nameof(Name));
+            this.TrySave(ToolName, inputElement, nameof(ToolName));
+            this.TrySave(QuantitySpecifications, inputElement, nameof(QuantitySpecifications));
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            this.TryLoad(inputElement, nameof(Name));
+            this.TryLoad(inputElement, nameof(ToolName));
+            this.TryLoad(inputElement, nameof(QuantitySpecifications));
+            return true;
+        }
     }
 }

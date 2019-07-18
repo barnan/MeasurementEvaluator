@@ -1,39 +1,20 @@
-﻿using System;
-using System.Xml;
+﻿using Interfaces.Misc;
+using System;
 
 namespace Interfaces.Result
 {
-    public interface IResult
+    public interface IResult : IXmlStorable
     {
-        /// <summary>
-        /// Contains start time of the calculation 
-        /// </summary>
-        DateTime StartTime { get; }
-
         /// <summary>
         /// Contains the calculation end time
         /// </summary>
-        DateTime EndTime { get; }
+        DateTime CreationTime { get; }
 
 
         /// <summary>
         /// contains whether the calculation was successful or not. The calculation is successful, if all the sub-result were been able to calculate.
         /// </summary>
         bool Successful { get; }
-
-
-        /// <summary>
-        /// Save the result content into an XElement
-        /// </summary>
-        /// <returns></returns>
-        XmlElement Save(XmlElement input);
-
-        /// <summary>
-        /// Load the necessry data from an XElement
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        bool Load(XmlElement input);
     }
 
 

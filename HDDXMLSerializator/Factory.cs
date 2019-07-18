@@ -17,7 +17,7 @@ namespace DataAcquisitions.HDDXmlSerializator
             {
                 if (!_fileReaderDict.ContainsKey(name))
                 {
-                    HDDXmlSerializatorParameters param = new HDDXmlSerializatorParameters();
+                    HDDXmlSerializatorParameters param = new HDDXmlSerializatorParameters(name);
                     HDDXmlSerializator instance = new HDDXmlSerializator(param);
                     _fileReaderDict.Add(name, instance);
                     return instance;

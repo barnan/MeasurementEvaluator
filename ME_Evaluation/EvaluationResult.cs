@@ -14,8 +14,8 @@ namespace MeasurementEvaluator.ME_Evaluation
         public IReadOnlyList<IQuantityEvaluationResult> EvaluationResults { get; }
 
 
-        public EvaluationResult(DateTime startTime, DateTime endTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> evaluationResults)
-            : base(startTime, endTime, successfulCalculation)
+        public EvaluationResult(DateTime creationTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> evaluationResults)
+            : base(creationTime, successfulCalculation)
         {
             EvaluationResults = evaluationResults;
         }
@@ -55,11 +55,11 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         public bool ConditionIsMet { get; }
 
-        public ICalculationResult Result { get; }
+        public IResult Result { get; }
 
 
-        public ConditionEvaluaitonResult(DateTime startTime, DateTime endTime, bool successfulCalculation, IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, ICalculationResult result)
-            : base(startTime, endTime, successfulCalculation)
+        public ConditionEvaluaitonResult(DateTime creationTime, bool successfulCalculation, IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, IResult result)
+            : base(creationTime, successfulCalculation)
         {
             MeasurementSerieData = measurementSerieData;
             Condition = condition;

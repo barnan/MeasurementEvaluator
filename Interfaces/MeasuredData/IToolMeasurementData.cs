@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData
 {
+
     /// <summary>
     /// interface that describes the measurement result of one tool, only Getters
     /// </summary>
@@ -22,18 +23,14 @@ namespace Interfaces.MeasuredData
     }
 
 
-    /// <summary>
-    /// interface that describes the measurement result of one tool, Setters added
-    /// </summary>
+
+
     public interface IToolMeasurementDataHandler : IToolMeasurementData, INamedHandler
     {
-
         new ToolNames ToolName { get; set; }
 
         new IReadOnlyList<IMeasurementSerie> Results { get; set; }
     }
-
-
 
     /// <summary>
     /// interface that describes the measurement result of more than one tools
@@ -42,7 +39,5 @@ namespace Interfaces.MeasuredData
     {
         IReadOnlyList<IToolMeasurementData> MeasurementDatas { get; }
     }
-
-
 
 }

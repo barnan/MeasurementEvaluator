@@ -1,4 +1,5 @@
 ﻿using Interfaces.Misc;
+using System;
 
 namespace MeasurementEvaluatorUIWPF
 {
@@ -7,16 +8,44 @@ namespace MeasurementEvaluatorUIWPF
     /// </summary>
     public partial class Window : System.Windows.Window, IWindowUIWPF
     {
-        private MainWindowParameters _param;
+        private MainWindowParameters Parameter { get; }
 
         internal Window(MainWindowParameters param)
         {
-            _param = param;
-            Name = param.ID;
+            Parameter = param;
+            Name = param.Name;
 
             InitializeComponent();
 
             this.DataContext = new MainWindowViewModel(param);
+
+            //Style style = Application.Current.FindResource("CustomWindowStyle") as Style;
+            //this.Style = style;
+        }
+
+        public bool InitializationCompleted()
+        {
+            try
+            {
+                Parameter.OnInitializationCompleted();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+        private void Window_OnClosed(object sender, EventArgs e)
+        {
+            try
+            {
+                Parameter.OnClosed();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

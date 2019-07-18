@@ -2,7 +2,7 @@
 
 namespace Interfaces.ToolSpecifications
 {
-    public interface IQuantity : INamed
+    public interface IQuantity : INamed, IXmlStorable
     {
         /// <summary>
         /// unit of quantity

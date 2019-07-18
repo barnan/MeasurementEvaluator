@@ -2,6 +2,16 @@
 
 namespace Interfaces.Misc
 {
+
+    public enum InitializationStates
+    {
+        NotInitialized = 0,
+        Initializing = 1,
+        Closing = 2,
+        Initialized = 3,
+        InitializationFailed = 4
+    }
+
     public interface IInitializable
     {
 
@@ -17,19 +27,33 @@ namespace Interfaces.Misc
         bool IsInitialized { get; }
 
         /// <summary>
+        /// The current initialization state of the component
+        /// </summary>
+        InitializationStates InitializationState { get; }
+
+        /// <summary>
         /// It is contrary of the inititalization. It contains the memory deallocation or disposing is necessary.
         /// </summary>
         void Close();
 
         /// <summary>
-        /// Initialized eventhandler is fired when the the component is initialized. 
+        /// Initialized eventhandler is fired when the the initialization state of the component is changed
         /// </summary>
-        event EventHandler<EventArgs> Initialized;
-
-        /// <summary>
-        /// Closed eventhandler is fired when the the component is closed. 
-        /// </summary>
-        event EventHandler<EventArgs> Closed;
-
+        event EventHandler<InitializationEventArgs> InitStateChanged;
     }
+
+
+    public class InitializationEventArgs : EventArgs
+    {
+        public InitializationStates NewState { get; private set; }
+        public InitializationStates OldState { get; private set; }
+
+
+        public InitializationEventArgs(InitializationStates newState, InitializationStates oldState)
+        {
+            NewState = newState;
+            OldState = oldState;
+        }
+    }
+
 }

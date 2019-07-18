@@ -7,7 +7,6 @@
         /// </summary>
         double HalfTolerance { get; }
 
-        
     }
 
 
@@ -16,7 +15,6 @@
     {
         new double HalfTolerance { get; set; }
 
-        
     }
 
 }

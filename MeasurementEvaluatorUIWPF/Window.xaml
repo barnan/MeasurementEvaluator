@@ -6,20 +6,24 @@
         xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF"
         xmlns:messageControlUiwpf="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
         xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.Converters"
-        xmlns:misc="clr-namespace:Interfaces.Misc;assembly=Interfaces"
         mc:Ignorable="d"
+        Closed="Window_OnClosed"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}"
-        Title="MainWindow" Height="800" Width="1000" MinHeight="500"  MinWidth="800">
+        Title="MainWindow" Height="700" Width="800" ResizeMode="NoResize">
 
-
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>               
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml" />-->
+                <ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/ExpressionDark.xaml" />
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>-->
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+   
     <Grid>
-
-        <Grid.Resources>
-            <!--<Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                <Setter Property="Header" Value="{Binding ID}"/>
-            </Style>-->
-        </Grid.Resources>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
@@ -39,14 +43,6 @@
                             Value="{Binding Content}" />
                 </Style>
             </TabControl.ItemContainerStyle>
-
-
-            <!--<TabItem Header="Evaluation">-->
-            <!--<ContentPresenter  Content="{Binding Parameters.TabPages}"/>-->
-            <!--</TabItem>-->
-            <!--<TabItem Header="Specification-file Editor" />
-            <TabItem Header="Reference-file Editor" />
-            <TabItem Header="Skew Calculation" />-->
         </TabControl>
 
         <GroupBox Grid.Row="1" Header="Messages">

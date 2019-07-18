@@ -25,7 +25,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
             {
                 Message msg = new Message { MessageText = message, MessageSeverityLevel = severityLevel };
 
-                _messages.Add(msg);
+                Messages.Add(msg);
 
                 MessageReceived?.Invoke(this, new CustomEventArg<Message>(msg));
 
@@ -42,7 +42,11 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
-            set { _messages = value; }
+            set
+            {
+                _messages = value;
+                OnPropertyChanged();
+            }
         }
     }
 

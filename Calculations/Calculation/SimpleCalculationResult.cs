@@ -3,15 +3,15 @@ using System;
 
 namespace Calculations.Calculation
 {
-    internal class SimpleCalculationResult : CalculationResult, ISimpleCalculationResult
+    internal class SimpleCalculationResult : CalculationResult<double>, ISimpleCalculationResult
     {
-        public double Result { get; }
+        public double ResultValue { get; }
 
 
-        public SimpleCalculationResult(double result, DateTime startTime, DateTime endTime, bool successful)
-            : base(startTime, endTime, successful)
+        public SimpleCalculationResult(double result, DateTime creationTime, bool successful)
+            : base(creationTime, successful)
         {
-            Result = result;
+            ResultValue = result;
         }
 
 

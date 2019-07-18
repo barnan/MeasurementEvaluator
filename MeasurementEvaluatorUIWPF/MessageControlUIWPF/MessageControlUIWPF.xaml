@@ -8,7 +8,7 @@
              xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="500"
-             d:DataContext="{d:DesignInstance local:IuiMessageControl, IsDesignTimeCreatable=False}" >
+             d:DataContext="{d:DesignInstance local:UIMessageControl, IsDesignTimeCreatable=False}" >
     
     <ListView ItemsSource="{Binding Messages}">
         
@@ -20,8 +20,7 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <TextBox Text="{Binding MessageText, Converter={StaticResource MessageToTextConverter}}" 
-                         Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}"
-                         Background="Gray"/>
+                Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}" Background="Gray"/>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -34,7 +35,18 @@ namespace Start
 
             try
             {
+                Process currentprocess = Process.GetCurrentProcess();
+
                 _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+
+
+                if (string.IsNullOrEmpty(_currentExeFolder))
+                {
+                    PluginLoader.SendToErrorLogAndConsole("Received exefolder-path OR path-name is null.");
+                    return;
+                }
+
                 PluginLoader.SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
                 PluginLoader.SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
 
@@ -55,14 +67,12 @@ namespace Start
                     _measurementDataFolder,
                     _resultFolder))
                 {
-                    PluginLoader.SendToErrrorLogAndConsole("Frame setup was not successful.");
+                    PluginLoader.SendToErrorLogAndConsole("Frame initialization was NOT successful.");
                     return;
                 }
                 pluginLoader.Start();
 
-                PluginLoader.SendToInfoLogAndConsole("Frame started successfully.");
-
-
+                PluginLoader.SendToInfoLogAndConsole($"Process {currentprocess} ended.");
             }
             catch (Exception ex)
             {
@@ -80,42 +90,42 @@ namespace Start
                 // cnfigurations:
                 if (settings[FolderSettingsKeys.ConfigurationFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.ConfigurationFolderKey, @".\Configuration");
+                    settings.Add(FolderSettingsKeys.ConfigurationFolderKey, @".\Configuration\");
                 }
                 _configurationFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ConfigurationFolderKey], nameof(_configurationFolder));
 
                 // specifications:
                 if (settings[FolderSettingsKeys.SpecificactionFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications");
+                    settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications\");
                 }
                 _specificationFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.SpecificactionFolderKey], nameof(_specificationFolder));
 
                 // references:
                 if (settings[FolderSettingsKeys.ReferenceFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References");
+                    settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References\");
                 }
                 _referenceFolderPath = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ReferenceFolderKey], nameof(_referenceFolderPath));
 
                 // meas data:
                 if (settings[FolderSettingsKeys.MeasurementDataFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements");
+                    settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements\");
                 }
                 _measurementDataFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.MeasurementDataFolderKey], nameof(_measurementDataFolder));
 
                 // result:
                 if (settings[FolderSettingsKeys.ResultFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results");
+                    settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results\");
                 }
                 _resultFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.ResultFolderKey], nameof(_resultFolder));
 
                 // plugins:
                 if (settings[FolderSettingsKeys.PluginsFolderKey] == null)
                 {
-                    settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins");
+                    settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins\");
                 }
                 _pluginsFolder = CreateFinalPath(_currentExeFolder, settings[FolderSettingsKeys.PluginsFolderKey], nameof(_pluginsFolder));
 
@@ -144,14 +154,14 @@ namespace Start
 
         private static string CreateFinalPath(string currentExeFolder, string specialFolder, string name)
         {
-            if (string.IsNullOrEmpty(currentExeFolder) || string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrrorLogAndConsole("Received exefolder-path OR path-name is null."));
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole("Received path-name is null."));
             }
 
             if (string.IsNullOrEmpty(specialFolder))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrrorLogAndConsole($"{name} is null."));
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole($"{name} is null."));
             }
 
             if (Path.IsPathRooted(specialFolder))
@@ -162,7 +172,7 @@ namespace Start
                     PluginLoader.SendToInfoLogAndConsole($"{specialFolder} created.");
                 }
 
-                PluginLoader.SendToInfoLogAndConsole($"{name} ({specialFolder}) wil be used.");
+                PluginLoader.SendToInfoLogAndConsole($"{specialFolder} will be used as {name}");
                 return specialFolder;
             }
 
@@ -170,8 +180,8 @@ namespace Start
 
             if (!Directory.Exists(combinedPath))
             {
-                PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) created.");
                 Directory.CreateDirectory(combinedPath);
+                PluginLoader.SendToInfoLogAndConsole($"Combined {name} directory ({combinedPath}) created.");
             }
 
             PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
@@ -187,7 +197,6 @@ namespace Start
             internal const string MeasurementDataFolderKey = "MeasurementFolder";
             internal const string PluginsFolderKey = "PluginsFolder";
             internal const string ResultFolderKey = "ResultFolder";
-
         }
 
     }

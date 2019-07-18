@@ -1,28 +1,23 @@
 ﻿namespace Interfaces.Result
 {
 
-    public interface ICalculationResult : IResult
-    {
+    public interface ICalculationResult<T> : IResult
+    {/// <summary>
+     /// calculation result
+     /// </summary>
+        T ResultValue { get; }
     }
 
 
 
-    public interface ISimpleCalculationResult : ICalculationResult
+    public interface ISimpleCalculationResult : ICalculationResult<double>
     {
-        /// <summary>
-        /// calculation result
-        /// </summary>
-        double Result { get; }
+
     }
 
 
-    public interface IQCellsCalculationResult : ICalculationResult
+    public interface IQCellsCalculationResult : ICalculationResult<double>
     {
-        /// <summary>
-        /// calculation result
-        /// </summary>
-        double Result { get; }
-
         /// <summary>
         /// Upper Specification Limit
         /// </summary>
@@ -37,7 +32,7 @@
 
 
 
-    public interface IGRAndRCalculationResult : ICalculationResult
+    public interface IGRAndRCalculationResult : ICalculationResult<double>
     {
     }
 

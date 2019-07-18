@@ -1,4 +1,5 @@
 ﻿using Interfaces.Misc;
+using System;
 using System.Windows.Controls;
 
 namespace MeasurementEvaluatorUI.Base
@@ -7,6 +8,7 @@ namespace MeasurementEvaluatorUI.Base
     {
         public string Title { get; protected set; }
 
+        public EventHandler<EventArgs> InitializationFinished;
 
     }
 }

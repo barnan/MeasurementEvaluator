@@ -29,6 +29,7 @@ namespace MeasurementEvaluatorUIWPF
         internal MainWindowViewModel(MainWindowParameters parameters)
         {
             Parameters = parameters;
+
             Tabs = new ObservableCollection<TabItem>();
 
             foreach (ITabUIWPF tabUiwpf in parameters.Tabs)
@@ -38,5 +39,6 @@ namespace MeasurementEvaluatorUIWPF
 
             SelectedTabItem = Tabs[0];
         }
+
     }
 }

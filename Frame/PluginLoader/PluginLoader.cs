@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace Frame.PluginLoader
 {
@@ -28,7 +28,9 @@ namespace Frame.PluginLoader
         private static ILogger _logger;
         private static object _lockObj = new object();
         private static ComponentList _componentList;
-        private readonly string _componentSectionName = "ComponentList";
+        private const string _COMPONENT_SECTION_NAME = "ComponentList";
+        private const string _COMPONENT_FILE_NAME = "ComponentList";
+        private const string _CONFIG_FILE_EXTENSION = ".config";
 
         private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
@@ -55,14 +57,13 @@ namespace Frame.PluginLoader
         }
 
 
-        public static string SendToInfoLogAndConsole(string message)
+        public static void SendToInfoLogAndConsole(string message)
         {
             _logger?.Info(message);
             Console.WriteLine(message + Environment.NewLine);
-            return message;
         }
 
-        public static string SendToErrrorLogAndConsole(string message)
+        public static string SendToErrorLogAndConsole(string message)
         {
             _logger?.Error(message);
             ConsoleColor cc = Console.ForegroundColor;
@@ -91,47 +92,47 @@ namespace Frame.PluginLoader
             {
                 lock (_lockObj)
                 {
-                    if (!IsPathFolder(configurationFolder))
+                    if (!IsPathFolder(configurationFolder) || !Directory.Exists(configurationFolder))
                     {
                         return false;
                     }
-                    ConfigurationFolder = configurationFolder;
+                    ConfigurationFolder = CheckDirectoryPath(configurationFolder);
 
-                    if (!IsPathFolder(currentExeFolder))
+                    if (!IsPathFolder(currentExeFolder) || !Directory.Exists(currentExeFolder))
                     {
                         return false;
                     }
-                    CurrentExeFolder = currentExeFolder;
+                    CurrentExeFolder = CheckDirectoryPath(currentExeFolder);
 
-                    if (!IsPathFolder(pluginsFolder))
+                    if (!IsPathFolder(pluginsFolder) || !Directory.Exists(pluginsFolder))
                     {
                         return false;
                     }
-                    PluginsFolder = pluginsFolder;
+                    PluginsFolder = CheckDirectoryPath(pluginsFolder);
 
-                    if (!IsPathFolder(specificationFolder))
+                    if (!IsPathFolder(specificationFolder) || !Directory.Exists(specificationFolder))
                     {
                         return false;
                     }
-                    SpecificationFolder = specificationFolder;
+                    SpecificationFolder = CheckDirectoryPath(specificationFolder);
 
-                    if (!IsPathFolder(referenceFolder))
+                    if (!IsPathFolder(referenceFolder) || !Directory.Exists(referenceFolder))
                     {
                         return false;
                     }
-                    ReferenceFolder = referenceFolder;
+                    ReferenceFolder = CheckDirectoryPath(referenceFolder);
 
-                    if (!IsPathFolder(measDataFolder))
+                    if (!IsPathFolder(measDataFolder) || !Directory.Exists(measDataFolder))
                     {
                         return false;
                     }
-                    MeasurementDataFolder = measDataFolder;
+                    MeasurementDataFolder = CheckDirectoryPath(measDataFolder);
 
-                    if (!IsPathFolder(resultFolder))
+                    if (!IsPathFolder(resultFolder) || !Directory.Exists(resultFolder))
                     {
                         return false;
                     }
-                    ResultFolder = resultFolder;
+                    ResultFolder = CheckDirectoryPath(resultFolder);
 
                     ConfigManager = new ConfigManager(ConfigurationFolder);
 
@@ -149,12 +150,12 @@ namespace Frame.PluginLoader
             }
             catch (ArgumentNullException ex)
             {
-                SendToErrrorLogAndConsole($"Problem with input variable: {ex.Message}");
+                SendToErrorLogAndConsole($"Problem with input variable: {ex.Message}");
                 return false;
             }
             catch (Exception ex)
             {
-                SendToErrrorLogAndConsole($"Exception occured: {ex.Message}");
+                SendToErrorLogAndConsole($"Exception occured: {ex.Message}");
                 return false;
             }
         }
@@ -202,7 +203,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Exception occured: {ex}");
+                    SendToErrorLogAndConsole($"Exception occured: {ex}");
                     return false;
                 }
             }
@@ -217,20 +218,25 @@ namespace Frame.PluginLoader
                 return null;
             }
 
-            if (_componentList.Components.All(p => p.Name != name) || !_componentList.Components.Where(p => p.Name == name).Any(p => p.Interfaces.Contains(interfaceType.Name)))
+            var components = _componentList.Components.Where(p => p.Name == name).ToList();
+            if (components.Count > 1)
             {
-                _logger.Error($"ComponentList does not contain {name} {interfaceType}");
+                _logger.Error($"Ambiguity between components. {name} appears more than once in the ComponentList.");
+                return null;
+            }
+            if (components.Count < 1)
+            {
+                _logger.Error($"No component was found with the given name:{name} in the ComponentList.");
                 return null;
             }
 
-            var component = _componentList.Components.Where(p => p.Name == name).ToList();
-            if (component.Count != 1)
-            {
-                _logger.Error($"Ambiguity between components in the ComponentList. {name} appears more times.");
-                return null;
-            }
+            //if (components[0].Interfaces.All(p => !(interfaceType.IsAssignableFrom(Type.GetType(p)))))
+            //{
+            //    _logger.Error($"The found compnent (with name: {name}) does not implement the given interface: {nameof(interfaceType)}. The implemented interfaces: {string.Join(",", components[0].Interfaces)}");
+            //    return null;
+            //}
 
-            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == component[0].AssemblyName).ToList();
+            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == components[0].AssemblyName).ToList();
 
             List<object> instances = new List<object>();
             foreach (var factory in fact)
@@ -246,13 +252,13 @@ namespace Frame.PluginLoader
 
             if (instances.Count == 0)
             {
-                _logger.Error($"No factory was found to create: {interfaceType}");
+                SendToErrorLogAndConsole($"No factory was found to create: {name}({interfaceType})");
                 return null;
             }
 
             if (instances.Count > 1)
             {
-                _logger.Error($"More than one factories was found to create: {interfaceType}");
+                SendToErrorLogAndConsole($"More than one factories was found to create: {name}({interfaceType})");
                 return null;
             }
 
@@ -302,7 +308,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Could not load assemby from file: {dllFile} -> {ex}");
+                    SendToErrorLogAndConsole($"Could not load assemby from file: {dllFile} -> {ex}");
                 }
             }
 
@@ -330,7 +336,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                    SendToErrorLogAndConsole($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
                 }
             }
 
@@ -366,7 +372,7 @@ namespace Frame.PluginLoader
                 }
                 catch (Exception ex)
                 {
-                    SendToErrrorLogAndConsole($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
+                    SendToErrorLogAndConsole($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
                 }
             }
             _factories = factories;
@@ -383,7 +389,7 @@ namespace Frame.PluginLoader
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("Arrived path is null, empty or whitespace.");
+                throw new ArgumentNullException("Arrived path is null, empty or consists of whitespace.");
             }
 
             FileAttributes attr = File.GetAttributes(path);
@@ -396,6 +402,18 @@ namespace Frame.PluginLoader
         }
 
 
+        private string CheckDirectoryPath(string path)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            if (dirInfo.FullName != path)
+            {
+                return dirInfo.FullName;
+            }
+
+            return path;
+        }
+
+
         /// <summary>
         /// Reads the list of available components from the ComponentList.config or creates a dummy component list
         /// </summary>
@@ -404,22 +422,21 @@ namespace Frame.PluginLoader
         {
             try
             {
-                string componentListFileName = Path.Combine(ConfigurationFolder, "ComponentList.config");
+                string componentListFileName = Path.Combine(ConfigurationFolder, $"{_COMPONENT_FILE_NAME}{_CONFIG_FILE_EXTENSION}");
 
                 ConfigManager.CreateConfigFileIfNotExisting(componentListFileName);
 
                 ComponentList componentList = new ComponentList();
-                XmlDocument xmlDoc = new XmlDocument();
-                XmlElement componentListSection = ConfigManager.LoadXmlElement(xmlDoc, componentListFileName, _componentSectionName);
+                XElement componentListSection = ConfigManager.LoadSectionXElementFromFile(componentListFileName, _COMPONENT_SECTION_NAME, typeof(ComponentList));
 
                 if (componentListSection == null)
                 {
-                    componentListSection = ConfigManager.CreateXmlSection(xmlDoc, _componentSectionName, typeof(ComponentList));
+                    componentListSection = ConfigManager.CreateSectionXElement(_COMPONENT_SECTION_NAME, typeof(ComponentList));
                 }
 
-                if (!componentList.Load(xmlDoc, componentListSection))
+                if (!componentList.Load(componentListSection, _logger))
                 {
-                    ConfigManager.Save(componentListFileName, "ComponentList", componentListSection, typeof(ComponentList));
+                    ConfigManager.Save(componentListFileName, _COMPONENT_SECTION_NAME, componentListSection, typeof(ComponentList));
                 }
 
                 return componentList;

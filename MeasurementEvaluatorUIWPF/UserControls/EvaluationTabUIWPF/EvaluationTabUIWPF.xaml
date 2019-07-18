@@ -7,7 +7,18 @@
              xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF"
              d:DataContext="{d:DesignInstance local:EvaluationTabViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450">
+
+    <base:UserControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml" />-->
+                <ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/ExpressionDark.xaml" />
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>-->
+                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </base:UserControlBase.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,11 +27,12 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Grid.Column="0" Grid.Row="0" Header="Collect Data">
+        <GroupBox Grid.Column="0" Grid.Row="0" Grid.RowSpan ="2" Header="Collect Data">
             <ContentPresenter Content="{Binding Parameters.DataCollectorUIWPF}" />
         </GroupBox>
 
@@ -28,7 +40,7 @@
             <ContentPresenter Content="{Binding Parameters.ResultGridUIWPF}"/>
         </GroupBox>
 
-        <GroupBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Header="Result Handling">
+        <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Header="Result Handling">
             <ContentPresenter Content="{Binding Parameters.ResultHandlingUIWPF}"/>
         </GroupBox>
 

@@ -1,6 +1,7 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Frame.PluginLoader.Interfaces;
+using Interfaces.Evaluation;
 using Interfaces.Misc;
 using NLog;
 using System;
@@ -14,11 +15,18 @@ namespace MeasurementEvaluator
 {
     internal class MeasurmentEvaluator : IRunable
     {
-        private ILogger _logger;
-        private ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
+        private Application _application;
+        private readonly ILogger _logger;
+        private readonly ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private string _mainWindowName = null;
+
+        [Configuration("Name of the evaluator", "Evaluator Name", true)]
+        private string _dataEvaluatorName = null;
+        private IEvaluation Evaluator { get; set; }
+
+
         private IWindowUIWPF _window;
 
 
@@ -38,7 +46,7 @@ namespace MeasurementEvaluator
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
                 if (!successfulLoading)
                 {
-                    PluginLoader.SendToErrrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
+                    PluginLoader.SendToErrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
                 }
 
                 if (_createDummyObjects)
@@ -59,19 +67,35 @@ namespace MeasurementEvaluator
                     return;
                 }
 
+                Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
+                if (!Evaluator.Initiailze())
+                {
+                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
+                }
+
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
-                    _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
+                    _application = new Application();
+                    //var myResourceDictionary = new ResourceDictionary { Source = new Uri("/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml", UriKind.RelativeOrAbsolute) };
+                    //application.Resources.MergedDictionaries.Add(myResourceDictionary);
 
-                    Application application = new Application();
+                    _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
 
                     Window mainWindow = (Window)_window;
                     mainWindow.Closed += MainWindow_OnClosed;
 
-                    System.Windows.Application.Current.MainWindow = mainWindow;
+                    //System.Windows.Application.Current.MainWindow = mainWindow;
+                    _application.MainWindow = mainWindow;
                     mainWindow.Show();
-                    application.Run(mainWindow);
+
+                    if (!_window.InitializationCompleted())
+                    {
+                        _logger.Error("InitializationCompleted event failed.");
+                        return;
+                    }
+
+                    _application.Run(mainWindow);
 
                 });
                 Debug.Assert(appThread != null);
@@ -80,22 +104,29 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
+
                 _uiFinishedEvent.WaitOne();
 
-                PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) stopped.");
+                PluginLoader.SendToInfoLogAndConsole($"{Assembly.GetExecutingAssembly().GetName().Name} was shut down.");
             }
             catch (Exception ex)
             {
-                PluginLoader.SendToErrrorLogAndConsole($"Exception occured: {ex}");
+                PluginLoader.SendToErrorLogAndConsole($"Exception occured: {ex}");
             }
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs eventArgs)
         {
-            // todo: null mainwindow??
             PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
 
+            Evaluator.Close();
+
+
+            _application.Shutdown();
+
             Task.Run(() => _uiFinishedEvent.Set());
+
+
         }
 
     }

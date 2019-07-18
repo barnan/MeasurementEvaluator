@@ -1,6 +1,19 @@
-﻿namespace MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF
+﻿using MeasurementEvaluatorUIWPF.Base;
+
+namespace MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF
 {
-    class SampleOrientationParameters
+    public class SampleOrientationParameters : ParameterBase
     {
+        public SampleOrientationParameters(string sectionName)
+        {
+        }
+
+        internal bool Load(string sectionName)
+        {
+            Name = sectionName;
+
+            return true;
+        }
+
     }
 }

@@ -4,7 +4,7 @@ using Interfaces.Result;
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition : INamed
+    public interface ICondition : INamed, IXmlStorable
     {
 
         /// <summary>
@@ -12,27 +12,27 @@ namespace Interfaces.ToolSpecifications
         /// </summary>
         CalculationTypes CalculationType { get; }
 
-
         /// <summary>
         /// Validity of the condition -> if false, the condition is switched off
         /// </summary>
         bool Enabled { get; }
 
         /// <summary>
-        /// Checks the condition. The calculatin result contains the approppriate result
-        /// </summary>
-        /// <param name="calculationResult">the calculation result which will be used in the condition comparison</param>
-        /// <returns></returns>
-        bool Compare(ICalculationResult calculationResult);
-
-        /// <summary>
         /// Defines whether relative or absolute condition
         /// </summary>
-        RELATIVEORABSOLUTE RelOrAbs { get; }
+        Relativity RelOrAbs { get; }
+
+        /// <summary>
+        /// Checks the condition. The calculation result contains the approppriate result
+        /// </summary>
+        /// <param name="resultToCompare">the "external calculation" result which will be used in the condition comparison</param>
+        /// <returns>the relation is met (true) or not (false)</returns>
+        bool Compare(IResult resultToCompare);
     }
 
 
-    public interface ICondition<out T> : ICondition
+
+    public interface ICondition<T> : ICondition
         where T : struct
     {
         /// <summary>
@@ -43,9 +43,8 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
-        T Value { get; }
+        T LeftValue { get; }
     }
-
 
 
 
@@ -55,7 +54,7 @@ namespace Interfaces.ToolSpecifications
 
         new bool Enabled { get; set; }
 
-        new RELATIVEORABSOLUTE RelOrAbs { get; set; }
+        new Relativity RelOrAbs { get; set; }
     }
 
 
@@ -64,7 +63,7 @@ namespace Interfaces.ToolSpecifications
     {
         new Relations ConditionRelation { get; set; }
 
-        new T Value { get; set; }
+        new T LeftValue { get; set; }
     }
 
 }

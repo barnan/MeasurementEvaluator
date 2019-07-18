@@ -1,7 +1,9 @@
 ﻿using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
@@ -20,16 +22,23 @@ namespace Calculations.Calculation
 
         public abstract CalculationTypes CalculationType { get; }
 
-        public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICalculationSettings settings = null)
+        public IResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            if (measurementSerieData?.MeasData == null)
+            if (measurementSerieData?.MeasuredPoints == null)
             {
                 _parameters.Logger.LogError("Received measdata is null.");
-
                 return null;
             }
 
-            return InternalCalculation(measurementSerieData, settings);
+            try
+            {
+                return InternalCalculation(measurementSerieData, condition, referenceValue);
+            }
+            catch (Exception ex)
+            {
+                _parameters.Logger.LogError($"Exception occured:{ex.Message}");
+                return null;
+            }
         }
 
         #endregion
@@ -42,12 +51,12 @@ namespace Calculations.Calculation
         }
 
 
-        protected abstract ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings);
+        protected abstract IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
 
 
         protected virtual List<double> GetValidElementList(IMeasurementSerie measurementSerieData)
         {
-            return measurementSerieData.MeasData.Where(p => p.Valid).Select(p => p.Value).ToList();
+            return measurementSerieData.MeasuredPoints.Where(p => p.Valid).Select(p => p.Value).ToList();
         }
 
 
@@ -72,5 +81,6 @@ namespace Calculations.Calculation
             return Math.Sqrt(sumOfDerivationAverage - average * average);
         }
 
+        //public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceValue sample);
     }
 }

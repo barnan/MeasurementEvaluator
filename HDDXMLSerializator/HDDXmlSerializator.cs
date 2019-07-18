@@ -1,10 +1,9 @@
 ﻿using Interfaces;
 using Interfaces.DataAcquisition;
-using Miscellaneous;
+using Interfaces.Misc;
 using System;
 using System.IO;
-using System.Text;
-using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace DataAcquisitions.HDDXmlSerializator
@@ -22,67 +21,89 @@ namespace DataAcquisitions.HDDXmlSerializator
         }
 
 
-
-        public T ReadFromFile<T>(string fileNameAndPath, ToolNames toolName = null)
+        public object ReadFromFile(string fileNameAndPath, Type type = null, ToolNames toolName = null)
         {
             lock (_lockObject)
             {
                 try
                 {
-                    if (!CheckFilePath(fileNameAndPath))
+                    if (!CanRead(fileNameAndPath))
                     {
-                        _parameters.Logger.MethodError($"File does not exists: {fileNameAndPath}");
-                        return default(T);
+                        _parameters.Logger.Error($"File is not accessible: {fileNameAndPath}");
                     }
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
+                    Type readType = type;
+                    XElement readElement = XElement.Load(fileNameAndPath);
 
-                    using (StreamReader sr = new StreamReader(fileNameAndPath))
+                    if (readType == null)
                     {
-                        return (T)serializer.Deserialize(sr);
+                        XAttribute assembylAttribute = readElement.Attribute("Assembly");
+                        string readTypeName = assembylAttribute?.Value ?? readElement.Name.LocalName;
+                        readType = Type.GetType(readTypeName);
                     }
+
+                    object createdObj = null;
+
+                    if (typeof(IXmlStorable).IsAssignableFrom(readType))
+                    {
+                        createdObj = Activator.CreateInstance(readType);
+                        (createdObj as IXmlStorable)?.LoadFromXml(readElement);
+                    }
+                    else
+                    {
+                        using (StreamReader sr = new StreamReader(fileNameAndPath))
+                        {
+                            XmlSerializer serializer = new XmlSerializer(readType);
+                            createdObj = serializer.Deserialize(sr);
+                        }
+
+                    }
+
+                    return createdObj;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return default(T);
+                    _parameters.Logger.Error($"Exception occured: {ex}");
+                    return null;
                 }
             }
         }
 
 
-
-        public bool WriteToFile<T>(T tobj, string fileNameAndPath)
+        public bool WriteToFile(object tobj, string fileNameAndPath)
         {
             lock (_lockObject)
             {
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
+                    Type type = tobj.GetType();
 
-                    XmlWriterSettings settings = new XmlWriterSettings();
-                    settings.Indent = true;
-                    settings.OmitXmlDeclaration = false;
-                    settings.Encoding = new UnicodeEncoding(true, true);
+                    if (tobj is IXmlStorable storable)
+                    {
+                        XElement element = new XElement(type.Name);
+                        XAttribute assemblyAttrib = new XAttribute("Assembly", type.AssemblyQualifiedName);
+                        element.Add(assemblyAttrib);
+
+                        storable.SaveToXml(element);
+
+                        element.Save(fileNameAndPath);
+                        return true;
+                    }
 
                     using (StreamWriter sw = new StreamWriter(fileNameAndPath))
                     {
-                        using (XmlWriter xw = XmlWriter.Create(sw, settings))
-                        {
-                            serializer.Serialize(xw, tobj);
-                        }
+                        XmlSerializer serializer = new XmlSerializer(type);
+                        serializer.Serialize(sw, tobj);
+                        return true;
                     }
-
-                    return true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _parameters.Logger.Error($"Exception occured: {ex}");
                     return false;
                 }
             }
         }
-
-
-
 
 
         public bool CanRead(string fileNameAndPath)
@@ -100,12 +121,5 @@ namespace DataAcquisitions.HDDXmlSerializator
             return false;
         }
 
-
-        private bool CheckFilePath(string fileNameAndPath)
-        {
-            return File.Exists(fileNameAndPath);
-        }
-
     }
-
 }

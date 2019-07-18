@@ -1,14 +1,15 @@
 ﻿using Interfaces;
-using Interfaces.Calculation;
 using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
 
 namespace Calculations.Calculation
 {
-    internal class CpkCalculation1D : CalculationBase, ICpkCalculation
+    internal class CpkCalculation1D : CpCalculation1D
     {
         internal CpkCalculation1D(CalculationParameters parameters)
             : base(parameters)
@@ -18,36 +19,40 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.Cpk;
 
 
-        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICalculationSettings settings)
+        protected override IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            DateTime startTime = _parameters.DateTimeProvider.GetDateTime();
-
-            if (!(settings is ICpkCalculationSettings cpkSettings))
+            if (!(condition is ICpkCondition cpkCondition))
             {
-                _parameters.Logger.LogError($"Arrived settings is null or it is not {nameof(ICpkCalculationSettings)}");
-                return null;
+                throw new ArgumentNullException($"No {nameof(ICpkCondition)} condition received for {CalculationType} settings creation.");
+            }
+
+            if (condition.CalculationType != CalculationType)
+            {
+                throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
+            }
+
+            // CpkCalculation changes into CpCalculation
+            if (referenceValue == null)
+            {
+                return base.InternalCalculation(measurementSerieData, condition, referenceValue);
+            }
+
+            if (!(referenceValue is IReferenceValue<double> doubleReferenceValue))
+            {
+                throw new ArgumentException($"The received reference value is not {nameof(IReferenceValue<double>)}");
             }
 
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
-
             double std = GetStandardDeviation(validElementList);
-
-            double usl = cpkSettings.ReferenceValue + cpkSettings.HalfTolerance;
-
-            double lsl = cpkSettings.ReferenceValue - cpkSettings.HalfTolerance;
-
+            double usl = doubleReferenceValue.Value + cpkCondition.HalfTolerance;
+            double lsl = doubleReferenceValue.Value - cpkCondition.HalfTolerance;
             double cpk = Math.Min((average - usl) / (3 * std), (lsl - average) / (3 * std));
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
 
-            return new QCellsCalculationResult(cpk,
-                                               usl,
-                                               lsl,
-                                               startTime,
-                                               _parameters.DateTimeProvider.GetDateTime(),
-                                               true);
+            return new QCellsCalculationResult(cpk, usl, lsl, _parameters.DateTimeProvider.GetDateTime(), true);
         }
     }
 }

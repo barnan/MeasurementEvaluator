@@ -15,14 +15,18 @@ namespace MeasurementEvaluator.ME_Matching
             {
                 if (!_matchingDict.ContainsKey(name))
                 {
-                    MathchingParameters param = new MathchingParameters();
+                    PairingParameters param = new PairingParameters();
                     if (param.Load(name))
                     {
                         Matching instance = new Matching(param);
                         _matchingDict.Add(name, instance);
+                        return instance;
                     }
                 }
-                return _matchingDict[name];
+                else
+                {
+                    return _matchingDict[name];
+                }
             }
             return null;
         }

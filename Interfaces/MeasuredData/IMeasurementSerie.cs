@@ -8,7 +8,7 @@ namespace Interfaces.MeasuredData
         /// <summary>
         /// List of measurement result
         /// </summary>
-        IReadOnlyList<IMeasurementPoint> MeasData { get; }
+        IReadOnlyList<IMeasurementPoint> MeasuredPoints { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index

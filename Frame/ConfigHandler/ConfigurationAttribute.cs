@@ -6,7 +6,7 @@ namespace Frame.ConfigHandler
     public class ConfigurationAttribute : Attribute
     {
         public ConfigurationAttribute(string description, string name)
-            : this(name, description, false)
+            : this(description, name, false)
         {
         }
 

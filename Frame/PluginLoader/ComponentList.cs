@@ -1,7 +1,8 @@
 ﻿using Frame.PluginLoader.Interfaces;
+using NLog;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace Frame.PluginLoader
 {
@@ -11,6 +12,7 @@ namespace Frame.PluginLoader
         private const string NAME_ATTRIBUTE_NAME = "Name";
         private const string ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
         private const string INTERFACE_ATTRIBUTE_NAME = "Interfaces";
+        private const string COMPONENTS_NODE_NAME = "Components";
         private const string COMPONENT_NODE_NAME = "Component";
 
 
@@ -20,37 +22,37 @@ namespace Frame.PluginLoader
         /// <param name="xmlDoc"></param>
         /// <param name="inputElement">input xml element</param>
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
-        internal bool Load(XmlDocument xmlDoc, XmlElement inputElement)
+        internal bool Load(XElement inputElement, ILogger logger)
         {
             Components = new List<Component>();
 
-            if (inputElement.HasChildNodes)
+            if (inputElement.HasElements)
             {
-                XmlNode componentsNode = inputElement.FirstChild;
+                XElement componentsElement = inputElement.Element(COMPONENTS_NODE_NAME);
 
-                if (componentsNode != null && componentsNode.HasChildNodes)
+                if (componentsElement != null && componentsElement.HasElements)
                 {
-                    foreach (XmlNode componentNode in componentsNode.ChildNodes)
+                    foreach (XElement componentXElement in componentsElement.Elements())
                     {
                         string nameText = null;
                         string assemblyText = null;
                         string interfaceText = null;
 
-                        foreach (XmlAttribute attribute in componentNode.Attributes)
+                        foreach (XAttribute attribute in componentXElement.Attributes())
                         {
                             if (attribute.Name == NAME_ATTRIBUTE_NAME)
                             {
-                                nameText = attribute.InnerText;
+                                nameText = attribute.Value;
                             }
 
                             if (attribute.Name == ASSEMBLY_ATTRIBUTE_NAME)
                             {
-                                assemblyText = attribute.InnerText;
+                                assemblyText = attribute.Value;
                             }
 
                             if (attribute.Name == INTERFACE_ATTRIBUTE_NAME)
                             {
-                                interfaceText = attribute.InnerText;
+                                interfaceText = attribute.Value;
                             }
                         }
 
@@ -58,6 +60,8 @@ namespace Frame.PluginLoader
                         {
                             string[] interfaces = interfaceText.Split(';');
                             Components.Add(new Component { Name = nameText, Interfaces = interfaces.ToList(), AssemblyName = assemblyText });
+
+                            logger.Info($"{nameText} {assemblyText} {string.Join(",", interfaces)} added to the component list.");
                         }
                     }
                 }
@@ -66,22 +70,19 @@ namespace Frame.PluginLoader
             // create dummy component for example:
             if (Components.Count == 0)
             {
-                XmlElement dummyelement = xmlDoc.CreateElement("Components");
-                XmlElement dummyChildElement = xmlDoc.CreateElement(COMPONENT_NODE_NAME);
+                XElement dummyelement = new XElement(COMPONENTS_NODE_NAME);
+                XElement dummyChildElement = new XElement(COMPONENT_NODE_NAME);
 
-                XmlAttribute nameAttribute = xmlDoc.CreateAttribute(NAME_ATTRIBUTE_NAME);
-                nameAttribute.InnerText = "MeasurementEvaluator";
-                XmlAttribute typeAttribute = xmlDoc.CreateAttribute(ASSEMBLY_ATTRIBUTE_NAME);
-                typeAttribute.InnerText = "Measurement EValuator";
-                XmlAttribute interfaceAttribute = xmlDoc.CreateAttribute(INTERFACE_ATTRIBUTE_NAME);
-                interfaceAttribute.InnerText = nameof(IRunable);
+                XAttribute nameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, "MeasurementEvaluator");
+                XAttribute typeAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, "MeasurementEValuator");
+                XAttribute interfaceAttribute = new XAttribute(INTERFACE_ATTRIBUTE_NAME, nameof(IRunable));
 
-                dummyChildElement.Attributes.Append(nameAttribute);
-                dummyChildElement.Attributes.Append(typeAttribute);
-                dummyChildElement.Attributes.Append(interfaceAttribute);
+                dummyChildElement.Add(nameAttribute);
+                dummyChildElement.Add(typeAttribute);
+                dummyChildElement.Add(interfaceAttribute);
 
-                dummyelement.AppendChild(dummyChildElement);
-                inputElement.AppendChild(dummyelement);
+                dummyelement.Add(dummyChildElement);
+                inputElement.Add(dummyelement);
 
                 return false;
             }

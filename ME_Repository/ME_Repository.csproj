@@ -49,15 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HDDMeasurementDataRepository.cs" />
-    <Compile Include="HDDReferenceRepository.cs" />
+    <Compile Include="HDDRepositoryGeneric.cs" />
     <Compile Include="HDDRepository.cs" />
     <Compile Include="HDDRepositoryParameters.cs" />
-    <Compile Include="HDDSpecificationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataStructures\DataStructures.csproj">
+      <Project>{6e851eb0-9af1-45ad-ad46-f84bdadd6689}</Project>
+      <Name>DataStructures</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Frame\Frame.csproj">
       <Project>{50fc5be3-6190-42d7-b518-733947048d4b}</Project>
       <Name>Frame</Name>

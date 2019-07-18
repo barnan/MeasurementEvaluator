@@ -33,19 +33,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculation\ICalculation.cs" />
     <Compile Include="Calculation\ICalculationContainer.cs" />
     <Compile Include="Calculation\ICalculationSettings.cs" />
     <Compile Include="DataAcquisition\IDataCollector.cs" />
-    <Compile Include="DataAcquisition\IMeasurementDataRepository.cs" />
-    <Compile Include="DataAcquisition\IReferenceRepository.cs" />
-    <Compile Include="DataAcquisition\IToolSpecificationRepository.cs" />
     <Compile Include="Enumerations_BaseClasses.cs" />
     <Compile Include="Evaluation\IMathing.cs" />
+    <Compile Include="MeasuredData\IGenericMeasurementPoint.cs" />
     <Compile Include="Misc\IComponent.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />
     <Compile Include="Misc\IDummyObjectCreator.cs" />
@@ -54,12 +52,12 @@
     <Compile Include="Misc\INamed.cs" />
     <Compile Include="DataAcquisition\IManagableFromRepository.cs" />
     <Compile Include="Misc\ITabUIWPF.cs" />
+    <Compile Include="Misc\IXmlStorable.cs" />
     <Compile Include="ToolSpecifications\IRotatable.cs" />
     <Compile Include="Result\ICalculationResult.cs" />
     <Compile Include="DataAcquisition\IHDDFileReaderWriter.cs" />
     <Compile Include="DataAcquisition\IRepository.cs" />
     <Compile Include="DataAcquisition\IStoredData.cs" />
-    <Compile Include="DataAcquisition\IHDDXmlSerializator.cs" />
     <Compile Include="Evaluation\IEvaluation.cs" />
     <Compile Include="MeasuredData\IMeasurementPoint.cs" />
     <Compile Include="Misc\IInitializable.cs" />

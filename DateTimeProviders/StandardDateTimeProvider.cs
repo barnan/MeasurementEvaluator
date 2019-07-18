@@ -20,9 +20,9 @@ namespace DateTimeProviders
             return datetime;
         }
 
-        public StandardDateTimeProvider()
+        public StandardDateTimeProvider(string name)
         {
-            _logger = LogManager.GetCurrentClassLogger();
+            _logger = LogManager.GetLogger(name);
 
             _logger.Info("Instantiated.");
         }

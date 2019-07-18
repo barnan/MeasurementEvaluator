@@ -1,28 +1,26 @@
 ﻿using Interfaces.Result;
 using System;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace DataStructures
 {
     public abstract class ResultBase : IResult
     {
-        protected ResultBase(DateTime startTime, DateTime endTime, bool successful)
+        protected ResultBase(DateTime creationTime, bool successful)
         {
-            StartTime = startTime;
-            EndTime = endTime;
+            CreationTime = creationTime;
             Successful = successful;
         }
 
-        public virtual DateTime StartTime { get; }
-        public virtual DateTime EndTime { get; }
+        public virtual DateTime CreationTime { get; }
         public virtual bool Successful { get; }
 
-        public XmlElement Save(XmlElement input)
+        public XElement SaveToXml(XElement input)
         {
             throw new NotImplementedException();
         }
 
-        public bool Load(XmlElement input)
+        public bool LoadFromXml(XElement input)
         {
             throw new NotImplementedException();
         }

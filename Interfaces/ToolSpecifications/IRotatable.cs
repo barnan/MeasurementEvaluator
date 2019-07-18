@@ -10,7 +10,7 @@
         bool SetCurrentOrientation(SampleOrientation orientation);
 
         /// <summary>
-        /// Query the available orientains
+        /// Query the available orientains. For example [0, 90, 180, 270]
         /// </summary>
         /// <returns>returns the available orientation angles in an array</returns>
         SampleOrientation[] GetAvailableOrientations();

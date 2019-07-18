@@ -2,5 +2,6 @@
 {
     public interface IWindowUIWPF
     {
+        bool InitializationCompleted();
     }
 }

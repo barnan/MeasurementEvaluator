@@ -17,27 +17,27 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         [Configuration("Name of the measurement Data repository", "Measurement Data Repository", LoadComponent = true)]
         private string _measurementDataRepositoryName = null;
-        internal IMeasurementDataRepository MeasurementDataRepository { get; private set; }
+        internal IRepository MeasurementDataRepository { get; private set; }
 
         [Configuration("Name of the reference repository", "Reference Repository", LoadComponent = true)]
         private string _referenceRepositoryName = null;
-        internal IReferenceRepository ReferenceRepository { get; private set; }
+        internal IRepository ReferenceRepository { get; private set; }
 
         [Configuration("Name of the specification repository", "Specification Repository", LoadComponent = true)]
         private string _specificationRepositoryName = null;
-        internal IToolSpecificationRepository SpecificationRepository { get; private set; }
+        internal IRepository SpecificationRepository { get; private set; }
 
 
 
         internal bool Load(string sectionName)
         {
-            Logger = LogManager.GetCurrentClassLogger();
+            Logger = LogManager.GetLogger(sectionName);
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            SpecificationRepository = PluginLoader.CreateInstance<IToolSpecificationRepository>(_specificationRepositoryName);
-            ReferenceRepository = PluginLoader.CreateInstance<IReferenceRepository>(_referenceRepositoryName);
-            MeasurementDataRepository = PluginLoader.CreateInstance<IMeasurementDataRepository>(_measurementDataRepositoryName);
+            SpecificationRepository = PluginLoader.CreateInstance<IRepository>(_specificationRepositoryName);
+            ReferenceRepository = PluginLoader.CreateInstance<IRepository>(_referenceRepositoryName);
+            MeasurementDataRepository = PluginLoader.CreateInstance<IRepository>(_measurementDataRepositoryName);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProviderName);
 
             return CheckComponent();

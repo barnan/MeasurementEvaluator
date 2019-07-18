@@ -1,35 +1,31 @@
 ﻿using Interfaces.Misc;
-using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 
 namespace Interfaces.DataAcquisition
 {
 
-    public interface IRepository<T> : IInitializable
-        where T : class
+    public interface IRepository : IInitializable
     {
+        object Get(int index, IComparer<object> comparer = null);
 
-        T Get(int index, IComparer<T> comparer = null);
+        object Get(string name);
 
-        T Get(string name);
+        IEnumerable<object> GetAllElements();
 
         IEnumerable<string> GetAllNames();
 
-        IEnumerable<T> Find(Predicate<T> predicate);
+        IEnumerable<object> Find(Predicate<object> predicate);
 
-        bool Add(T item);
+        bool Add(object item);
 
-        void AddRange(IEnumerable<T> items);
+        void AddRange(IEnumerable<object> items);
 
-        bool Remove(T item);
+        bool Remove(object item);
 
-        void RemoveRange(IEnumerable<T> items);
+        void RemoveRange(IEnumerable<object> items);
 
+        bool SetFolder(string path);
     }
-
-
-    
-
 
 }

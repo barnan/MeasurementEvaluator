@@ -1,21 +1,31 @@
-﻿using Interfaces.Result;
+﻿using Interfaces.Misc;
+using Interfaces.Result;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace Interfaces
 {
 
-    // type safe enum, but not sealed!!
-    public class Relations
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Relations : IXmlStorable
     {
-        public string Name { get; }
-        public int Value { get; }
+        private const string XELEMENT_ATTRIBUTE_NAME = "Value";
+
+        public string Name { get; private set; }
+        public int Value { get; private set; }
 
         public Relations(string name, int value)
         {
             Name = name;
             Value = value;
+        }
+
+        public Relations()
+        {
         }
 
         public class RelationsEnumValues
@@ -26,6 +36,7 @@ namespace Interfaces
             public const int LESSOREQUAL = 3;
             public const int GREATER = 4;
             public const int GREATEROREQUAL = 5;
+            public const int ALLWAYS = 6;
         }
 
         public static Relations EQUAL = new Relations(nameof(EQUAL), RelationsEnumValues.EQUAL);
@@ -34,6 +45,7 @@ namespace Interfaces
         public static Relations LESSOREQUAL = new Relations(nameof(LESSOREQUAL), RelationsEnumValues.LESSOREQUAL);
         public static Relations GREATER = new Relations(nameof(GREATER), RelationsEnumValues.GREATER);
         public static Relations GREATEROREQUAL = new Relations(nameof(GREATEROREQUAL), RelationsEnumValues.GREATEROREQUAL);
+        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), RelationsEnumValues.ALLWAYS);
 
         public override string ToString()
         {
@@ -45,10 +57,42 @@ namespace Interfaces
             return rel.Value;
         }
 
-        public override int GetHashCode()
+
+        public static explicit operator Relations(string val)
         {
-            return base.GetHashCode();
+            if (EQUAL.ToString() == val)
+            {
+                return EQUAL;
+            }
+            if (NOTEQUAL.ToString() == val)
+            {
+                return NOTEQUAL;
+            }
+            if (LESS.ToString() == val)
+            {
+                return LESS;
+            }
+            if (LESSOREQUAL.ToString() == val)
+            {
+                return LESSOREQUAL;
+            }
+            if (GREATER.ToString() == val)
+            {
+                return GREATER;
+            }
+            if (GREATEROREQUAL.ToString() == val)
+            {
+                return GREATEROREQUAL;
+            }
+            if (ALLWAYS.ToString() == val)
+            {
+                return ALLWAYS;
+            }
+
+            return null;
         }
+
+        public override int GetHashCode() => base.GetHashCode();
 
         public override bool Equals(object other)
         {
@@ -59,52 +103,58 @@ namespace Interfaces
             }
             return Value == otherRelation.Value;
         }
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            inputElement.SetAttributeValue(XELEMENT_ATTRIBUTE_NAME, Name);
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            string attributeValue = inputElement.Attribute(XELEMENT_ATTRIBUTE_NAME).Value;
+            var element = (Relations)attributeValue;
+            Name = element.Name;
+            Value = element.Value;
+            return true;
+        }
     }
 
 
-    public class ValidIfRelations : Relations
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum Relativity
     {
-        public ValidIfRelations(string name, int value)
-            : base(name, value)
-        {
-        }
-
-        public class ValidIfRelationsEnumValues : RelationsEnumValues
-        {
-            public const int ALLWAYS = 6;
-        }
-
-        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), ValidIfRelationsEnumValues.ALLWAYS);
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public override bool Equals(object other)
-        {
-            return base.Equals(other);
-        }
+        Absolute = 0,
+        Relative = 1
     }
 
 
-    public enum RELATIVEORABSOLUTE : byte
-    {
-        ABSOLUTE = 0,
-        RELATIVE = 1
-    }
-
-
+    /// <summary>
+    /// 
+    /// </summary>
     public enum SampleOrientation
     {
+        [Description("0 degree")]
         Orientation_0 = 0,
+
+        [Description("90 degree")]
         Orientation_90 = 90,
-        Orientation_180 = 270,
-        Orientation_270 = 360
+
+        [Description("180 degree")]
+        Orientation_180 = 180,
+
+        [Description("270 degree")]
+        Orientation_270 = 270
     };
 
 
-    public enum Units : byte
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum Units
     {
         [Description("ADU")]
         ADU = 0,
@@ -127,16 +177,25 @@ namespace Interfaces
     };
 
 
-    // type safe enum pattern:
-    public sealed class ToolNames
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class ToolNames : IXmlStorable
     {
-        public string Name { get; }
-        public int Value { get; }
+        private const string XELEMENT_TOOLNAME = "ToolName";
+
+        public string Name { get; private set; }
+        public int Value { get; private set; }
 
         public ToolNames(string name, int value)
         {
             Name = name;
             Value = value;
+        }
+
+        public ToolNames()
+        {
         }
 
         public static ToolNames Unknown = new ToolNames(nameof(Unknown), 0);
@@ -153,10 +212,102 @@ namespace Interfaces
         {
             return Name;
         }
+
+        public XElement SaveToXml(XElement inputElement)
+        {
+            inputElement.SetAttributeValue(XELEMENT_TOOLNAME, Name);
+            return inputElement;
+        }
+
+        public bool LoadFromXml(XElement inputElement)
+        {
+            string attributeValue = inputElement.Attribute(XELEMENT_TOOLNAME).Value;
+            var element = (ToolNames)attributeValue;
+            Name = element.Name;
+            Value = element.Value;
+            return true;
+        }
+
+        public static explicit operator ToolNames(string val)
+        {
+            if (val == Unknown.Name)
+            {
+                return Unknown;
+            }
+            if (val == TTR.Name)
+            {
+                return TTR;
+            }
+            if (val == SHP.Name)
+            {
+                return SHP;
+            }
+            if (val == WSIChipping.Name)
+            {
+                return WSIChipping;
+            }
+            if (val == WSIContamination.Name)
+            {
+                return WSIContamination;
+            }
+            if (val == PED.Name)
+            {
+                return PED;
+            }
+            if (val == MCI.Name)
+            {
+                return MCI;
+            }
+            if (val == PLI.Name)
+            {
+                return PLI;
+            }
+            if (val == UPCD.Name)
+            {
+                return UPCD;
+            }
+            return null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (!(obj is ToolNames toolNameParam))
+            {
+                return false;
+            }
+
+            return Value == toolNameParam.Value && Name == toolNameParam.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode() + Name.GetHashCode();
+        }
+
+        public static bool operator ==(ToolNames toolName1, ToolNames toolName2)
+        {
+            if (object.Equals(toolName1, null) && object.Equals(toolName2, null))
+                return true;
+
+            return !object.Equals(toolName1, null) && !object.Equals(toolName2, null) && toolName1.Value == toolName2.Value && toolName1.Name == toolName2.Name;
+        }
+
+        public static bool operator !=(ToolNames toolName1, ToolNames ToolName2)
+        {
+            return !(toolName1 == ToolName2);
+        }
     }
 
 
-    public enum CalculationTypes : byte
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum CalculationTypes
     {
         Unknown = 0,
         Average,
@@ -167,6 +318,9 @@ namespace Interfaces
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ResultEventArgs : EventArgs
     {
         public IResult Result { get; }
@@ -177,6 +331,10 @@ namespace Interfaces
     }
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class DataCollectorResultEventArgs : EventArgs
     {
         List<string> SpecificationName { get; }
@@ -193,6 +351,10 @@ namespace Interfaces
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class CustomEventArg<T> : EventArgs
     {
         private readonly T _data;
@@ -206,6 +368,10 @@ namespace Interfaces
     }
 
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     public enum MessageSeverityLevels
     {
         Trace,

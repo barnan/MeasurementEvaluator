@@ -1,6 +1,7 @@
 ﻿using Interfaces.Misc;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
-using System;
+using Interfaces.ToolSpecifications;
 using System.Collections.Generic;
 
 namespace Interfaces.DataAcquisition
@@ -10,20 +11,17 @@ namespace Interfaces.DataAcquisition
         /// <summary>
         /// Gatheres the data with the given name inputs. When ready calls its ResultReady event.
         /// </summary>
-        /// <param name="specifactionName">name of the required specification</param>
-        /// <param name="measurementDataFileNames">names of the required measurement data files</param>
-        /// <param name="referenceName">names of required reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
-        void GatherData(string specifactionName, List<string> measurementDataFileNames, string referenceName = null);
+        /// <param name="specifaction">specification</param>
+        /// <param name="measurementDataFileNames">measurement data files</param>
+        /// <param name="reference">reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
+        void GatherData(IToolSpecification specifaction, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null);
 
-        /// <summary>
-        /// Method the gather the available measurement data, speficiation and reference file names from the given media
-        /// </summary>
-        void GatherNames();
+        IEnumerable<IToolSpecification> GetAvailableToolSpecifications();
 
-        /// <summary>
-        /// Fires an event when the GatherNames is finished
-        /// </summary>
-        event EventHandler<DataCollectorResultEventArgs> FileNamesReadyEvent;
+        IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName);
 
+        IEnumerable<IReferenceSample> GetReferenceSamples();
+
+        string MeasurementFolderPath { get; }
     }
 }

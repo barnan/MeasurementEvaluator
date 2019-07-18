@@ -14,7 +14,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF
 
             DataContext = new EditorTabViewModel(parameters);
 
-            Name = parameters.ID;
+            Name = parameters.Name;
 
             Title = "Editor Tab";
         }

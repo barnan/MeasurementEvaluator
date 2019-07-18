@@ -21,9 +21,13 @@ namespace Calculations.CalculationContainer
                     {
                         CalculationContainer instance = new CalculationContainer(param);
                         _calculationContainerDict.Add(name, instance);
+                        return instance;
                     }
                 }
-                return _calculationContainerDict[name];
+                else
+                {
+                    return _calculationContainerDict[name];
+                }
             }
             return null;
         }

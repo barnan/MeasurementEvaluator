@@ -31,7 +31,7 @@ namespace Interfaces.Result
         /// <summary>
         /// The number result of the calculation
         /// </summary>
-        ICalculationResult Result { get; }
+        IResult Result { get; }
     }
 
 

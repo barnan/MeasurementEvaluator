@@ -17,8 +17,8 @@ namespace MeasurementEvaluator.ME_DataCollector
         public IReadOnlyList<IToolMeasurementData> MeasurementData { get; }
 
 
-        public DataCollectorResult(DateTime startTime, DateTime endTime, bool successfulCalculation, IToolSpecification toolSpecification, IReadOnlyList<IToolMeasurementData> measurementData, IReferenceSample referenceSample = null)
-        : base(startTime, endTime, successfulCalculation)
+        public DataCollectorResult(DateTime endTime, bool successfulCalculation, IToolSpecification toolSpecification, IReadOnlyList<IToolMeasurementData> measurementData, IReferenceSample referenceSample = null)
+        : base(endTime, successfulCalculation)
         {
             Specification = toolSpecification;
             Reference = referenceSample;
