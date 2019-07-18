@@ -61,6 +61,13 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         protected override void InternalInit()
         {
+            if (!_parameters.Matcher.Initiailze())
+            {
+                _parameters.Logger.MethodError($"{nameof(_parameters.Matcher)} could not been initialized.");
+                InitializationState = InitializationStates.InitializationFailed;
+                return;
+            }
+
             if (!_parameters.DataCollector.Initiailze())
             {
                 _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");

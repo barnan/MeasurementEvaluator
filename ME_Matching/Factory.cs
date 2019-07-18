@@ -15,7 +15,7 @@ namespace MeasurementEvaluator.ME_Matching
             {
                 if (!_matchingDict.ContainsKey(name))
                 {
-                    MathchingParameters param = new MathchingParameters();
+                    PairingParameters param = new PairingParameters();
                     if (param.Load(name))
                     {
                         Matching instance = new Matching(param);

@@ -49,8 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MatchingDictCreator.cs" />
-    <Compile Include="MatchingFileCreator.cs" />
+    <Compile Include="PairingDictCreator.cs" />
     <Compile Include="ReferenceCreator.cs" />
     <Compile Include="SpecificationCreator.cs" />
     <Compile Include="DummyObjectCreator.cs" />
@@ -70,6 +69,10 @@
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{6dca4d70-0d2c-4a32-80be-485667ceac24}</Project>
       <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ME_Matching\ME_Matching.csproj">
+      <Project>{AA161A08-8211-45C2-82BA-0D4471B19D99}</Project>
+      <Name>ME_Matching</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

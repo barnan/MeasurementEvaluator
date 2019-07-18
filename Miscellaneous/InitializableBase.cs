@@ -33,24 +33,20 @@ namespace Miscellaneous
                     _logger.Info("Already initialized.");
                     return IsInitialized;
                 }
-
                 InitializationState = InitializationStates.Initializing;
-
                 InternalInit();
-
-                _logger.Info($"Internal initialization finished. New state: {InitializationState}");
-
-                return IsInitialized;
             }
             catch (Exception ex)
             {
+                InitializationState = InitializationStates.InitializationFailed;
                 _logger.Error($"Exception occured: {ex}");
-                return IsInitialized;
             }
             finally
             {
                 Monitor.Exit(_initLock);
             }
+            _logger.Info($"Internal initialization finished. New state: {InitializationState}");
+            return IsInitialized;
         }
 
 
@@ -72,19 +68,18 @@ namespace Miscellaneous
                 }
 
                 InitializationState = InitializationStates.Closing;
-
                 InternalClose();
-
-                _logger.Info($"Internal close finished. New state: {InitializationState}");
             }
             catch (Exception ex)
             {
+                InitializationState = InitializationStates.InitializationFailed;
                 _logger.Error($"Exception occured: {ex}");
             }
             finally
             {
                 Monitor.Exit(_initLock);
             }
+            _logger.Info($"Internal close finished. New state: {InitializationState}");
         }
 
 

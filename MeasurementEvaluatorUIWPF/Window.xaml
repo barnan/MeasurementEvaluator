@@ -45,7 +45,7 @@
             </TabControl.ItemContainerStyle>
         </TabControl>
 
-        <GroupBox Grid.Row="1" Header="Messages" BorderBrush="Beige">
+        <GroupBox Grid.Row="1" Header="Messages">
             <messageControlUiwpf:MessageControlUIWPF />
         </GroupBox>
 

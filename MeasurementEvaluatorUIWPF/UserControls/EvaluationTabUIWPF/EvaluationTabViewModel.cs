@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
+﻿namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 {
     class EvaluationTabViewModel
     {
@@ -12,7 +10,6 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
         {
             Parameters = parameters;
             Parameters.InitializationCompleted += Parameters_InitializationCompleted;
-            Parameters.Closed += Parameters_Closed;
         }
 
         private void Parameters_InitializationCompleted(object sender, System.EventArgs e)
@@ -20,9 +17,5 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
             Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
         }
 
-        private void Parameters_Closed(object sender, EventArgs e)
-        {
-            //Parameters.Close();
-        }
     }
 }

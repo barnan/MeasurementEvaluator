@@ -20,8 +20,7 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <TextBox Text="{Binding MessageText, Converter={StaticResource MessageToTextConverter}}" 
-                Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}"
-                         Background="Gray"/>
+                Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}" Background="Gray"/>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

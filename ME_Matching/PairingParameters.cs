@@ -5,16 +5,16 @@ using NLog;
 
 namespace MeasurementEvaluator.ME_Matching
 {
-    internal class MathchingParameters
+    internal class PairingParameters
     {
         internal ILogger Logger { get; private set; }
 
         [Configuration("Handles the reading of the matching file.", "File Reader", LoadComponent = true)]
-        private string _matchingFileReader = null;
-        internal IHDDFileReader MatchingFileReader { get; private set; }
+        private string _pairingFileReader = null;
+        internal IHDDFileReader PairingFileReader { get; private set; }
 
         [Configuration("Name of the matching file", "Name of the matching file", LoadComponent = false)]
-        private string _bindingFilePath = "MatchingDictionary";
+        private string _bindingFilePath = "PairingDictionary";
         internal string BindingFilePath => _bindingFilePath;
 
 
@@ -25,7 +25,7 @@ namespace MeasurementEvaluator.ME_Matching
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            MatchingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_matchingFileReader);
+            PairingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_pairingFileReader);
 
             return CheckComponent();
         }
@@ -33,15 +33,15 @@ namespace MeasurementEvaluator.ME_Matching
 
         private bool CheckComponent()
         {
-            if (MatchingFileReader == null)
+            if (PairingFileReader == null)
             {
-                Logger.Error($"Error in the {nameof(MathchingParameters)} loading. {nameof(MatchingFileReader)} is null.");
+                Logger.Error($"Error in the {nameof(PairingParameters)} loading. {nameof(PairingFileReader)} is null.");
                 return false;
             }
 
             if (string.IsNullOrEmpty(BindingFilePath))
             {
-                Logger.Error($"Error in the {nameof(MathchingParameters)} loading. {nameof(BindingFilePath)} is empty.");
+                Logger.Error($"Error in the {nameof(PairingParameters)} loading. {nameof(BindingFilePath)} is empty.");
                 return false;
             }
 

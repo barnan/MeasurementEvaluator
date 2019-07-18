@@ -14,7 +14,7 @@ namespace ME_DummyObjectCreator
 
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {
-            // specification 01:
+            // ttr specification 01:
 
             ICondition<double> thicknessAVGCondition = new SimpleCondition()
             {
@@ -93,7 +93,7 @@ namespace ME_DummyObjectCreator
 
 
 
-            // specification 02:
+            // ttr specification 02:
 
             ICondition<double> thicknessAVGCondition2 = new SimpleCondition()
             {

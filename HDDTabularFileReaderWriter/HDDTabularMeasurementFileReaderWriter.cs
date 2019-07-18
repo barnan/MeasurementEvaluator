@@ -27,7 +27,7 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
         }
 
 
-        public object ReadFromFile(string fileNameAndPath, ToolNames toolName = null)
+        public object ReadFromFile(string fileNameAndPath, Type type, ToolNames toolName = null)
         {
             lock (_lockObject)
             {

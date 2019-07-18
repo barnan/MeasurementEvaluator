@@ -57,11 +57,10 @@ namespace Frame.PluginLoader
         }
 
 
-        public static string SendToInfoLogAndConsole(string message)
+        public static void SendToInfoLogAndConsole(string message)
         {
             _logger?.Info(message);
             Console.WriteLine(message + Environment.NewLine);
-            return message;
         }
 
         public static string SendToErrorLogAndConsole(string message)

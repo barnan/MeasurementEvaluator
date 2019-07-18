@@ -4,34 +4,34 @@ using System.Collections.Generic;
 namespace MeasurementEvaluator.ME_Matching
 {
     [Serializable]
-    public class MatchingKeyValuePairs
+    public class PairingKeyValuePair
     {
 
         /// <summary>
         /// Specification condition name. E.g.: Thickness Average
         /// </summary>
-        public string ConditionName { get; }
+        public string ConditionName { get; set; }
 
 
         /// <summary>
         /// assignable measurement data names
         /// </summary>
-        public IList<string> MeasDataNames { get; }
+        public List<string> MeasDataNames { get; set; }
 
 
         /// <summary>
         /// assignable reference name
         /// </summary>
-        public string ReferenceName { get; }
+        public string ReferenceName { get; set; }
 
 
 
-        public MatchingKeyValuePairs()
+        public PairingKeyValuePair()
         {
         }
 
 
-        public MatchingKeyValuePairs(string key, IList<string> values, string referenceName)
+        public PairingKeyValuePair(string key, List<string> values, string referenceName)
         {
             ConditionName = key;
             MeasDataNames = values;

@@ -21,7 +21,7 @@ namespace DataAcquisitions.HDDXmlSerializator
         }
 
 
-        public object ReadFromFile(string fileNameAndPath, ToolNames toolName = null)
+        public object ReadFromFile(string fileNameAndPath, Type type = null, ToolNames toolName = null)
         {
             lock (_lockObject)
             {
@@ -32,19 +32,22 @@ namespace DataAcquisitions.HDDXmlSerializator
                         _parameters.Logger.Error($"File is not accessible: {fileNameAndPath}");
                     }
 
+                    Type readType = type;
                     XElement readElement = XElement.Load(fileNameAndPath);
 
-                    XAttribute assembylAttribute = readElement.Attribute("Assembly");
+                    if (readType == null)
+                    {
+                        XAttribute assembylAttribute = readElement.Attribute("Assembly");
+                        string readTypeName = assembylAttribute?.Value ?? readElement.Name.LocalName;
+                        readType = Type.GetType(readTypeName);
+                    }
 
-                    string readTypeName = assembylAttribute?.Value ?? readElement.Name.LocalName;
-
-                    Type readType = Type.GetType(readTypeName);
                     object createdObj = null;
 
                     if (typeof(IXmlStorable).IsAssignableFrom(readType))
                     {
                         createdObj = Activator.CreateInstance(readType);
-                        (createdObj as IXmlStorable).LoadFromXml(readElement);
+                        (createdObj as IXmlStorable)?.LoadFromXml(readElement);
                     }
                     else
                     {
@@ -52,7 +55,6 @@ namespace DataAcquisitions.HDDXmlSerializator
                         {
                             XmlSerializer serializer = new XmlSerializer(readType);
                             createdObj = serializer.Deserialize(sr);
-                            return true;
                         }
 
                     }
@@ -62,7 +64,7 @@ namespace DataAcquisitions.HDDXmlSerializator
                 catch (Exception ex)
                 {
                     _parameters.Logger.Error($"Exception occured: {ex}");
-                    return false;
+                    return null;
                 }
             }
         }

@@ -197,7 +197,6 @@ namespace Start
             internal const string MeasurementDataFolderKey = "MeasurementFolder";
             internal const string PluginsFolderKey = "PluginsFolder";
             internal const string ResultFolderKey = "ResultFolder";
-
         }
 
     }

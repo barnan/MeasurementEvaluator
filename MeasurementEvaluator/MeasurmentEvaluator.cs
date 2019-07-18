@@ -91,7 +91,7 @@ namespace MeasurementEvaluator
 
                     if (!_window.InitializationCompleted())
                     {
-                        _logger.Error("InitializationCompleted failed.");
+                        _logger.Error("InitializationCompleted event failed.");
                         return;
                     }
 
@@ -106,7 +106,8 @@ namespace MeasurementEvaluator
 
 
                 _uiFinishedEvent.WaitOne();
-                PluginLoader.SendToInfoLogAndConsole($"Current application ({Assembly.GetExecutingAssembly().FullName}) was shut down.");
+
+                PluginLoader.SendToInfoLogAndConsole($"{Assembly.GetExecutingAssembly().GetName().Name} was shut down.");
             }
             catch (Exception ex)
             {
@@ -116,11 +117,16 @@ namespace MeasurementEvaluator
 
         private void MainWindow_OnClosed(object sender, EventArgs eventArgs)
         {
+            PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
+
             Evaluator.Close();
+
+
             _application.Shutdown();
+
             Task.Run(() => _uiFinishedEvent.Set());
 
-            PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
+
         }
 
     }

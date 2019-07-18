@@ -149,9 +149,7 @@ namespace Miscellaneous
             {
                 var xmlSerializer = new XmlSerializer(Type.GetType(attributeValue));
                 return xmlSerializer.Deserialize(inputElement.CreateReader());
-
             }
-
 
 
             return null;

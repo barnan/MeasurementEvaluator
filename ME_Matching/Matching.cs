@@ -1,7 +1,9 @@
-﻿using Interfaces.Evaluation;
+﻿using Frame.PluginLoader;
+using Interfaces.Evaluation;
 using Interfaces.Misc;
 using Miscellaneous;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MeasurementEvaluator.ME_Matching
@@ -9,11 +11,11 @@ namespace MeasurementEvaluator.ME_Matching
     internal class Matching : InitializableBase, IMathing
     {
 
-        private readonly MathchingParameters _parameters;
-        private List<MatchingKeyValuePairs> _specificationMeasDataReferencePairs;
+        private readonly PairingParameters _parameters;
+        private List<PairingKeyValuePair> _specificationMeasDataReferencePairs;
 
 
-        public Matching(MathchingParameters parameters)
+        public Matching(PairingParameters parameters)
             : base(parameters.Logger)
         {
             _parameters = parameters;
@@ -25,18 +27,20 @@ namespace MeasurementEvaluator.ME_Matching
 
         protected override void InternalInit()
         {
-            if (_parameters.MatchingFileReader == null)
+            if (_parameters.PairingFileReader == null)
             {
-                _parameters.Logger.LogError($"{nameof(_parameters.MatchingFileReader)} is null");
+                _parameters.Logger.LogError($"{nameof(_parameters.PairingFileReader)} is null");
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
 
             // todo: check type
-            _specificationMeasDataReferencePairs = (List<MatchingKeyValuePairs>)_parameters.MatchingFileReader.ReadFromFile(_parameters.BindingFilePath);
+            string fullFilePath = Path.Combine(PluginLoader.SpecificationFolder, _parameters.BindingFilePath);
+
+            _specificationMeasDataReferencePairs = (List<PairingKeyValuePair>)_parameters.PairingFileReader.ReadFromFile(fullFilePath, typeof(List<PairingKeyValuePair>));
             if (_specificationMeasDataReferencePairs == null)
             {
-                _parameters.Logger.LogError($"Deserialization of {nameof(MatchingKeyValuePairs)} was not successful from: {_parameters.BindingFilePath}");
+                _parameters.Logger.LogError($"Deserialization of {nameof(PairingKeyValuePair)} was not successful from: {_parameters.BindingFilePath}");
             }
 
             InitializationState = InitializationStates.Initialized;
