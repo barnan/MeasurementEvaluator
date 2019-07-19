@@ -10,6 +10,7 @@
         Closed="Window_OnClosed"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel, IsDesignTimeCreatable=False}"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         ShowTitleBar="True"
         Title="Measurement Evaluator" Height="700" Width="800" ResizeMode="NoResize">
 
