@@ -20,10 +20,10 @@ namespace MeasurementEvaluator
         private readonly ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
-        private string _mainWindowName = null;
+        private readonly string _mainWindowName = null;
 
         [Configuration("Name of the evaluator", "Evaluator Name", true)]
-        private string _dataEvaluatorName = null;
+        private readonly string _dataEvaluatorName = null;
         private IEvaluation Evaluator { get; set; }
 
 
@@ -77,15 +77,12 @@ namespace MeasurementEvaluator
                 Thread appThread = new Thread(() =>
                 {
                     _application = new Application();
-                    //var myResourceDictionary = new ResourceDictionary { Source = new Uri("/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml", UriKind.RelativeOrAbsolute) };
-                    //application.Resources.MergedDictionaries.Add(myResourceDictionary);
 
                     _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
 
                     Window mainWindow = (Window)_window;
                     mainWindow.Closed += MainWindow_OnClosed;
 
-                    //System.Windows.Application.Current.MainWindow = mainWindow;
                     _application.MainWindow = mainWindow;
                     mainWindow.Show();
 
@@ -99,7 +96,7 @@ namespace MeasurementEvaluator
 
                 });
                 Debug.Assert(appThread != null);
-                appThread.Name = "WpfThread";
+                appThread.Name = "ApplicationThread";
                 appThread.SetApartmentState(ApartmentState.STA);
                 appThread.IsBackground = true;
                 appThread.Start();
@@ -108,6 +105,8 @@ namespace MeasurementEvaluator
                 _uiFinishedEvent.WaitOne();
 
                 PluginLoader.SendToInfoLogAndConsole($"{Assembly.GetExecutingAssembly().GetName().Name} was shut down.");
+
+                Thread.Sleep(200);
             }
             catch (Exception ex)
             {
@@ -121,12 +120,9 @@ namespace MeasurementEvaluator
 
             Evaluator.Close();
 
-
             _application.Shutdown();
 
             Task.Run(() => _uiFinishedEvent.Set());
-
-
         }
 
     }

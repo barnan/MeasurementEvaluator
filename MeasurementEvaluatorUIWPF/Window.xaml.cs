@@ -1,4 +1,5 @@
 ﻿using Interfaces.Misc;
+using MahApps.Metro.Controls;
 using System;
 
 namespace MeasurementEvaluatorUIWPF
@@ -6,7 +7,7 @@ namespace MeasurementEvaluatorUIWPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Window : System.Windows.Window, IWindowUIWPF
+    public partial class Window : MetroWindow, IWindowUIWPF
     {
         private MainWindowParameters Parameter { get; }
 
@@ -17,10 +18,7 @@ namespace MeasurementEvaluatorUIWPF
 
             InitializeComponent();
 
-            this.DataContext = new MainWindowViewModel(param);
-
-            //Style style = Application.Current.FindResource("CustomWindowStyle") as Style;
-            //this.Style = style;
+            DataContext = new MainWindowViewModel(param);
         }
 
         public bool InitializationCompleted()

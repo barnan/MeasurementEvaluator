@@ -7,20 +7,9 @@
              xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.Converters"
              xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF"
              mc:Ignorable="d"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              d:DataContext="{d:DesignInstance local:DataCollectorViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" Width="380">
-
-    <base:UserControlBase.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/Styles.xaml" />-->
-                <ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/ExpressionDark.xaml" />
-                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>-->
-                <!--<ResourceDictionary Source="/MeasurementEvaluatorUIWPF;component/Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>-->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </base:UserControlBase.Resources>
-
 
     <Grid>
         <Grid.Resources>
@@ -29,7 +18,6 @@
                 <Setter Property="Margin" Value="10"/>
             </Style>
 
-            <converters:ToolNameConverter x:Key="ToolNameConverter" />
             <converters:FileNameConverter x:Key="FileNameConverter" />
         </Grid.Resources>
 
@@ -52,7 +40,7 @@
 
         </Grid.RowDefinitions>
 
-        
+      
         <!--Tool Selection combo box-->
         <ComboBox Grid.Column="0" Grid.Row="0" Style="{StaticResource MarginStyle}"
                   ItemsSource="{Binding AvailableToolList}"
@@ -96,8 +84,12 @@
             </ListView.View>
         </ListView>
 
-        <Button Grid.Column="3" Grid.Row="3" Content="Browse" Command="{Binding BrowseMeasurementDataCommand}" 
-                Style="{StaticResource MarginStyle}"/>
+        <Button Grid.Column="3" Grid.Row="3" Command="{Binding BrowseMeasurementDataCommand}" Style="{StaticResource MarginStyle}">
+            <StackPanel Orientation="Horizontal">
+                <!--<iconPacks:PackIconOcticons Kind="Browser" />-->
+                <TextBlock>Browse</TextBlock>
+            </StackPanel>
+        </Button>
 
         <!--calculate-->
         <Button Grid.Column="3" Grid.Row="4" Content="Calculate" Command="{Binding CalculateCommand}" 

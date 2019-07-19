@@ -14,6 +14,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
             var viewModel = new DataCollectorViewModel(param);
             DataContext = viewModel;
+            Title = "Collect Data";
 
         }
     }
