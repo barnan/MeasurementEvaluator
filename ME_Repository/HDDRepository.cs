@@ -34,6 +34,12 @@ namespace DataAcquisitions.ME_Repository
                 InitializationState = InitializationStates.InitializationFailed;
             }
 
+            if (_parameters.HDDReaderWriter == null)
+            {
+                _parameters.Logger.MethodError($"The given parameter ({_parameters.HDDReaderWriter }) is null.");
+                InitializationState = InitializationStates.InitializationFailed;
+            }
+
             InitializationState = InitializationStates.Initialized;
         }
 
@@ -124,12 +130,6 @@ namespace DataAcquisitions.ME_Repository
                     _fileContentDictionaryCache = GetItemList(_repositoryPath);
                     hitList = GetHitListByName(_fileContentDictionaryCache, name);
 
-                    if (hitList.Count == 0)
-                    {
-                        _parameters.Logger.MethodError($"No element was found with the given name: {name}.");
-                        return null;
-                    }
-
                     if (hitList.Count > 1)
                     {
                         _parameters.Logger.MethodError($"More elements were found with the given name: {name}.");
@@ -176,8 +176,7 @@ namespace DataAcquisitions.ME_Repository
             {
                 try
                 {
-                    INamed named = item as INamed;
-                    if (string.IsNullOrEmpty(named?.Name))
+                    if (!(item is INamed named))
                     {
                         _parameters.Logger.MethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
                         return false;
@@ -186,8 +185,7 @@ namespace DataAcquisitions.ME_Repository
                     string fullName = Path.Combine(_repositoryPath, CreateFileNameFromName(named.Name));
                     if (File.Exists(fullName))
                     {
-                        _parameters.Logger.MethodError($"The created fileName: {fullName} already exists.");
-                        return false;
+                        _parameters.Logger.MethodError($"The created fileName: {fullName} already exists -> it will be overwritten!!");
                     }
 
                     _parameters.HDDReaderWriter.WriteToFile(item, fullName);
@@ -384,11 +382,9 @@ namespace DataAcquisitions.ME_Repository
 
                 foreach (string rawFileName in fileNameList)
                 {
-                    FileInfo finfo = new FileInfo(rawFileName);
-                    string fileName = finfo.FullName;
-                    object obj = _parameters.HDDReaderWriter.ReadFromFile(fileName);
+                    object obj = _parameters.HDDReaderWriter.ReadFromFile(rawFileName);
 
-                    string nameInDictionary = fileName;
+                    string nameInDictionary = rawFileName;
                     if (obj is INamed namedObject)
                     {
                         nameInDictionary = namedObject.Name;
@@ -398,9 +394,11 @@ namespace DataAcquisitions.ME_Repository
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"File read: {fileName}, stored in dictionary as {nameInDictionary}");
+                        _parameters.Logger.MethodTrace($"File read: {rawFileName}, stored in dictionary as {nameInDictionary}");
                     }
                 }
+
+                _parameters.Logger.MethodTrace($"The old {nameof(_fileContentDictionaryCache)} had {_fileContentDictionaryCache?.Count} elements, the new list has {fileContentDictionary.Count} elements");
 
                 _fileContentDictionaryCache = fileContentDictionary;
 
@@ -429,35 +427,13 @@ namespace DataAcquisitions.ME_Repository
 
         private List<object> GetHitListByPredicate(List<KeyValuePair<string, object>> itemList, Predicate<object> predicate)
         {
-            if (itemList == null)
-            {
-                return null;
-            }
-
-            IEnumerable<object> valueList = itemList.Select(p => p.Value);
-            List<object> hitList = new List<object>();
-
-            foreach (object val in valueList)
-            {
-                if (predicate(val))
-                {
-                    hitList.Add(val);
-                }
-            }
-
-            return hitList;
+            return itemList?.Where(p => predicate(p.Value)).Select(p => p.Value).ToList();
         }
 
 
         private List<object> GetHitListByName(List<KeyValuePair<string, object>> itemList, string name)
         {
-            if (itemList == null)
-            {
-                return null;
-            }
-
-            List<KeyValuePair<string, object>> hitList = itemList.Where(p => p.Key == name).ToList();
-            return hitList.Select(x => x.Value).ToList();
+            return itemList?.Where(p => p.Key == name).Select(x => x.Value).ToList();
         }
 
 
@@ -468,13 +444,13 @@ namespace DataAcquisitions.ME_Repository
                 return null;
             }
 
-            List<object> valueList = itemList.Select(p => p.Value).ToList();
-
-            if (index > valueList.Count)
+            if (index > itemList.Count)
             {
-                _parameters.Logger.MethodError("The arrived index is higher than the length of the specification list.");
+                _parameters.Logger.MethodError("The arrived index is higher than the length of the internal list.");
                 return null;
             }
+
+            List<object> valueList = itemList.Select(p => p.Value).ToList();
 
             if (comparer == null)
             {
@@ -485,7 +461,7 @@ namespace DataAcquisitions.ME_Repository
                 valueList.Sort(comparer);
             }
 
-            _parameters.Logger.MethodInfo($"Element with index: {index} was given back.");
+            _parameters.Logger.MethodInfo($"Element {valueList[index]} with index: {index} was given back.");
 
             return valueList[index];
         }

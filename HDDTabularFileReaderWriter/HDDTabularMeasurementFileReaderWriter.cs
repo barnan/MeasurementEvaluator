@@ -5,6 +5,7 @@ using Interfaces.MeasuredData;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
@@ -52,6 +53,8 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
         private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, ToolNames toolName)
         {
             List<IMeasurementSerie> results = new List<IMeasurementSerie>();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
             {
@@ -61,6 +64,11 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 
                 while (!reader.EndOfStream)
                 {
+                    if (sw.ElapsedMilliseconds > _parameters.FileReadTimeout)
+                    {
+                        break;
+                    }
+
                     string line = reader.ReadLine();
 
                     if (line == null)
@@ -86,18 +94,7 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
                     {
                         for (int i = 0; i < elements.Length; i++)
                         {
-                            double szam;
-                            bool valid;
-                            try
-                            {
-                                szam = Convert.ToDouble(elements[i], System.Globalization.CultureInfo.InvariantCulture);
-                                valid = true;
-                            }
-                            catch (FormatException)
-                            {
-                                szam = 0.0;
-                                valid = false;
-                            }
+                            bool valid = double.TryParse(elements[i], out double szam);
 
                             if (i >= uniqueResult.Count)
                             {
@@ -125,8 +122,7 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
                 }
             }
 
-            ToolMeasurementData toolMeasData = new ToolMeasurementData { ToolName = toolName, Results = results, Name = fileNameAndPath };
-            return toolMeasData;
+            return new ToolMeasurementData { ToolName = toolName, Results = results, Name = fileNameAndPath };
         }
 
         public bool CanRead(string fileNameAndPath)
