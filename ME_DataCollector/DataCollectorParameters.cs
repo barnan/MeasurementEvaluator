@@ -30,8 +30,13 @@ namespace MeasurementEvaluator.ME_DataCollector
         public IUIMessageControl MessageControl { get; private set; }
 
 
+        public string Name { get; private set; }
+
+
         internal bool Load(string sectionName)
         {
+            Name = sectionName;
+
             Logger = LogManager.GetLogger(sectionName);
 
             PluginLoader.ConfigManager.Load(this, sectionName);

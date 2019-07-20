@@ -15,33 +15,33 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI.Converters
                 return Binding.DoNothing;
             }
 
-            Message msg;
+            MessageSeverityLevels severity;
             try
             {
-                msg = (Message)value;
+                severity = (MessageSeverityLevels)value;
             }
             catch (Exception)
             {
                 return Binding.DoNothing;
             }
 
-            switch (msg.MessageSeverityLevel)
+            switch (severity)
             {
                 case MessageSeverityLevels.Trace:
-                    return Colors.White;
+                    return new SolidColorBrush(Colors.White);
+
                 case MessageSeverityLevels.Info:
-                    return Colors.Black;
+                    return new SolidColorBrush(Colors.Black);
 
                 case MessageSeverityLevels.Warning:
-                    return Colors.Orange;
+                    return new SolidColorBrush(Colors.Orange);
 
                 case MessageSeverityLevels.Error:
-                    return Colors.DarkRed;
+                    return new SolidColorBrush(Colors.DarkRed);
+
                 default:
                     return Binding.DoNothing;
             }
-
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

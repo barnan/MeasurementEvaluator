@@ -44,6 +44,8 @@ namespace MeasurementEvaluator.ME_Matching
             }
 
             InitializationState = InitializationStates.Initialized;
+
+            _parameters.MessageControl.AddMessage("Matching initialized.");
         }
 
         protected override void InternalClose()

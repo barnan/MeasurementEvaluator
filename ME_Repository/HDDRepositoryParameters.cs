@@ -1,6 +1,7 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
+using Interfaces.Misc;
 using NLog;
 using System.Collections.Generic;
 
@@ -18,13 +19,23 @@ namespace DataAcquisitions.ME_Repository
         private string _hddDReaderWriter = null;
         internal IHDDFileReaderWriter HDDReaderWriter { get; private set; }
 
+        public IUIMessageControl MessageControl { get; private set; }
+
+
+        public string Name { get; private set; }
+
+
         public bool Load(string sectionName)
         {
-            Logger = LogManager.GetCurrentClassLogger();
+            Name = sectionName;
+
+            Logger = LogManager.GetLogger(sectionName);
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(_hddDReaderWriter);
+
+            MessageControl = PluginLoader.CreateInstance<IUIMessageControl>("MessageControl");
 
             return CheckComponent();
         }
@@ -40,6 +51,12 @@ namespace DataAcquisitions.ME_Repository
             if (FileExtensionFilters == null)
             {
                 Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(FileExtensionFilters)} is null.");
+                return false;
+            }
+
+            if (MessageControl == null)
+            {
+                Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(MessageControl)} is null.");
                 return false;
             }
 

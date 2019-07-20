@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MeasurementEvaluator
@@ -87,7 +86,7 @@ namespace MeasurementEvaluator
                     _application.MainWindow = mainWindow;
                     mainWindow.Show();
 
-                    _initCompletedEvent.WaitOne(9);
+                    _initCompletedEvent.WaitOne();
 
                     if (!_window.InitializationCompleted())
                     {
@@ -135,7 +134,7 @@ namespace MeasurementEvaluator
 
             _application.Shutdown();
 
-            Task.Run(() => _uiFinishedEvent.Set());
+            _uiFinishedEvent.Set();
         }
 
     }

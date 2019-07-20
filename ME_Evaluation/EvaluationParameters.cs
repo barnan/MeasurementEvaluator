@@ -32,8 +32,13 @@ namespace MeasurementEvaluator.ME_Evaluation
         public IUIMessageControl MessageControl { get; private set; }
 
 
+        public string Name { get; private set; }
+
+
         public bool Load(string sectionName)
         {
+            Name = sectionName;
+
             Logger = LogManager.GetCurrentClassLogger();
 
             PluginLoader.ConfigManager.Load(this, sectionName);

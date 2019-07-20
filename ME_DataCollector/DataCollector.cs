@@ -103,7 +103,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
             InitializationState = InitializationStates.Initialized;
 
-            _parameters.MessageControl.AddMessage($"DataCollector initialized.");
+            _parameters.MessageControl.AddMessage($"{_parameters.Name} initialized.");
         }
 
         protected override void InternalClose()
