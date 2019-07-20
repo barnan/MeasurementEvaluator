@@ -5,12 +5,12 @@ using NLog;
 using System;
 using System.Collections.ObjectModel;
 
-namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
+namespace MeasurementEvaluatorUIWPF.MessageControlUI
 {
 
     public class UIMessageControl : ViewModelBase, IUIMessageControl
     {
-        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
+        private readonly ILogger _logger = LogManager.GetLogger(nameof(UIMessageControl));
         private readonly object _lockObj = new object();
 
 
@@ -31,14 +31,14 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
 
                 if (_logger.IsTraceEnabled)
                 {
-                    _logger.Trace($"Message arrived. Text: {msg.MessageText}, Severity level: {msg.MessageSeverityLevel}");
+                    _logger.Trace($"Message received. Text: {msg.MessageText}, Severity level: {msg.MessageSeverityLevel}");
                 }
             }
         }
 
         public event EventHandler MessageReceived;
 
-        private ObservableCollection<Message> _messages;
+        private ObservableCollection<Message> _messages = new ObservableCollection<Message>();
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
@@ -54,9 +54,9 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF
 
     public class Message
     {
-        public string MessageText { get; internal set; }
+        public string MessageText { get; set; }
 
-        public MessageSeverityLevels MessageSeverityLevel { get; internal set; }
+        public MessageSeverityLevels MessageSeverityLevel { get; set; }
     }
 
 

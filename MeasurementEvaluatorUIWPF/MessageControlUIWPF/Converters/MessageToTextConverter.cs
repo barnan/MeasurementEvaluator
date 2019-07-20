@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters
+namespace MeasurementEvaluatorUIWPF.MessageControlUI.Converters
 {
     public class MessageToTextConverter : IValueConverter
     {

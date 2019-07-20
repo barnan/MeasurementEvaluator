@@ -11,4 +11,10 @@ namespace Interfaces.Misc
         event EventHandler MessageReceived;
     }
 
+
+
+    public interface IMessageControlUIWPF
+    {
+    }
+
 }

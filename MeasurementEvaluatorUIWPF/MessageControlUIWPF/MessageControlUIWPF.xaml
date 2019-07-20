@@ -1,28 +1,28 @@
-﻿<base:UserControlBase x:Class="MeasurementEvaluatorUIWPF.MessageControlUIWPF.MessageControlUIWPF"
+﻿<base:UserControlBase x:Class="MeasurementEvaluatorUIWPF.MessageControlUI.MessageControlUIWPF"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
+             xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUI"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
-             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters"
+             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance local:UIMessageControl, IsDesignTimeCreatable=False}" >
     
-    <ListView ItemsSource="{Binding Messages}">
-        
-        <ListView.Resources>
+    <ItemsControl ItemsSource="{Binding Messages}">
+
+        <ItemsControl.Resources>
             <converters:MessageToColorConverter x:Key="MessageToColorConverter" />
             <converters:MessageToTextConverter x:Key="MessageToTextConverter" />
-        </ListView.Resources>
-        
-        <ListView.ItemTemplate>
+        </ItemsControl.Resources>
+
+        <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <TextBox Text="{Binding MessageText, Converter={StaticResource MessageToTextConverter}}" 
-                Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}" Background="Gray"/>
+                Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}"/>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 
 </base:UserControlBase>

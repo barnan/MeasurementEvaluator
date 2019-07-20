@@ -333,6 +333,8 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             var resultreadyevent = ResultReadyEvent;
             resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
+
+            _parameters.MessageControl.AddMessage("Calculation Finished");
         }
 
 

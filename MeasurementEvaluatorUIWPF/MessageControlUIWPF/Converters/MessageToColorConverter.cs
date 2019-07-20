@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters
+namespace MeasurementEvaluatorUIWPF.MessageControlUI.Converters
 {
     public class MessageToColorConverter : IValueConverter
     {

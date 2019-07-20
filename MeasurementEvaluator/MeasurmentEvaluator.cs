@@ -19,6 +19,10 @@ namespace MeasurementEvaluator
         private readonly ILogger _logger;
         private readonly ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
+        private readonly ManualResetEvent _windowCreatedEvent = new ManualResetEvent(false);
+
+        private readonly ManualResetEvent _initCompletedEvent = new ManualResetEvent(false);
+
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private readonly string _mainWindowName = null;
 
@@ -67,11 +71,6 @@ namespace MeasurementEvaluator
                     return;
                 }
 
-                Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
-                if (!Evaluator.Initiailze())
-                {
-                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
-                }
 
                 // Start UI:
                 Thread appThread = new Thread(() =>
@@ -80,11 +79,15 @@ namespace MeasurementEvaluator
 
                     _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
 
+                    _windowCreatedEvent.Set();
+
                     Window mainWindow = (Window)_window;
                     mainWindow.Closed += MainWindow_OnClosed;
 
                     _application.MainWindow = mainWindow;
                     mainWindow.Show();
+
+                    _initCompletedEvent.WaitOne(9);
 
                     if (!_window.InitializationCompleted())
                     {
@@ -101,6 +104,16 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
+                _windowCreatedEvent.WaitOne();  // to have instantiated message controller UI
+
+                // create evaluator
+                Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
+                if (!Evaluator.Initiailze())
+                {
+                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
+                }
+
+                _initCompletedEvent.Set();
 
                 _uiFinishedEvent.WaitOne();
 

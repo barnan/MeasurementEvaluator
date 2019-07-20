@@ -27,6 +27,7 @@ namespace MeasurementEvaluator.ME_DataCollector
         private string _specificationRepositoryName = null;
         internal IRepository SpecificationRepository { get; private set; }
 
+        public IUIMessageControl MessageControl { get; private set; }
 
 
         internal bool Load(string sectionName)
@@ -39,6 +40,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             ReferenceRepository = PluginLoader.CreateInstance<IRepository>(_referenceRepositoryName);
             MeasurementDataRepository = PluginLoader.CreateInstance<IRepository>(_measurementDataRepositoryName);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProviderName);
+            MessageControl = PluginLoader.CreateInstance<IUIMessageControl>("MessageControl");
 
             return CheckComponent();
         }
@@ -57,7 +59,6 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return false;
             }
 
-
             if (MeasurementDataRepository == null)
             {
                 Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(MeasurementDataRepository)} is null.");
@@ -67,6 +68,12 @@ namespace MeasurementEvaluator.ME_DataCollector
             if (DateTimeProvider == null)
             {
                 Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(DateTimeProvider)} is null.");
+                return false;
+            }
+
+            if (MessageControl == null)
+            {
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(MessageControl)} is null.");
                 return false;
             }
 

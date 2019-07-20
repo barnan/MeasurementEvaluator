@@ -2,6 +2,7 @@
 using Frame.PluginLoader;
 using Interfaces.Misc;
 using MeasurementEvaluatorUIWPF.Base;
+using MeasurementEvaluatorUIWPF.MessageControlUI;
 using System.Collections.Generic;
 
 namespace MeasurementEvaluatorUIWPF
@@ -13,8 +14,13 @@ namespace MeasurementEvaluatorUIWPF
         public List<ITabUIWPF> Tabs { get; private set; }        // todo: fill the Title at instantiation time!!
 
 
+        public MessageControlUIWPF MessageControlUIWPF { get; private set; }
+
+
         internal bool Load(string sectionName)
         {
+            MessageControlUIWPF = PluginLoader.CreateInstance<MessageControlUIWPF>("MessageControl");
+
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             Name = sectionName;

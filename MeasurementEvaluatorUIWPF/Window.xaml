@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF"
-        xmlns:messageControlUiwpf="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
+        xmlns:messageControlUiwpf="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUI"
         xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.Converters"
         mc:Ignorable="d"
         Closed="Window_OnClosed"
@@ -46,8 +46,9 @@
             </TabControl.ItemContainerStyle>
         </TabControl>
 
-        <GroupBox Grid.Row="1" Header="Messages">
-            <messageControlUiwpf:MessageControlUIWPF />
+        <GroupBox Grid.Row="1" Header="Messages" Margin="1">
+            <!--<messageControlUiwpf:MessageControlUIWPF />-->
+            <ContentPresenter Content="{Binding Parameters.MessageControlUIWPF}" />
         </GroupBox>
 
     </Grid>

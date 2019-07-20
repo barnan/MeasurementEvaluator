@@ -29,6 +29,9 @@ namespace MeasurementEvaluator.ME_Evaluation
         internal IMathing Matcher { get; private set; }
 
 
+        public IUIMessageControl MessageControl { get; private set; }
+
+
         public bool Load(string sectionName)
         {
             Logger = LogManager.GetCurrentClassLogger();
@@ -39,6 +42,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollector);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
             Matcher = PluginLoader.CreateInstance<IMathing>(_matcher);
+            MessageControl = PluginLoader.CreateInstance<IUIMessageControl>("MessageControl");
 
             return CheckComponent();
         }
@@ -66,6 +70,12 @@ namespace MeasurementEvaluator.ME_Evaluation
             if (Matcher == null)
             {
                 Logger.Error($"Error in the {nameof(EvaluationParameters)} loading. {nameof(Matcher)} is null.");
+                return false;
+            }
+
+            if (MessageControl == null)
+            {
+                Logger.Error($"Error in the {nameof(EvaluationParameters)} loading. {nameof(MessageControl)} is null.");
                 return false;
             }
 
