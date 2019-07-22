@@ -1,7 +1,7 @@
 ﻿using Frame.ConfigHandler;
+using Frame.MessageHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
-using Interfaces.Misc;
 using NLog;
 
 namespace MeasurementEvaluator.ME_Matching
@@ -33,7 +33,7 @@ namespace MeasurementEvaluator.ME_Matching
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             PairingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_pairingFileReader);
-            MessageControl = PluginLoader.CreateInstance<IUIMessageControl>("MessageControl");
+            MessageControl = PluginLoader.MessageControll;
 
             return CheckComponent();
         }

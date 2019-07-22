@@ -98,7 +98,6 @@
     <Compile Include="Base\UserControlBase.cs" />
     <Compile Include="Base\ViewModelBase.cs" />
     <Compile Include="MessageControlUIWPF\Converters\MessageToColorConverter.cs" />
-    <Compile Include="MessageControlUIWPF\UIMessageControl.cs" />
     <Compile Include="MessageControlUIWPF\MessageControlUIWPF.xaml.cs">
       <DependentUpon>MessageControlUIWPF.xaml</DependentUpon>
     </Compile>

@@ -18,19 +18,17 @@ namespace MeasurementEvaluator
         private readonly ILogger _logger;
         private readonly ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
 
-        private readonly ManualResetEvent _windowCreatedEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent _blCreatedEvent = new ManualResetEvent(false);
 
-        private readonly ManualResetEvent _initCompletedEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent _blInitCompletedEvent = new ManualResetEvent(false);
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private readonly string _mainWindowName = null;
 
         [Configuration("Name of the evaluator", "Evaluator Name", true)]
-        private readonly string _dataEvaluatorName = null;
+        private readonly string _evaluatorName = null;
         private IEvaluation Evaluator { get; set; }
 
-
-        private IWindowUIWPF _window;
 
 
         [Configuration("true -> the application does not start, only some dummy objects will be (re)created.", "Create Dummy Objects", true)]
@@ -74,21 +72,20 @@ namespace MeasurementEvaluator
                 // Start UI:
                 Thread appThread = new Thread(() =>
                 {
-                    _application = new Application();
+                    _blCreatedEvent.WaitOne();
 
-                    _window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
+                    IWindowUIWPF window = PluginLoader.CreateInstance<IWindowUIWPF>(_mainWindowName);
 
-                    _windowCreatedEvent.Set();
-
-                    Window mainWindow = (Window)_window;
+                    Window mainWindow = (Window)window;
                     mainWindow.Closed += MainWindow_OnClosed;
 
-                    _application.MainWindow = mainWindow;
+
+                    _application = new Application { MainWindow = mainWindow };
                     mainWindow.Show();
 
-                    _initCompletedEvent.WaitOne();
+                    _blInitCompletedEvent.WaitOne();
 
-                    if (!_window.InitializationCompleted())
+                    if (!window.InitializationCompleted())
                     {
                         _logger.Error("InitializationCompleted event failed.");
                         return;
@@ -103,16 +100,18 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
-                _windowCreatedEvent.WaitOne();  // to have instantiated message controller UI
+
 
                 // create evaluator
-                Evaluator = PluginLoader.CreateInstance<IEvaluation>(_dataEvaluatorName);
+                Evaluator = PluginLoader.CreateInstance<IEvaluation>(_evaluatorName);
                 if (!Evaluator.Initiailze())
                 {
                     PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
                 }
 
-                _initCompletedEvent.Set();
+                _blCreatedEvent.Set();
+
+                _blInitCompletedEvent.Set();
 
                 _uiFinishedEvent.WaitOne();
 

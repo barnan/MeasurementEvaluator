@@ -1,4 +1,5 @@
 ﻿using Frame.ConfigHandler;
+using Frame.MessageHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using Interfaces.Misc;
@@ -45,7 +46,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             ReferenceRepository = PluginLoader.CreateInstance<IRepository>(_referenceRepositoryName);
             MeasurementDataRepository = PluginLoader.CreateInstance<IRepository>(_measurementDataRepositoryName);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProviderName);
-            MessageControl = PluginLoader.CreateInstance<IUIMessageControl>("MessageControl");
+            MessageControl = PluginLoader.MessageControll;
 
             return CheckComponent();
         }

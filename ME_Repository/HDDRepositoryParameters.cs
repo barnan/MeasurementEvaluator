@@ -1,7 +1,7 @@
 ﻿using Frame.ConfigHandler;
+using Frame.MessageHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
-using Interfaces.Misc;
 using NLog;
 using System.Collections.Generic;
 
@@ -35,7 +35,7 @@ namespace DataAcquisitions.ME_Repository
 
             HDDReaderWriter = PluginLoader.CreateInstance<IHDDFileReaderWriter>(_hddDReaderWriter);
 
-            MessageControl = PluginLoader.CreateInstance<IUIMessageControl>("MessageControl");
+            MessageControl = PluginLoader.MessageControll;
 
             return CheckComponent();
         }

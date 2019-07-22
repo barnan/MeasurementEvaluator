@@ -1,4 +1,5 @@
 ﻿using DataStructures.MeasuredData;
+using Frame.MessageHandler;
 using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.Evaluation;

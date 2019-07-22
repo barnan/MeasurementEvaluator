@@ -367,17 +367,4 @@ namespace Interfaces
         public T Data => _data;
     }
 
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum MessageSeverityLevels
-    {
-        Trace,
-        Info,
-        Warning,
-        Error
-    }
-
 }
