@@ -4,6 +4,8 @@ using Interfaces.Misc;
 using MeasurementEvaluatorUI.Base;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
 namespace MeasurementEvaluatorUIWPF.MessageControlUI
@@ -11,7 +13,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
     /// <summary>
     /// Interaction logic for MessageControlUIWPF.xaml
     /// </summary>
-    public partial class MessageControlUIWPF : UserControlBase, IMessageControlUIWPF
+    public partial class MessageControlUIWPF : UserControlBase, IMessageControlUIWPF, INotifyPropertyChanged
     {
         private IUIMessageControl _messageControl;
         private readonly object obj = new object();
@@ -24,6 +26,18 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
             set
             {
                 _messages = value;
+            }
+        }
+
+
+        private MessageToUI _selectedMessage;
+        public MessageToUI SelectedMessage
+        {
+            get { return _selectedMessage; }
+            set
+            {
+                _selectedMessage = value;
+                OnPropertyChanged();
             }
         }
 
@@ -48,9 +62,23 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
                 return;
             }
 
-            Action act = delegate () { Messages.Add(new MessageToUI { Time = DateTime.Now, MessageSeverityLevel = receivedData.Data2, MessageText = receivedData.Data1 }); };
+            Action act = delegate ()
+            {
+                Messages.Add(new MessageToUI { Time = DateTime.Now, MessageSeverityLevel = receivedData.Data2, MessageText = receivedData.Data1 });
+                SelectedMessage = Messages[Messages.Count - 1];
+            };
 
             Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, act);
+        }
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 

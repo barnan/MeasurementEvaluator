@@ -76,6 +76,7 @@
     <Compile Include="Factory.cs" />
     <Compile Include="MainWindowParameters.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="MessageControlUIWPF\Converters\MessageToTextConverter.cs" />
     <Compile Include="MessageControlUIWPF\Factory.cs" />
     <Compile Include="TabItem.cs" />
     <Compile Include="UserControls\EditorTabUIWPF\EditorTabUIWPF.xaml.cs">

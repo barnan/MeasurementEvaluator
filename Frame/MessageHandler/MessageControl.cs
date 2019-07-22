@@ -4,17 +4,9 @@ using System;
 namespace Frame.MessageHandler
 {
 
-
-
-
-
-
-
-
     public class UIMessageControl : IUIMessageControl
     {
         private readonly ILogger _logger = LogManager.GetLogger(nameof(UIMessageControl));
-        private readonly object _lockObj = new object();
 
 
         public void AddMessage(string message)
@@ -24,23 +16,15 @@ namespace Frame.MessageHandler
 
         public void AddMessage(string message, MessageSeverityLevels severityLevel)
         {
-            lock (_lockObj)
-            {
-                MessageReceived?.Invoke(this, new MessageEventArg<string, MessageSeverityLevels>(message, severityLevel));
+            MessageReceived?.Invoke(this, new MessageEventArg<string, MessageSeverityLevels>(message, severityLevel));
 
-                if (_logger.IsTraceEnabled)
-                {
-                    _logger.Trace($"Message received. Text: {message}, Severity level: {severityLevel}");
-                }
+            if (_logger.IsTraceEnabled)
+            {
+                _logger.Trace($"Message received. Text: {message}, Severity level: {severityLevel}");
             }
         }
-
         public event EventHandler MessageReceived;
-
     }
-
-
-
 
 
     public interface IUIMessageControl
@@ -52,7 +36,6 @@ namespace Frame.MessageHandler
         event EventHandler MessageReceived;
     }
 
-
     public enum MessageSeverityLevels
     {
         Trace,
@@ -60,8 +43,6 @@ namespace Frame.MessageHandler
         Warning,
         Error
     }
-
-
 
     public class MessageEventArg<T, E> : EventArgs
     {
@@ -77,7 +58,4 @@ namespace Frame.MessageHandler
         public T Data1 => _data1;
         public E Data2 => _data2;
     }
-
-
-
 }

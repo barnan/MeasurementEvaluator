@@ -17,9 +17,8 @@ namespace MeasurementEvaluator
         private Application _application;
         private readonly ILogger _logger;
         private readonly ManualResetEvent _uiFinishedEvent = new ManualResetEvent(false);
-
+        private readonly ManualResetEvent _uiCreatedEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent _blCreatedEvent = new ManualResetEvent(false);
-
         private readonly ManualResetEvent _blInitCompletedEvent = new ManualResetEvent(false);
 
         [Configuration("Name of the used main window", "MainWindow Name", true)]
@@ -79,9 +78,10 @@ namespace MeasurementEvaluator
                     Window mainWindow = (Window)window;
                     mainWindow.Closed += MainWindow_OnClosed;
 
-
                     _application = new Application { MainWindow = mainWindow };
                     mainWindow.Show();
+
+                    _uiCreatedEvent.Set();
 
                     _blInitCompletedEvent.WaitOne();
 
@@ -91,6 +91,7 @@ namespace MeasurementEvaluator
                         return;
                     }
 
+                    _application.DispatcherUnhandledException += _application_DispatcherUnhandledException;
                     _application.Run(mainWindow);
 
                 });
@@ -100,19 +101,18 @@ namespace MeasurementEvaluator
                 appThread.IsBackground = true;
                 appThread.Start();
 
-
-
                 // create evaluator
                 Evaluator = PluginLoader.CreateInstance<IEvaluation>(_evaluatorName);
+
+                _blCreatedEvent.Set();
+                _uiCreatedEvent.WaitOne();
+
                 if (!Evaluator.Initiailze())
                 {
                     PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
                 }
 
-                _blCreatedEvent.Set();
-
                 _blInitCompletedEvent.Set();
-
                 _uiFinishedEvent.WaitOne();
 
                 PluginLoader.SendToInfoLogAndConsole($"{Assembly.GetExecutingAssembly().GetName().Name} was shut down.");
@@ -123,6 +123,11 @@ namespace MeasurementEvaluator
             {
                 PluginLoader.SendToErrorLogAndConsole($"Exception occured: {ex}");
             }
+        }
+
+        private void _application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            PluginLoader.SendToErrorLogAndConsole($"Exception occured: {sender} - {e.Exception.Message}");
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs eventArgs)

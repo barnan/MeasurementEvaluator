@@ -10,15 +10,25 @@
              d:DesignHeight="100" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance local:MessageControlUIWPF, IsDesignTimeCreatable=False}" >
 
-    <ListBox ItemsSource="{Binding Messages}">
+    <ListBox ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
 
         <ListBox.Resources>
             <converters:MessageToColorConverter x:Key="MessageToColorConverter" />
+            <converters:MessageToTextConverter x:Key="MessageToTextConverter" />
         </ListBox.Resources>
 
         <ListBox.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding MessageText}" Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}" Margin="0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource MessageToTextConverter}">
+                                <Binding Path="MessageText"/>
+                                <Binding Path="Time"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
             </DataTemplate>
         </ListBox.ItemTemplate>
     </ListBox>
