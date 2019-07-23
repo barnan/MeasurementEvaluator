@@ -41,6 +41,8 @@ namespace DataAcquisitions.ME_Repository
             }
 
             InitializationState = InitializationStates.Initialized;
+
+            _parameters.MessageControl.AddMessage($"{_parameters.Name} Repository initialized.");
         }
 
         protected override void InternalClose()

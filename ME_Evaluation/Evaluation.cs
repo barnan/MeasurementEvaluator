@@ -1,4 +1,5 @@
 ﻿using DataStructures.MeasuredData;
+using Frame.MessageHandler;
 using Interfaces;
 using Interfaces.Calculation;
 using Interfaces.Evaluation;
@@ -63,14 +64,18 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             if (!_parameters.Matcher.Initiailze())
             {
-                _parameters.Logger.MethodError($"{nameof(_parameters.Matcher)} could not been initialized.");
+                string message = $"{nameof(_parameters.Matcher)} could not been initialized.";
+                _parameters.Logger.MethodError(message);
+                _parameters.MessageControl.AddMessage(message, MessageSeverityLevels.Error);
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
 
             if (!_parameters.DataCollector.Initiailze())
             {
-                _parameters.Logger.MethodError($"{nameof(_parameters.DataCollector)} could not been initialized.");
+                string message = $"{nameof(_parameters.DataCollector)} could not been initialized.";
+                _parameters.Logger.MethodError(message);
+                _parameters.MessageControl.AddMessage(message, MessageSeverityLevels.Error);
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
@@ -87,6 +92,8 @@ namespace MeasurementEvaluator.ME_Evaluation
             _processThread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
+
+            _parameters.MessageControl.AddMessage($"{_parameters.Name} initialized");
         }
 
         protected override void InternalClose()
@@ -333,6 +340,8 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             var resultreadyevent = ResultReadyEvent;
             resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
+
+            _parameters.MessageControl.AddMessage("Calculation Finished");
         }
 
 

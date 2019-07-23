@@ -1,28 +1,36 @@
-﻿<base:UserControlBase x:Class="MeasurementEvaluatorUIWPF.MessageControlUIWPF.MessageControlUIWPF"
+﻿<base:UserControlBase x:Class="MeasurementEvaluatorUIWPF.MessageControlUI.MessageControlUIWPF"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF"
+             xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUI"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
-             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters"
+             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.MessageControlUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="500"
-             d:DataContext="{d:DesignInstance local:UIMessageControl, IsDesignTimeCreatable=False}" >
-    
-    <ListView ItemsSource="{Binding Messages}">
-        
-        <ListView.Resources>
+             d:DataContext="{d:DesignInstance local:MessageControlUIWPF, IsDesignTimeCreatable=False}" >
+
+    <ListBox ItemsSource="{Binding Messages}" SelectedItem="{Binding SelectedMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+
+        <ListBox.Resources>
             <converters:MessageToColorConverter x:Key="MessageToColorConverter" />
             <converters:MessageToTextConverter x:Key="MessageToTextConverter" />
-        </ListView.Resources>
-        
-        <ListView.ItemTemplate>
+        </ListBox.Resources>
+
+        <ListBox.ItemTemplate>
             <DataTemplate>
-                <TextBox Text="{Binding MessageText, Converter={StaticResource MessageToTextConverter}}" 
-                Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}" Background="Gray"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource MessageToTextConverter}">
+                                <Binding Path="MessageText"/>
+                                <Binding Path="Time"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </ListBox.ItemTemplate>
+    </ListBox>
 
 </base:UserControlBase>

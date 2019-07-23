@@ -2,31 +2,33 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MeasurementEvaluatorUIWPF.MessageControlUIWPF.Converters
+namespace MeasurementEvaluatorUIWPF.MessageControlUI.Converters
 {
-    public class MessageToTextConverter : IValueConverter
+    public class MessageToTextConverter : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
+            if (values.Length != 2)
             {
                 return Binding.DoNothing;
             }
 
-            Message msg;
-            try
-            {
-                msg = (Message)value;
-            }
-            catch (Exception)
+            if (!(values[0] is string text))
             {
                 return Binding.DoNothing;
             }
 
-            return msg?.MessageText ?? Binding.DoNothing;
+            if (!(values[1] is DateTime time))
+            {
+                return Binding.DoNothing;
+            }
+
+            string finalMessage = $"{time.ToString("yyyy.HH.dd - HH:mm:ss.fff")} - {text}";
+
+            return finalMessage;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

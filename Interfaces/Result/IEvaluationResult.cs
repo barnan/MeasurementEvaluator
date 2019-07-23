@@ -38,13 +38,13 @@ namespace Interfaces.Result
 
     public interface IQuantityEvaluationResult
     {
-        IReadOnlyList<IConditionEvaluationResult> ConditionCalculationResults { get; }
+        IReadOnlyList<IConditionEvaluationResult> ConditionEvaluationResults { get; }
     }
 
 
 
     public interface IEvaluationResult : IResult
     {
-        IReadOnlyList<IQuantityEvaluationResult> EvaluationResults { get; }
+        IReadOnlyList<IQuantityEvaluationResult> QuantityEvaluationResults { get; }
     }
 }

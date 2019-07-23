@@ -1,14 +1,8 @@
-﻿using System;
-
-namespace Interfaces.Misc
+﻿namespace Interfaces.Misc
 {
-    public interface IUIMessageControl
+
+    public interface IMessageControlUIWPF
     {
-        void AddMessage(string message);
-
-        void AddMessage(string message, MessageSeverityLevels severityLevel);
-
-        event EventHandler MessageReceived;
     }
 
 }

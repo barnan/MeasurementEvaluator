@@ -102,6 +102,8 @@ namespace MeasurementEvaluator.ME_DataCollector
             _processThread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
+
+            _parameters.MessageControl.AddMessage($"{_parameters.Name} initialized.");
         }
 
         protected override void InternalClose()
@@ -325,6 +327,5 @@ namespace MeasurementEvaluator.ME_DataCollector
             localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(_parameters.DateTimeProvider.GetDateTime(), true, _specification, measurementDatas, _reference)));
         }
     }
-
 
 }

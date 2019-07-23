@@ -11,13 +11,13 @@ namespace MeasurementEvaluator.ME_Evaluation
 {
     internal class EvaluationResult : ResultBase, IEvaluationResult
     {
-        public IReadOnlyList<IQuantityEvaluationResult> EvaluationResults { get; }
+        public IReadOnlyList<IQuantityEvaluationResult> QuantityEvaluationResults { get; }
 
 
-        public EvaluationResult(DateTime creationTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> evaluationResults)
+        public EvaluationResult(DateTime creationTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> quantityEvaluationResults)
             : base(creationTime, successfulCalculation)
         {
-            EvaluationResults = evaluationResults;
+            QuantityEvaluationResults = quantityEvaluationResults;
         }
 
     }
@@ -25,12 +25,12 @@ namespace MeasurementEvaluator.ME_Evaluation
 
     internal class QuantityEvaluationResult : IQuantityEvaluationResult
     {
-        public IReadOnlyList<IConditionEvaluationResult> ConditionCalculationResults { get; }
+        public IReadOnlyList<IConditionEvaluationResult> ConditionEvaluationResults { get; }
 
 
         public QuantityEvaluationResult(IReadOnlyList<IConditionEvaluationResult> conditionCalculationResults)
         {
-            ConditionCalculationResults = conditionCalculationResults;
+            ConditionEvaluationResults = conditionCalculationResults;
         }
     }
 

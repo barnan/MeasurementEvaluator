@@ -1,4 +1,5 @@
 ﻿using Frame.ConfigHandler;
+using Frame.MessageHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using NLog;
@@ -17,15 +18,22 @@ namespace MeasurementEvaluator.ME_Matching
         private string _bindingFilePath = "PairingDictionary";
         internal string BindingFilePath => _bindingFilePath;
 
+        public IUIMessageControl MessageControl { get; private set; }
+
+
+        public string Name { get; private set; }
 
 
         internal bool Load(string sectionName)
         {
+            Name = sectionName;
+
             Logger = LogManager.GetCurrentClassLogger();
 
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             PairingFileReader = PluginLoader.CreateInstance<IHDDFileReader>(_pairingFileReader);
+            MessageControl = PluginLoader.MessageControll;
 
             return CheckComponent();
         }
@@ -42,6 +50,12 @@ namespace MeasurementEvaluator.ME_Matching
             if (string.IsNullOrEmpty(BindingFilePath))
             {
                 Logger.Error($"Error in the {nameof(PairingParameters)} loading. {nameof(BindingFilePath)} is empty.");
+                return false;
+            }
+
+            if (MessageControl == null)
+            {
+                Logger.Error($"Error in the {nameof(PairingParameters)} loading. {nameof(MessageControl)} is null.");
                 return false;
             }
 

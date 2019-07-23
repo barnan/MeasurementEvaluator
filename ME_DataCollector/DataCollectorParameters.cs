@@ -1,4 +1,5 @@
 ﻿using Frame.ConfigHandler;
+using Frame.MessageHandler;
 using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using Interfaces.Misc;
@@ -27,10 +28,16 @@ namespace MeasurementEvaluator.ME_DataCollector
         private string _specificationRepositoryName = null;
         internal IRepository SpecificationRepository { get; private set; }
 
+        public IUIMessageControl MessageControl { get; private set; }
+
+
+        public string Name { get; private set; }
 
 
         internal bool Load(string sectionName)
         {
+            Name = sectionName;
+
             Logger = LogManager.GetLogger(sectionName);
 
             PluginLoader.ConfigManager.Load(this, sectionName);
@@ -39,6 +46,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             ReferenceRepository = PluginLoader.CreateInstance<IRepository>(_referenceRepositoryName);
             MeasurementDataRepository = PluginLoader.CreateInstance<IRepository>(_measurementDataRepositoryName);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProviderName);
+            MessageControl = PluginLoader.MessageControll;
 
             return CheckComponent();
         }
@@ -57,7 +65,6 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return false;
             }
 
-
             if (MeasurementDataRepository == null)
             {
                 Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(MeasurementDataRepository)} is null.");
@@ -67,6 +74,12 @@ namespace MeasurementEvaluator.ME_DataCollector
             if (DateTimeProvider == null)
             {
                 Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(DateTimeProvider)} is null.");
+                return false;
+            }
+
+            if (MessageControl == null)
+            {
+                Logger.Error($"Error in the {nameof(DataCollectorParameters)} loading. {nameof(MessageControl)} is null.");
                 return false;
             }
 

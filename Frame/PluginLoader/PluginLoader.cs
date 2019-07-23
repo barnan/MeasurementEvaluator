@@ -1,4 +1,5 @@
 ﻿using Frame.ConfigHandler;
+using Frame.MessageHandler;
 using Frame.PluginLoader.Interfaces;
 using NLog;
 using System;
@@ -43,7 +44,9 @@ namespace Frame.PluginLoader
         public static string ResultFolder { get; private set; }
         public static ConfigManager ConfigManager { get; private set; }
 
-        public bool Initialized { get; private set; }
+        public static bool Initialized { get; private set; }
+
+        public static IUIMessageControl MessageControll { get; private set; }
 
 
         static PluginLoader()
@@ -144,6 +147,8 @@ namespace Frame.PluginLoader
 #if RELEASE
                 ShowWindow(GetConsoleWindow(), SW_HIDE);
 #endif
+
+                    MessageControll = new UIMessageControl();
 
                     return Initialized = true;
                 }

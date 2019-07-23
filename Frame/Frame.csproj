@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ConfigHandler\ConfigurationAttribute.cs" />
     <Compile Include="ConfigHandler\ConfigManager.cs" />
+    <Compile Include="MessageHandler\MessageControl.cs" />
     <Compile Include="PluginLoader\ComponentList.cs" />
     <Compile Include="PluginLoader\Interfaces.cs" />
     <Compile Include="PluginLoader\PluginLoader.cs" />
@@ -55,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{6DCA4D70-0D2C-4A32-80BE-485667CEAC24}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using Interfaces.Misc;
 using MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF;
 using MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF;
 using MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF;
+using MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF;
 using System;
 
 namespace MeasurementEvaluatorUIWPF
@@ -64,15 +65,22 @@ namespace MeasurementEvaluatorUIWPF
                     }
                 }
 
+
+                if (name.Contains("ResultGrid"))
+                {
+                    ResultGridUIWPFParameters param = new ResultGridUIWPFParameters();
+                    if (param.Load(name))
+                    {
+                        ResultGridUIWPF instance = new ResultGridUIWPF(param);
+                        return instance;
+                    }
+                }
+
                 if (name.Contains("ResultHandling"))
                 {
                     return null;
                 }
 
-                if (name.Contains("DataCollector"))
-                {
-                    return null;
-                }
 
             }
 
