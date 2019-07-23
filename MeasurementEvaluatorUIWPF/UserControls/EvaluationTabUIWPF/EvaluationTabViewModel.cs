@@ -1,6 +1,8 @@
-﻿namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
+﻿using MeasurementEvaluatorUI.Base;
+
+namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
 {
-    class EvaluationTabViewModel
+    internal class EvaluationTabViewModel : ViewModelBase
     {
         public EvaluationTabUIWPFParameters Parameters { get; }
 

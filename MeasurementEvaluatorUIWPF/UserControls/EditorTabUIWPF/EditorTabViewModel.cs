@@ -2,7 +2,7 @@
 
 namespace MeasurementEvaluatorUIWPF.UserControls.EditorTabUIWPF
 {
-    class EditorTabViewModel : ViewModelBase
+    internal class EditorTabViewModel : ViewModelBase
     {
         public EditorTabUIWPFParameters Parameters { get; }
 

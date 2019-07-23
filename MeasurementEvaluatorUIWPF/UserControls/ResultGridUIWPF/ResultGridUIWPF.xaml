@@ -7,7 +7,32 @@
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="600">
+
     <Grid>
+        <DataGrid
+            ItemsSource="{Binding ConditionEvaluationResults}"
+            CanUserReorderColumns="False"
+            CanUserResizeRows="False"
+            CanUserSortColumns="False"
+            CanUserDeleteRows="False"
+            CanUserResizeColumns="False"
+            IsReadOnly="True"
+            AutoGenerateColumns="True"
+            HorizontalContentAlignment="Center"
+            HorizontalScrollBarVisibility="Visible"
+            EnableColumnVirtualization="False"
+            EnableRowVirtualization="False"
+            VirtualizingPanel.VirtualizationMode="Standard"
+            VirtualizingPanel.IsVirtualizing="False"
+                          
+            SelectionMode="Single"
+            SelectionUnit="FullRow">
+
             
+            
+            
+
+        </DataGrid>
     </Grid>
+
 </base:UserControlBase>

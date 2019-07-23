@@ -2,7 +2,7 @@
 
 namespace MeasurementEvaluatorUIWPF.UserControls.ResultHandlingUIWPF
 {
-    class ResultHandlingViewModel : ViewModelBase
+    internal class ResultHandlingViewModel : ViewModelBase
     {
     }
 }

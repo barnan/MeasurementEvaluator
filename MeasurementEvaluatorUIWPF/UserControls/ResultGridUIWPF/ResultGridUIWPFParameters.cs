@@ -1,16 +1,17 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
-using Interfaces.DataAcquisition;
+using Interfaces.Evaluation;
 using MeasurementEvaluatorUIWPF.Base;
 using NLog;
 
-namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
+namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
 {
-    public class DataCollectorUIWPFParameters : ParameterBase
+    public class ResultGridUIWPFParameters : ParameterBase
     {
-        [Configuration("Name of DataCollector component", "DataCollector", true)]
-        private string _dataCollectorName = null;
-        internal IDataCollector DataCollector { get; private set; }
+
+        [Configuration("Name of evaluator component", "Evaluator", true)]
+        private string _evaluatorName = null;
+        internal IEvaluation Evaluator { get; private set; }
 
 
         internal ILogger Logger { get; private set; }
@@ -22,7 +23,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             Name = sectionName;
 
             PluginLoader.ConfigManager.Load(this, sectionName);
-            DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollectorName);
+            Evaluator = PluginLoader.CreateInstance<IEvaluation>(_evaluatorName);
 
             return CheckComponent();
         }
@@ -30,7 +31,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         private bool CheckComponent()
         {
-            if (DataCollector == null)
+            if (Evaluator == null)
             {
                 return false;
             }
