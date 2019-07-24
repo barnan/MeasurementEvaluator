@@ -1,4 +1,6 @@
-﻿using Interfaces.Misc;
+﻿using System;
+using Interfaces.BaseClasses;
+using Interfaces.Misc;
 using Interfaces.Result;
 
 namespace Interfaces.ToolSpecifications
@@ -48,7 +50,7 @@ namespace Interfaces.ToolSpecifications
 
 
 
-    public interface IConditionHandler : ICondition
+    public interface IConditionHandler : ICondition, IFormattable
     {
         new CalculationTypes CalculationType { get; set; }
 

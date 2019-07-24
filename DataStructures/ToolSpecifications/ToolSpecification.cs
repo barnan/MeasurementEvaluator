@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;

@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;

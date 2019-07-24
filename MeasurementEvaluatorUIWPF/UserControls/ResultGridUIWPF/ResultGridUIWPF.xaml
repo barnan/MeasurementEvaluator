@@ -5,10 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF"
              xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
+             d:DataContext="{d:DesignInstance local:ResultGridViewModel, IsDesignTimeCreatable=False}"
+             xmlns:converters="clr-namespace:MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="600">
 
     <Grid>
+        <Grid.Resources>
+            <converters:ConditionConverter x:Key="ConditionConverter"/>
+        </Grid.Resources>
+        
+
         <DataGrid
             ItemsSource="{Binding ConditionEvaluationResults}"
             CanUserReorderColumns="False"
@@ -17,7 +24,7 @@
             CanUserDeleteRows="False"
             CanUserResizeColumns="False"
             IsReadOnly="True"
-            AutoGenerateColumns="True"
+            AutoGenerateColumns="False"
             HorizontalContentAlignment="Center"
             HorizontalScrollBarVisibility="Visible"
             EnableColumnVirtualization="False"
@@ -26,12 +33,16 @@
             VirtualizingPanel.IsVirtualizing="False"
                           
             SelectionMode="Single"
-            SelectionUnit="FullRow">
+            SelectionUnit="CellOrRowHeader">
 
-            
-            
-            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tool"></DataGridTextColumn>
+                <DataGridTextColumn Header="Quantity"></DataGridTextColumn>
+                <DataGridTextColumn Header="Condition" Binding="{Binding Condition, Converter={StaticResource ConditionConverter}}"/>
+                <DataGridTextColumn Header="Reference" Binding="{Binding ReferenceValue}"/>
+                <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionIsMet}"/>
 
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 

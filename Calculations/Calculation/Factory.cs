@@ -1,5 +1,5 @@
 ﻿using Frame.PluginLoader.Interfaces;
-using Interfaces;
+using Interfaces.BaseClasses;
 using Interfaces.Calculation;
 using System;
 using System.Collections.Generic;

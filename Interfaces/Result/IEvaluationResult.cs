@@ -1,12 +1,13 @@
 ﻿using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
+using System;
 using System.Collections.Generic;
 
 namespace Interfaces.Result
 {
 
-    public interface IConditionEvaluationResult : IResult
+    public interface IConditionEvaluationResult : IResult, IFormattable
     {
         /// <summary>
         /// the result is calculated from this measuremnt series data

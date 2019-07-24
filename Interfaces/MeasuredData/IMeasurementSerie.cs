@@ -1,4 +1,5 @@
-﻿using Interfaces.Misc;
+﻿using Interfaces.BaseClasses;
+using Interfaces.Misc;
 using System.Collections.Generic;
 
 namespace Interfaces.MeasuredData

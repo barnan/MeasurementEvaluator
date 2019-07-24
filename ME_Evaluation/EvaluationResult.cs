@@ -19,7 +19,6 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             QuantityEvaluationResults = quantityEvaluationResults;
         }
-
     }
 
 
@@ -68,7 +67,20 @@ namespace MeasurementEvaluator.ME_Evaluation
             Result = result;
         }
 
-    }
 
+        public override string ToString()
+        {
+            if (ReferenceValue == null || Condition == null)
+            {
+                return string.Empty;
+            }
+
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }

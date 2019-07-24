@@ -6,6 +6,7 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
+using Interfaces.BaseClasses;
 
 namespace Calculations.Calculation
 {

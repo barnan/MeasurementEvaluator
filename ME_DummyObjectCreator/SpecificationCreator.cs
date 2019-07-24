@@ -1,5 +1,5 @@
 ﻿using DataStructures.ToolSpecifications;
-using Interfaces;
+using Interfaces.BaseClasses;
 using Interfaces.DataAcquisition;
 using Interfaces.ToolSpecifications;
 using System.Collections.Generic;

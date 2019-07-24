@@ -1,4 +1,6 @@
-﻿namespace Interfaces.ToolSpecifications
+﻿using Interfaces.BaseClasses;
+
+namespace Interfaces.ToolSpecifications
 {
     public interface ISimpleCondition : ICondition<double>
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Interfaces.BaseClasses;
+using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {

@@ -3,6 +3,7 @@ using Interfaces.Calculation;
 using Miscellaneous;
 using System.Collections.Generic;
 using System.Linq;
+using Interfaces.BaseClasses;
 
 namespace Calculations.CalculationContainer
 {

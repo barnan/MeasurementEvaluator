@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
@@ -44,12 +44,7 @@ namespace DataStructures.ToolSpecifications
                 return false;
             }
 
-            if (!(calculationResult is IQCellsCalculationResult qcellsResult))
-            {
-                return false;
-            }
-
-            return Compare(qcellsResult.ResultValue);
+            return Compare((calculationResult as IQCellsCalculationResult).ResultValue);
         }
 
         #endregion
@@ -57,7 +52,6 @@ namespace DataStructures.ToolSpecifications
 
         public override XElement SaveToXml(XElement inputElement)
         {
-            //inputElement.SetAttributeValue(nameof(Name), Name);
             this.TrySave(Name, inputElement, nameof(Name));
             this.TrySave(Enabled, inputElement, nameof(Enabled));
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));

@@ -2,21 +2,18 @@
 using Interfaces.Result;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Xml.Linq;
 
-namespace Interfaces
+namespace Interfaces.BaseClasses
 {
 
-    /// <summary>
-    /// 
-    /// </summary>
     public sealed class Relations : IXmlStorable
     {
         private const string XELEMENT_ATTRIBUTE_NAME = "Value";
 
         public string Name { get; private set; }
         public int Value { get; private set; }
+        private string Text { get; set; }
 
         public Relations(string name, int value)
         {
@@ -39,17 +36,17 @@ namespace Interfaces
             public const int ALLWAYS = 6;
         }
 
-        public static Relations EQUAL = new Relations(nameof(EQUAL), RelationsEnumValues.EQUAL);
-        public static Relations NOTEQUAL = new Relations(nameof(NOTEQUAL), RelationsEnumValues.NOTEQUAL);
-        public static Relations LESS = new Relations(nameof(LESS), RelationsEnumValues.LESS);
-        public static Relations LESSOREQUAL = new Relations(nameof(LESSOREQUAL), RelationsEnumValues.LESSOREQUAL);
-        public static Relations GREATER = new Relations(nameof(GREATER), RelationsEnumValues.GREATER);
-        public static Relations GREATEROREQUAL = new Relations(nameof(GREATEROREQUAL), RelationsEnumValues.GREATEROREQUAL);
-        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), RelationsEnumValues.ALLWAYS);
+        public static Relations EQUAL = new Relations(nameof(EQUAL), RelationsEnumValues.EQUAL) { Text = "==" };
+        public static Relations NOTEQUAL = new Relations(nameof(NOTEQUAL), RelationsEnumValues.NOTEQUAL) { Text = "!=" };
+        public static Relations LESS = new Relations(nameof(LESS), RelationsEnumValues.LESS) { Text = ">" };
+        public static Relations LESSOREQUAL = new Relations(nameof(LESSOREQUAL), RelationsEnumValues.LESSOREQUAL) { Text = ">=" };
+        public static Relations GREATER = new Relations(nameof(GREATER), RelationsEnumValues.GREATER) { Text = "<" };
+        public static Relations GREATEROREQUAL = new Relations(nameof(GREATEROREQUAL), RelationsEnumValues.GREATEROREQUAL) { Text = "<=" };
+        public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), RelationsEnumValues.ALLWAYS) { Text = "" };
 
         public override string ToString()
         {
-            return Name;
+            return Text;
         }
 
         public static implicit operator int(Relations rel)
@@ -121,60 +118,6 @@ namespace Interfaces
     }
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum Relativity
-    {
-        Absolute = 0,
-        Relative = 1
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum SampleOrientation
-    {
-        [Description("0 degree")]
-        Orientation_0 = 0,
-
-        [Description("90 degree")]
-        Orientation_90 = 90,
-
-        [Description("180 degree")]
-        Orientation_180 = 180,
-
-        [Description("270 degree")]
-        Orientation_270 = 270
-    };
-
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum Units
-    {
-        [Description("ADU")]
-        ADU = 0,
-
-        [Description("count")]
-        count,
-
-        [Description("mm")]
-        mm,
-
-        [Description("um")]
-        um,
-
-        [Description("Ohmcm")]
-        Ohmcm,
-
-        [Description("sec")]
-        sec
-
-    };
 
 
 

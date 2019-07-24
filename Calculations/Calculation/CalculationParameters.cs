@@ -1,6 +1,7 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
 using Interfaces;
+using Interfaces.BaseClasses;
 using Interfaces.Misc;
 using NLog;
 

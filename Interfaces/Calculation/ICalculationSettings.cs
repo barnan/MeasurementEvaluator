@@ -1,4 +1,6 @@
-﻿namespace Interfaces.Calculation
+﻿using Interfaces.BaseClasses;
+
+namespace Interfaces.Calculation
 {
 
     /// <summary>

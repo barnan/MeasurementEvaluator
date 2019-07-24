@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.Calculation;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
@@ -81,6 +81,5 @@ namespace Calculations.Calculation
             return Math.Sqrt(sumOfDerivationAverage - average * average);
         }
 
-        //public abstract ICalculationSettings CreateSettings(ICondition condition, IReferenceValue sample);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
@@ -9,9 +9,6 @@ namespace DataStructures.ToolSpecifications
 {
     public class SimpleCondition : ConditionBase<double>, ISimpleConditionHandler
     {
-
-        private const string _XML_NODE = "Condition";
-
 
         public Relations ValidIf { get; set; }
 
@@ -37,12 +34,7 @@ namespace DataStructures.ToolSpecifications
                 return false;
             }
 
-            if (!(calculationResult is ISimpleCalculationResult simpleResult))
-            {
-                return false;
-            }
-
-            return Compare(simpleResult.ResultValue);
+            return Compare((calculationResult as ISimpleCalculationResult).ResultValue);
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using Interfaces.Misc;
 using System;
 using System.Collections.Generic;
+using Interfaces.BaseClasses;
 
 namespace Interfaces.ToolSpecifications
 {

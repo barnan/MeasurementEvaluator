@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.DataAcquisition;
 using Interfaces.Misc;
 using System;

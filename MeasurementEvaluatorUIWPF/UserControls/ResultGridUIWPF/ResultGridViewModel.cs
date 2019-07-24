@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.Result;
 using MeasurementEvaluatorUI.Base;
 using System;
@@ -55,6 +55,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
 
             Action act = delegate ()
             {
+                ConditionEvaluationResults.Clear();
                 foreach (IConditionEvaluationResult element in elements)
                 {
                     ConditionEvaluationResults.Add(element);

@@ -1,5 +1,5 @@
 ﻿using Frame.PluginLoader;
-using Interfaces;
+using Interfaces.BaseClasses;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Interfaces.Misc;

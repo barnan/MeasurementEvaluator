@@ -1,4 +1,5 @@
-﻿using Interfaces.Misc;
+﻿using Interfaces.BaseClasses;
+using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;

@@ -1,8 +1,11 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
@@ -55,7 +58,21 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}{Environment.NewLine}RelativeOrAbsolute: {RelOrAbs}";
+            FieldInfo fieldInfo = this.GetType().GetField(RelOrAbs.ToString());
+            DescriptionAttribute[] attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+
+            string enumDescription = "";
+            if (attributes != null && attributes.Any())
+            {
+                enumDescription = attributes.First().Description;
+            }
+
+            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}{Environment.NewLine}{enumDescription}";
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+
         }
 
         #endregion
@@ -111,9 +128,14 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        protected bool CheckCalculationType(IResult calculationResult, CalculationTypes calculationType)
+        protected bool CheckCalculationType(IResult calculationResult, CalculationTypes calcType)
         {
-            switch (calculationType)
+            if (CalculationType != calcType)
+            {
+                return false;
+            }
+
+            switch (calcType)
             {
                 case CalculationTypes.Unknown:
                     return false;
@@ -128,7 +150,7 @@ namespace DataStructures.ToolSpecifications
                 case CalculationTypes.GRAndR:
                     return calculationResult is IGRAndRCalculationResult;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(calculationType), calculationType, null);
+                    throw new ArgumentOutOfRangeException(nameof(calcType), calcType, null);
             }
         }
 
@@ -137,7 +159,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"{base.ToString()}{Environment.NewLine}True, if {ConditionRelation} than {LeftValue}";
+            return $"{base.ToString()}{Environment.NewLine}{LeftValue}{ConditionRelation}";
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Interfaces.BaseClasses;
+using System;
 
 namespace Interfaces.DataAcquisition
 {

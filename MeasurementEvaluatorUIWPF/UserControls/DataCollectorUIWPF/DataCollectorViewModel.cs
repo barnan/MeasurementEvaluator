@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using MeasurementEvaluatorUI.Base;

@@ -1,6 +1,6 @@
 ﻿using DataStructures.MeasuredData;
 using Frame.MessageHandler;
-using Interfaces;
+using Interfaces.BaseClasses;
 using Interfaces.Calculation;
 using Interfaces.Evaluation;
 using Interfaces.MeasuredData;
