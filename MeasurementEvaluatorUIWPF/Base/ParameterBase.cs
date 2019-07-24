@@ -1,5 +1,6 @@
 ﻿using Interfaces.Misc;
 using System;
+using System.Windows.Threading;
 
 namespace MeasurementEvaluatorUIWPF.Base
 {
@@ -37,5 +38,12 @@ namespace MeasurementEvaluatorUIWPF.Base
             eventhandlers?.Invoke(this, new EventArgs());
         }
 
+
+        private static Dispatcher _mainWindowDispatcher;
+        public Dispatcher MainWindowDispatcher
+        {
+            get => _mainWindowDispatcher;
+            set => _mainWindowDispatcher = value;
+        }
     }
 }

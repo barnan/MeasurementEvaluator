@@ -17,6 +17,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
     {
         private IUIMessageControl _messageControl;
         private readonly object obj = new object();
+        private MessageControlParameters _parameters;
 
 
         private ObservableCollection<MessageToUI> _messages;
@@ -42,8 +43,10 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
         }
 
 
-        public MessageControlUIWPF()
+        public MessageControlUIWPF(MessageControlParameters parameters)
         {
+            _parameters = parameters;
+
             InitializeComponent();
 
             DataContext = this;
@@ -67,8 +70,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
                 Messages.Add(new MessageToUI { Time = DateTime.Now, MessageSeverityLevel = receivedData.Data2, MessageText = receivedData.Data1 });
                 SelectedMessage = Messages[Messages.Count - 1];
             };
-
-            Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, act);
+            _parameters.MainWindowDispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, act);
         }
 
 

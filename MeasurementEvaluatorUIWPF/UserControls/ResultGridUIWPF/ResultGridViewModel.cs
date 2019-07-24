@@ -1,29 +1,31 @@
 ﻿using Interfaces;
 using Interfaces.Result;
 using MeasurementEvaluatorUI.Base;
-using System.Collections.Generic;
+using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
 {
     internal class ResultGridViewModel : ViewModelBase
     {
-        private ResultGridUIWPFParameters Parameters { get; }
+        private ResultGridUIWPFParameters _parameters;
 
 
         public ResultGridViewModel(ResultGridUIWPFParameters parameters)
         {
-            Parameters = parameters;
-
-            Parameters.Evaluator.SubscribeToResultReadyEvent(Evaluator_OnResultready);
+            _parameters = parameters;
+            _parameters.Evaluator.SubscribeToResultReadyEvent(Evaluator_OnResultReady);
+            ConditionEvaluationResults = new ObservableCollection<IConditionEvaluationResult>();
         }
 
 
 
         #region Props
 
-        private List<IConditionEvaluationResult> _conditionEvaluationResults;
-        public List<IConditionEvaluationResult> ConditionEvaluationResults
+        private ObservableCollection<IConditionEvaluationResult> _conditionEvaluationResults;
+        public ObservableCollection<IConditionEvaluationResult> ConditionEvaluationResults
         {
             get
             {
@@ -40,7 +42,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
 
         #region private
 
-        private void Evaluator_OnResultready(object sender, ResultEventArgs eventArgs)
+        private void Evaluator_OnResultReady(object sender, ResultEventArgs eventArgs)
         {
             if (!(eventArgs?.Result is IEvaluationResult evaluationResult))
             {
@@ -48,9 +50,20 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
                 return;
             }
 
-            ConditionEvaluationResults = evaluationResult.QuantityEvaluationResults.SelectMany(p => p.ConditionEvaluationResults).ToList();
-        }
+            var elements = evaluationResult.QuantityEvaluationResults.SelectMany(p => p.ConditionEvaluationResults);
 
+
+            Action act = delegate ()
+            {
+                foreach (IConditionEvaluationResult element in elements)
+                {
+                    ConditionEvaluationResults.Add(element);
+                }
+            };
+
+            _parameters.MainWindowDispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, act);
+
+        }
 
         #endregion
 

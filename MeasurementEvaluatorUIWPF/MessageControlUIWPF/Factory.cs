@@ -11,7 +11,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI
         {
             if (t.IsAssignableFrom(typeof(MessageControlUIWPF)))
             {
-                return _messageControlUI ?? (_messageControlUI = new MessageControlUIWPF());
+                return _messageControlUI ?? (_messageControlUI = new MessageControlUIWPF(new MessageControlParameters()));
             }
 
             return null;

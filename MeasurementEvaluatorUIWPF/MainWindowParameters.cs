@@ -4,6 +4,7 @@ using Interfaces.Misc;
 using MeasurementEvaluatorUIWPF.Base;
 using MeasurementEvaluatorUIWPF.MessageControlUI;
 using System.Collections.Generic;
+using System.Windows.Threading;
 
 namespace MeasurementEvaluatorUIWPF
 {
@@ -15,6 +16,13 @@ namespace MeasurementEvaluatorUIWPF
 
 
         public MessageControlUIWPF MessageControlUIWPF { get; private set; }
+
+
+        public MainWindowParameters()
+        {
+            MainWindowDispatcher = Dispatcher.CurrentDispatcher;
+        }
+
 
 
         internal bool Load(string sectionName)
