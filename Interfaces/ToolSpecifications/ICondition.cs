@@ -8,7 +8,7 @@ using System;
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface ICondition : INamed, IXmlStorable
+    public interface ICondition : INamed, IXmlStorable, IFormattable
     {
 
         /// <summary>
@@ -27,6 +27,11 @@ namespace Interfaces.ToolSpecifications
         Relativity RelOrAbs { get; }
 
         /// <summary>
+        /// Relation in the condition    e.g.  <  >  ==  >=  <=
+        /// </summary>
+        Relations ConditionRelation { get; }
+
+        /// <summary>
         /// Checks the condition. The calculation result contains the approppriate result
         /// </summary>
         /// <param name="calculationResult"></param>
@@ -34,7 +39,7 @@ namespace Interfaces.ToolSpecifications
         /// <param name="measSerie"></param>
         /// <param name="referenceValue"></param>
         /// <returns>the relation is met (true) or not (false)</returns>
-        IConditionEvaluationResult Compare(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue);
+        IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue);
     }
 
 
@@ -43,11 +48,6 @@ namespace Interfaces.ToolSpecifications
         where T : struct
     {
         /// <summary>
-        /// Relation in the condition    e.g.  <  >  ==  >=  <=
-        /// </summary>
-        Relations ConditionRelation { get; }
-
-        /// <summary>
         /// valueof part of the relation. The RIGHT value of the comparison
         /// </summary>
         T LeftValue { get; }
@@ -55,21 +55,21 @@ namespace Interfaces.ToolSpecifications
 
 
 
-    public interface IConditionHandler : ICondition, IFormattable
+    public interface IConditionHandler : ICondition
     {
         new CalculationTypes CalculationType { get; set; }
 
         new bool Enabled { get; set; }
 
         new Relativity RelOrAbs { get; set; }
+
+        new Relations ConditionRelation { get; set; }
     }
 
 
     public interface IConditionHandler<T> : ICondition<T>
         where T : struct
     {
-        new Relations ConditionRelation { get; set; }
-
         new T LeftValue { get; set; }
     }
 

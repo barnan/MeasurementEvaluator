@@ -2,7 +2,6 @@
 using Interfaces.ToolSpecifications;
 using System;
 using System.Globalization;
-using System.Text;
 using System.Windows.Data;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF.Converters
@@ -23,11 +22,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF.Converters
             {
                 return Binding.DoNothing;
             }
-            StringBuilder sb = new StringBuilder();
 
-
-
-
+            return conditionEvalResult.ToString("grid", null);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

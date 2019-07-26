@@ -53,8 +53,10 @@
     <Compile Include="ReferenceSample\ReferenceSample.cs" />
     <Compile Include="ReferenceSample\ReferenceValue.cs" />
     <Compile Include="ResultBase.cs" />
-    <Compile Include="ToolSpecifications\ConditionEvaluaitonResult.cs" />
+    <Compile Include="ToolSpecifications\Results\ConditionEvaluationResult.cs" />
     <Compile Include="ToolSpecifications\Quantity.cs" />
+    <Compile Include="ToolSpecifications\Results\CpkConditionEvaluationResult.cs" />
+    <Compile Include="ToolSpecifications\Results\SimpleConditionEvaluationResult.cs" />
     <Compile Include="ToolSpecifications\RotatableToolSpecification.cs" />
     <Compile Include="ToolSpecifications\ConditionBase.cs" />
     <Compile Include="ToolSpecifications\CpkCondition.cs" />

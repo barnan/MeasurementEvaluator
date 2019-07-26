@@ -22,7 +22,7 @@ namespace Calculations.Calculation
 
         public abstract CalculationTypes CalculationType { get; }
 
-        public IResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
+        public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (measurementSerieData?.MeasuredPoints == null)
             {
@@ -51,7 +51,7 @@ namespace Calculations.Calculation
         }
 
 
-        protected abstract IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
+        protected abstract ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
 
 
         protected virtual List<double> GetValidElementList(IMeasurementSerie measurementSerieData)

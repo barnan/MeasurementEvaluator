@@ -43,12 +43,13 @@ namespace DataStructures.ToolSpecifications
         public Relativity RelOrAbs { get; set; }
 
 
-        public IConditionEvaluationResult Compare(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
+        public IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            if (calculationResult == null)
+            if (calculationResult == null || measSerie == null)
             {
-                return false;
+                return null;
             }
+
             return EvaluateCondition(calculationResult, dateTime, measSerie, referenceValue);
         }
 
@@ -60,13 +61,15 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            FieldInfo fieldInfo = this.GetType().GetField(RelOrAbs.ToString());
-            DescriptionAttribute[] attributes = fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+            string fieldName = Enum.GetName(typeof(Relativity), RelOrAbs);
+
+            MemberInfo memberInfo = RelOrAbs.GetType().GetMember(fieldName).FirstOrDefault();
+            DescriptionAttribute attribute = memberInfo?.GetCustomAttributes(typeof(DescriptionAttribute)).FirstOrDefault() as DescriptionAttribute;
 
             string enumDescription = "";
-            if (attributes != null && attributes.Any())
+            if (attribute != null)
             {
-                enumDescription = attributes.First().Description;
+                enumDescription = attribute.Description;
             }
 
             return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}{Environment.NewLine}{enumDescription}";

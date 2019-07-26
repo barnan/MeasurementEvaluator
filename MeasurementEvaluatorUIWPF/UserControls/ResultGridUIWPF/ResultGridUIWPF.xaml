@@ -38,7 +38,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tool"></DataGridTextColumn>
                 <DataGridTextColumn Header="Quantity"></DataGridTextColumn>
-                <DataGridTextColumn Header="Condition" Binding="{Binding Condition, Converter={StaticResource ConditionConverter}}"/>
+                <DataGridTextColumn Header="Condition" Binding="{Binding ., Converter={StaticResource ConditionConverter}}"/>
                 <DataGridTextColumn Header="Reference" Binding="{Binding ReferenceValue}"/>
                 <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionIsMet}"/>
 

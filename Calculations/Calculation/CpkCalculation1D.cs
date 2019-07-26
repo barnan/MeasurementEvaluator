@@ -19,7 +19,7 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.Cpk;
 
 
-        protected override IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (!(condition is ICpkCondition cpkCondition))
             {
@@ -34,7 +34,7 @@ namespace Calculations.Calculation
             // CpkCalculation changes into CpCalculation
             if (referenceValue == null)
             {
-                return base.InternalCalculation(measurementSerieData, condition, referenceValue);
+                return base.InternalCalculation(measurementSerieData, condition, null);
             }
 
             if (!(referenceValue is IReferenceValue<double> doubleReferenceValue))
@@ -52,7 +52,12 @@ namespace Calculations.Calculation
 
             _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
 
-            return new QCellsCalculationResult(cpk, usl, lsl, _parameters.DateTimeProvider.GetDateTime(), true);
+            return new QCellsCalculationResult(cpk,
+                                                usl,
+                                                lsl,
+                                                _parameters.DateTimeProvider.GetDateTime(),
+                                                true,
+                                                measurementSerieData);
         }
     }
 }

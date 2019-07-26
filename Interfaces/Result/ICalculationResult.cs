@@ -1,10 +1,23 @@
-﻿namespace Interfaces.Result
+﻿using Interfaces.MeasuredData;
+
+namespace Interfaces.Result
 {
 
-    public interface ICalculationResult<T> : IResult
-    {/// <summary>
-     /// calculation result
-     /// </summary>
+    public interface ICalculationResult : IResult
+    {
+        /// <summary>
+        /// the data serie which was used in the calculation
+        /// </summary>
+        IMeasurementSerie MeasurementSerie { get; }
+    }
+
+
+
+    public interface ICalculationResult<T> : ICalculationResult
+    {
+        /// <summary>
+        /// calculation result
+        /// </summary>
         T ResultValue { get; }
     }
 

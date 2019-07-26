@@ -1,5 +1,4 @@
-﻿using Interfaces;
-using Interfaces.Calculation;
+﻿using Interfaces.BaseClasses;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
@@ -7,11 +6,10 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
-using Interfaces.BaseClasses;
 
 namespace Calculations.Calculation
 {
-    class AverageCalculation1D : CalculationBase, ICalculation
+    class AverageCalculation1D : CalculationBase
     {
 
         internal AverageCalculation1D(CalculationParameters parameters)
@@ -22,7 +20,7 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.Average;
 
 
-        protected override IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (condition.CalculationType != CalculationType)
             {
@@ -36,7 +34,8 @@ namespace Calculations.Calculation
 
             return new SimpleCalculationResult(average,
                                                _parameters.DateTimeProvider.GetDateTime(),
-                                               true);
+                                               true,
+                                                measurementSerieData);
         }
     }
 }

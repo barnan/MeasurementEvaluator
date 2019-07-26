@@ -1,18 +1,13 @@
-﻿using Interfaces.MeasuredData;
-using Interfaces.ReferenceSample;
+﻿using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
+using System;
 using System.Collections.Generic;
 
 namespace Interfaces.Result
 {
 
-    public interface IConditionEvaluationResult : IResult
+    public interface IConditionEvaluationResult : IResult, IFormattable
     {
-        /// <summary>
-        /// the result is calculated from this measuremnt series data
-        /// </summary>
-        IMeasurementSerie MeasurementSerieData { get; }
-
         /// <summary>
         /// the condition which is used in the evaluation of this result
         /// </summary>
@@ -31,7 +26,7 @@ namespace Interfaces.Result
         /// <summary>
         /// The number result of the calculation
         /// </summary>
-        IResult CalculationResult { get; }
+        ICalculationResult CalculationResult { get; }
     }
 
 

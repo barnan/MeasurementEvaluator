@@ -1,6 +1,6 @@
-﻿using Interfaces.BaseClasses;
+﻿using DataStructures.ToolSpecifications.Results;
+using Interfaces.BaseClasses;
 using Interfaces.MeasuredData;
-using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
@@ -64,14 +64,18 @@ namespace DataStructures.ToolSpecifications
 
         #region protected
 
-        protected override bool EvaluateCondition(IResult calculationResult, IDateTimeProvider dateTimeProvider, IMeasurementSerie measSerie, IReferenceValue referenceValue)
+        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            if (!CheckCalculationType(calculationResult, CalculationType))
+            if (!CheckCalculationType(result, CalculationType))
             {
-                return false;
+                return null;
             }
 
-            return Compare((calculationResult as IQCellsCalculationResult).ResultValue);
+
+            IQCellsCalculationResult qcellsResult = result as IQCellsCalculationResult;
+            bool isMet = Compare(qcellsResult.ResultValue);
+
+            return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, qcellsResult);
         }
 
         #endregion

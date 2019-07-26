@@ -1,4 +1,5 @@
-﻿using Interfaces.BaseClasses;
+﻿using DataStructures.ToolSpecifications.Results;
+using Interfaces.BaseClasses;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
@@ -30,28 +31,18 @@ namespace DataStructures.ToolSpecifications
             ValidIf_Value = validIfValue;
         }
 
-        protected override IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
+        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            if (!CheckCalculationType(calculationResult, CalculationType))
+            if (!CheckCalculationType(result, CalculationType))
             {
-                return false;
+                return null;
             }
 
-            bool isMet = Compare((calculationResult as ISimpleCalculationResult).ResultValue);
+            ISimpleCalculationResult calculationResult = result as ISimpleCalculationResult;
+            bool isMet = Compare(calculationResult.ResultValue);
 
-            return new ConditionEvaluaitonResult(dateTime, measSerie, this, referenceValue, isMet, calculationResult);
+            return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
         }
-
-        //bool conditionEvaluationResult = condition.Compare(calcResult);
-        //IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
-        //    _parameters.DateTimeProvider.GetDateTime(),
-        //    calcResult.Successful,
-        //    calculationInputData,
-        //    condition,
-        //    referenceValue,
-        //    conditionEvaluationResult,
-        //    calcResult);
-
 
         #region object.ToString()
 

@@ -1,5 +1,7 @@
-﻿using Interfaces.Result;
+﻿using Interfaces.MeasuredData;
+using Interfaces.Result;
 using System;
+using System.Xml.Linq;
 
 namespace Calculations.Calculation
 {
@@ -10,13 +12,22 @@ namespace Calculations.Calculation
         public double LSL { get; }
 
 
-        public QCellsCalculationResult(double result, double usl, double lsl, DateTime creationTime, bool successful)
-            : base(creationTime, successful)
+        public QCellsCalculationResult(double result, double usl, double lsl, DateTime creationTime, bool successful, IMeasurementSerie measurementSerie)
+            : base(creationTime, successful, measurementSerie)
         {
             ResultValue = result;
             USL = usl;
             LSL = lsl;
         }
 
+        public override XElement SaveToXml(XElement input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool LoadFromXml(XElement input)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

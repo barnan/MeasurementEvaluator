@@ -1,5 +1,4 @@
-﻿using Interfaces;
-using Interfaces.Calculation;
+﻿using Interfaces.BaseClasses;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
@@ -8,11 +7,10 @@ using Miscellaneous;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Interfaces.BaseClasses;
 
 namespace Calculations.Calculation
 {
-    class StdCalculation1D : CalculationBase, ICalculation
+    class StdCalculation1D : CalculationBase
     {
 
         internal StdCalculation1D(CalculationParameters parameters)
@@ -23,7 +21,7 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.StandardDeviation;
 
 
-        protected override IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (condition.CalculationType != CalculationType)
             {
@@ -35,7 +33,10 @@ namespace Calculations.Calculation
 
             _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}.");
 
-            return new SimpleCalculationResult(std, _parameters.DateTimeProvider.GetDateTime(), true);
+            return new SimpleCalculationResult(std,
+                                                _parameters.DateTimeProvider.GetDateTime(),
+                                                true,
+                                                measurementSerieData);
         }
     }
 }

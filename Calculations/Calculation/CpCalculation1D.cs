@@ -1,4 +1,4 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
@@ -6,7 +6,6 @@ using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
 using System.Collections.Generic;
-using Interfaces.BaseClasses;
 
 namespace Calculations.Calculation
 {
@@ -20,7 +19,7 @@ namespace Calculations.Calculation
         public override CalculationTypes CalculationType => CalculationTypes.Cp;
 
 
-        protected override IResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
+        protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
             if (!(condition is ICpkCondition cpkCondition))
             {
@@ -52,7 +51,8 @@ namespace Calculations.Calculation
                                                 usl,
                                                 lsl,
                                                 _parameters.DateTimeProvider.GetDateTime(),
-                                                true);
+                                                true,
+                                                measurementSerieData);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Interfaces.Calculation
         /// <param name="referenceValue"></param>
         /// <returns>Calculation results</returns>
         /// <exception cref="ArgumentException">Throws when input settings are not applicable</exception>
-        IResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
+        ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue);
 
         /// <summary>
         /// type of the current calculation

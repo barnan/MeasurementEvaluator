@@ -5,6 +5,7 @@ using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace MeasurementEvaluator.ME_DataCollector
 {
@@ -23,6 +24,16 @@ namespace MeasurementEvaluator.ME_DataCollector
             Specification = toolSpecification;
             Reference = referenceSample;
             MeasurementData = measurementData;
+        }
+
+        public override XElement SaveToXml(XElement input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool LoadFromXml(XElement input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

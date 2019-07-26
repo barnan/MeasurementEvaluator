@@ -26,11 +26,6 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             throw new NotImplementedException();
         }
-
-        public override string ToString(string format, IFormatProvider formatProvider)
-        {
-            return "";
-        }
     }
 
 

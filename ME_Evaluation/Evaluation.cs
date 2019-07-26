@@ -240,7 +240,6 @@ namespace MeasurementEvaluator.ME_Evaluation
                         if (condition == null)
                         {
                             _parameters.Logger.MethodInfo("Received condition is null");
-                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
@@ -248,7 +247,6 @@ namespace MeasurementEvaluator.ME_Evaluation
                         if (!condition.Enabled)
                         {
                             _parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name} {condition.Name} is not enabled -> condition check skipped.");
-                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
@@ -266,7 +264,6 @@ namespace MeasurementEvaluator.ME_Evaluation
                         if (coherentMeasurementData.Count == 0)
                         {
                             _parameters.Logger.MethodError("No coherent measurement data was found in measurement data files");
-                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
@@ -296,11 +293,10 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         if (!calcResult.Successful)
                         {
-                            conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                             continue;
                         }
 
-                        IConditionEvaluationResult conditionEvaluationResult = condition.Compare(calcResult, _parameters.DateTimeProvider.GetDateTime(), calculationInputData, referenceValue);
+                        IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), calculationInputData, referenceValue);
 
                         //bool conditionEvaluationResult = condition.Compare(calcResult);
                         //IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
@@ -331,7 +327,6 @@ namespace MeasurementEvaluator.ME_Evaluation
                     catch (Exception ex)
                     {
                         _parameters.Logger.MethodError($"Exception occured: {ex}");
-                        conditionResultList.Add(CreateNOTSuccessfulConditionResult());
                     }
                 }
 
@@ -345,12 +340,6 @@ namespace MeasurementEvaluator.ME_Evaluation
             _parameters.MessageControl.AddMessage("Calculation Finished");
         }
 
-
-
-        private IConditionEvaluationResult CreateNOTSuccessfulConditionResult()
-        {
-            return //new ConditionEvaluaitonResult(default(DateTime), false, null, null, null, false, null);
-        }
 
         #endregion
 
