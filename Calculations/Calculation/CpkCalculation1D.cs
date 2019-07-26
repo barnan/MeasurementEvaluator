@@ -45,19 +45,20 @@ namespace Calculations.Calculation
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
-            double std = GetStandardDeviation(validElementList);
+            double std = GetStandardDeviation(validElementList, average);
             double usl = doubleReferenceValue.Value + cpkCondition.HalfTolerance;
             double lsl = doubleReferenceValue.Value - cpkCondition.HalfTolerance;
             double cpk = Math.Min((average - usl) / (3 * std), (lsl - average) / (3 * std));
 
-            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}.");
+            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cpk}, USL: {usl}, LSL: {lsl}, average:{average}");
 
-            return new QCellsCalculationResult(cpk,
+            return new QCellsCalculationResult(_parameters.DateTimeProvider.GetDateTime(),
+                                                true,
+                                                measurementSerieData,
+                                                cpk,
                                                 usl,
                                                 lsl,
-                                                _parameters.DateTimeProvider.GetDateTime(),
-                                                true,
-                                                measurementSerieData);
+                                                average);
         }
     }
 }

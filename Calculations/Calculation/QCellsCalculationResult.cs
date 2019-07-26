@@ -12,10 +12,9 @@ namespace Calculations.Calculation
         public double LSL { get; }
 
 
-        public QCellsCalculationResult(double result, double usl, double lsl, DateTime creationTime, bool successful, IMeasurementSerie measurementSerie)
-            : base(creationTime, successful, measurementSerie)
+        public QCellsCalculationResult(DateTime creationTime, bool successful, IMeasurementSerie measurementSerie, double result, double usl, double lsl, double average)
+            : base(creationTime, successful, measurementSerie, result, average)
         {
-            ResultValue = result;
             USL = usl;
             LSL = lsl;
         }

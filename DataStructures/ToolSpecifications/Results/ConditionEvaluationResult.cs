@@ -1,5 +1,4 @@
-﻿using Interfaces.BaseClasses;
-using Interfaces.ReferenceSample;
+﻿using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
@@ -57,7 +56,7 @@ namespace DataStructures.ToolSpecifications.Results
                 case "G":
                     return ToString();
                 case "GRID":
-                    return $"{(Condition.RelOrAbs == Relativity.Absolute ? "(abs)" : "(rel)")} {Condition.ToString(format, formatProvider)}";
+                    return $"{Condition.ToString(format, formatProvider)}";
                 default:
                     throw new FormatException(String.Format($"The {format} format string is not supported."));
             }

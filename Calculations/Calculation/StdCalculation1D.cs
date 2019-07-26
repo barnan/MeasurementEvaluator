@@ -29,14 +29,18 @@ namespace Calculations.Calculation
             }
 
             List<double> validElementList = measurementSerieData.MeasuredPoints.Where(p => p.Valid).Select(p => p.Value).ToList();
-            double std = GetStandardDeviation(validElementList);
 
-            _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}.");
+            double average = GetAverage(validElementList);
 
-            return new SimpleCalculationResult(std,
-                                                _parameters.DateTimeProvider.GetDateTime(),
+            double std = GetStandardDeviation(validElementList, average);
+
+            _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}, average: {average}");
+
+            return new SimpleCalculationResult(_parameters.DateTimeProvider.GetDateTime(),
                                                 true,
-                                                measurementSerieData);
+                                                measurementSerieData,
+                                                std,
+                                                average);
         }
     }
 }

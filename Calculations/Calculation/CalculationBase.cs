@@ -66,10 +66,8 @@ namespace Calculations.Calculation
         }
 
 
-        protected virtual double GetStandardDeviation(List<double> inputData)
+        protected virtual double GetStandardDeviation(List<double> inputData, double average)
         {
-            double average = GetAverage(inputData);
-
             double sumOfDerivation = 0;
 
             foreach (double value in inputData)

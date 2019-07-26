@@ -39,10 +39,52 @@ namespace DataStructures.ToolSpecifications
             }
 
             ISimpleCalculationResult calculationResult = result as ISimpleCalculationResult;
-            bool isMet = Compare(calculationResult.ResultValue);
 
+            if (!CompareValidity(calculationResult.Average))
+            {
+                return null;
+                // log
+            }
+
+            bool isMet = false;
+            switch (RelOrAbs)
+            {
+                case Relativity.Absolute:
+                    isMet = Compare(calculationResult.ResultValue);
+                    break;
+                case Relativity.Relative:
+                    isMet = Compare(calculationResult.ResultValue / calculationResult.Average);
+                    break;
+                default:
+                    break;
+            }
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
         }
+
+
+
+        // evaluation calls it from derived classes:
+        protected bool CompareValidity(double rightValue)
+        {
+            switch (ConditionRelation)
+            {
+                case Relations.RelationsEnumValues.LESS:
+                    return ValidIf_Value < rightValue;
+                case Relations.RelationsEnumValues.GREATER:
+                    return ValidIf_Value > rightValue;
+                case Relations.RelationsEnumValues.LESSOREQUAL:
+                    return ValidIf_Value <= rightValue;
+                case Relations.RelationsEnumValues.GREATEROREQUAL:
+                    return ValidIf_Value >= rightValue;
+                case Relations.RelationsEnumValues.EQUAL:
+                    return ValidIf_Value == rightValue;
+                case Relations.RelationsEnumValues.NOTEQUAL:
+                    return ValidIf_Value != rightValue;
+            }
+            return false;
+        }
+
+
 
         #region object.ToString()
 
@@ -68,7 +110,7 @@ namespace DataStructures.ToolSpecifications
                 case "G":
                     return ToString();
                 case "GRID":
-                    return $"{(RelOrAbs == Relativity.Absolute ? "(abs)" : "(rel)")} {LeftValue.ToString(format, formatProvider)} {ConditionRelation}";
+                    return $"{(RelOrAbs == Relativity.Absolute ? "(abs)" : "(rel)")} {LeftValue.ToString("N2")} {ConditionRelation}";
                 default:
                     throw new FormatException(String.Format($"The {format} format string is not supported."));
             }

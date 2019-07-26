@@ -3,7 +3,6 @@ using Interfaces.Result;
 using MeasurementEvaluatorUI.Base;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Threading;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
@@ -17,15 +16,29 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
         {
             _parameters = parameters;
             _parameters.Evaluator.SubscribeToResultReadyEvent(Evaluator_OnResultReady);
-            ConditionEvaluationResults = new ObservableCollection<IConditionEvaluationResult>();
+            ConditionEvaluationResults = new ObservableCollection<DataGridElement>();
         }
-
 
 
         #region Props
 
-        private ObservableCollection<IConditionEvaluationResult> _conditionEvaluationResults;
-        public ObservableCollection<IConditionEvaluationResult> ConditionEvaluationResults
+        private IEvaluationResult _evaluationResult;
+        public IEvaluationResult EvaluationResult
+        {
+            get
+            {
+                return _evaluationResult;
+            }
+            set
+            {
+                _evaluationResult = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private ObservableCollection<DataGridElement> _conditionEvaluationResults;
+        public ObservableCollection<DataGridElement> ConditionEvaluationResults
         {
             get
             {
@@ -50,20 +63,27 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
                 return;
             }
 
-            var elements = evaluationResult.QuantityEvaluationResults.SelectMany(p => p.ConditionEvaluationResults);
-
+            EvaluationResult = evaluationResult;
 
             Action act = delegate ()
             {
                 ConditionEvaluationResults.Clear();
-                foreach (IConditionEvaluationResult element in elements)
+                foreach (IQuantityEvaluationResult quantityEvaluatinResult in evaluationResult.QuantityEvaluationResults)
                 {
-                    ConditionEvaluationResults.Add(element);
+                    foreach (IConditionEvaluationResult conditionEvaluationResult in quantityEvaluatinResult.ConditionEvaluationResults)
+                    {
+                        ConditionEvaluationResults.Add(new DataGridElement
+                        {
+                            Name = evaluationResult.Name,
+                            ToolName = evaluationResult.ToolName.Name,
+                            QuantityName = quantityEvaluatinResult.Quantity.Name,
+                            ConditionEvaluationResult = conditionEvaluationResult
+                        });
+                    }
                 }
             };
 
             _parameters.MainWindowDispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, act);
-
         }
 
         #endregion

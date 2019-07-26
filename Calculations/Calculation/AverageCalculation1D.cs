@@ -30,12 +30,13 @@ namespace Calculations.Calculation
             List<double> validElementList = GetValidElementList(measurementSerieData);
             double average = GetAverage(validElementList);
 
-            _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated average: {average}.");
+            _parameters.Logger.LogTrace($"{nameof(AverageCalculation1D)}: Calculated average: {average}.");
 
-            return new SimpleCalculationResult(average,
-                                               _parameters.DateTimeProvider.GetDateTime(),
+            return new SimpleCalculationResult(_parameters.DateTimeProvider.GetDateTime(),
                                                true,
-                                                measurementSerieData);
+                                               measurementSerieData,
+                                               average,
+                                               average);
         }
     }
 }

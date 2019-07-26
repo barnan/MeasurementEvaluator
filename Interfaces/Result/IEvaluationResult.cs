@@ -1,4 +1,6 @@
-﻿using Interfaces.ReferenceSample;
+﻿using Interfaces.BaseClasses;
+using Interfaces.Misc;
+using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
@@ -34,12 +36,16 @@ namespace Interfaces.Result
     public interface IQuantityEvaluationResult
     {
         IReadOnlyList<IConditionEvaluationResult> ConditionEvaluationResults { get; }
+
+        IQuantity Quantity { get; }
     }
 
 
 
-    public interface IEvaluationResult : IResult
+    public interface IEvaluationResult : IResult, INamed
     {
         IReadOnlyList<IQuantityEvaluationResult> QuantityEvaluationResults { get; }
+
+        ToolNames ToolName { get; }
     }
 }

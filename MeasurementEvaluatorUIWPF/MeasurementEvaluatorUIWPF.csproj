@@ -107,6 +107,8 @@
       <DependentUpon>ResultChartUIWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ResultGridUIWPF\Converters\ConditionConverter.cs" />
+    <Compile Include="UserControls\ResultGridUIWPF\Converters\ToolNameConverter.cs" />
+    <Compile Include="UserControls\ResultGridUIWPF\DataGridElement.cs" />
     <Compile Include="UserControls\ResultGridUIWPF\ResultGridUIWPFParameters.cs" />
     <Compile Include="UserControls\ResultGridUIWPF\ResultGridUIWPF.xaml.cs">
       <DependentUpon>ResultGridUIWPF.xaml</DependentUpon>

@@ -32,7 +32,7 @@ namespace Calculations.Calculation
                 throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
             }
 
-            if (!(referenceValue is IReferenceValue<double> doubleReferenceValue))
+            if (!(referenceValue is IReferenceValue<double>))
             {
                 throw new ArgumentException($"The received reference value is not {nameof(IReferenceValue<double>)}");
             }
@@ -40,19 +40,20 @@ namespace Calculations.Calculation
             List<double> validElementList = GetValidElementList(measurementSerieData);
 
             double average = GetAverage(validElementList);
-            double std = GetStandardDeviation(validElementList);
+            double std = GetStandardDeviation(validElementList, average);
             double usl = average + cpkCondition.HalfTolerance;
             double lsl = average - cpkCondition.HalfTolerance;
             double cp = (usl - lsl) / (6 * std);
 
-            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}.");
+            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}, average: {average}");
 
-            return new QCellsCalculationResult(cp,
+            return new QCellsCalculationResult(_parameters.DateTimeProvider.GetDateTime(),
+                                                true,
+                                                measurementSerieData,
+                                                cp,
                                                 usl,
                                                 lsl,
-                                                _parameters.DateTimeProvider.GetDateTime(),
-                                                true,
-                                                measurementSerieData);
+                                                average);
         }
     }
 }

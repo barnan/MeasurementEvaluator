@@ -13,6 +13,7 @@
     <Grid>
         <Grid.Resources>
             <converters:ConditionConverter x:Key="ConditionConverter"/>
+            <converters:ToolNameConverter x:Key="ToolNameConverter"/>
         </Grid.Resources>
         
 
@@ -36,11 +37,11 @@
             SelectionUnit="CellOrRowHeader">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Tool"></DataGridTextColumn>
-                <DataGridTextColumn Header="Quantity"></DataGridTextColumn>
-                <DataGridTextColumn Header="Condition" Binding="{Binding ., Converter={StaticResource ConditionConverter}}"/>
-                <DataGridTextColumn Header="Reference" Binding="{Binding ReferenceValue}"/>
-                <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionIsMet}"/>
+                <DataGridTextColumn Header="Tool" Binding="{Binding ToolName}"/>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
+                <DataGridTextColumn Header="Condition" Binding="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionConverter}}"/>
+                <DataGridTextColumn Header="" Binding="{Binding }"/>
+                <DataGridTextColumn Header="SuccessFul" Binding="{Binding }"/>
 
             </DataGrid.Columns>
         </DataGrid>

@@ -105,10 +105,10 @@ namespace DataStructures.ToolSpecifications
 
 
         // evaluation calls it from derived classes:
-        protected bool Compare(T leftValue)
+        protected bool Compare(T rightValue)
         {
-            bool equality = EqualityComparer<T>.Default.Equals(leftValue, LeftValue);
-            int compResult = Comparer<T>.Default.Compare(leftValue, LeftValue);
+            bool equality = EqualityComparer<T>.Default.Equals(LeftValue, rightValue);
+            int compResult = Comparer<T>.Default.Compare(LeftValue, rightValue);
 
             switch (ConditionRelation)
             {
@@ -127,7 +127,6 @@ namespace DataStructures.ToolSpecifications
             }
             return false;
         }
-
 
         protected bool CheckCalculationType(IResult calculationResult, CalculationTypes calcType)
         {

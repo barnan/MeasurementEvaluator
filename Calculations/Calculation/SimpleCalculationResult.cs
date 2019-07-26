@@ -7,11 +7,9 @@ namespace Calculations.Calculation
 {
     internal class SimpleCalculationResult : CalculationResult<double>, ISimpleCalculationResult
     {
-
-        public SimpleCalculationResult(double result, DateTime creationTime, bool successful, IMeasurementSerie measurementSerie)
-            : base(creationTime, successful, measurementSerie)
+        public SimpleCalculationResult(DateTime creationTime, bool successful, IMeasurementSerie measurementSerie, double result, double average)
+            : base(creationTime, successful, measurementSerie, result, average)
         {
-            ResultValue = result;
         }
 
         public override XElement SaveToXml(XElement input)

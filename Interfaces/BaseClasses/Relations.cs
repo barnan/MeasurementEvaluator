@@ -10,7 +10,7 @@ namespace Interfaces.BaseClasses
 
         public string Name { get; private set; }
         public int Value { get; private set; }
-        private string Text { get; }
+        private string Text { get; set; }
 
         private Relations(string name, int value, string text)
         {
@@ -55,31 +55,31 @@ namespace Interfaces.BaseClasses
 
         public static explicit operator Relations(string val)
         {
-            if (EQUAL.ToString() == val)
+            if (nameof(EQUAL) == val)
             {
                 return EQUAL;
             }
-            if (NOTEQUAL.ToString() == val)
+            if (nameof(NOTEQUAL) == val)
             {
                 return NOTEQUAL;
             }
-            if (LESS.ToString() == val)
+            if (nameof(LESS) == val)
             {
                 return LESS;
             }
-            if (LESSOREQUAL.ToString() == val)
+            if (nameof(LESSOREQUAL) == val)
             {
                 return LESSOREQUAL;
             }
-            if (GREATER.ToString() == val)
+            if (nameof(GREATER) == val)
             {
                 return GREATER;
             }
-            if (GREATEROREQUAL.ToString() == val)
+            if (nameof(GREATEROREQUAL) == val)
             {
                 return GREATEROREQUAL;
             }
-            if (ALLWAYS.ToString() == val)
+            if (nameof(ALLWAYS) == val)
             {
                 return ALLWAYS;
             }
@@ -117,6 +117,7 @@ namespace Interfaces.BaseClasses
 
             Name = element.Name;
             Value = element.Value;
+            Text = element.Text;
             return true;
         }
     }

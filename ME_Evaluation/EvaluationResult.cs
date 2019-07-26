@@ -1,5 +1,7 @@
 ﻿using DataStructures;
+using Interfaces.BaseClasses;
 using Interfaces.Result;
+using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -10,11 +12,16 @@ namespace MeasurementEvaluator.ME_Evaluation
     {
         public IReadOnlyList<IQuantityEvaluationResult> QuantityEvaluationResults { get; }
 
+        public ToolNames ToolName { get; }
 
-        public EvaluationResult(DateTime creationTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> quantityEvaluationResults)
+        public string Name { get; }
+
+        public EvaluationResult(DateTime creationTime, bool successfulCalculation, IReadOnlyList<IQuantityEvaluationResult> quantityEvaluationResults, ToolNames toolName, string name)
             : base(creationTime, successfulCalculation)
         {
             QuantityEvaluationResults = quantityEvaluationResults;
+            ToolName = toolName;
+            Name = name;
         }
 
         public override XElement SaveToXml(XElement input)
@@ -33,10 +40,12 @@ namespace MeasurementEvaluator.ME_Evaluation
     {
         public IReadOnlyList<IConditionEvaluationResult> ConditionEvaluationResults { get; }
 
+        public IQuantity Quantity { get; }
 
-        public QuantityEvaluationResult(IReadOnlyList<IConditionEvaluationResult> conditionCalculationResults)
+        public QuantityEvaluationResult(IReadOnlyList<IConditionEvaluationResult> conditionCalculationResults, IQuantity quantity)
         {
             ConditionEvaluationResults = conditionCalculationResults;
+            Quantity = quantity;
         }
     }
 }

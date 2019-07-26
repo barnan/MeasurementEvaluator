@@ -19,13 +19,14 @@ namespace Interfaces.Result
         /// calculation result
         /// </summary>
         T ResultValue { get; }
+
+        T Average { get; }
     }
 
 
 
     public interface ISimpleCalculationResult : ICalculationResult<double>
     {
-
     }
 
 

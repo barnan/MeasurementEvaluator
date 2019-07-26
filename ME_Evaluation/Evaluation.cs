@@ -298,18 +298,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), calculationInputData, referenceValue);
 
-                        //bool conditionEvaluationResult = condition.Compare(calcResult);
-                        //IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
-                        //    _parameters.DateTimeProvider.GetDateTime(),
-                        //    calcResult.Successful,
-                        //    calculationInputData,
-                        //    condition,
-                        //    referenceValue,
-                        //    conditionEvaluationResult,
-                        //    calcResult);
-
                         conditionResultList.Add(conditionEvaluationResult);
-
 
                         #region logging
                         if (_parameters.Logger.IsTraceEnabled)
@@ -330,9 +319,9 @@ namespace MeasurementEvaluator.ME_Evaluation
                     }
                 }
 
-                quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList));
+                quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList, quantitySpec.Quantity));
             }
-            IEvaluationResult evaluationResult = new EvaluationResult(_parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList);
+            IEvaluationResult evaluationResult = new EvaluationResult(_parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList, specification.ToolName, specification.Name);
 
             var resultreadyevent = ResultReadyEvent;
             resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
@@ -340,10 +329,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             _parameters.MessageControl.AddMessage("Calculation Finished");
         }
 
-
         #endregion
-
-
 
 
 
