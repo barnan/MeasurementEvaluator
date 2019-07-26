@@ -31,7 +31,7 @@ namespace Interfaces.BaseClasses
 
         [Description("270 degree")]
         Orientation_270 = 270
-    };
+    }
 
 
 
@@ -57,7 +57,16 @@ namespace Interfaces.BaseClasses
 
         [Description("sec")]
         sec
+    }
 
-    };
 
+    public enum CalculationTypes
+    {
+        Unknown = 0,
+        Average,
+        StandardDeviation,
+        Cp,
+        Cpk,
+        GRAndR
+    }
 }

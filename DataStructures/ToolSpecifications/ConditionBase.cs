@@ -1,4 +1,6 @@
 ﻿using Interfaces.BaseClasses;
+using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
@@ -41,16 +43,16 @@ namespace DataStructures.ToolSpecifications
         public Relativity RelOrAbs { get; set; }
 
 
-        public bool Compare(IResult calculationResult)
+        public IConditionEvaluationResult Compare(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
             if (calculationResult == null)
             {
                 return false;
             }
-            return EvaluateCondition(calculationResult);
+            return EvaluateCondition(calculationResult, dateTime, measSerie, referenceValue);
         }
 
-        protected abstract bool EvaluateCondition(IResult calculationResult);
+        protected abstract IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTimeProvider, IMeasurementSerie measSerie, IReferenceValue referenceValue);
 
         #endregion
 
@@ -70,17 +72,13 @@ namespace DataStructures.ToolSpecifications
             return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}{Environment.NewLine}{enumDescription}";
         }
 
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-
-        }
+        public abstract string ToString(string format, IFormatProvider formatProvider);
 
         #endregion
 
         public abstract XElement SaveToXml(XElement inputElement);
 
         public abstract bool LoadFromXml(XElement inputElement);
-
     }
 
 
@@ -153,7 +151,6 @@ namespace DataStructures.ToolSpecifications
                     throw new ArgumentOutOfRangeException(nameof(calcType), calcType, null);
             }
         }
-
 
         #region object.ToString()
 

@@ -1,8 +1,11 @@
 ﻿using Interfaces.BaseClasses;
+using Interfaces.MeasuredData;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
@@ -27,15 +30,27 @@ namespace DataStructures.ToolSpecifications
             ValidIf_Value = validIfValue;
         }
 
-        protected override bool EvaluateCondition(IResult calculationResult)
+        protected override IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {
                 return false;
             }
 
-            return Compare((calculationResult as ISimpleCalculationResult).ResultValue);
+            bool isMet = Compare((calculationResult as ISimpleCalculationResult).ResultValue);
+
+            return new ConditionEvaluaitonResult(dateTime, measSerie, this, referenceValue, isMet, calculationResult);
         }
+
+        //bool conditionEvaluationResult = condition.Compare(calcResult);
+        //IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
+        //    _parameters.DateTimeProvider.GetDateTime(),
+        //    calcResult.Successful,
+        //    calculationInputData,
+        //    condition,
+        //    referenceValue,
+        //    conditionEvaluationResult,
+        //    calcResult);
 
 
         #region object.ToString()
@@ -43,6 +58,29 @@ namespace DataStructures.ToolSpecifications
         public override string ToString()
         {
             return $"{base.ToString()}{Environment.NewLine}Valid, if {ValidIf} than {ValidIf_Value}";
+        }
+
+        public override string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (string.IsNullOrEmpty(format))
+            {
+                format = "G";
+            }
+
+            if (formatProvider == null)
+            {
+                formatProvider = CultureInfo.CurrentCulture;
+            }
+
+            switch (format.ToUpperInvariant())
+            {
+                case "G":
+                    return ToString();
+                case "GRID":
+                    return $"{(RelOrAbs == Relativity.Absolute ? "(abs)" : "(rel)")} {LeftValue.ToString(format, formatProvider)} {ConditionRelation}";
+                default:
+                    throw new FormatException(String.Format($"The {format} format string is not supported."));
+            }
         }
 
         #endregion

@@ -1,8 +1,5 @@
 ﻿using DataStructures;
-using Interfaces.MeasuredData;
-using Interfaces.ReferenceSample;
 using Interfaces.Result;
-using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -19,6 +16,21 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             QuantityEvaluationResults = quantityEvaluationResults;
         }
+
+        public override XElement SaveToXml(XElement input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool LoadFromXml(XElement input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString(string format, IFormatProvider formatProvider)
+        {
+            return "";
+        }
     }
 
 
@@ -32,55 +44,4 @@ namespace MeasurementEvaluator.ME_Evaluation
             ConditionEvaluationResults = conditionCalculationResults;
         }
     }
-
-
-    internal class ConditionEvaluaitonResult : ResultBase, IConditionEvaluationResult
-    {
-        public XElement Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Load(XElement input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMeasurementSerie MeasurementSerieData { get; }
-
-        public ICondition Condition { get; }
-
-        public IReferenceValue ReferenceValue { get; }
-
-        public bool ConditionIsMet { get; }
-
-        public IResult Result { get; }
-
-
-        public ConditionEvaluaitonResult(DateTime creationTime, bool successfulCalculation, IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, IResult result)
-            : base(creationTime, successfulCalculation)
-        {
-            MeasurementSerieData = measurementSerieData;
-            Condition = condition;
-            ReferenceValue = referenceValue;
-            ConditionIsMet = conditionIsMet;
-            Result = result;
-        }
-
-
-        public override string ToString()
-        {
-            if (ReferenceValue == null || Condition == null)
-            {
-                return string.Empty;
-            }
-
-        }
-
-        public string ToString(string format, IFormatProvider formatProvider)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

@@ -1,8 +1,12 @@
 ﻿using Interfaces.BaseClasses;
+using Interfaces.MeasuredData;
+using Interfaces.Misc;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
@@ -33,11 +37,34 @@ namespace DataStructures.ToolSpecifications
             return $"{base.ToString()}{Environment.NewLine}HalfTolerance: {HalfTolerance}{Environment.NewLine}{RelOrAbs}";
         }
 
+        public override string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (string.IsNullOrEmpty(format))
+            {
+                format = "G";
+            }
+
+            if (formatProvider == null)
+            {
+                formatProvider = CultureInfo.CurrentCulture;
+            }
+
+            switch (format.ToUpperInvariant())
+            {
+                case "G":
+                    return ToString();
+                case "GRID":
+                    return $"{LeftValue.ToString(format, formatProvider)} {ConditionRelation}";
+                default:
+                    throw new FormatException(String.Format($"The {format} format string is not supported."));
+            }
+        }
+
         #endregion
 
         #region protected
 
-        protected override bool EvaluateCondition(IResult calculationResult)
+        protected override bool EvaluateCondition(IResult calculationResult, IDateTimeProvider dateTimeProvider, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
             if (!CheckCalculationType(calculationResult, CalculationType))
             {

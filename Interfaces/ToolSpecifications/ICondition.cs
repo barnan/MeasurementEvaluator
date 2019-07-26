@@ -1,7 +1,9 @@
-﻿using System;
-using Interfaces.BaseClasses;
+﻿using Interfaces.BaseClasses;
+using Interfaces.MeasuredData;
 using Interfaces.Misc;
+using Interfaces.ReferenceSample;
 using Interfaces.Result;
+using System;
 
 namespace Interfaces.ToolSpecifications
 {
@@ -27,9 +29,12 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// Checks the condition. The calculation result contains the approppriate result
         /// </summary>
-        /// <param name="resultToCompare">the "external calculation" result which will be used in the condition comparison</param>
+        /// <param name="calculationResult"></param>
+        /// <param name="dateTime"></param>
+        /// <param name="measSerie"></param>
+        /// <param name="referenceValue"></param>
         /// <returns>the relation is met (true) or not (false)</returns>
-        bool Compare(IResult resultToCompare);
+        IConditionEvaluationResult Compare(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue);
     }
 
 

@@ -300,30 +300,31 @@ namespace MeasurementEvaluator.ME_Evaluation
                             continue;
                         }
 
-                        bool conditionEvaluationResult = condition.Compare(calcResult);
+                        IConditionEvaluationResult conditionEvaluationResult = condition.Compare(calcResult, _parameters.DateTimeProvider.GetDateTime(), calculationInputData, referenceValue);
 
-                        IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
-                            _parameters.DateTimeProvider.GetDateTime(),
-                            calcResult.Successful,
-                            calculationInputData,
-                            condition,
-                            referenceValue,
-                            conditionEvaluationResult,
-                            calcResult);
+                        //bool conditionEvaluationResult = condition.Compare(calcResult);
+                        //IConditionEvaluationResult conditionResult = new ConditionEvaluaitonResult(
+                        //    _parameters.DateTimeProvider.GetDateTime(),
+                        //    calcResult.Successful,
+                        //    calculationInputData,
+                        //    condition,
+                        //    referenceValue,
+                        //    conditionEvaluationResult,
+                        //    calcResult);
 
-                        conditionResultList.Add(conditionResult);
+                        conditionResultList.Add(conditionEvaluationResult);
 
 
                         #region logging
                         if (_parameters.Logger.IsTraceEnabled)
                         {
                             _parameters.Logger.MethodTrace("The evaluation result:");
-                            _parameters.Logger.MethodTrace($"   End time: {conditionResult.CreationTime}");
-                            _parameters.Logger.MethodTrace($"   The calculation was {(conditionResult.Successful ? "" : "NOT")} successful.");
+                            _parameters.Logger.MethodTrace($"   End time: {conditionEvaluationResult.CreationTime}");
+                            _parameters.Logger.MethodTrace($"   The calculation was {(conditionEvaluationResult.Successful ? "" : "NOT")} successful.");
                             _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasuredPoints.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");
-                            _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult ? "" : "NOT")} acceptable.");
+                            _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult.ConditionIsMet ? "" : "NOT")} acceptable.");
                         }
                         #endregion
                     }
@@ -348,7 +349,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         private IConditionEvaluationResult CreateNOTSuccessfulConditionResult()
         {
-            return new ConditionEvaluaitonResult(default(DateTime), false, null, null, null, false, null);
+            return //new ConditionEvaluaitonResult(default(DateTime), false, null, null, null, false, null);
         }
 
         #endregion
