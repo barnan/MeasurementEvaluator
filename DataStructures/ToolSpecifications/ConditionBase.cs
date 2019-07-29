@@ -117,9 +117,9 @@ namespace DataStructures.ToolSpecifications
                 case Relations.RelationsEnumValues.GREATER:
                     return compResult == 1;
                 case Relations.RelationsEnumValues.LESSOREQUAL:
-                    return compResult == -1 && equality;
+                    return compResult == 1 || equality;
                 case Relations.RelationsEnumValues.GREATEROREQUAL:
-                    return compResult == 1 && equality;
+                    return compResult == -1 || equality;
                 case Relations.RelationsEnumValues.EQUAL:
                     return equality;
                 case Relations.RelationsEnumValues.NOTEQUAL:

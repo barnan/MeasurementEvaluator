@@ -53,7 +53,7 @@ namespace DataStructures.ToolSpecifications
                     isMet = Compare(calculationResult.ResultValue);
                     break;
                 case Relativity.Relative:
-                    isMet = Compare(calculationResult.ResultValue / calculationResult.Average);
+                    isMet = Compare(calculationResult.ResultValue / calculationResult.Average * 100);
                     break;
                 default:
                     break;
@@ -66,8 +66,10 @@ namespace DataStructures.ToolSpecifications
         // evaluation calls it from derived classes:
         protected bool CompareValidity(double rightValue)
         {
-            switch (ConditionRelation)
+            switch (ValidIf)
             {
+                case Relations.RelationsEnumValues.ALLWAYS:
+                    return true;
                 case Relations.RelationsEnumValues.LESS:
                     return ValidIf_Value < rightValue;
                 case Relations.RelationsEnumValues.GREATER:

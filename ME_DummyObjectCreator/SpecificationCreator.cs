@@ -18,10 +18,10 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> thicknessAVGCondition = new SimpleCondition()
             {
-                Name = "Thickness Average Avg Condition",
-                CalculationType = CalculationTypes.Average,
-                LeftValue = 200,
-                ConditionRelation = Relations.EQUAL,
+                Name = "Thickness Average Std Abs Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                LeftValue = 2,
+                ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
@@ -30,7 +30,7 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> thicknessSTDCondition = new SimpleCondition()
             {
-                Name = "Thickness Average Std Condition",
+                Name = "Thickness Average Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
                 LeftValue = 0.5,
                 ConditionRelation = Relations.LESSOREQUAL,
@@ -97,10 +97,10 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> thicknessAVGCondition2 = new SimpleCondition()
             {
-                Name = "Thickness Average Avg Condition",
-                CalculationType = CalculationTypes.Average,
-                LeftValue = 201,
-                ConditionRelation = Relations.EQUAL,
+                Name = "Thickness Average Std Abs Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                LeftValue = 3,
+                ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
@@ -109,7 +109,7 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> thicknessSTDCondition2 = new SimpleCondition()
             {
-                Name = "Thickness Average Std Condition",
+                Name = "Thickness Average Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,

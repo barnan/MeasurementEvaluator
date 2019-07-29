@@ -4,6 +4,7 @@ using Frame.PluginLoader;
 using Interfaces.DataAcquisition;
 using NLog;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataAcquisitions.ME_Repository
 {
@@ -11,13 +12,16 @@ namespace DataAcquisitions.ME_Repository
     {
         internal ILogger Logger { get; private set; }
 
+
         [Configuration("File extension of the files used in the given repository folder", "File Extensions", true)]
         private List<string> _fileExtensionFilters = new List<string> { "*.*" };
         internal List<string> FileExtensionFilters => _fileExtensionFilters;
 
+
         [Configuration("Name of the reader writer component", "Reader writer", true)]
         private string _hddDReaderWriter = null;
         internal IHDDFileReaderWriter HDDReaderWriter { get; private set; }
+
 
         public IUIMessageControl MessageControl { get; private set; }
 
@@ -51,6 +55,12 @@ namespace DataAcquisitions.ME_Repository
             if (FileExtensionFilters == null)
             {
                 Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(FileExtensionFilters)} is null.");
+                return false;
+            }
+
+            if (FileExtensionFilters.Any(p => string.IsNullOrEmpty(p)))
+            {
+                Logger.Error($"Error in the {nameof(HDDRepositoryParameters)} loading. {nameof(FileExtensionFilters)} has empty element.");
                 return false;
             }
 

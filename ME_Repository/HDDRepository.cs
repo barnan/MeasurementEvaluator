@@ -28,15 +28,9 @@ namespace DataAcquisitions.ME_Repository
 
         protected override void InternalInit()
         {
-            if (!Directory.Exists(_repositoryPath))
+            if (!CheckFolder(_repositoryPath))
             {
                 _parameters.Logger.MethodError($"The given directory ({_repositoryPath}) does not exists.");
-                InitializationState = InitializationStates.InitializationFailed;
-            }
-
-            if (_parameters.HDDReaderWriter == null)
-            {
-                _parameters.Logger.MethodError($"The given parameter ({_parameters.HDDReaderWriter }) is null.");
                 InitializationState = InitializationStates.InitializationFailed;
             }
 
@@ -362,21 +356,9 @@ namespace DataAcquisitions.ME_Repository
         {
             try
             {
-                if (!CheckFolder(fullPath))
-                {
-                    _parameters.Logger.MethodError($"The given folder can not be used: {fullPath}");
-                    return null;
-                }
-
                 List<string> fileNameList = new List<string>();
                 foreach (string filterItem in _parameters.FileExtensionFilters)
                 {
-                    if (string.IsNullOrEmpty(filterItem))
-                    {
-                        _parameters.Logger.Error("Empty file extension filter element found.");
-                        continue;
-                    }
-
                     fileNameList.AddRange(Directory.GetFiles(fullPath, $"*.{filterItem}"));
                 }
 

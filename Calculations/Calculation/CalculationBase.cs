@@ -72,11 +72,11 @@ namespace Calculations.Calculation
 
             foreach (double value in inputData)
             {
-                sumOfDerivation += value * value;
+                sumOfDerivation += (value - average) * (value - average);
             }
             double sumOfDerivationAverage = sumOfDerivation / (inputData.Count - 1);
 
-            return Math.Sqrt(sumOfDerivationAverage - average * average);
+            return Math.Sqrt(sumOfDerivationAverage);
         }
 
     }

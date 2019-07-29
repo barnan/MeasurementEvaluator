@@ -309,7 +309,7 @@ namespace Frame.PluginLoader
                     Assembly assembly = Assembly.Load(an);
                     assemblies.Add(assembly);
 
-                    SendToInfoLogAndConsole($"{assembly.FullName} assembly loadded.");
+                    SendToInfoLogAndConsole($"{assembly.FullName} assembly loadded nad added to the list.");
                 }
                 catch (Exception ex)
                 {

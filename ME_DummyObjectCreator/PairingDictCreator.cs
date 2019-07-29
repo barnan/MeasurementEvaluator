@@ -12,8 +12,8 @@ namespace ME_DummyObjectCreator
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {
 
-            PairingKeyValuePair ttrThicknessAverage = new PairingKeyValuePair("Thickness Average Avg Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Average");
-            PairingKeyValuePair ttrThicknessStd = new PairingKeyValuePair("Thickness Average Std Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Std");
+            PairingKeyValuePair ttrThicknessAverage = new PairingKeyValuePair("Thickness Average Std Abs Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Average");
+            PairingKeyValuePair ttrThicknessStd = new PairingKeyValuePair("Thickness Average Std Rel Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Std");
 
 
 
