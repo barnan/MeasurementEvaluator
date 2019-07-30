@@ -39,9 +39,10 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tool" Binding="{Binding ToolName}"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
+                <DataGridTextColumn Header="Calculation Type" Binding="{Binding ConditionEvaluationResult.Condition.CalculationType}"/>
                 <DataGridTextColumn Header="Condition" Binding="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionConverter}}"/>
-                <DataGridTextColumn Header="" Binding="{Binding }"/>
-                <DataGridTextColumn Header="SuccessFul" Binding="{Binding }"/>
+                <DataGridTextColumn Header="Calculation Result" Binding="{Binding CalculationDoubleResult}"/>
+                <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionEvaluationResult.CalculationResult.Successful}"/>
 
             </DataGrid.Columns>
         </DataGrid>

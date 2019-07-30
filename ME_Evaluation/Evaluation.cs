@@ -65,8 +65,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             if (!_parameters.Matcher.Initiailze())
             {
                 string message = $"{nameof(_parameters.Matcher)} could not been initialized.";
-                _parameters.Logger.MethodError(message);
-                _parameters.MessageControl.AddMessage(message, MessageSeverityLevels.Error);
+                _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError(message), MessageSeverityLevels.Error);
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
@@ -74,8 +73,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             if (!_parameters.DataCollector.Initiailze())
             {
                 string message = $"{nameof(_parameters.DataCollector)} could not been initialized.";
-                _parameters.Logger.MethodError(message);
-                _parameters.MessageControl.AddMessage(message, MessageSeverityLevels.Error);
+                _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError(message), MessageSeverityLevels.Error);
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
@@ -86,13 +84,12 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             _processThread = new Thread(ProcessEvaluation)
             {
-                Name = "EvaluatorQueueProcesorThread",
+                Name = "EvaluatorQueueProcessorThread",
                 IsBackground = false
             };
             _processThread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
-
             _parameters.MessageControl.AddMessage($"{_parameters.Name} initialized");
         }
 
@@ -224,7 +221,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                 _parameters.Logger.MethodInfo(measurementData.Name);
             }
 
-            List<IQuantityEvaluationResult> quantityEvaluationList = new List<IQuantityEvaluationResult>();
+            List<IQuantityEvaluationResult> quantityResultList = new List<IQuantityEvaluationResult>();
 
             // go through all quantity specifications:
             foreach (IQuantitySpecification quantitySpec in specification.QuantitySpecifications)
@@ -239,14 +236,16 @@ namespace MeasurementEvaluator.ME_Evaluation
                         // skip condition if condition is null:
                         if (condition == null)
                         {
-                            _parameters.Logger.MethodInfo("Received condition is null");
+                            _parameters.Logger.MethodError("Received condition is null");
                             continue;
                         }
+
+                        _parameters.MessageControl.AddMessage(_parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} Evaluation started."));
 
                         // skip condition if not enabled:
                         if (!condition.Enabled)
                         {
-                            _parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name} {condition.Name} is not enabled -> condition check skipped.");
+                            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} is not enabled -> condition check skipped."));
                             continue;
                         }
 
@@ -263,40 +262,34 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         if (coherentMeasurementData.Count == 0)
                         {
-                            _parameters.Logger.MethodError("No coherent measurement data was found in measurement data files");
+                            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError($"{quantitySpec.Quantity.Name}-{condition.Name} No coherent measurement data was found in measurement data files. Searched names: {string.Join(",", coherentMeasurementDataNames)}"), MessageSeverityLevels.Error);
                             continue;
                         }
 
-                        // if more result were found with the same name -> they will be linked together, unless their name is different
-                        // the coherent measurement datas will be summarized into one measurement data
-                        IMeasurementSerie calculationInputData;
-                        if (coherentMeasurementData.Count == 1)
+                        // if more result were found with the same name -> they will be linked together, unless their name is different the coherent measurement datas will be summarized into one measurement data
+                        List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
+                        foreach (IMeasurementSerie serie in coherentMeasurementData)
                         {
-                            calculationInputData = coherentMeasurementData[0];
+                            measPointList.AddRange(serie.MeasuredPoints);
                         }
-                        else
-                        {
-                            List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
-                            foreach (IMeasurementSerie serie in coherentMeasurementData)
-                            {
-                                measPointList.AddRange(serie.MeasuredPoints);
-                            }
-                            calculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
-                        }
+                        IMeasurementSerie jointCalculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
+
+                        _parameters.MessageControl.AddMessage(_parameters.Logger.MethodInfo($"{coherentMeasurementData.Count} measurement datas were joint together."));
 
                         // find reference associated with the specification
                         string referenceName = _parameters.Matcher.GetReferenceName(condition.Name);
                         IReferenceValue referenceValue = referenceSample?.ReferenceValues?.FirstOrDefault(p => string.Equals(p.Name, referenceName));
 
                         // perform calculation:
-                        IResult calcResult = calculation.Calculate(calculationInputData, condition, referenceValue);
+                        IResult calcResult = calculation.Calculate(jointCalculationInputData, condition, referenceValue);
 
                         if (!calcResult.Successful)
                         {
+                            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError($"{quantitySpec.Quantity.Name}-{condition.Name} Calculation {calculation.CalculationType} was not successful."), MessageSeverityLevels.Error);
                             continue;
                         }
 
-                        IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), calculationInputData, referenceValue);
+                        IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), jointCalculationInputData, referenceValue);
 
                         conditionResultList.Add(conditionEvaluationResult);
 
@@ -306,7 +299,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                             _parameters.Logger.MethodTrace("The evaluation result:");
                             _parameters.Logger.MethodTrace($"   End time: {conditionEvaluationResult.CreationTime}");
                             _parameters.Logger.MethodTrace($"   The calculation was {(conditionEvaluationResult.Successful ? "" : "NOT")} successful.");
-                            _parameters.Logger.MethodTrace($"   Calculation input data name {calculationInputData.Name} number of measurement points: {calculationInputData.MeasuredPoints.Count}");
+                            _parameters.Logger.MethodTrace($"   Calculation input data name {jointCalculationInputData.Name} number of measurement points: {jointCalculationInputData.MeasuredPoints.Count}");
                             _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
                             _parameters.Logger.MethodTrace($"   Condition: {condition}");
                             _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult.ConditionIsMet ? "" : "NOT")} acceptable.");
@@ -319,14 +312,15 @@ namespace MeasurementEvaluator.ME_Evaluation
                     }
                 }
 
-                quantityEvaluationList.Add(new QuantityEvaluationResult(conditionResultList, quantitySpec.Quantity));
+                quantityResultList.Add(new QuantityEvaluationResult(conditionResultList, quantitySpec.Quantity));
             }
-            IEvaluationResult evaluationResult = new EvaluationResult(_parameters.DateTimeProvider.GetDateTime(), true, quantityEvaluationList, specification.ToolName, specification.Name);
+
+            IEvaluationResult evaluationResult = new EvaluationResult(_parameters.DateTimeProvider.GetDateTime(), true, quantityResultList, specification.ToolName, specification.Name);
 
             var resultreadyevent = ResultReadyEvent;
             resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
 
-            _parameters.MessageControl.AddMessage("Calculation Finished");
+            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError("Calculation Finished"));
         }
 
         #endregion

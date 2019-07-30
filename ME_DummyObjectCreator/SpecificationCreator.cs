@@ -43,10 +43,10 @@ namespace ME_DummyObjectCreator
             // resisitivity conditions
             ICondition<double> resistivityAVGCondition = new SimpleCondition()
             {
-                Name = "Resistivity Average Avg Condition",
-                CalculationType = CalculationTypes.Average,
-                LeftValue = 1.5,
-                ConditionRelation = Relations.EQUAL,
+                Name = "Resistivity Std Abs Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                LeftValue = 0.05,
+                ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
@@ -55,7 +55,7 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> resistivitySTDCondition = new SimpleCondition()
             {
-                Name = "Resitivity Average Std Condition",
+                Name = "Resistivity Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
@@ -121,7 +121,7 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> thicknessCpkCondition2 = new CpkCondition()
             {
-                Name = "Thickness Cpk Calculation",
+                Name = "Thickness Average Cpk Calculation",
                 CalculationType = CalculationTypes.Cpk,
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
@@ -133,10 +133,10 @@ namespace ME_DummyObjectCreator
             // resisitivity conditions
             ICondition<double> resistivityAVGCondition2 = new SimpleCondition()
             {
-                Name = "Resistivity Average Avg Condition",
-                CalculationType = CalculationTypes.Average,
-                LeftValue = 1.7,
-                ConditionRelation = Relations.EQUAL,
+                Name = "Resistivity Std Abs Condition",
+                CalculationType = CalculationTypes.StandardDeviation,
+                LeftValue = 0.07,
+                ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
                 RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
@@ -145,7 +145,7 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> resistivitySTDCondition2 = new SimpleCondition()
             {
-                Name = "Resitivity Average Std Condition",
+                Name = "Resistivity Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
@@ -157,8 +157,8 @@ namespace ME_DummyObjectCreator
 
             ICondition<double> resistivityCpkCondition2 = new CpkCondition()
             {
-                Name = "Resitivity Average Std Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
+                Name = "Resistivity Std Cpk Condition",
+                CalculationType = CalculationTypes.Cpk,
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,

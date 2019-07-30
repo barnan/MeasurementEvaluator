@@ -55,8 +55,6 @@ namespace DataStructures.ToolSpecifications
                 case Relativity.Relative:
                     isMet = Compare(calculationResult.ResultValue / calculationResult.Average * 100);
                     break;
-                default:
-                    break;
             }
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
         }
@@ -70,16 +68,22 @@ namespace DataStructures.ToolSpecifications
             {
                 case Relations.RelationsEnumValues.ALLWAYS:
                     return true;
+
                 case Relations.RelationsEnumValues.LESS:
                     return ValidIf_Value < rightValue;
+
                 case Relations.RelationsEnumValues.GREATER:
                     return ValidIf_Value > rightValue;
+
                 case Relations.RelationsEnumValues.LESSOREQUAL:
                     return ValidIf_Value <= rightValue;
+
                 case Relations.RelationsEnumValues.GREATEROREQUAL:
                     return ValidIf_Value >= rightValue;
+
                 case Relations.RelationsEnumValues.EQUAL:
                     return ValidIf_Value == rightValue;
+
                 case Relations.RelationsEnumValues.NOTEQUAL:
                     return ValidIf_Value != rightValue;
             }

@@ -11,5 +11,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
         public string QuantityName { get; set; }
 
         public IConditionEvaluationResult ConditionEvaluationResult { get; set; }
+
+        public double CalculationDoubleResult => (ConditionEvaluationResult.CalculationResult as ICalculationResult<double>)?.ResultValue ?? 0;
     }
 }

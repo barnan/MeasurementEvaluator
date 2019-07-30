@@ -20,7 +20,7 @@
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}">
+                    <TextBlock TextWrapping="Wrap" Foreground="{Binding MessageSeverityLevel, Converter={StaticResource MessageToColorConverter}}">
                         <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource MessageToTextConverter}">
                                 <Binding Path="MessageText"/>
