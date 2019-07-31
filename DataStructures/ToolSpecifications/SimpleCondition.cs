@@ -19,6 +19,8 @@ namespace DataStructures.ToolSpecifications
         public double ValidIf_Value { get; set; }
 
 
+        #region ctor
+
         public SimpleCondition()
         {
         }
@@ -31,12 +33,16 @@ namespace DataStructures.ToolSpecifications
             ValidIf_Value = validIfValue;
         }
 
+        #endregion
+
+        #region ICondition
+
         protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            if (!CheckCalculationType(result, CalculationType))
-            {
-                return null;
-            }
+            //if (!CheckCalculationType(result, CalculationType))
+            //{
+            //    return null;
+            //}
 
             ISimpleCalculationResult calculationResult = result as ISimpleCalculationResult;
 
@@ -47,50 +53,50 @@ namespace DataStructures.ToolSpecifications
             }
 
             bool isMet = false;
-            switch (RelOrAbs)
-            {
-                case Relativity.Absolute:
-                    isMet = Compare(calculationResult.ResultValue);
-                    break;
-                case Relativity.Relative:
-                    isMet = Compare(calculationResult.ResultValue / calculationResult.Average * 100);
-                    break;
-            }
+            //switch (RelOrAbs)
+            //{
+            //    case Relativity.Absolute:
+            //        isMet = Compare(calculationResult.ResultValue);
+            //        break;
+            //    case Relativity.Relative:
+            //        isMet = Compare(calculationResult.ResultValue / calculationResult.Average * 100);
+            //        break;
+            //}
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
         }
 
 
 
         // evaluation calls it from derived classes:
-        protected bool CompareValidity(double rightValue)
+        private bool CompareValidity(double rightValue)
         {
-            switch (ValidIf)
+            switch (ValidIf.Relation)
             {
-                case Relations.RelationsEnumValues.ALLWAYS:
+                case RelationsEnumValues.ALLWAYS:
                     return true;
 
-                case Relations.RelationsEnumValues.LESS:
+                case RelationsEnumValues.LESS:
                     return ValidIf_Value < rightValue;
 
-                case Relations.RelationsEnumValues.GREATER:
+                case RelationsEnumValues.GREATER:
                     return ValidIf_Value > rightValue;
 
-                case Relations.RelationsEnumValues.LESSOREQUAL:
+                case RelationsEnumValues.LESSOREQUAL:
                     return ValidIf_Value <= rightValue;
 
-                case Relations.RelationsEnumValues.GREATEROREQUAL:
+                case RelationsEnumValues.GREATEROREQUAL:
                     return ValidIf_Value >= rightValue;
 
-                case Relations.RelationsEnumValues.EQUAL:
+                case RelationsEnumValues.EQUAL:
                     return ValidIf_Value == rightValue;
 
-                case Relations.RelationsEnumValues.NOTEQUAL:
+                case RelationsEnumValues.NOTEQUAL:
                     return ValidIf_Value != rightValue;
             }
             return false;
         }
 
-
+        #endregion
 
         #region object.ToString()
 
@@ -125,6 +131,8 @@ namespace DataStructures.ToolSpecifications
         #endregion
 
 
+        #region XmlStorable
+
         public override XElement SaveToXml(XElement inputElement)
         {
             this.TrySave(Name, inputElement, nameof(Name));
@@ -151,6 +159,8 @@ namespace DataStructures.ToolSpecifications
             this.TryLoad(inputElement, nameof(ValidIf_Value));
             return true;
         }
+
+        #endregion
 
     }
 }

@@ -16,6 +16,8 @@ namespace DataStructures.ToolSpecifications
     public abstract class ConditionBase : IConditionHandler
     {
 
+        #region ctor
+
         public ConditionBase()
         {
         }
@@ -28,6 +30,8 @@ namespace DataStructures.ToolSpecifications
             Enabled = enabled;
             RelOrAbs = relorabs;
         }
+
+        #endregion
 
         #region INamed
 
@@ -85,24 +89,31 @@ namespace DataStructures.ToolSpecifications
     }
 
 
+
+
+
     public abstract class ConditionBase<T> : ConditionBase, IConditionHandler<T>
         where T : struct
     {
+
         public T LeftValue { get; set; }
 
 
-        public ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled, Relativity relorabs)
+        #region ctor
+
+        protected ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled, Relativity relorabs)
             : base(name, calculationtype, relation, enabled, relorabs)
         {
             LeftValue = value;
         }
 
 
-        public ConditionBase()
+        protected ConditionBase()
         {
             LeftValue = default(T);
         }
 
+        #endregion
 
         // evaluation calls it from derived classes:
         protected bool Compare(T rightValue)
@@ -110,49 +121,49 @@ namespace DataStructures.ToolSpecifications
             bool equality = EqualityComparer<T>.Default.Equals(LeftValue, rightValue);
             int compResult = Comparer<T>.Default.Compare(LeftValue, rightValue);
 
-            switch (ConditionRelation)
+            switch (ConditionRelation.Relation)
             {
-                case Relations.RelationsEnumValues.LESS:
+                case RelationsEnumValues.LESS:
                     return compResult == -1;
-                case Relations.RelationsEnumValues.GREATER:
+                case RelationsEnumValues.GREATER:
                     return compResult == 1;
-                case Relations.RelationsEnumValues.LESSOREQUAL:
+                case RelationsEnumValues.LESSOREQUAL:
                     return compResult == 1 || equality;
-                case Relations.RelationsEnumValues.GREATEROREQUAL:
+                case RelationsEnumValues.GREATEROREQUAL:
                     return compResult == -1 || equality;
-                case Relations.RelationsEnumValues.EQUAL:
+                case RelationsEnumValues.EQUAL:
                     return equality;
-                case Relations.RelationsEnumValues.NOTEQUAL:
+                case RelationsEnumValues.NOTEQUAL:
                     return equality;
             }
             return false;
         }
 
-        protected bool CheckCalculationType(IResult calculationResult, CalculationTypes calcType)
-        {
-            if (CalculationType != calcType)
-            {
-                return false;
-            }
+        //protected bool CheckCalculationType(IResult calculationResult, CalculationTypes calcType)
+        //{
+        //    if (CalculationType != calcType)
+        //    {
+        //        return false;
+        //    }
 
-            switch (calcType)
-            {
-                case CalculationTypes.Unknown:
-                    return false;
-                case CalculationTypes.Average:
-                    return calculationResult is ISimpleCalculationResult;
-                case CalculationTypes.StandardDeviation:
-                    return calculationResult is ISimpleCalculationResult;
-                case CalculationTypes.Cp:
-                    return calculationResult is IQCellsCalculationResult;
-                case CalculationTypes.Cpk:
-                    return calculationResult is IQCellsCalculationResult;
-                case CalculationTypes.GRAndR:
-                    return calculationResult is IGRAndRCalculationResult;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(calcType), calcType, null);
-            }
-        }
+        //    switch (calcType)
+        //    {
+        //        case CalculationTypes.Unknown:
+        //            return false;
+        //        case CalculationTypes.Average:
+        //            return calculationResult is ISimpleCalculationResult;
+        //        case CalculationTypes.StandardDeviation:
+        //            return calculationResult is ISimpleCalculationResult;
+        //        case CalculationTypes.Cp:
+        //            return calculationResult is IQCellsCalculationResult;
+        //        case CalculationTypes.Cpk:
+        //            return calculationResult is IQCellsCalculationResult;
+        //        case CalculationTypes.GRAndR:
+        //            return calculationResult is IGRAndRCalculationResult;
+        //        default:
+        //            throw new ArgumentOutOfRangeException(nameof(calcType), calcType, null);
+        //    }
+        //}
 
         #region object.ToString()
 

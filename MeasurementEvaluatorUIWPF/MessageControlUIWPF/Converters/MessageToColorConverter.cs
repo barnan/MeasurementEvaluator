@@ -28,7 +28,7 @@ namespace MeasurementEvaluatorUIWPF.MessageControlUI.Converters
             switch (severity)
             {
                 case MessageSeverityLevels.Trace:
-                    return new SolidColorBrush(Colors.Yellow);
+                    return new SolidColorBrush(Colors.LightGray);
 
                 case MessageSeverityLevels.Info:
                     return new SolidColorBrush(Colors.White);

@@ -66,10 +66,10 @@ namespace DataStructures.ToolSpecifications
 
         protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            if (!CheckCalculationType(result, CalculationType))
-            {
-                return null;
-            }
+            //if (!CheckCalculationType(result, CalculationType))
+            //{
+            //    return null;
+            //}
 
 
             IQCellsCalculationResult qcellsResult = result as IQCellsCalculationResult;
@@ -80,6 +80,7 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
+        #region XmlStorable
 
         public override XElement SaveToXml(XElement inputElement)
         {
@@ -105,6 +106,8 @@ namespace DataStructures.ToolSpecifications
             this.TryLoad(inputElement, nameof(HalfTolerance));
             return true;
         }
+
+        #endregion
     }
 
 }

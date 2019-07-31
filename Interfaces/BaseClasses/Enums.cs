@@ -60,13 +60,5 @@ namespace Interfaces.BaseClasses
     }
 
 
-    public enum CalculationTypes
-    {
-        Unknown = 0,
-        Average,
-        StandardDeviation,
-        Cp,
-        Cpk,
-        GRAndR
-    }
+
 }

@@ -1,6 +1,5 @@
 ﻿using Frame.ConfigHandler;
 using Frame.PluginLoader;
-using Interfaces;
 using Interfaces.BaseClasses;
 using Interfaces.Misc;
 using NLog;
@@ -18,8 +17,8 @@ namespace Calculations.Calculation
 
 
         [Configuration("CalculationType", "CalculationType", LoadComponent = true)]
-        private CalculationTypes _calculationType = CalculationTypes.Unknown;
-        public CalculationTypes CalculationType => _calculationType;
+        private CalculationTypesValues _calculationType = CalculationTypesValues.Unknown;
+        public CalculationTypes CalculationType => (CalculationTypes)_calculationType;
 
 
         internal bool Load(string sectionName)

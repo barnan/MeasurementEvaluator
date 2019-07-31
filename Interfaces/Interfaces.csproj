@@ -37,6 +37,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\CalculationTypes.cs" />
     <Compile Include="BaseClasses\EventArgs.cs" />
     <Compile Include="BaseClasses\Relations.cs" />
     <Compile Include="BaseClasses\Enums.cs" />

@@ -21,22 +21,22 @@ namespace Calculations.Calculation
                     {
                         ICalculation instance = null;
 
-                        switch (param.CalculationType)
+                        switch (param.CalculationType.CalculationType)
                         {
-                            case CalculationTypes.Average:
+                            case CalculationTypesValues.Average:
                                 instance = new AverageCalculation1D(param);
                                 break;
-                            case CalculationTypes.StandardDeviation:
+                            case CalculationTypesValues.StandardDeviation:
                                 instance = new StdCalculation1D(param);
                                 break;
-                            case CalculationTypes.Cp:
+                            case CalculationTypesValues.Cp:
                                 instance = new CpCalculation1D(param);
                                 break;
-                            case CalculationTypes.Cpk:
+                            case CalculationTypesValues.Cpk:
                                 instance = new CpkCalculation1D(param);
                                 break;
-                            case CalculationTypes.GRAndR:
-                            case CalculationTypes.Unknown:
+                            case CalculationTypesValues.GRAndR:
+                            case CalculationTypesValues.Unknown:
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }

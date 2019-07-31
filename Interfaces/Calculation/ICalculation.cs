@@ -25,6 +25,7 @@ namespace Interfaces.Calculation
         /// type of the current calculation
         /// </summary>
         CalculationTypes CalculationType { get; }
+
     }
 
 }
