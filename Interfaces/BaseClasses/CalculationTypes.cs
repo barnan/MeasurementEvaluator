@@ -7,13 +7,6 @@ namespace Interfaces.BaseClasses
 
     public enum CalculationTypesValues
     {
-        //public const int Unkown = 0;
-        //public const int Average = 1;
-        //public const int StanderdDeviation = 2;
-        //public const int Cp = 3;
-        //public const int Cpk = 4;
-        //public const int GRAndR = 5;
-
         Unknown = 0,
         Average = 1,
         StandardDeviation = 2,
@@ -29,9 +22,7 @@ namespace Interfaces.BaseClasses
         private const string XELEMENT_CALCULATIONTYPE = "CalculationType";
         private const string XELEMENT_RELATIVITY = "Relativity";
 
-
         public Relativity[] Relativites { get; private set; }
-
 
         public Relativity Relativity { get; set; }
 
@@ -146,12 +137,10 @@ namespace Interfaces.BaseClasses
             {
                 return false;
             }
-
             if (ReferenceEquals(this, other))
             {
                 return true;
             }
-
             return CalculationTypeValue == other.CalculationTypeValue;
         }
 
@@ -161,12 +150,10 @@ namespace Interfaces.BaseClasses
             {
                 return false;
             }
-
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
             return obj is CalculationTypes && Equals((CalculationTypes)obj);
         }
 
@@ -180,6 +167,17 @@ namespace Interfaces.BaseClasses
                 return hashCode;
             }
         }
+
+        public static bool operator ==(CalculationTypes left, CalculationTypes right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CalculationTypes left, CalculationTypes right)
+        {
+            return !left.Equals(right);
+        }
+
     }
 
 }

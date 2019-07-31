@@ -4,6 +4,7 @@ using Frame.PluginLoader.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +17,6 @@ namespace Frame.PluginLoader
     {
         [DllImport("kernel32.dll")]
         internal static extern IntPtr GetConsoleWindow();
-
 
         [DllImport("user32.dll")]
         internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
@@ -143,10 +143,6 @@ namespace Frame.PluginLoader
                     {
                         return Initialized = false;
                     }
-
-#if RELEASE
-                ShowWindow(GetConsoleWindow(), SW_HIDE);
-#endif
 
                     MessageControll = new UIMessageControl();
 
@@ -460,6 +456,13 @@ namespace Frame.PluginLoader
         {
             internal IPluginFactory Factory { get; set; }
             internal string AssemblyName { get; set; }
+        }
+
+
+        [Conditional("RELEASE")]
+        private void HideConsole()
+        {
+            ShowWindow(GetConsoleWindow(), SW_HIDE);
         }
 
 
