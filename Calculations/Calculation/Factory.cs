@@ -19,9 +19,9 @@ namespace Calculations.Calculation
                     CalculationParameters param = new CalculationParameters();
                     if (param.Load(name))
                     {
-                        ICalculation instance = null;
+                        ICalculation instance;
 
-                        switch (param.CalculationType.CalculationType)
+                        switch (param.CalculationTypeValue)
                         {
                             case CalculationTypesValues.Average:
                                 instance = new AverageCalculation1D(param);

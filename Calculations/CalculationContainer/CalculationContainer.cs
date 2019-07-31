@@ -1,9 +1,8 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.Calculation;
 using Miscellaneous;
 using System.Collections.Generic;
 using System.Linq;
-using Interfaces.BaseClasses;
 
 namespace Calculations.CalculationContainer
 {
@@ -11,7 +10,7 @@ namespace Calculations.CalculationContainer
     {
         private readonly CalculationContainerParameters _parameters;
 
-        public IReadOnlyList<CalculationTypes> AvailableCalculatons
+        public IReadOnlyList<CalculationTypesValues> AvailableCalculatons
         {
             get
             {
@@ -31,7 +30,7 @@ namespace Calculations.CalculationContainer
                 _parameters.Logger.LogError($"{nameof(_parameters.AvailableCalculations)} is null or empty.");
             }
 
-            List<ICalculation> calcList = _parameters.AvailableCalculations.Where(p => p.CalculationType == requiredCalculationType).ToList();
+            List<ICalculation> calcList = _parameters.AvailableCalculations.Where(p => p.CalculationType == requiredCalculationType.CalculationTypeValue).ToList();
 
             if (calcList.Count == 0)
             {

@@ -36,7 +36,7 @@ namespace Interfaces.BaseClasses
         public Relativity Relativity { get; set; }
 
 
-        public CalculationTypesValues CalculationType { get; private set; }
+        public CalculationTypesValues CalculationTypeValue { get; private set; }
 
 
         public CalculationTypes()
@@ -46,7 +46,7 @@ namespace Interfaces.BaseClasses
         private CalculationTypes(CalculationTypesValues value, Relativity[] relativites)
         {
             Relativites = relativites;
-            CalculationType = value;
+            CalculationTypeValue = value;
         }
 
 
@@ -80,7 +80,7 @@ namespace Interfaces.BaseClasses
 
         public XElement SaveToXml(XElement inputElement)
         {
-            inputElement.SetAttributeValue(XELEMENT_CALCULATIONTYPE, CalculationType);
+            inputElement.SetAttributeValue(XELEMENT_CALCULATIONTYPE, CalculationTypeValue);
             inputElement.SetAttributeValue(XELEMENT_RELATIVITY, Relativity);
             return inputElement;
         }
@@ -111,28 +111,28 @@ namespace Interfaces.BaseClasses
             switch (calculationTypeValue)
             {
                 case nameof(Average):
-                    CalculationType = CalculationTypesValues.Average;
+                    CalculationTypeValue = CalculationTypesValues.Average;
                     Relativites = Average.Relativites;
                     break;
                 case nameof(StandardDeviation):
-                    CalculationType = CalculationTypesValues.StandardDeviation;
+                    CalculationTypeValue = CalculationTypesValues.StandardDeviation;
                     Relativites = StandardDeviation.Relativites;
                     break;
                 case nameof(Cp):
-                    CalculationType = CalculationTypesValues.Cp;
+                    CalculationTypeValue = CalculationTypesValues.Cp;
                     Relativites = Cp.Relativites;
                     break;
                 case nameof(Cpk):
-                    CalculationType = CalculationTypesValues.Cpk;
+                    CalculationTypeValue = CalculationTypesValues.Cpk;
                     Relativites = Cpk.Relativites;
                     break;
                 case nameof(GRAndR):
-                    CalculationType = CalculationTypesValues.GRAndR;
+                    CalculationTypeValue = CalculationTypesValues.GRAndR;
                     Relativites = GRAndR.Relativites;
                     break;
                 case nameof(Unknown):
                 default:
-                    CalculationType = CalculationTypesValues.Unknown;
+                    CalculationTypeValue = CalculationTypesValues.Unknown;
                     Relativites = Unknown.Relativites;
                     break;
             }
@@ -152,7 +152,7 @@ namespace Interfaces.BaseClasses
                 return true;
             }
 
-            return CalculationType == other.CalculationType;
+            return CalculationTypeValue == other.CalculationTypeValue;
         }
 
         public override bool Equals(object obj)
@@ -176,7 +176,7 @@ namespace Interfaces.BaseClasses
             {
                 var hashCode = (Relativites != null ? Relativites.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (int)Relativity;
-                hashCode = (hashCode * 397) ^ (int)CalculationType;
+                hashCode = (hashCode * 397) ^ (int)CalculationTypeValue;
                 return hashCode;
             }
         }

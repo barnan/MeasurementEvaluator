@@ -16,7 +16,7 @@ namespace Calculations.Calculation
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.Cpk;
+        public override CalculationTypesValues CalculationType => CalculationTypesValues.Cpk;
 
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
@@ -26,7 +26,7 @@ namespace Calculations.Calculation
                 throw new ArgumentNullException($"No {nameof(ICpkCondition)} condition received for {CalculationType} settings creation.");
             }
 
-            if (condition.CalculationType != CalculationType)
+            if (condition.CalculationType.CalculationTypeValue != CalculationType)
             {
                 throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
             }

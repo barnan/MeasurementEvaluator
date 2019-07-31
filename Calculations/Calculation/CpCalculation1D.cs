@@ -16,7 +16,7 @@ namespace Calculations.Calculation
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.Cp;
+        public override CalculationTypesValues CalculationType => CalculationTypesValues.Cp;
 
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
@@ -27,7 +27,7 @@ namespace Calculations.Calculation
                 return null;
             }
 
-            if (condition.CalculationType != CalculationType)
+            if (condition.CalculationType.CalculationTypeValue != CalculationType)
             {
                 throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
             }

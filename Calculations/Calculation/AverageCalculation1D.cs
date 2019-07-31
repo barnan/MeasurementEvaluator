@@ -17,12 +17,12 @@ namespace Calculations.Calculation
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.Average;
+        public override CalculationTypesValues CalculationType => CalculationTypesValues.Average;
 
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            if (condition.CalculationType != CalculationType)
+            if (condition.CalculationType.CalculationTypeValue != CalculationType)
             {
                 throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
             }
