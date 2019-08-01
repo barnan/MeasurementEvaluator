@@ -26,6 +26,7 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessAVGCondition.CalculationType.Relativity = Relativity.Absolute;
 
             ICondition<double> thicknessSTDCondition = new SimpleCondition()
             {

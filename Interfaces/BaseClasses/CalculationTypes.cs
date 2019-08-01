@@ -34,40 +34,22 @@ namespace Interfaces.BaseClasses
         {
         }
 
-        private CalculationTypes(CalculationTypesValues value, Relativity[] relativites)
+        private CalculationTypes(CalculationTypesValues value, Relativity[] relativities)
         {
-            Relativites = relativites;
+            Relativites = relativities;
             CalculationTypeValue = value;
         }
 
 
-        public static readonly CalculationTypes Unknown = new CalculationTypes(CalculationTypesValues.Unknown, Array.Empty<Relativity>());
-        public static readonly CalculationTypes Average = new CalculationTypes(CalculationTypesValues.Average, new Relativity[] { Relativity.Absolute });
-        public static readonly CalculationTypes StandardDeviation = new CalculationTypes(CalculationTypesValues.StandardDeviation, new Relativity[] { Relativity.Absolute, Relativity.Relative });
-        public static readonly CalculationTypes Cp = new CalculationTypes(CalculationTypesValues.Cp, new Relativity[] { Relativity.Absolute });
-        public static readonly CalculationTypes Cpk = new CalculationTypes(CalculationTypesValues.Cpk, new Relativity[] { Relativity.Absolute });
-        public static readonly CalculationTypes GRAndR = new CalculationTypes(CalculationTypesValues.GRAndR, new Relativity[] { Relativity.Absolute });
+        public static CalculationTypes Unknown => new CalculationTypes(CalculationTypesValues.Unknown, Array.Empty<Relativity>());
+        public static CalculationTypes Average => new CalculationTypes(CalculationTypesValues.Average, new Relativity[] { Relativity.Absolute });
+        public static CalculationTypes StandardDeviation => new CalculationTypes(CalculationTypesValues.StandardDeviation, new Relativity[] { Relativity.Absolute, Relativity.Relative });
+        public static CalculationTypes Cp => new CalculationTypes(CalculationTypesValues.Cp, new Relativity[] { Relativity.Absolute });
+        public static CalculationTypes Cpk => new CalculationTypes(CalculationTypesValues.Cpk, new Relativity[] { Relativity.Absolute });
+        public static CalculationTypes GRAndR => new CalculationTypes(CalculationTypesValues.GRAndR, new Relativity[] { Relativity.Absolute });
 
 
-        public static explicit operator CalculationTypes(CalculationTypesValues typeValues)
-        {
-            switch (typeValues)
-            {
-                case CalculationTypesValues.Average:
-                    return Average;
-                case CalculationTypesValues.StandardDeviation:
-                    return StandardDeviation;
-                case CalculationTypesValues.Cp:
-                    return Cp;
-                case CalculationTypesValues.Cpk:
-                    return Cpk;
-                case CalculationTypesValues.GRAndR:
-                    return GRAndR;
-                case CalculationTypesValues.Unknown:
-                default:
-                    return Unknown;
-            }
-        }
+        #region XmlStorable
 
         public XElement SaveToXml(XElement inputElement)
         {
@@ -131,6 +113,10 @@ namespace Interfaces.BaseClasses
             return true;
         }
 
+        #endregion
+
+        #region IEquatable
+
         public bool Equals(CalculationTypes other)
         {
             if (ReferenceEquals(null, other))
@@ -168,6 +154,10 @@ namespace Interfaces.BaseClasses
             }
         }
 
+        #endregion
+
+        #region == operator overloading
+
         public static bool operator ==(CalculationTypes left, CalculationTypes right)
         {
             return left.Equals(right);
@@ -178,11 +168,16 @@ namespace Interfaces.BaseClasses
             return !left.Equals(right);
         }
 
+        #endregion
+
+        #region object.ToString()
 
         public override string ToString()
         {
             return $"({Relativity}) {CalculationTypeValue}";
         }
+
+        #endregion
     }
 
 }
