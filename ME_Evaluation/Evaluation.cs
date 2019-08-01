@@ -215,11 +215,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             _parameters.Logger.MethodInfo($"Started to evaluate received collectordata: Specification name: {specification.Name}");
             _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.Name ?? "No reference received"}.");
-            _parameters.Logger.MethodInfo("Measurement datas: ");
-            foreach (IToolMeasurementData measurementData in measurementDatas)
-            {
-                _parameters.Logger.MethodInfo(measurementData.Name);
-            }
+            _parameters.Logger.MethodInfo($"Measurement datas: {string.Join(",", measurementDatas.Select(p => p.Name))}");
 
             List<IQuantityEvaluationResult> quantityResultList = new List<IQuantityEvaluationResult>();
 

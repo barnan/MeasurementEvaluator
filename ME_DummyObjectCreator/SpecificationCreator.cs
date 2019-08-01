@@ -23,7 +23,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 2,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -35,10 +34,10 @@ namespace ME_DummyObjectCreator
                 LeftValue = 0.5,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Relative,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessSTDCondition.CalculationType.Relativity = Relativity.Relative;
 
             // resisitivity conditions
             ICondition<double> resistivityAVGCondition = new SimpleCondition()
@@ -48,7 +47,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 0.05,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -60,10 +58,10 @@ namespace ME_DummyObjectCreator
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Relative,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            resistivitySTDCondition.CalculationType.Relativity = Relativity.Relative;
 
 
             IQuantitySpecificationHandler thicknessQuantitySpecification = new QuantitySpecification();
@@ -102,7 +100,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 3,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -114,7 +111,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Relative,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -126,7 +122,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Relative,
                 HalfTolerance = 1
             };
 
@@ -138,7 +133,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 0.07,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Absolute,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -150,7 +144,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Relative,
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
@@ -162,7 +155,6 @@ namespace ME_DummyObjectCreator
                 LeftValue = 1,
                 ConditionRelation = Relations.LESSOREQUAL,
                 Enabled = true,
-                RelOrAbs = Relativity.Relative,
                 HalfTolerance = 1
             };
 

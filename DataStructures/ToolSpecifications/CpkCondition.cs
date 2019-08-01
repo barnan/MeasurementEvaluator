@@ -34,7 +34,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"{base.ToString()}{Environment.NewLine}HalfTolerance: {HalfTolerance}{Environment.NewLine}{RelOrAbs}";
+            return $"{base.ToString()}{Environment.NewLine}HalfTolerance: {HalfTolerance}";
         }
 
         public override string ToString(string format, IFormatProvider formatProvider)
@@ -88,7 +88,6 @@ namespace DataStructures.ToolSpecifications
             this.TrySave(Enabled, inputElement, nameof(Enabled));
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
-            this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
             this.TrySave(LeftValue, inputElement, nameof(LeftValue));
             this.TrySave(HalfTolerance, inputElement, nameof(HalfTolerance));
 
@@ -101,7 +100,6 @@ namespace DataStructures.ToolSpecifications
             this.TryLoad(inputElement, nameof(Enabled));
             this.TryLoad(inputElement, nameof(CalculationType));
             this.TryLoad(inputElement, nameof(ConditionRelation));
-            this.TryLoad(inputElement, nameof(RelOrAbs));
             this.TryLoad(inputElement, nameof(LeftValue));
             this.TryLoad(inputElement, nameof(HalfTolerance));
             return true;

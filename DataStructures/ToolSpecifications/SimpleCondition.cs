@@ -39,29 +39,15 @@ namespace DataStructures.ToolSpecifications
 
         protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            //if (!CheckCalculationType(result, CalculationType))
-            //{
-            //    return null;
-            //}
-
             ISimpleCalculationResult calculationResult = result as ISimpleCalculationResult;
 
             if (!CompareValidity(calculationResult.Average))
             {
                 return null;
-                // log
+                //log
             }
 
             bool isMet = false;
-            //switch (RelOrAbs)
-            //{
-            //    case Relativity.Absolute:
-            //        isMet = Compare(calculationResult.ResultValue);
-            //        break;
-            //    case Relativity.Relative:
-            //        isMet = Compare(calculationResult.ResultValue / calculationResult.Average * 100);
-            //        break;
-            //}
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
         }
 
@@ -122,7 +108,7 @@ namespace DataStructures.ToolSpecifications
                 case "G":
                     return ToString();
                 case "GRID":
-                    return $"{(RelOrAbs == Relativity.Absolute ? "(abs)" : "(rel)")} {LeftValue.ToString("N2")} {ConditionRelation}";
+                    return $"{LeftValue.ToString("N2")} {ConditionRelation}";
                 default:
                     throw new FormatException(String.Format($"The {format} format string is not supported."));
             }
@@ -139,7 +125,6 @@ namespace DataStructures.ToolSpecifications
             this.TrySave(Enabled, inputElement, nameof(Enabled));
             this.TrySave(CalculationType, inputElement, nameof(CalculationType));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
-            this.TrySave(RelOrAbs, inputElement, nameof(RelOrAbs));
             this.TrySave(LeftValue, inputElement, nameof(LeftValue));
             this.TrySave(ValidIf, inputElement, nameof(ValidIf));
             this.TrySave(ValidIf_Value, inputElement, nameof(ValidIf_Value));
@@ -153,7 +138,6 @@ namespace DataStructures.ToolSpecifications
             this.TryLoad(inputElement, nameof(Enabled));
             this.TryLoad(inputElement, nameof(CalculationType));
             this.TryLoad(inputElement, nameof(ConditionRelation));
-            this.TryLoad(inputElement, nameof(RelOrAbs));
             this.TryLoad(inputElement, nameof(LeftValue));
             this.TryLoad(inputElement, nameof(ValidIf));
             this.TryLoad(inputElement, nameof(ValidIf_Value));

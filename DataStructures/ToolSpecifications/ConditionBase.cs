@@ -5,9 +5,6 @@ using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications
@@ -28,7 +25,6 @@ namespace DataStructures.ToolSpecifications
             CalculationType = calculationtype;
             ConditionRelation = relation;
             Enabled = enabled;
-            RelOrAbs = relorabs;
         }
 
         #endregion
@@ -44,7 +40,6 @@ namespace DataStructures.ToolSpecifications
         public CalculationTypes CalculationType { get; set; }
         public Relations ConditionRelation { get; set; }
         public bool Enabled { get; set; }
-        public Relativity RelOrAbs { get; set; }
 
 
         public IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
@@ -65,18 +60,7 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            string fieldName = Enum.GetName(typeof(Relativity), RelOrAbs);
-
-            MemberInfo memberInfo = RelOrAbs.GetType().GetMember(fieldName).FirstOrDefault();
-            DescriptionAttribute attribute = memberInfo?.GetCustomAttributes(typeof(DescriptionAttribute)).FirstOrDefault() as DescriptionAttribute;
-
-            string enumDescription = "";
-            if (attribute != null)
-            {
-                enumDescription = attribute.Description;
-            }
-
-            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}{Environment.NewLine}{enumDescription}";
+            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}";
         }
 
         public abstract string ToString(string format, IFormatProvider formatProvider);

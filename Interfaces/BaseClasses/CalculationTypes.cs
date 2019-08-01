@@ -178,6 +178,11 @@ namespace Interfaces.BaseClasses
             return !left.Equals(right);
         }
 
+
+        public override string ToString()
+        {
+            return $"({Relativity}) {CalculationTypeValue}";
+        }
     }
 
 }
