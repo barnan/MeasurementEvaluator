@@ -56,26 +56,26 @@ namespace MeasurementEvaluator.ME_Matching
         #endregion
 
 
-        public IEnumerable<string> GetMeasDataNames(string conditionName)
+        public IEnumerable<string> GetMeasDataNames(string searchedConditionName)
         {
             if (!IsInitialized)
             {
                 _parameters.Logger.LogError("Not initialized yet.");
                 return null;
             }
-            IEnumerable<string> result = _specificationMeasDataReferencePairs.Where(p => p.ConditionName == conditionName).SelectMany(p => p.MeasDataNames);
+            IEnumerable<string> result = _specificationMeasDataReferencePairs.Where(p => p.ConditionName == searchedConditionName).SelectMany(p => p.MeasDataNames);
 
             return result;
         }
 
-        public string GetReferenceName(string conditionName)
+        public string GetReferenceName(string searchedConditionName)
         {
             if (!IsInitialized)
             {
                 _parameters.Logger.LogError("Not initialized yet.");
                 return null;
             }
-            string result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.ConditionName == conditionName)?.ReferenceName;
+            string result = _specificationMeasDataReferencePairs.FirstOrDefault(p => p.ConditionName == searchedConditionName)?.ReferenceName;
             return result;
         }
 

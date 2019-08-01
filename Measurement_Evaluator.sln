@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDTabularFileReaderWriter"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDDXmlSerializator", "HDDXmlSerializator\HDDXmlSerializator.csproj", "{682CC5C9-81F8-4308-94C6-CF66F755C6EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_Matcher", "Test_Matcher\Test_Matcher.csproj", "{4961BB73-188B-4CBE-84CD-8C31E32AF18E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{682CC5C9-81F8-4308-94C6-CF66F755C6EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4961BB73-188B-4CBE-84CD-8C31E32AF18E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4961BB73-188B-4CBE-84CD-8C31E32AF18E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4961BB73-188B-4CBE-84CD-8C31E32AF18E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4961BB73-188B-4CBE-84CD-8C31E32AF18E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

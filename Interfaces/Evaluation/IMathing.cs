@@ -9,15 +9,15 @@ namespace Interfaces.Evaluation
         /// <summary>
         /// Gives the names of those measurement datas which are related to the given specification name
         /// </summary>
-        /// <param name="specificationName">input specification name</param>
+        /// <param name="searchedConditionName">input specification name</param>
         /// <returns></returns>
-        IEnumerable<string> GetMeasDataNames(string specificationName);
+        IEnumerable<string> GetMeasDataNames(string searchedConditionName);
 
         /// <summary>
         /// Gives the names of those reference values which are related to the given specification name
         /// </summary>
-        /// <param name="specificationName">input specification name</param>
+        /// <param name="searchedConditionName">input specification name</param>
         /// <returns></returns>
-        string GetReferenceName(string specificationName);
+        string GetReferenceName(string searchedConditionName);
     }
 }
