@@ -1,5 +1,6 @@
 ﻿using Interfaces.Misc;
 using System;
+using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace Interfaces.BaseClasses
@@ -7,11 +8,22 @@ namespace Interfaces.BaseClasses
 
     public enum CalculationTypesValues
     {
+        [Description("Unknown")]
         Unknown = 0,
+
+        [Description("Avg")]
         Average = 1,
+
+        [Description("Std")]
         StandardDeviation = 2,
+
+        [Description("Cp")]
         Cp = 3,
+
+        [Description("Cpk")]
         Cpk = 4,
+
+        [Description("GRAndR")]
         GRAndR = 5,
     }
 

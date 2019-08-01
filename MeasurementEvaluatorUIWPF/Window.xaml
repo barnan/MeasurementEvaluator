@@ -12,7 +12,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         ShowTitleBar="True"
-        Title="Measurement Evaluator" Height="700" Width="800" ResizeMode="NoResize">
+        Title="Measurement Evaluator" Height="700" Width="1000" ResizeMode="NoResize">
 
     <Window.Resources>
         <ResourceDictionary>

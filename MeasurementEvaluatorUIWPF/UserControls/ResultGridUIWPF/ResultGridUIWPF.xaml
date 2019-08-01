@@ -13,7 +13,6 @@
     <Grid>
         <Grid.Resources>
             <converters:ConditionConverter x:Key="ConditionConverter"/>
-            <converters:ToolNameConverter x:Key="ToolNameConverter"/>
         </Grid.Resources>
         
 
@@ -41,7 +40,7 @@
                 <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
                 <DataGridTextColumn Header="Calculation Type" Binding="{Binding ConditionEvaluationResult.Condition.CalculationType}"/>
                 <DataGridTextColumn Header="Condition" Binding="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionConverter}}"/>
-                <DataGridTextColumn Header="Calculation Result" Binding="{Binding CalculationDoubleResult}"/>
+                <DataGridTextColumn Header="Calculation Result" Binding="{Binding CalculationDoubleResult, StringFormat=N3}" Width="70"/>
                 <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionEvaluationResult.CalculationResult.Successful}"/>
 
             </DataGrid.Columns>

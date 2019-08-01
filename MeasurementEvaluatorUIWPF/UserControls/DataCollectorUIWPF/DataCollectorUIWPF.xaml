@@ -9,7 +9,7 @@
              mc:Ignorable="d"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              d:DataContext="{d:DesignInstance local:DataCollectorViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="450" Width="380">
+             d:DesignHeight="450" MinWidth="200">
 
     <Grid>
         <Grid.Resources>

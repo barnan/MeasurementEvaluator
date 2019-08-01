@@ -34,12 +34,18 @@ namespace Calculations.Calculation
 
             double std = GetStandardDeviation(validElementList, average);
 
+            double result = std;
+            if (condition.CalculationType.Relativity == Relativity.Relative)
+            {
+                result = std / average * 100;
+            }
+
             _parameters.Logger.LogTrace($"{nameof(StdCalculation1D)}: Calculated standard devaition: {std}, average: {average}");
 
             return new SimpleCalculationResult(_parameters.DateTimeProvider.GetDateTime(),
                                                 true,
                                                 measurementSerieData,
-                                                std,
+                                                result,
                                                 average);
         }
     }
