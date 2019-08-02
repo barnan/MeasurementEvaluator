@@ -14,7 +14,6 @@
         <Grid.Resources>
             <converters:ConditionConverter x:Key="ConditionConverter"/>
         </Grid.Resources>
-        
 
         <DataGrid
             ItemsSource="{Binding ConditionEvaluationResults}"
@@ -33,17 +32,49 @@
             VirtualizingPanel.IsVirtualizing="False"
                           
             SelectionMode="Single"
-            SelectionUnit="CellOrRowHeader">
+            SelectionUnit="FullRow">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tool" Binding="{Binding ToolName}"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
                 <DataGridTextColumn Header="Calculation Type" Binding="{Binding ConditionEvaluationResult.Condition.CalculationType}"/>
                 <DataGridTextColumn Header="Condition" Binding="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionConverter}}"/>
-                <DataGridTextColumn Header="Calculation Result" Binding="{Binding CalculationDoubleResult, StringFormat=N3}" Width="70"/>
+                <DataGridTextColumn Header="Result" Binding="{Binding CalculationDoubleResult, StringFormat=N3}" Width="70"/>
                 <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionEvaluationResult.CalculationResult.Successful}"/>
-
+                <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionEvaluationResult.CalculationResult.Successful}"/>
             </DataGrid.Columns>
+
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+
+                        <DataGrid
+                            ItemsSource="{Binding CalculationResult.MeasurementSerie.MeasuredPoints}"
+                            CanUserReorderColumns="False"
+                            CanUserResizeRows="False"
+                            CanUserSortColumns="False"
+                            CanUserDeleteRows="False"
+                            CanUserResizeColumns="False"
+                            IsReadOnly="True"
+                            AutoGenerateColumns="False"
+                            HorizontalContentAlignment="Center"
+                            HorizontalScrollBarVisibility="Visible"
+                            EnableColumnVirtualization="False"
+                            EnableRowVirtualization="False"
+                            VirtualizingPanel.VirtualizationMode="Standard"
+                            VirtualizingPanel.IsVirtualizing="False"
+                              
+                            SelectionMode="Single"
+                            SelectionUnit="CellOrRowHeader">
+                        </DataGrid>
+                    </Grid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+
         </DataGrid>
     </Grid>
 

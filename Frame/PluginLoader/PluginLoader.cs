@@ -485,7 +485,7 @@ namespace Frame.PluginLoader
             }
 
             PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
-            return combinedPath;
+            return CheckDirectoryPath(combinedPath);
         }
 
         #endregion
