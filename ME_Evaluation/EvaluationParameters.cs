@@ -27,7 +27,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         [Configuration("Data matching", "Data Matcher", LoadComponent = true)]
         private string _matcher = null;
-        internal IMathing Matcher { get; private set; }
+        internal IMatching Matcher { get; private set; }
 
 
         public IUIMessageControl MessageControl { get; private set; }
@@ -47,7 +47,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             CalculationContainer = PluginLoader.CreateInstance<ICalculationContainer>(_calculationContainer);
             DataCollector = PluginLoader.CreateInstance<IDataCollector>(_dataCollector);
             DateTimeProvider = PluginLoader.CreateInstance<IDateTimeProvider>(_dateTimeProvider);
-            Matcher = PluginLoader.CreateInstance<IMathing>(_matcher);
+            Matcher = PluginLoader.CreateInstance<IMatching>(_matcher);
             MessageControl = PluginLoader.MessageControll;
 
             return CheckComponent();

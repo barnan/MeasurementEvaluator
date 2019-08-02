@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfPairingKeyValuePair xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PairingKeyValuePair>
+    <ConditionName>Thickness Average Std Abs Condition</ConditionName>
+    <MeasDataNames>
+      <string>TTR,AvrThickness</string>
+      <string>TTR.AvrThickness</string>
+      <string>Thickness[um]</string>
+    </MeasDataNames>
+    <ReferenceName>Thickness Average</ReferenceName>
+  </PairingKeyValuePair>
+  <PairingKeyValuePair>
+    <ConditionName>Thickness Average Std Rel Condition</ConditionName>
+    <MeasDataNames>
+      <string>TTR,AvrThickness</string>
+      <string>TTR.AvrThickness</string>
+      <string>Thickness[um]</string>
+    </MeasDataNames>
+    <ReferenceName>Thickness Std</ReferenceName>
+  </PairingKeyValuePair>
+</ArrayOfPairingKeyValuePair>

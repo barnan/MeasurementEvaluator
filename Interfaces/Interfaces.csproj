@@ -46,7 +46,7 @@
     <Compile Include="Calculation\ICalculationContainer.cs" />
     <Compile Include="Calculation\ICalculationSettings.cs" />
     <Compile Include="DataAcquisition\IDataCollector.cs" />
-    <Compile Include="Evaluation\IMathing.cs" />
+    <Compile Include="Evaluation\IMatching.cs" />
     <Compile Include="MeasuredData\IGenericMeasurementPoint.cs" />
     <Compile Include="Misc\IComponent.cs" />
     <Compile Include="Misc\IDateTimeProvider.cs" />

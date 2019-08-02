@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Frame.PluginLoader;
+using Interfaces.Evaluation;
+using NUnit.Framework;
 
 namespace Test_Matcher
 {
-    class Test_Matching
+    [TestFixture]
+    internal class Test_Matching
     {
+        private IMatching _matcher;
+
+
+        [OneTimeSetUp]
+        public void OneTimeSetupMatcher()
+        {
+
+            PluginLoader loader = new PluginLoader();
+
+
+
+            //_matcher = PluginLoader.CreateInstance<IMatching>();
+        }
+
+
+
+
     }
 }

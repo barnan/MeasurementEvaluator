@@ -4,12 +4,17 @@ using Frame.PluginLoader.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
+
+
+[assembly: InternalsVisibleTo("Test_Matcher")]
 
 namespace Frame.PluginLoader
 {
@@ -81,61 +86,88 @@ namespace Frame.PluginLoader
         /// Sets the used pluginfolder to the given path
         /// </summary>
         /// ///
-        /// <param name="configurationFolder"></param>
         /// <param name="currentExeFolder"></param>
-        /// <param name="pluginsFolder"></param>
-        /// <param name="specificationFolder"></param>
-        /// <param name="referenceFolder"></param>
-        /// <param name="measDataFolder"></param>
-        /// <param name="resultFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool Inititialize(string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder)
+        public bool Inititialize(string currentExeFolder/*string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder*/)
         {
             try
             {
+                var settings = ConfigurationManager.AppSettings;
+
+
                 lock (_lockObj)
                 {
-                    if (!IsPathFolder(configurationFolder) || !Directory.Exists(configurationFolder))
-                    {
-                        return false;
-                    }
-                    ConfigurationFolder = CheckDirectoryPath(configurationFolder);
-
                     if (!IsPathFolder(currentExeFolder) || !Directory.Exists(currentExeFolder))
                     {
                         return false;
                     }
                     CurrentExeFolder = CheckDirectoryPath(currentExeFolder);
 
-                    if (!IsPathFolder(pluginsFolder) || !Directory.Exists(pluginsFolder))
+                    // Configuration folder:
+                    if (settings[FolderSettingsKeys.ConfigurationFolderKey] == null)
+                    {
+                        settings.Add(FolderSettingsKeys.ConfigurationFolderKey, @".\Configuration\");
+                    }
+                    ConfigurationFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ConfigurationFolderKey], nameof(ConfigurationFolder));
+                    if (!IsPathFolder(ConfigurationFolder) || !Directory.Exists(ConfigurationFolder))
                     {
                         return false;
                     }
-                    PluginsFolder = CheckDirectoryPath(pluginsFolder);
 
-                    if (!IsPathFolder(specificationFolder) || !Directory.Exists(specificationFolder))
+                    // Plugins folder:
+                    if (settings[FolderSettingsKeys.PluginsFolderKey] == null)
+                    {
+                        settings.Add(FolderSettingsKeys.PluginsFolderKey, @".\Plugins\");
+                    }
+                    PluginsFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.PluginsFolderKey], nameof(PluginsFolder));
+                    if (!IsPathFolder(PluginsFolder) || !Directory.Exists(PluginsFolder))
                     {
                         return false;
                     }
-                    SpecificationFolder = CheckDirectoryPath(specificationFolder);
 
-                    if (!IsPathFolder(referenceFolder) || !Directory.Exists(referenceFolder))
+                    // Specification folder:
+                    if (settings[FolderSettingsKeys.SpecificactionFolderKey] == null)
+                    {
+                        settings.Add(FolderSettingsKeys.SpecificactionFolderKey, @".\Configuration\Specifications\");
+                    }
+                    SpecificationFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.SpecificactionFolderKey], nameof(SpecificationFolder));
+                    if (!IsPathFolder(SpecificationFolder) || !Directory.Exists(SpecificationFolder))
                     {
                         return false;
                     }
-                    ReferenceFolder = CheckDirectoryPath(referenceFolder);
 
-                    if (!IsPathFolder(measDataFolder) || !Directory.Exists(measDataFolder))
+                    // Reference folder:
+                    if (settings[FolderSettingsKeys.ReferenceFolderKey] == null)
+                    {
+                        settings.Add(FolderSettingsKeys.ReferenceFolderKey, @".\Configuration\References\");
+                    }
+                    ReferenceFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ReferenceFolderKey], nameof(ReferenceFolder));
+                    if (!IsPathFolder(ReferenceFolder) || !Directory.Exists(ReferenceFolder))
                     {
                         return false;
                     }
-                    MeasurementDataFolder = CheckDirectoryPath(measDataFolder);
 
-                    if (!IsPathFolder(resultFolder) || !Directory.Exists(resultFolder))
+                    // measurement data:
+                    if (settings[FolderSettingsKeys.MeasurementDataFolderKey] == null)
+                    {
+                        settings.Add(FolderSettingsKeys.MeasurementDataFolderKey, @".\Configuration\Measurements\");
+                    }
+                    MeasurementDataFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.MeasurementDataFolderKey], nameof(MeasurementDataFolder));
+                    if (!IsPathFolder(MeasurementDataFolder) || !Directory.Exists(MeasurementDataFolder))
                     {
                         return false;
                     }
-                    ResultFolder = CheckDirectoryPath(resultFolder);
+
+                    // Result folder:
+                    if (settings[FolderSettingsKeys.ResultFolderKey] == null)
+                    {
+                        settings.Add(FolderSettingsKeys.ResultFolderKey, @".\Results\");
+                    }
+                    ResultFolder = CreateFinalPath(CurrentExeFolder, settings[FolderSettingsKeys.ResultFolderKey], nameof(ResultFolder));
+                    if (!IsPathFolder(ResultFolder) || !Directory.Exists(ResultFolder))
+                    {
+                        return false;
+                    }
 
                     ConfigManager = new ConfigManager(ConfigurationFolder);
 
@@ -148,6 +180,11 @@ namespace Frame.PluginLoader
 
                     return Initialized = true;
                 }
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                _logger.Error($"Problem during configuration folder loading from App settings: {ex.Message}");
+                return false;
             }
             catch (ArgumentNullException ex)
             {
@@ -415,11 +452,70 @@ namespace Frame.PluginLoader
         }
 
 
+        private string CreateFinalPath(string currentExeFolder, string specialFolder, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole("Received path-name is null."));
+            }
+
+            if (string.IsNullOrEmpty(specialFolder))
+            {
+                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole($"{name} is null."));
+            }
+
+            if (Path.IsPathRooted(specialFolder))
+            {
+                if (!Directory.Exists(specialFolder))
+                {
+                    Directory.CreateDirectory(specialFolder);
+                    PluginLoader.SendToInfoLogAndConsole($"{specialFolder} created.");
+                }
+
+                PluginLoader.SendToInfoLogAndConsole($"{specialFolder} will be used as {name}");
+                return specialFolder;
+            }
+
+            string combinedPath = Path.Combine(currentExeFolder, specialFolder);
+
+            if (!Directory.Exists(combinedPath))
+            {
+                Directory.CreateDirectory(combinedPath);
+                PluginLoader.SendToInfoLogAndConsole($"Combined {name} directory ({combinedPath}) created.");
+            }
+
+            PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
+            return combinedPath;
+        }
+
+        #endregion
+
+        #region internal classes
+
+        internal class FactoryElement
+        {
+            internal IPluginFactory Factory { get; set; }
+            internal string AssemblyName { get; set; }
+        }
+
+        private static class FolderSettingsKeys
+        {
+            internal const string ConfigurationFolderKey = "ConfigurationFolder";
+            internal const string SpecificactionFolderKey = "SpecificationFolder";
+            internal const string ReferenceFolderKey = "ReferenceFolder";
+            internal const string MeasurementDataFolderKey = "MeasurementFolder";
+            internal const string PluginsFolderKey = "PluginsFolder";
+            internal const string ResultFolderKey = "ResultFolder";
+        }
+
+        #endregion
+
+
         /// <summary>
         /// Reads the list of available components from the ComponentList.config or creates a dummy component list
         /// </summary>
         /// <returns>returns with the componentlist from the ComponentList.config or a dummy componentList (example)</returns>
-        private ComponentList LoadComponentList()
+        internal ComponentList LoadComponentList()
         {
             try
             {
@@ -447,15 +543,6 @@ namespace Frame.PluginLoader
                 // todo throw stacktrace
                 throw new Exception($"Problem during component list loading: {ex.Message}");
             }
-        }
-
-        #endregion
-
-
-        internal class FactoryElement
-        {
-            internal IPluginFactory Factory { get; set; }
-            internal string AssemblyName { get; set; }
         }
 
 

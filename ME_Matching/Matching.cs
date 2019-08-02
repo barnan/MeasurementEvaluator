@@ -6,9 +6,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+
+//[assembly: InternalsVisibleTo("Test_Matcher")]
+
 namespace MeasurementEvaluator.ME_Matching
 {
-    internal class Matching : InitializableBase, IMathing
+
+    internal class Matching : InitializableBase, IMatching
     {
 
         private readonly PairingParameters _parameters;

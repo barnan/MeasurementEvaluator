@@ -53,10 +53,22 @@
     <Compile Include="Test_Matching.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Input_Data\DataNamePairs.pair" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Input_Data\" />
+    <ProjectReference Include="..\Frame\Frame.csproj">
+      <Project>{50FC5BE3-6190-42D7-B518-733947048D4B}</Project>
+      <Name>Frame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{6DCA4D70-0D2C-4A32-80BE-485667CEAC24}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ME_Matching\ME_Matching.csproj">
+      <Project>{AA161A08-8211-45C2-82BA-0D4471B19D99}</Project>
+      <Name>ME_Matching</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
