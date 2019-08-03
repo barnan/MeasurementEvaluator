@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF.Converters
 {
-    public class ConditionConverter : IValueConverter
+    public class ConditionToTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -12,7 +12,9 @@
 
     <Grid>
         <Grid.Resources>
-            <converters:ConditionConverter x:Key="ConditionConverter"/>
+            <converters:ConditionToTextConverter x:Key="ConditionToTextConverter"/>
+            <converters:SuccessToColorConverter x:Key="SuccessToColorConverter"/>
+            <converters:MeasurementDataConverter x:Key="MeasurementDataConverter"/>
         </Grid.Resources>
 
         <DataGrid
@@ -30,30 +32,62 @@
             EnableRowVirtualization="False"
             VirtualizingPanel.VirtualizationMode="Standard"
             VirtualizingPanel.IsVirtualizing="False"
+            GridLinesVisibility="Horizontal"
+            ColumnWidth="Auto"
                           
             SelectionMode="Single"
             SelectionUnit="FullRow">
 
             <DataGrid.Columns>
+                
+                <!--Tool name-->
                 <DataGridTextColumn Header="Tool" Binding="{Binding ToolName}"/>
+                
+                <!--Quantity-->
                 <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
+                
+                <!--Condition Type-->
                 <DataGridTextColumn Header="Calculation Type" Binding="{Binding ConditionEvaluationResult.Condition.CalculationType}"/>
-                <DataGridTextColumn Header="Condition" Binding="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionConverter}}"/>
+                
+                <!--Condition column-->
+                <DataGridTemplateColumn Header="Condition" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionToTextConverter}}" HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!--Result column-->
                 <DataGridTextColumn Header="Result" Binding="{Binding CalculationDoubleResult, StringFormat=N3}" Width="70"/>
-                <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionEvaluationResult.CalculationResult.Successful}"/>
-                <DataGridTextColumn Header="SuccessFul" Binding="{Binding ConditionEvaluationResult.CalculationResult.Successful}"/>
+                
+                <!--Successful column-->
+                <DataGridTemplateColumn Header="Successful" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ConditionEvaluationResult.CalculationResult.Successful}" HorizontalAlignment="Center" 
+                                       Foreground="{Binding ConditionEvaluationResult.CalculationResult.Successful, Converter={StaticResource SuccessToColorConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
 
+            
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="200"/>
                         </Grid.ColumnDefinitions>
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
                         <DataGrid
-                            ItemsSource="{Binding CalculationResult.MeasurementSerie.MeasuredPoints}"
+                            Grid.Column="0"
+                            ItemsSource="{Binding MeasurementPoints}"
                             CanUserReorderColumns="False"
                             CanUserResizeRows="False"
                             CanUserSortColumns="False"
@@ -70,6 +104,9 @@
                               
                             SelectionMode="Single"
                             SelectionUnit="CellOrRowHeader">
+
+                            <DataGridTextColumn Binding="{Binding MeasurementPoints}"/>
+
                         </DataGrid>
                     </Grid>
                 </DataTemplate>

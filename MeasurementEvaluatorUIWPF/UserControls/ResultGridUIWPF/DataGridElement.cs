@@ -1,4 +1,6 @@
 ﻿using Interfaces.Result;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
 {
@@ -13,5 +15,17 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
         public IConditionEvaluationResult ConditionEvaluationResult { get; set; }
 
         public double CalculationDoubleResult => (ConditionEvaluationResult.CalculationResult as ICalculationResult<double>)?.ResultValue ?? 0;
+
+        public MeasurementPointContainers MeasurementPoints => new MeasurementPointContainers
+        {
+            MeasurementPoints = ConditionEvaluationResult.CalculationResult.MeasurementSerie.MeasuredPoints.Select(p => p.Value).ToList()
+        };
     }
+
+
+    public class MeasurementPointContainers
+    {
+        public List<double> MeasurementPoints { get; set; }
+    }
+
 }
