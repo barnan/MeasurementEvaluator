@@ -10,13 +10,6 @@ namespace Start
     internal class Program
     {
         private static ILogger _logger;
-
-        private static string _configurationFolder;
-        private static string _specificationFolder;
-        private static string _referenceFolderPath;
-        private static string _measurementDataFolder;
-        private static string _resultFolder;
-        private static string _pluginsFolder;
         private static string _currentExeFolder;
 
 
@@ -35,28 +28,23 @@ namespace Start
             try
             {
                 Process currentprocess = Process.GetCurrentProcess();
+                SendToInfoLogAndConsole($"Process {currentprocess} started.");
 
                 _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                if (string.IsNullOrEmpty(_currentExeFolder))
-                {
-                    PluginLoader.SendToErrorLogAndConsole("Received exefolder-path OR path-name is null.");
-                    return;
-                }
-
-                PluginLoader.SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
-                PluginLoader.SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
+                SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
+                SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
 
                 // frame start:
                 PluginLoader pluginLoader = new PluginLoader();
                 if (!pluginLoader.Inititialize(_currentExeFolder))
                 {
-                    PluginLoader.SendToErrorLogAndConsole("Frame initialization was NOT successful.");
+                    SendToErrorLogAndConsole("Frame initialization was NOT successful.");
                     return;
                 }
                 pluginLoader.Start();
 
-                PluginLoader.SendToInfoLogAndConsole($"Process {currentprocess} ended.");
+                SendToInfoLogAndConsole($"Process {currentprocess} ended.");
             }
             catch (Exception ex)
             {
@@ -64,5 +52,16 @@ namespace Start
             }
         }
 
+
+
+        private static void SendToInfoLogAndConsole(string message)
+        {
+            PluginLoader.SendToInfoLogAndConsole(message);
+        }
+
+        private static void SendToErrorLogAndConsole(string message)
+        {
+            PluginLoader.SendToErrorLogAndConsole(message);
+        }
     }
 }

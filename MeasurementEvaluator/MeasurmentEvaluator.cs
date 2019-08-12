@@ -21,6 +21,9 @@ namespace MeasurementEvaluator
         private readonly ManualResetEvent _blCreatedEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent _blInitCompletedEvent = new ManualResetEvent(false);
 
+
+        #region configuration
+
         [Configuration("Name of the used main window", "MainWindow Name", true)]
         private readonly string _mainWindowName = null;
 
@@ -28,16 +31,25 @@ namespace MeasurementEvaluator
         private readonly string _evaluatorName = null;
         private IEvaluation Evaluator { get; set; }
 
-
-
         [Configuration("true -> the application does not start, only some dummy objects will be (re)created.", "Create Dummy Objects", true)]
         private bool _createDummyObjects = false;
 
+        #endregion
+
+
+        #region ctor
+
+        /// <summary>
+        /// ctor for the activator
+        /// </summary>
         public MeasurmentEvaluator()
         {
             _logger = LogManager.GetCurrentClassLogger();
         }
 
+        #endregion
+
+        #region IRunable
 
         public void Run()
         {
@@ -46,7 +58,7 @@ namespace MeasurementEvaluator
                 bool successfulLoading = PluginLoader.ConfigManager.Load(this, nameof(MeasurementEvaluator));
                 if (!successfulLoading)
                 {
-                    PluginLoader.SendToErrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
+                    SendToErrorLogAndConsole($"Loading of {nameof(MeasurementEvaluator)} was not successful in the {nameof(PluginLoader)}.");
                 }
 
                 if (_createDummyObjects)
@@ -96,7 +108,7 @@ namespace MeasurementEvaluator
 
                 });
                 Debug.Assert(appThread != null);
-                appThread.Name = "ApplicationThread";
+                appThread.Name = "WPF_Thread";
                 appThread.SetApartmentState(ApartmentState.STA);
                 appThread.IsBackground = true;
                 appThread.Start();
@@ -109,21 +121,25 @@ namespace MeasurementEvaluator
 
                 if (!Evaluator.Initiailze())
                 {
-                    PluginLoader.SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
+                    SendToErrorLogAndConsole($"{nameof(Evaluator)} could not been initialized.");
                 }
 
                 _blInitCompletedEvent.Set();
                 _uiFinishedEvent.WaitOne();
 
-                PluginLoader.SendToInfoLogAndConsole($"{Assembly.GetExecutingAssembly().GetName().Name} was shut down.");
+                SendToInfoLogAndConsole($"{Assembly.GetExecutingAssembly().GetName().Name} was shut down.");
 
                 Thread.Sleep(200);
             }
             catch (Exception ex)
             {
-                PluginLoader.SendToErrorLogAndConsole($"Exception occured: {ex}");
+                SendToErrorLogAndConsole($"Exception occured: {ex}");
             }
         }
+
+        #endregion
+
+        #region private
 
         private void _application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
@@ -140,6 +156,20 @@ namespace MeasurementEvaluator
 
             _uiFinishedEvent.Set();
         }
+
+
+        private void SendToErrorLogAndConsole(string message)
+        {
+            PluginLoader.SendToInfoLogAndConsole(message);
+        }
+
+        private void SendToInfoLogAndConsole(string message)
+        {
+            PluginLoader.SendToInfoLogAndConsole(message);
+        }
+
+
+        #endregion
 
     }
 }

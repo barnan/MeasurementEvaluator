@@ -45,7 +45,7 @@ namespace Calculations.Calculation
             double lsl = average - cpkCondition.HalfTolerance;
             double cp = (usl - lsl) / (6 * std);
 
-            _parameters.Logger.MethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}, average: {average}");
+            _parameters.Logger.LogMethodTrace($"{nameof(StdCalculation1D)}: Calculated  Cp: {cp}, USL: {usl}, LSL: {lsl}, average: {average}");
 
             return new QCellsCalculationResult(_parameters.DateTimeProvider.GetDateTime(),
                                                 true,

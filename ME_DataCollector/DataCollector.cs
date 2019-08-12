@@ -38,7 +38,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             _parameters.ReferenceRepository.SetFolder(PluginLoader.ReferenceFolder);
             _parameters.MeasurementDataRepository.SetFolder(PluginLoader.MeasurementDataFolder);
 
-            _parameters.Logger.MethodInfo("Instantiated.");
+            _parameters.Logger.LogMethodInfo("Instantiated.");
         }
 
         #endregion
@@ -51,14 +51,14 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             ResultReadyEvent += method;
 
-            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
+            _parameters.Logger.LogMethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
         }
 
         public void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
         {
             ResultReadyEvent -= method;
 
-            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
+            _parameters.Logger.LogMethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
         }
 
 
@@ -209,7 +209,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         private void ProcessQueueElements(object obj)
         {
-            _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
+            _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
 
             CancellationToken token;
             try
@@ -218,7 +218,7 @@ namespace MeasurementEvaluator.ME_DataCollector
             }
             catch (Exception ex)
             {
-                _parameters.Logger.MethodError($"Received parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+                _parameters.Logger.LogMethodError($"Received parameter is not {nameof(CancellationToken)}. Exception: {ex}");
                 return;
             }
 
@@ -230,7 +230,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
                 if (token.IsCancellationRequested)
                 {
-                    _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                    _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                     break;
                 }
 
@@ -238,7 +238,7 @@ namespace MeasurementEvaluator.ME_DataCollector
                 {
                     if (token.IsCancellationRequested)
                     {
-                        _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                        _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                         break;
                     }
 
@@ -258,7 +258,7 @@ namespace MeasurementEvaluator.ME_DataCollector
 
                     if (item == null)
                     {
-                        _parameters.Logger.MethodError("Started to process item, but it is null");
+                        _parameters.Logger.LogMethodError("Started to process item, but it is null");
                         continue;
                     }
 

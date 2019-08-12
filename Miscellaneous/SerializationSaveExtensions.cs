@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace Miscellaneous
 {
-    public static class SerializationExtension_Save
+    public static class SerializationExtensionSave
     {
 
         public static void TrySave<T, TV>(this T storable, Expression<Func<T, TV>> expr, XElement element, string name = null)

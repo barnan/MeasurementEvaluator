@@ -34,7 +34,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             : base(parameters.Logger)
         {
             _parameters = parameters;
-            _parameters.Logger.MethodError("Instantiated.");
+            _parameters.Logger.LogMethodError("Instantiated.");
         }
 
         #endregion
@@ -46,13 +46,13 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         public void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
         {
-            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
+            _parameters.Logger.LogMethodInfo($"{method.GetMethodInfo().DeclaringType} class subscribed to {nameof(ResultReadyEvent)}");
             ResultReadyEvent += method;
         }
 
         public void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method)
         {
-            _parameters.Logger.MethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
+            _parameters.Logger.LogMethodInfo($"{method.GetMethodInfo().DeclaringType} class un-subscribed to {nameof(ResultReadyEvent)}");
             ResultReadyEvent -= method;
         }
 
@@ -65,7 +65,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             if (!_parameters.Matcher.Initiailze())
             {
                 string message = $"{nameof(_parameters.Matcher)} could not been initialized.";
-                _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError(message), MessageSeverityLevels.Error);
+                _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError(message), MessageSeverityLevels.Error);
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
@@ -73,7 +73,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             if (!_parameters.DataCollector.Initiailze())
             {
                 string message = $"{nameof(_parameters.DataCollector)} could not been initialized.";
-                _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError(message), MessageSeverityLevels.Error);
+                _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError(message), MessageSeverityLevels.Error);
                 InitializationState = InitializationStates.InitializationFailed;
                 return;
             }
@@ -114,13 +114,13 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             if (e?.Result == null)
             {
-                _parameters.Logger.MethodError("Received result event args is null.");
+                _parameters.Logger.LogMethodError("Received result event args is null.");
                 return;
             }
 
             if (!(e.Result is IDataCollectorResult collectedData))
             {
-                _parameters.Logger.MethodError($"Received result event args is not {nameof(IDataCollectorResult)}");
+                _parameters.Logger.LogMethodError($"Received result event args is not {nameof(IDataCollectorResult)}");
                 return;
             }
 
@@ -134,7 +134,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         private void ProcessEvaluation(object obj)
         {
-            _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
+            _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
 
             CancellationToken token;
             try
@@ -143,7 +143,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             }
             catch (Exception ex)
             {
-                _parameters.Logger.MethodError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+                _parameters.Logger.LogMethodError($"Arrived parameter is not {nameof(CancellationToken)}. Exception: {ex}");
                 return;
             }
 
@@ -155,7 +155,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                 if (token.IsCancellationRequested)
                 {
-                    _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                    _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                     break;
                 }
 
@@ -163,7 +163,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                 {
                     if (token.IsCancellationRequested)
                     {
-                        _parameters.Logger.MethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+                        _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
                         break;
                     }
 
@@ -183,7 +183,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                     if (item == null)
                     {
-                        _parameters.Logger.MethodError("Started to process item, but it is null");
+                        _parameters.Logger.LogMethodError("Started to process item, but it is null");
                         continue;
                     }
 
@@ -203,19 +203,19 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             if (specification == null)
             {
-                _parameters.Logger.MethodError("Received specification is null.");
+                _parameters.Logger.LogMethodError("Received specification is null.");
                 return;
             }
 
             if (measurementDatas == null)
             {
-                _parameters.Logger.MethodError("Received measurement data is null.");
+                _parameters.Logger.LogMethodError("Received measurement data is null.");
                 return;
             }
 
-            _parameters.Logger.MethodInfo($"Started to evaluate received collectordata: Specification name: {specification.Name}");
-            _parameters.Logger.MethodInfo($"Reference name: {referenceSample?.Name ?? "No reference received"}.");
-            _parameters.Logger.MethodInfo($"Measurement datas: {string.Join(",", measurementDatas.Select(p => p.Name))}");
+            _parameters.Logger.LogMethodInfo($"Started to evaluate received collectordata: Specification name: {specification.Name}");
+            _parameters.Logger.LogMethodInfo($"Reference name: {referenceSample?.Name ?? "No reference received"}.");
+            _parameters.Logger.LogMethodInfo($"Measurement datas: {string.Join(",", measurementDatas.Select(p => p.Name))}");
 
             List<IQuantityEvaluationResult> quantityResultList = new List<IQuantityEvaluationResult>();
 
@@ -232,16 +232,16 @@ namespace MeasurementEvaluator.ME_Evaluation
                         // skip condition if condition is null:
                         if (condition == null)
                         {
-                            _parameters.Logger.MethodError("Received condition is null");
+                            _parameters.Logger.LogMethodError("Received condition is null");
                             continue;
                         }
 
-                        _parameters.MessageControl.AddMessage(_parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} Evaluation started."));
+                        _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} Evaluation started."));
 
                         // skip condition if not enabled:
                         if (!condition.Enabled)
                         {
-                            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} is not enabled -> condition check skipped."));
+                            _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} is not enabled -> condition check skipped."));
                             continue;
                         }
 
@@ -258,7 +258,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         if (coherentMeasurementData.Count == 0)
                         {
-                            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError($"{quantitySpec.Quantity.Name}-{condition.Name} No coherent measurement data was found in measurement data files. Searched names: {string.Join(",", coherentMeasurementDataNames)}"), MessageSeverityLevels.Error);
+                            _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError($"{quantitySpec.Quantity.Name}-{condition.Name} No coherent measurement data was found in measurement data files. Searched names: {string.Join(",", coherentMeasurementDataNames)}"), MessageSeverityLevels.Error);
                             continue;
                         }
 
@@ -270,7 +270,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         }
                         IMeasurementSerie jointCalculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
 
-                        _parameters.MessageControl.AddMessage(_parameters.Logger.MethodInfo($"{coherentMeasurementData.Count} measurement datas were joint together."));
+                        _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodInfo($"{coherentMeasurementData.Count} measurement datas were joint together."));
 
                         // find reference associated with the specification
                         string referenceName = _parameters.Matcher.GetReferenceName(condition.Name);
@@ -281,7 +281,7 @@ namespace MeasurementEvaluator.ME_Evaluation
 
                         if (!calcResult.Successful)
                         {
-                            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError($"{quantitySpec.Quantity.Name}-{condition.Name} Calculation {calculation.CalculationType} was not successful."), MessageSeverityLevels.Error);
+                            _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError($"{quantitySpec.Quantity.Name}-{condition.Name} Calculation {calculation.CalculationType} was not successful."), MessageSeverityLevels.Error);
                             continue;
                         }
 
@@ -292,19 +292,19 @@ namespace MeasurementEvaluator.ME_Evaluation
                         #region logging
                         if (_parameters.Logger.IsTraceEnabled)
                         {
-                            _parameters.Logger.MethodTrace("The evaluation result:");
-                            _parameters.Logger.MethodTrace($"   End time: {conditionEvaluationResult.CreationTime}");
-                            _parameters.Logger.MethodTrace($"   The calculation was {(conditionEvaluationResult.Successful ? "" : "NOT")} successful.");
-                            _parameters.Logger.MethodTrace($"   Calculation input data name {jointCalculationInputData.Name} number of measurement points: {jointCalculationInputData.MeasuredPoints.Count}");
-                            _parameters.Logger.MethodTrace($"   ReferenceValue: {referenceValue}");
-                            _parameters.Logger.MethodTrace($"   Condition: {condition}");
-                            _parameters.Logger.MethodTrace($"   The result is {(conditionEvaluationResult.ConditionIsMet ? "" : "NOT")} acceptable.");
+                            _parameters.Logger.LogMethodTrace("The evaluation result:");
+                            _parameters.Logger.LogMethodTrace($"   End time: {conditionEvaluationResult.CreationTime}");
+                            _parameters.Logger.LogMethodTrace($"   The calculation was {(conditionEvaluationResult.Successful ? "" : "NOT")} successful.");
+                            _parameters.Logger.LogMethodTrace($"   Calculation input data name {jointCalculationInputData.Name} number of measurement points: {jointCalculationInputData.MeasuredPoints.Count}");
+                            _parameters.Logger.LogMethodTrace($"   ReferenceValue: {referenceValue}");
+                            _parameters.Logger.LogMethodTrace($"   Condition: {condition}");
+                            _parameters.Logger.LogMethodTrace($"   The result is {(conditionEvaluationResult.ConditionIsMet ? "" : "NOT")} acceptable.");
                         }
                         #endregion
                     }
                     catch (Exception ex)
                     {
-                        _parameters.Logger.MethodError($"Exception occured: {ex}");
+                        _parameters.Logger.LogMethodError($"Exception occured: {ex}");
                     }
                 }
 
@@ -316,7 +316,7 @@ namespace MeasurementEvaluator.ME_Evaluation
             var resultreadyevent = ResultReadyEvent;
             resultreadyevent?.Invoke(this, new ResultEventArgs(evaluationResult));
 
-            _parameters.MessageControl.AddMessage(_parameters.Logger.MethodError("Calculation Finished"));
+            _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError("Calculation Finished"));
         }
 
         #endregion

@@ -21,10 +21,10 @@ namespace Frame.PluginLoader
     public class PluginLoader
     {
         [DllImport("kernel32.dll")]
-        internal static extern IntPtr GetConsoleWindow();
+        private static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
-        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
 
@@ -88,7 +88,7 @@ namespace Frame.PluginLoader
         /// ///
         /// <param name="currentExeFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool Inititialize(string currentExeFolder/*string configurationFolder, string currentExeFolder, string pluginsFolder, string specificationFolder, string referenceFolder, string measDataFolder, string resultFolder*/)
+        public bool Inititialize(string currentExeFolder)
         {
             try
             {
@@ -203,14 +203,14 @@ namespace Frame.PluginLoader
         /// Starts the available IRunables from the [PluginsFolder] folder
         /// </summary>
         /// <returns></returns>
-        public bool Start()
+        public void Start()
         {
             lock (_lockObj)
             {
                 if (!Initialized)
                 {
                     _logger.Error($"{nameof(PluginLoader)} not initialized yet.");
-                    return false;
+                    return;
                 }
 
                 if (_iRunables.Count > 1)
@@ -222,7 +222,7 @@ namespace Frame.PluginLoader
                         _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
                     }
 
-                    return false;
+                    return;
                 }
 
                 try
@@ -236,13 +236,10 @@ namespace Frame.PluginLoader
                     runable.Run();
 
                     _logger.Info($"{type} started.");
-
-                    return true;
                 }
                 catch (Exception ex)
                 {
                     SendToErrorLogAndConsole($"Exception occured: {ex}");
-                    return false;
                 }
             }
         }

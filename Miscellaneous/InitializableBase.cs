@@ -45,6 +45,7 @@ namespace Miscellaneous
             {
                 Monitor.Exit(_initLock);
             }
+
             _logger.Info($"Internal initialization finished. New state: {InitializationState}");
             return IsInitialized;
         }

@@ -30,7 +30,7 @@ namespace DataAcquisitions.ME_Repository
         {
             if (!CheckFolder(_repositoryPath))
             {
-                _parameters.Logger.MethodError($"The given directory ({_repositoryPath}) does not exists.");
+                _parameters.Logger.LogMethodError($"The given directory ({_repositoryPath}) does not exists.");
                 InitializationState = InitializationStates.InitializationFailed;
             }
 
@@ -54,7 +54,7 @@ namespace DataAcquisitions.ME_Repository
             {
                 if (predicate == null)
                 {
-                    _parameters.Logger.MethodError("The received predicate is null.");
+                    _parameters.Logger.LogMethodError("The received predicate is null.");
                     return null;
                 }
 
@@ -80,7 +80,7 @@ namespace DataAcquisitions.ME_Repository
                 {
                     if (index < 0)
                     {
-                        _parameters.Logger.MethodError("The arrived index is below 0.");
+                        _parameters.Logger.LogMethodError("The arrived index is below 0.");
                         return null;
                     }
 
@@ -97,7 +97,7 @@ namespace DataAcquisitions.ME_Repository
                 }
                 catch (Exception ex)
                 {
-                    _parameters.Logger.MethodError($"Exception occured: {ex}");
+                    _parameters.Logger.LogMethodError($"Exception occured: {ex}");
                     return null;
                 }
             }
@@ -112,7 +112,7 @@ namespace DataAcquisitions.ME_Repository
                 {
                     if (string.IsNullOrEmpty(name))
                     {
-                        _parameters.Logger.MethodError("Received name null or empty.");
+                        _parameters.Logger.LogMethodError("Received name null or empty.");
                         return null;
                     }
 
@@ -128,17 +128,17 @@ namespace DataAcquisitions.ME_Repository
 
                     if (hitList.Count > 1)
                     {
-                        _parameters.Logger.MethodError($"More elements were found with the given name: {name}.");
+                        _parameters.Logger.LogMethodError($"More elements were found with the given name: {name}.");
                         return null;
                     }
 
-                    _parameters.Logger.MethodInfo($"Element with name: {name} was given back.");
+                    _parameters.Logger.LogMethodInfo($"Element with name: {name} was given back.");
 
                     return hitList[0];
                 }
                 catch (Exception ex)
                 {
-                    _parameters.Logger.MethodError($"Exception occured: {ex}");
+                    _parameters.Logger.LogMethodError($"Exception occured: {ex}");
                     return null;
                 }
             }
@@ -159,7 +159,7 @@ namespace DataAcquisitions.ME_Repository
                 }
                 catch (Exception ex)
                 {
-                    _parameters.Logger.MethodError($"Exception occured: {ex}");
+                    _parameters.Logger.LogMethodError($"Exception occured: {ex}");
                     return null;
                 }
             }
@@ -174,28 +174,28 @@ namespace DataAcquisitions.ME_Repository
                 {
                     if (!(item is INamed named))
                     {
-                        _parameters.Logger.MethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
+                        _parameters.Logger.LogMethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
                         return false;
                     }
 
                     string fullName = Path.Combine(_repositoryPath, CreateFileNameFromName(named.Name));
                     if (File.Exists(fullName))
                     {
-                        _parameters.Logger.MethodError($"The created fileName: {fullName} already exists -> it will be overwritten!!");
+                        _parameters.Logger.LogMethodError($"The created fileName: {fullName} already exists -> it will be overwritten!!");
                     }
 
                     _parameters.HDDReaderWriter.WriteToFile(item, fullName);
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"Item added: {fullName}");
+                        _parameters.Logger.LogMethodTrace($"Item added: {fullName}");
                     }
 
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    _parameters.Logger.MethodError($"Adding of {item} was not successful: {ex}");
+                    _parameters.Logger.LogMethodError($"Adding of {item} was not successful: {ex}");
                     return false;
                 }
             }
@@ -220,12 +220,7 @@ namespace DataAcquisitions.ME_Repository
 
                 foreach (KeyValuePair<string, object> pair in _fileContentDictionaryCache)
                 {
-                    if (pair.Value is INamed namedPairValue)
-                    {
-                        nameList.Add(namedPairValue.Name);
-                        continue;
-                    }
-                    nameList.Add(pair.Key);
+                    nameList.Add((pair.Value as INamed)?.Name ?? pair.Key);
                 }
                 return nameList;
             }
@@ -242,7 +237,7 @@ namespace DataAcquisitions.ME_Repository
 
                     if (string.IsNullOrEmpty(named?.Name))
                     {
-                        _parameters.Logger.MethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
+                        _parameters.Logger.LogMethodError($"Received object is not {nameof(INamed)} or its Name is null or empty.");
                         return false;
                     }
 
@@ -252,13 +247,13 @@ namespace DataAcquisitions.ME_Repository
 
                     if (selectedItem.Count < 1)
                     {
-                        _parameters.Logger.MethodError($"No files contain {named.Name}");
+                        _parameters.Logger.LogMethodError($"No files contain {named.Name}");
                         return false;
                     }
 
                     if (selectedItem.Count > 1)
                     {
-                        _parameters.Logger.MethodError($"More files contain {named.Name} -> {string.Join(",", selectedItem.Select(p => p.Key))}");
+                        _parameters.Logger.LogMethodError($"More files contain {named.Name} -> {string.Join(",", selectedItem.Select(p => p.Key))}");
                     }
 
                     foreach (KeyValuePair<string, object> pair in selectedItem)
@@ -268,7 +263,7 @@ namespace DataAcquisitions.ME_Repository
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"Item removed: {selectedItem[0].Key}");
+                        _parameters.Logger.LogMethodTrace($"Item removed: {selectedItem[0].Key}");
                     }
 
                     Refresh();
@@ -277,7 +272,7 @@ namespace DataAcquisitions.ME_Repository
                 }
                 catch (Exception ex)
                 {
-                    _parameters.Logger.MethodError($"Remove of {item} was not successful: {ex}");
+                    _parameters.Logger.LogMethodError($"Remove of {item} was not successful: {ex}");
                     return false;
                 }
             }
@@ -333,19 +328,19 @@ namespace DataAcquisitions.ME_Repository
         {
             if (string.IsNullOrEmpty(fullPath))
             {
-                _parameters.Logger.MethodError("The given path is null or empty.");
+                _parameters.Logger.LogMethodError("The given path is null or empty.");
                 return false;
             }
 
             if (!Directory.Exists(fullPath))
             {
-                _parameters.Logger.MethodError($"The given path does not exists: {fullPath}.");
+                _parameters.Logger.LogMethodError($"The given path does not exists: {fullPath}.");
                 return false;
             }
 
             if (_parameters.Logger.IsTraceEnabled)
             {
-                _parameters.Logger.MethodTrace($"The given directory path ({fullPath}) checked.");
+                _parameters.Logger.LogMethodTrace($"The given directory path ({fullPath}) checked.");
             }
 
             return true;
@@ -378,11 +373,11 @@ namespace DataAcquisitions.ME_Repository
 
                     if (_parameters.Logger.IsTraceEnabled)
                     {
-                        _parameters.Logger.MethodTrace($"File read: {rawFileName}, stored in dictionary as {nameInDictionary}");
+                        _parameters.Logger.LogMethodTrace($"File read: {rawFileName}, stored in dictionary as {nameInDictionary}");
                     }
                 }
 
-                _parameters.Logger.MethodTrace($"The old {nameof(_fileContentDictionaryCache)} had {_fileContentDictionaryCache?.Count} elements, the new list has {fileContentDictionary.Count} elements");
+                _parameters.Logger.LogMethodTrace($"The old {nameof(_fileContentDictionaryCache)} had {_fileContentDictionaryCache?.Count} elements, the new list has {fileContentDictionary.Count} elements");
 
                 _fileContentDictionaryCache = fileContentDictionary;
 
@@ -390,7 +385,7 @@ namespace DataAcquisitions.ME_Repository
             }
             catch (Exception ex)
             {
-                _parameters.Logger.MethodError($"Exception occured: {ex}");
+                _parameters.Logger.LogMethodError($"Exception occured: {ex}");
                 return null;
             }
         }
@@ -430,7 +425,7 @@ namespace DataAcquisitions.ME_Repository
 
             if (index > itemList.Count)
             {
-                _parameters.Logger.MethodError("The arrived index is higher than the length of the internal list.");
+                _parameters.Logger.LogMethodError("The arrived index is higher than the length of the internal list.");
                 return null;
             }
 
@@ -445,7 +440,7 @@ namespace DataAcquisitions.ME_Repository
                 valueList.Sort(comparer);
             }
 
-            _parameters.Logger.MethodInfo($"Element {valueList[index]} with index: {index} was given back.");
+            _parameters.Logger.LogMethodInfo($"Element {valueList[index]} with index: {index} was given back.");
 
             return valueList[index];
         }

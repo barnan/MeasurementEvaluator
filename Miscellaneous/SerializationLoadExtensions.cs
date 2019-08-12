@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Miscellaneous
 {
-    public static class SerializationExtension_Load
+    public static class SerializationExtensionLoad
     {
         public static void TryLoad<T, TV>(this IXmlStorable storable, Expression<Func<T, TV>> expr, XElement inputElement, string name = null)
         {
@@ -46,7 +46,7 @@ namespace Miscellaneous
             {
                 inputobj = (TV)Load(inputType, inputElement, name);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 inputobj = default(TV);
             }
@@ -61,14 +61,7 @@ namespace Miscellaneous
 
             if (serializableName == null)
             {
-                if (typeof(IList).IsAssignableFrom(inputType))
-                {
-                    serializableName = "List";
-                }
-                else
-                {
-                    serializableName = inputElement.Name.LocalName;
-                }
+                serializableName = typeof(IList).IsAssignableFrom(inputType) ? "List" : inputElement.Name.LocalName;
             }
 
             if (inputElement.Attribute("Assembly") != null)
@@ -155,5 +148,6 @@ namespace Miscellaneous
             return null;
 
         }
+
     }
 }

@@ -5,44 +5,6 @@ namespace Miscellaneous
 {
     public static class LoggerExtensions
     {
-        // -----------------------------------------------------
-        // Callermembername
-        public static string MethodTrace(this ILogger logger, string message, [CallerMemberName] string callermember = null)
-        {
-            logger.Trace($"{callermember}-{message}");
-            return message;
-        }
-
-        public static string MethodDebug(this ILogger logger, string message, [CallerMemberName] string callermember = null)
-        {
-            logger.Debug($"{callermember}-{message}");
-            return message;
-        }
-
-        public static string MethodInfo(this ILogger logger, string message, [CallerMemberName] string callermember = null)
-        {
-            logger.Info($"{callermember}-{message}");
-            return message;
-        }
-
-        public static string MethodWarning(this ILogger logger, string message, [CallerMemberName] string callermember = null)
-        {
-            logger.Warn($"{callermember}-{message}");
-            return message;
-        }
-
-        public static string MethodError(this ILogger logger, string message, [CallerMemberName] string callermember = null)
-        {
-            logger.Error($"{callermember}-{message}");
-            return message;
-        }
-
-        public static string MethodFatal(this ILogger logger, string message, [CallerMemberName] string callermember = null)
-        {
-            logger.Fatal($"{callermember}-{message}");
-            return message;
-        }
-
 
         // -----------------------------------------------------
         // checks the logging level + callermembername
@@ -50,7 +12,7 @@ namespace Miscellaneous
         {
             if (logger.IsTraceEnabled)
             {
-                logger.Trace($"{callermember}-{message}");
+                logger.LogTrace($"{callermember}-{message}");
             }
             return message;
         }

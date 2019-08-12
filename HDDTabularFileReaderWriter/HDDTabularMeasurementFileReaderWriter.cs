@@ -1,5 +1,5 @@
 ﻿using DataStructures.MeasuredData;
-using Interfaces;
+using Interfaces.BaseClasses;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
 using Miscellaneous;
@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Interfaces.BaseClasses;
 
 namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 {
@@ -35,112 +34,76 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
             {
                 try
                 {
-                    if (!CanRead(fileNameAndPath))
-                    {
-                        _parameters.Logger.MethodError($"File is not readable: {fileNameAndPath}");
-                        return null;
-                    }
-
-                    return ReadTabularDataFile(fileNameAndPath, toolName);
+                    List<string> headers = ReadTabularHeaders(fileNameAndPath);
+                    return ReadTabularDataFile(fileNameAndPath, toolName, headers);
                 }
                 catch (Exception ex)
                 {
-                    _parameters.Logger.MethodError($"Exception occured: {ex}");
+                    _parameters.Logger.LogMethodError($"Exception occured: {ex}");
                     return null;
                 }
             }
         }
 
-        private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, ToolNames toolName)
+        private List<string> ReadTabularHeaders(string fileNameAndPath)
         {
-            List<IMeasurementSerie> results = new List<IMeasurementSerie>();
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            List<string> headers = new List<string>();
 
             using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
             {
-                bool firstLine = true;
-                List<string> headers = new List<string>();
-                List<List<IMeasurementPoint>> uniqueResult = new List<List<IMeasurementPoint>>();
+                string line = reader.ReadLine();
+                string[] elements = line.Split(_parameters.Separator);
 
-                while (!reader.EndOfStream)
+                int emptycounter = 0;
+                foreach (string str in elements)
                 {
-                    if (sw.ElapsedMilliseconds > _parameters.FileReadTimeout)
-                    {
-                        break;
-                    }
+                    headers.Add(string.IsNullOrEmpty(str) ? "Empty_" + emptycounter++ : str);
+                }
+            }
+            return headers;
+        }
 
+        private IToolMeasurementData ReadTabularDataFile(string fileNameAndPath, ToolNames toolName, List<string> header)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            List<IMeasurementSerie> results = new List<IMeasurementSerie>();
+            List<List<IMeasurementPoint>> uniqueResult = new List<List<IMeasurementPoint>>();
+
+            for (int i = 0; i < header.Count; i++)
+            {
+                uniqueResult.Add(new List<IMeasurementPoint>());
+            }
+
+            using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
+            {
+                while (!reader.EndOfStream && sw.ElapsedMilliseconds > _parameters.FileReadTimeout)
+                {
                     string line = reader.ReadLine();
-
-                    if (line == null)
-                    {
-                        continue;
-                    }
-
                     string[] elements = line.Split(_parameters.Separator);
 
-                    if (firstLine)
+                    if (elements.Length != header.Count)
                     {
-                        int emptycounter = 0;
-
-                        foreach (string str in elements)
-                        {
-                            headers.Add(string.IsNullOrEmpty(str) ? "Empty_" + emptycounter : str);
-                            uniqueResult.Add(new List<IMeasurementPoint>());
-                        }
-
-                        firstLine = false;
+                        throw new FileLoadException("File contains more or less data rows than the first line (header)");
                     }
-                    else
+
+                    for (int i = 0; i < elements.Length; i++)
                     {
-                        for (int i = 0; i < elements.Length; i++)
-                        {
-                            bool valid = double.TryParse(elements[i], out double szam);
+                        bool valid = double.TryParse(elements[i], out double szam);
 
-                            if (i >= uniqueResult.Count)
-                            {
-                                _parameters.Logger.LogError($"Index ({i}) is higher than the length of the list ({uniqueResult.Count}). Element can not be stored.");
-                                continue;
-                            }
-
-                            uniqueResult[i].Add(new MeasurementPoint(szam, valid));
-                        }
-
-                        if (elements.Length < headers.Count)
-                        {
-                            for (int i = elements.Length; i < headers.Count; i++)
-                            {
-                                uniqueResult[i].Add(new MeasurementPoint(0, false));
-                                _parameters.Logger.LogTrace($"Zero element added in the {i}th element");
-                            }
-                        }
+                        uniqueResult[i].Add(new MeasurementPoint(szam, valid));
                     }
                 }
 
-                for (int i = 0; i < headers.Count; i++)
+                for (int i = 0; i < header.Count; i++)
                 {
-                    results.Add(new MeasurementSerie(headers[i], uniqueResult[i]));
+                    results.Add(new MeasurementSerie(header[i], uniqueResult[i]));
                 }
             }
 
             return new ToolMeasurementData { ToolName = toolName, Results = results, Name = fileNameAndPath };
         }
 
-        public bool CanRead(string fileNameAndPath)
-        {
-            if (string.IsNullOrEmpty(fileNameAndPath))
-            {
-                throw new ArgumentNullException($"{fileNameAndPath} can not read.");
-            }
-
-            using (FileStream fstream = new FileStream(fileNameAndPath, FileMode.Open, FileAccess.Read))
-            {
-                if (fstream.CanRead)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }

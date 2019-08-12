@@ -8,7 +8,7 @@ namespace Interfaces.DataAcquisition
     {
         object ReadFromFile(string fileNameAndPath, Type type = null, ToolNames toolName = null);
 
-        bool CanRead(string fileNameAndPath);
+        //bool CanRead(string fileNameAndPath);
     }
 
 
