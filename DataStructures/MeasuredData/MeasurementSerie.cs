@@ -6,13 +6,13 @@ namespace DataStructures.MeasuredData
 {
     public class MeasurementSerie : IMeasurementSerie
     {
-        public IReadOnlyList<IMeasurementPoint> MeasuredPoints { get; }
+        public IReadOnlyList<INumericMeasurementPoint> MeasuredPoints { get; }
 
         public Units Dimension { get; }
 
         public string Name { get; }
 
-        public MeasurementSerie(string measuredquantityname, List<IMeasurementPoint> measData, Units dimension = Units.ADU)
+        public MeasurementSerie(string measuredquantityname, List<INumericMeasurementPoint> measData, Units dimension = Units.ADU)
         {
             Name = measuredquantityname;
             MeasuredPoints = measData;
@@ -20,7 +20,7 @@ namespace DataStructures.MeasuredData
         }
 
 
-        public IMeasurementPoint this[int i] => MeasuredPoints[i];
+        public INumericMeasurementPoint this[int i] => MeasuredPoints[i];
 
     }
 }

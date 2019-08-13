@@ -17,18 +17,12 @@ namespace MeasurementEvaluatorUIWPF.UserControls.EvaluationTabUIWPF
         public IUserControlUIWPF ResultGridUIWPF { get; private set; }
 
 
-        [Configuration("Result handling user control name", nameof(ResultHandlingUIWPF), true)]
-        private string _resultHandlingUIWPFName = null;
-        public IUserControlUIWPF ResultHandlingUIWPF { get; private set; }
-
-
         internal bool Load(string sectionName)
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
             DataCollectorUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_dataCollectorUIWPFName);
             ResultGridUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultGridUIWPFName);
-            ResultHandlingUIWPF = PluginLoader.CreateInstance<IUserControlUIWPF>(_resultHandlingUIWPFName);
 
             Name = sectionName;
 

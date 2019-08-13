@@ -1,4 +1,5 @@
 ﻿using Interfaces.Misc;
+using System;
 using System.Xml.Linq;
 
 namespace Interfaces.BaseClasses
@@ -21,10 +22,9 @@ namespace Interfaces.BaseClasses
 
         private const string XELEMENT_ATTRIBUTE_NAME = "Relation";
 
-        //public string Name { get; private set; }
-        //public int Value { get; private set; }
-
         public RelationsEnumValues Relation { get; private set; }
+
+        public Func<bool, int, bool> Evaluation { get; set; }
 
         private string Text { get; set; }
 
@@ -33,51 +33,20 @@ namespace Interfaces.BaseClasses
         {
         }
 
-        private Relations(RelationsEnumValues relation, string text)
+        private Relations(RelationsEnumValues relation, string text, Func<bool, int, bool> evaluation)
         {
-            //Name = name;
-            //Value = value;
             Relation = relation;
             Text = text;
+            Evaluation = evaluation;
         }
 
-        //private Relations(string name, int value, string text)
-        //{
-        //    Name = name;
-        //    Value = value;
-        //    Text = text;
-        //}
-
-        //public Relations()
-        //{
-        //}
-
-        //public class RelationsEnumValues
-        //{
-        //    public const int EQUAL = 0;
-        //    public const int NOTEQUAL = 1;
-        //    public const int LESS = 2;
-        //    public const int LESSOREQUAL = 3;
-        //    public const int GREATER = 4;
-        //    public const int GREATEROREQUAL = 5;
-        //    public const int ALLWAYS = 6;
-        //}
-
-        //public static Relations EQUAL = new Relations(nameof(EQUAL), RelationsEnumValues.EQUAL, "==");
-        //public static Relations NOTEQUAL = new Relations(nameof(NOTEQUAL), RelationsEnumValues.NOTEQUAL, "!=");
-        //public static Relations LESS = new Relations(nameof(LESS), RelationsEnumValues.LESS, ">");
-        //public static Relations LESSOREQUAL = new Relations(nameof(LESSOREQUAL), RelationsEnumValues.LESSOREQUAL, ">=");
-        //public static Relations GREATER = new Relations(nameof(GREATER), RelationsEnumValues.GREATER, "<");
-        //public static Relations GREATEROREQUAL = new Relations(nameof(GREATEROREQUAL), RelationsEnumValues.GREATEROREQUAL, "<=");
-        //public static Relations ALLWAYS = new Relations(nameof(ALLWAYS), RelationsEnumValues.ALLWAYS, "");
-
-        public static Relations EQUAL = new Relations(RelationsEnumValues.EQUAL, "==");
-        public static Relations NOTEQUAL = new Relations(RelationsEnumValues.NOTEQUAL, "!=");
-        public static Relations LESS = new Relations(RelationsEnumValues.LESS, ">");
-        public static Relations LESSOREQUAL = new Relations(RelationsEnumValues.LESSOREQUAL, ">=");
-        public static Relations GREATER = new Relations(RelationsEnumValues.GREATER, "<");
-        public static Relations GREATEROREQUAL = new Relations(RelationsEnumValues.GREATEROREQUAL, "<=");
-        public static Relations ALLWAYS = new Relations(RelationsEnumValues.ALLWAYS, "");
+        public static Relations EQUAL = new Relations(RelationsEnumValues.EQUAL, "==", (equality, compareResult) => equality);
+        public static Relations NOTEQUAL = new Relations(RelationsEnumValues.NOTEQUAL, "!=", (equality, compareResult) => equality);
+        public static Relations LESS = new Relations(RelationsEnumValues.LESS, ">", (equality, compareResult) => compareResult == -1);
+        public static Relations LESSOREQUAL = new Relations(RelationsEnumValues.LESSOREQUAL, ">=", (equality, compareResult) => compareResult == 1 || equality);
+        public static Relations GREATER = new Relations(RelationsEnumValues.GREATER, "<", (equality, compareResult) => compareResult == 1);
+        public static Relations GREATEROREQUAL = new Relations(RelationsEnumValues.GREATEROREQUAL, "<=", (equality, compareResult) => compareResult == -1 || equality);
+        public static Relations ALLWAYS = new Relations(RelationsEnumValues.ALLWAYS, "", (equality, compareResult) => true);
 
         public override string ToString()
         {
@@ -157,10 +126,10 @@ namespace Interfaces.BaseClasses
                 return false;
             }
 
-            //Name = element.Name;
-            //Value = element.Value;
             Relation = element.Relation;
             Text = element.Text;
+            Evaluation = element.Evaluation;
+
             return true;
         }
     }

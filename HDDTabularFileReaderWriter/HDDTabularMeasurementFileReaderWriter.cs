@@ -69,11 +69,11 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
             sw.Start();
 
             List<IMeasurementSerie> results = new List<IMeasurementSerie>();
-            List<List<IMeasurementPoint>> uniqueResult = new List<List<IMeasurementPoint>>();
+            List<List<INumericMeasurementPoint>> uniqueResult = new List<List<INumericMeasurementPoint>>();
 
             for (int i = 0; i < header.Count; i++)
             {
-                uniqueResult.Add(new List<IMeasurementPoint>());
+                uniqueResult.Add(new List<INumericMeasurementPoint>());
             }
 
             using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
@@ -83,16 +83,15 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
                     string line = reader.ReadLine();
                     string[] elements = line.Split(_parameters.Separator);
 
-                    if (elements.Length != header.Count)
-                    {
-                        throw new FileLoadException("File contains more or less data rows than the first line (header)");
-                    }
+                    //if (elements.Length != header.Count)
+                    //{
+                    //    throw new FileLoadException("File contains more or less data rows than the first line (header)");
+                    //}
 
                     for (int i = 0; i < elements.Length; i++)
                     {
                         bool valid = double.TryParse(elements[i], out double szam);
-
-                        uniqueResult[i].Add(new MeasurementPoint(szam, valid));
+                        uniqueResult[i].Add(new NumericMeasurementPoint(szam, valid));
                     }
                 }
 

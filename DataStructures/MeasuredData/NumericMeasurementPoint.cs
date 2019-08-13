@@ -3,14 +3,14 @@ using System;
 
 namespace DataStructures.MeasuredData
 {
-    public class MeasurementPoint : IMeasurementPoint
+    public class NumericMeasurementPoint : INumericMeasurementPoint
     {
         public double Value { get; }
 
         public bool Valid { get; }
 
 
-        public MeasurementPoint(double value, bool valid)
+        public NumericMeasurementPoint(double value, bool valid)
         {
             Value = value;
             Valid = valid;
@@ -19,12 +19,12 @@ namespace DataStructures.MeasuredData
     }
 
 
-    public class TimedMeasurementPoint : MeasurementPoint, ITimedMeasurementPoint
+    public class TimedNumericMeasurementPoint : NumericMeasurementPoint, ITimedNumericMeasurementPoint
     {
         public DateTime MeasurementTime { get; }
 
 
-        public TimedMeasurementPoint(double result, bool valid, DateTime measurementTime)
+        public TimedNumericMeasurementPoint(double result, bool valid, DateTime measurementTime)
             : base(result, valid)
         {
             MeasurementTime = measurementTime;

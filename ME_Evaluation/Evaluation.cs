@@ -263,7 +263,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         }
 
                         // if more result were found with the same name -> they will be linked together, unless their name is different the coherent measurement datas will be summarized into one measurement data
-                        List<IMeasurementPoint> measPointList = new List<IMeasurementPoint>();
+                        List<INumericMeasurementPoint> measPointList = new List<INumericMeasurementPoint>();
                         foreach (IMeasurementSerie serie in coherentMeasurementData)
                         {
                             measPointList.AddRange(serie.MeasuredPoints);

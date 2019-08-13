@@ -63,7 +63,7 @@
     <Compile Include="DataAcquisition\IRepository.cs" />
     <Compile Include="DataAcquisition\IStoredData.cs" />
     <Compile Include="Evaluation\IEvaluation.cs" />
-    <Compile Include="MeasuredData\IMeasurementPoint.cs" />
+    <Compile Include="MeasuredData\INumericMeasurementPoint.cs" />
     <Compile Include="Misc\IInitializable.cs" />
     <Compile Include="Result\IDataCollectorResult.cs" />
     <Compile Include="Result\IEvaluationResult.cs" />

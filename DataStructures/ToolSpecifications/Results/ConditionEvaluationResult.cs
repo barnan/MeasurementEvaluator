@@ -30,13 +30,7 @@ namespace DataStructures.ToolSpecifications.Results
 
         public override string ToString()
         {
-            if (ReferenceValue == null || Condition == null)
-            {
-                return string.Empty;
-            }
-
             return base.ToString() + Condition + ReferenceValue + CalculationResult + $"Condition is met: {ConditionIsMet}{Environment.NewLine}";
-
         }
 
         public virtual string ToString(string format, IFormatProvider formatProvider)

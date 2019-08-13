@@ -22,11 +22,6 @@ namespace Interfaces.ToolSpecifications
         bool Enabled { get; }
 
         /// <summary>
-        /// Defines whether relative or absolute condition
-        /// </summary>
-        //Relativity RelOrAbs { get; }
-
-        /// <summary>
         /// Relation in the condition    e.g.  <  >  ==  >=  <=
         /// </summary>
         Relations ConditionRelation { get; }
@@ -60,8 +55,6 @@ namespace Interfaces.ToolSpecifications
         new CalculationTypes CalculationType { get; set; }
 
         new bool Enabled { get; set; }
-
-        //new Relativity RelOrAbs { get; set; }
 
         new Relations ConditionRelation { get; set; }
     }

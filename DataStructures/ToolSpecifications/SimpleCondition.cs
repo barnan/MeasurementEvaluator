@@ -6,6 +6,7 @@ using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Xml.Linq;
 
@@ -26,8 +27,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relativity relorabs, Relations validIf, double validIfValue)
-            : base(name, calculationtype, value, relation, enabled, relorabs)
+        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relations validIf, double validIfValue)
+            : base(name, calculationtype, value, relation, enabled)
         {
             ValidIf = validIf;
             ValidIf_Value = validIfValue;
@@ -44,42 +45,20 @@ namespace DataStructures.ToolSpecifications
             if (!CompareValidity(calculationResult.Average))
             {
                 return null;
-                //log
             }
 
-            bool isMet = false;
+            bool isMet = EvaluateRelation(calculationResult.ResultValue);
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
         }
-
 
 
         // evaluation calls it from derived classes:
         private bool CompareValidity(double rightValue)
         {
-            switch (ValidIf.Relation)
-            {
-                case RelationsEnumValues.ALLWAYS:
-                    return true;
+            bool equality = EqualityComparer<double>.Default.Equals(LeftValue, rightValue);
+            int compResult = Comparer<double>.Default.Compare(LeftValue, rightValue);
 
-                case RelationsEnumValues.LESS:
-                    return ValidIf_Value < rightValue;
-
-                case RelationsEnumValues.GREATER:
-                    return ValidIf_Value > rightValue;
-
-                case RelationsEnumValues.LESSOREQUAL:
-                    return ValidIf_Value <= rightValue;
-
-                case RelationsEnumValues.GREATEROREQUAL:
-                    return ValidIf_Value >= rightValue;
-
-                case RelationsEnumValues.EQUAL:
-                    return ValidIf_Value == rightValue;
-
-                case RelationsEnumValues.NOTEQUAL:
-                    return ValidIf_Value != rightValue;
-            }
-            return false;
+            return ConditionRelation.Evaluation(equality, compResult);
         }
 
         #endregion

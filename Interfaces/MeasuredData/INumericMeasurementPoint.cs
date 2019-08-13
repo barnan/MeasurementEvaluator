@@ -2,12 +2,12 @@
 
 namespace Interfaces.MeasuredData
 {
-    public interface IMeasurementPoint : IGenericMeasurementPoint<double>
+    public interface INumericMeasurementPoint : IGenericMeasurementPoint<double>
     {
     }
 
 
-    public interface ITimedMeasurementPoint : IMeasurementPoint
+    public interface ITimedNumericMeasurementPoint : INumericMeasurementPoint
     {
         /// <summary>
         /// date and time when the measurement was taken

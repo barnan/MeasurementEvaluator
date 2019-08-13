@@ -1,9 +1,8 @@
-﻿using Interfaces;
+﻿using Interfaces.BaseClasses;
 using Interfaces.ReferenceSample;
 using Miscellaneous;
 using System;
 using System.Xml.Linq;
-using Interfaces.BaseClasses;
 
 namespace DataStructures.ReferenceSample
 {
@@ -30,17 +29,22 @@ namespace DataStructures.ReferenceSample
 
         public int CompareTo(IReferenceValue other)
         {
-            if (ReferenceEquals(this, other))
+            if (object.ReferenceEquals(this, other))
             {
                 return 0;
             }
 
-            if (ReferenceEquals(null, other))
+            if (!(other is IReferenceValue<double> otherdooubleValue))
             {
                 return 1;
             }
 
-            return string.Compare(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+            if (Dimension != otherdooubleValue.Dimension)
+            {
+                return Dimension - otherdooubleValue.Dimension;
+            }
+
+            return Math.Sign(Value - otherdooubleValue.Value);
         }
 
         public XElement SaveToXml(XElement inputElement)
@@ -59,6 +63,5 @@ namespace DataStructures.ReferenceSample
             return true;
         }
     }
-
 
 }

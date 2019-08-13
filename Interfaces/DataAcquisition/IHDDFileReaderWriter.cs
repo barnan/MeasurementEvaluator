@@ -7,8 +7,6 @@ namespace Interfaces.DataAcquisition
     public interface IHDDFileReader
     {
         object ReadFromFile(string fileNameAndPath, Type type = null, ToolNames toolName = null);
-
-        //bool CanRead(string fileNameAndPath);
     }
 
 

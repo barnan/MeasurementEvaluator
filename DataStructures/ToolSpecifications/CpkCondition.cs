@@ -23,8 +23,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relativity relativity, double halfTolerance)
-            : base(name, calculationtype, value, relation, enabled, relativity)
+        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, double halfTolerance)
+            : base(name, calculationtype, value, relation, enabled)
         {
             HalfTolerance = halfTolerance;
         }
@@ -66,14 +66,8 @@ namespace DataStructures.ToolSpecifications
 
         protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
         {
-            //if (!CheckCalculationType(result, CalculationType))
-            //{
-            //    return null;
-            //}
-
-
             IQCellsCalculationResult qcellsResult = result as IQCellsCalculationResult;
-            bool isMet = Compare(qcellsResult.ResultValue);
+            bool isMet = EvaluateRelation(qcellsResult.ResultValue);
 
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, qcellsResult);
         }
