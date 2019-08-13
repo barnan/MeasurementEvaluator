@@ -17,20 +17,5 @@ namespace DataStructures.MeasuredData
         {
         }
 
-
-        public int CompareTo(IToolMeasurementData other)
-        {
-            if (object.ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (object.ReferenceEquals(null, other))
-            {
-                return 1;
-            }
-
-            return ToolName.Value - other.ToolName.Value;
-        }
     }
 }

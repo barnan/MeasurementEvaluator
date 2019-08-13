@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+
+[assembly: InternalsVisibleTo("Test_Matcher")]
+
 
 namespace MeasurementEvaluator.ME_Matching
 {

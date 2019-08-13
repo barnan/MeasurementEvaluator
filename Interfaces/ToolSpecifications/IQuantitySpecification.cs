@@ -1,10 +1,9 @@
 ﻿using Interfaces.Misc;
-using System;
 using System.Collections.Generic;
 
 namespace Interfaces.ToolSpecifications
 {
-    public interface IQuantitySpecification : IComparable<IQuantitySpecification>, IXmlStorable
+    public interface IQuantitySpecification : IXmlStorable
     {
         /// <summary>
         /// the quantity which the condition is related

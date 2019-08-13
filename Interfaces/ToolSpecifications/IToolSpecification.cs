@@ -1,12 +1,11 @@
-﻿using Interfaces.Misc;
-using System;
+﻿using Interfaces.BaseClasses;
+using Interfaces.Misc;
 using System.Collections.Generic;
-using Interfaces.BaseClasses;
 
 namespace Interfaces.ToolSpecifications
 {
 
-    public interface IToolSpecification : IComparable<IToolSpecification>, INamed, IXmlStorable
+    public interface IToolSpecification : INamed, IXmlStorable
     {
         /// <summary>
         /// List of all defined specification of the quantities of the tool

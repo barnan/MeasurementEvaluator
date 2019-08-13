@@ -105,12 +105,12 @@ namespace Interfaces.BaseClasses
                 return false;
             }
 
-            if (!(obj is ToolNames toolNameParam))
+            if (!(obj is ToolNames otherToolName))
             {
                 return false;
             }
 
-            return Value == toolNameParam.Value && Name == toolNameParam.Name;
+            return Value == otherToolName.Value && Name == otherToolName.Name;
         }
 
         public override int GetHashCode()

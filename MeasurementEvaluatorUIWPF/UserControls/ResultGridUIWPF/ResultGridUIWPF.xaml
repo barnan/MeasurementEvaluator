@@ -15,6 +15,21 @@
             <converters:ConditionToTextConverter x:Key="ConditionToTextConverter"/>
             <converters:SuccessToColorConverter x:Key="SuccessToColorConverter"/>
             <converters:MeasurementDataConverter x:Key="MeasurementDataConverter"/>
+
+            <Style x:Key="GroupHeaderStyle" TargetType="{x:Type GroupItem}" >
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}"/>
+                                <ItemsPresenter />
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            
         </Grid.Resources>
 
         <DataGrid
@@ -73,6 +88,16 @@
                 
             </DataGrid.Columns>
 
+            <DataGrid.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource GroupHeaderStyle}">
+                    <GroupStyle.Panel>
+                        <ItemsPanelTemplate>
+                            <DataGridRowsPresenter/>
+                        </ItemsPanelTemplate>
+                    </GroupStyle.Panel>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+            
             
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
@@ -94,7 +119,7 @@
                             CanUserDeleteRows="False"
                             CanUserResizeColumns="False"
                             IsReadOnly="True"
-                            AutoGenerateColumns="False"
+                            AutoGenerateColumns="True"
                             HorizontalContentAlignment="Center"
                             HorizontalScrollBarVisibility="Visible"
                             EnableColumnVirtualization="False"
@@ -104,9 +129,6 @@
                               
                             SelectionMode="Single"
                             SelectionUnit="CellOrRowHeader">
-
-                            <DataGridTextColumn Binding="{Binding MeasurementPoints}"/>
-
                         </DataGrid>
                     </Grid>
                 </DataTemplate>

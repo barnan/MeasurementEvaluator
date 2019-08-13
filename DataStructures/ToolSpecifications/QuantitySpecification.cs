@@ -51,31 +51,6 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
-
-        #region IComparable<IQuantitySpecification>
-
-        public int CompareTo(IQuantitySpecification other)
-        {
-            if (ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, other))
-            {
-                return 1;
-            }
-
-            if (other.Conditions.Count == Conditions.Count)
-            {
-                return 0;
-            }
-
-            return Conditions.Count > other.Conditions.Count ? 1 : -1;
-        }
-
-        #endregion
-
         #region IXmlStorable
 
         public XElement SaveToXml(XElement inputElement)

@@ -1,11 +1,10 @@
 ﻿using Interfaces.BaseClasses;
 using Interfaces.Misc;
-using System;
 
 namespace Interfaces.ReferenceSample
 {
 
-    public interface IReferenceValue : IComparable<IReferenceValue>, INamed, IXmlStorable
+    public interface IReferenceValue : INamed, IXmlStorable
     {
         /// <summary>
         /// Dimension of the Value
