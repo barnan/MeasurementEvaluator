@@ -78,15 +78,17 @@ namespace DataAcquisitions.HDDTabularMeasurementFileReaderWriter
 
             using (StreamReader reader = new StreamReader(File.OpenRead(fileNameAndPath)))
             {
-                while (!reader.EndOfStream && sw.ElapsedMilliseconds > _parameters.FileReadTimeout)
+                string line = reader.ReadLine(); //skip the first (header) line
+
+                while (!reader.EndOfStream && sw.ElapsedMilliseconds < _parameters.FileReadTimeout)
                 {
-                    string line = reader.ReadLine();
+                    line = reader.ReadLine();
                     string[] elements = line.Split(_parameters.Separator);
 
-                    //if (elements.Length != header.Count)
-                    //{
-                    //    throw new FileLoadException("File contains more or less data rows than the first line (header)");
-                    //}
+                    if (elements.Length != header.Count)
+                    {
+                        throw new FileLoadException("File contains more or less data rows than the first line (header)");
+                    }
 
                     for (int i = 0; i < elements.Length; i++)
                     {

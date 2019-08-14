@@ -15,21 +15,13 @@
             <ColumnDefinition Width="1.6*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <GroupBox Grid.Column="0" Grid.Row="0" Grid.RowSpan ="2" Header="Collect Data" Margin="1">
+        <GroupBox Grid.Column="0" Grid.RowSpan ="2" Header="Collect Data" Margin="1">
             <ContentPresenter Content="{Binding Parameters.DataCollectorUIWPF}" />
         </GroupBox>
 
-        <GroupBox Grid.Column="1" Grid.Row="0"  Header="Result" Margin="1">
+        <GroupBox Grid.Column="1" Header="Evaluation" Margin="1">
             <ContentPresenter Content="{Binding Parameters.ResultGridUIWPF}"/>
-        </GroupBox>
-
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Result Handling" Margin="1">
-            <ContentPresenter Content="{Binding Parameters.ResultHandlingUIWPF}"/>
         </GroupBox>
 
     </Grid>

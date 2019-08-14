@@ -28,113 +28,125 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
-            
         </Grid.Resources>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <DataGrid
-            ItemsSource="{Binding ConditionEvaluationResults}"
-            CanUserReorderColumns="False"
-            CanUserResizeRows="False"
-            CanUserSortColumns="False"
-            CanUserDeleteRows="False"
-            CanUserResizeColumns="False"
-            IsReadOnly="True"
-            AutoGenerateColumns="False"
-            HorizontalContentAlignment="Center"
-            HorizontalScrollBarVisibility="Visible"
-            EnableColumnVirtualization="False"
-            EnableRowVirtualization="False"
-            VirtualizingPanel.VirtualizationMode="Standard"
-            VirtualizingPanel.IsVirtualizing="False"
-            GridLinesVisibility="Horizontal"
-            ColumnWidth="Auto"
-                          
-            SelectionMode="Single"
-            SelectionUnit="FullRow">
-
-            <DataGrid.Columns>
-                
-                <!--Tool name-->
-                <DataGridTextColumn Header="Tool" Binding="{Binding ToolName}"/>
-                
-                <!--Quantity-->
-                <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
-                
-                <!--Condition Type-->
-                <DataGridTextColumn Header="Calculation Type" Binding="{Binding ConditionEvaluationResult.Condition.CalculationType}"/>
-                
-                <!--Condition column-->
-                <DataGridTemplateColumn Header="Condition" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionToTextConverter}}" HorizontalAlignment="Right"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <!--Result column-->
-                <DataGridTextColumn Header="Result" Binding="{Binding CalculationDoubleResult, StringFormat=N3}" Width="70"/>
-                
-                <!--Successful column-->
-                <DataGridTemplateColumn Header="Successful" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ConditionEvaluationResult.CalculationResult.Successful}" HorizontalAlignment="Center" 
-                                       Foreground="{Binding ConditionEvaluationResult.CalculationResult.Successful, Converter={StaticResource SuccessToColorConverter}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                
-            </DataGrid.Columns>
-
-            <DataGrid.GroupStyle>
-                <GroupStyle ContainerStyle="{StaticResource GroupHeaderStyle}">
-                    <GroupStyle.Panel>
-                        <ItemsPanelTemplate>
-                            <DataGridRowsPresenter/>
-                        </ItemsPanelTemplate>
-                    </GroupStyle.Panel>
-                </GroupStyle>
-            </DataGrid.GroupStyle>
-            
-            
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <DataGrid
-                            Grid.Column="0"
-                            ItemsSource="{Binding MeasurementPoints}"
-                            CanUserReorderColumns="False"
-                            CanUserResizeRows="False"
-                            CanUserSortColumns="False"
-                            CanUserDeleteRows="False"
-                            CanUserResizeColumns="False"
-                            IsReadOnly="True"
-                            AutoGenerateColumns="True"
-                            HorizontalContentAlignment="Center"
-                            HorizontalScrollBarVisibility="Visible"
-                            EnableColumnVirtualization="False"
-                            EnableRowVirtualization="False"
-                            VirtualizingPanel.VirtualizationMode="Standard"
-                            VirtualizingPanel.IsVirtualizing="False"
+        <GroupBox Grid.Row="0" Header="Results">
+            <DataGrid 
+                ItemsSource="{Binding ConditionEvaluationResults}"
+                CanUserReorderColumns="False"
+                CanUserResizeRows="False"
+                CanUserSortColumns="False"
+                CanUserDeleteRows="False"
+                CanUserResizeColumns="False"
+                IsReadOnly="True"
+                AutoGenerateColumns="False"
+                HorizontalContentAlignment="Center"
+                HorizontalScrollBarVisibility="Visible"
+                EnableColumnVirtualization="False"
+                EnableRowVirtualization="False"
+                VirtualizingPanel.VirtualizationMode="Standard"
+                VirtualizingPanel.IsVirtualizing="False"
+                GridLinesVisibility="Horizontal"
+                ColumnWidth="Auto"
                               
-                            SelectionMode="Single"
-                            SelectionUnit="CellOrRowHeader">
-                        </DataGrid>
-                    </Grid>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
+                SelectionMode="Single"
+                SelectionUnit="FullRow">
 
-        </DataGrid>
+                <DataGrid.Columns>
+                    
+                    <!--Tool name-->
+                    <DataGridTextColumn Header="Tool" Binding="{Binding ToolName}"/>
+                    
+                    <!--Quantity-->
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityName}"/>
+                    
+                    <!--Condition Type-->
+                    <DataGridTextColumn Header="Calculation Type" Binding="{Binding ConditionEvaluationResult.Condition.CalculationType}"/>
+                    
+                    <!--Condition column-->
+                    <DataGridTemplateColumn Header="Condition" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ConditionEvaluationResult, Converter={StaticResource ConditionToTextConverter}}" HorizontalAlignment="Right"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!--Result column-->
+                    <DataGridTextColumn Header="Result" Binding="{Binding CalculationDoubleResult, StringFormat=N3}" Width="70"/>
+                    
+                    <!--Successful column-->
+                    <DataGridTemplateColumn Header="Successful" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ConditionEvaluationResult.CalculationResult.Successful}" HorizontalAlignment="Center" 
+                                           Foreground="{Binding ConditionEvaluationResult.CalculationResult.Successful, Converter={StaticResource SuccessToColorConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
+                </DataGrid.Columns>
+
+                <DataGrid.GroupStyle>
+                    <GroupStyle ContainerStyle="{StaticResource GroupHeaderStyle}">
+                        <GroupStyle.Panel>
+                            <ItemsPanelTemplate>
+                                <DataGridRowsPresenter/>
+                            </ItemsPanelTemplate>
+                        </GroupStyle.Panel>
+                    </GroupStyle>
+                </DataGrid.GroupStyle>
+                
+                
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <DataGrid
+                                Grid.Column="0"
+                                ItemsSource="{Binding MeasurementPoints}"
+                                CanUserReorderColumns="False"
+                                CanUserResizeRows="False"
+                                CanUserSortColumns="False"
+                                CanUserDeleteRows="False"
+                                CanUserResizeColumns="False"
+                                IsReadOnly="True"
+                                AutoGenerateColumns="True"
+                                HorizontalContentAlignment="Center"
+                                HorizontalScrollBarVisibility="Visible"
+                                EnableColumnVirtualization="False"
+                                EnableRowVirtualization="False"
+                                VirtualizingPanel.VirtualizationMode="Standard"
+                                VirtualizingPanel.IsVirtualizing="False"
+                                  
+                                SelectionMode="Single"
+                                SelectionUnit="CellOrRowHeader">
+                            </DataGrid>
+                        </Grid>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+
+            </DataGrid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Header="Result Handling">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Save Table"  MaxHeight="40" MinWidth="40" Width="80"/>
+            </StackPanel>
+        </GroupBox>
     </Grid>
 
 </base:UserControlBase>
+

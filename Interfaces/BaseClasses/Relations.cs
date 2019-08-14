@@ -46,7 +46,7 @@ namespace Interfaces.BaseClasses
         public static Relations LESSOREQUAL = new Relations(RelationsEnumValues.LESSOREQUAL, ">=", (equality, compareResult) => compareResult == 1 || equality);
         public static Relations GREATER = new Relations(RelationsEnumValues.GREATER, "<", (equality, compareResult) => compareResult == 1);
         public static Relations GREATEROREQUAL = new Relations(RelationsEnumValues.GREATEROREQUAL, "<=", (equality, compareResult) => compareResult == -1 || equality);
-        public static Relations ALLWAYS = new Relations(RelationsEnumValues.ALLWAYS, "", (equality, compareResult) => true);
+        public static Relations ALLWAYS = new Relations(RelationsEnumValues.ALLWAYS, "ALLWAYS", (equality, compareResult) => true);
 
         public override string ToString()
         {
@@ -61,31 +61,31 @@ namespace Interfaces.BaseClasses
 
         public static explicit operator Relations(string val)
         {
-            if ("==" == val)
+            if (EQUAL.Text == val)
             {
                 return EQUAL;
             }
-            if ("!=" == val)
+            if (NOTEQUAL.Text == val)
             {
                 return NOTEQUAL;
             }
-            if (">" == val)
+            if (LESS.Text == val)
             {
                 return LESS;
             }
-            if (">=" == val)
+            if (LESSOREQUAL.Text == val)
             {
                 return LESSOREQUAL;
             }
-            if ("<" == val)
+            if (GREATER.Text == val)
             {
                 return GREATER;
             }
-            if ("<=" == val)
+            if (GREATEROREQUAL.Text == val)
             {
                 return GREATEROREQUAL;
             }
-            if ("" == val)
+            if (ALLWAYS.Text == val)
             {
                 return ALLWAYS;
             }

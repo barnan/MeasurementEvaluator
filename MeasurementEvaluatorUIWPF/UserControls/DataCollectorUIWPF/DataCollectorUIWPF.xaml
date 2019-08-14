@@ -87,17 +87,15 @@
             </ListView.View>
         </ListView>
 
-        <Button Grid.Column="3" Grid.Row="3" Command="{Binding BrowseMeasurementDataCommand}" Style="{StaticResource MarginStyle}"
-                MaxHeight="40" MinWidth="40" Width="80">
+        <Button Grid.Column="3" Grid.Row="3" Command="{Binding BrowseMeasurementDataCommand}" MaxHeight="40" MinWidth="40" Width="80">
             <StackPanel Orientation="Horizontal">
                 <!--<iconPacks:PackIconOcticons Kind="Browser" />-->
-                <TextBlock>Browse</TextBlock>
+                <TextBlock>BROWSE</TextBlock>
             </StackPanel>
         </Button>
 
         <!--calculate-->
-        <Button Grid.Column="3" Grid.Row="4" Content="Calculate" Command="{Binding CalculateCommand}" Style="{StaticResource MarginStyle}"
-                MaxHeight="40" MinWidth="40" Width="80"/>
+        <Button Grid.Column="3" Grid.Row="4" Content="Calculate" Command="{Binding CalculateCommand}" MaxHeight="40" MinWidth="40" Width="80"/>
 
         <!--image control to show the rotation-->
         <Image Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Margin="10" >

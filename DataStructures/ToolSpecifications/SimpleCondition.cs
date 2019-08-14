@@ -55,10 +55,10 @@ namespace DataStructures.ToolSpecifications
         // evaluation calls it from derived classes:
         private bool CompareValidity(double rightValue)
         {
-            bool equality = EqualityComparer<double>.Default.Equals(LeftValue, rightValue);
-            int compResult = Comparer<double>.Default.Compare(LeftValue, rightValue);
+            bool equality = EqualityComparer<double>.Default.Equals(ValidIf_Value, rightValue);
+            int compResult = Comparer<double>.Default.Compare(ValidIf_Value, rightValue);
 
-            return ConditionRelation.Evaluation(equality, compResult);
+            return ValidIf.Evaluation(equality, compResult);
         }
 
         #endregion

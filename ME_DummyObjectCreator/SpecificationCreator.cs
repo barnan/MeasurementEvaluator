@@ -16,7 +16,7 @@ namespace ME_DummyObjectCreator
         {
             // ttr specification 01:
 
-            ICondition<double> thicknessAVGCondition = new SimpleCondition()
+            ICondition<double> thicknessStdAbsCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Std Abs Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -26,9 +26,9 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
-            thicknessAVGCondition.CalculationType.Relativity = Relativity.Absolute;
+            thicknessStdAbsCondition.CalculationType.Relativity = Relativity.Absolute;
 
-            ICondition<double> thicknessSTDCondition = new SimpleCondition()
+            ICondition<double> thicknessStdRelCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -38,21 +38,11 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
-            thicknessSTDCondition.CalculationType.Relativity = Relativity.Relative;
+            thicknessStdRelCondition.CalculationType.Relativity = Relativity.Relative;
 
             // resisitivity conditions
-            ICondition<double> resistivityAVGCondition = new SimpleCondition()
-            {
-                Name = "Resistivity Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                LeftValue = 0.05,
-                ConditionRelation = Relations.LESSOREQUAL,
-                Enabled = true,
-                ValidIf = Relations.ALLWAYS,
-                ValidIf_Value = 0,
-            };
 
-            ICondition<double> resistivitySTDCondition = new SimpleCondition()
+            ICondition<double> resistivityStdRelCondition = new SimpleCondition()
             {
                 Name = "Resistivity Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -62,16 +52,16 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
-            resistivitySTDCondition.CalculationType.Relativity = Relativity.Relative;
+            resistivityStdRelCondition.CalculationType.Relativity = Relativity.Relative;
 
 
             IQuantitySpecificationHandler thicknessQuantitySpecification = new QuantitySpecification();
             thicknessQuantitySpecification.Quantity = new Quantity(Units.um, "Thickness Average");
-            thicknessQuantitySpecification.Conditions = new List<ICondition> { thicknessAVGCondition, thicknessSTDCondition };
+            thicknessQuantitySpecification.Conditions = new List<ICondition> { thicknessStdAbsCondition, thicknessStdRelCondition };
 
             IQuantitySpecificationHandler resistivityQuantitySpecification = new QuantitySpecification();
             resistivityQuantitySpecification.Quantity = new Quantity(Units.um, "Resistivity Average");
-            resistivityQuantitySpecification.Conditions = new List<ICondition> { resistivityAVGCondition, resistivitySTDCondition };
+            resistivityQuantitySpecification.Conditions = new List<ICondition> { resistivityStdRelCondition };
 
 
             List<IQuantitySpecification> quanSpecList = new List<IQuantitySpecification>
@@ -94,7 +84,7 @@ namespace ME_DummyObjectCreator
 
             // ttr specification 02:
 
-            ICondition<double> thicknessAVGCondition2 = new SimpleCondition()
+            ICondition<double> thicknessStdAbsCondition2 = new SimpleCondition()
             {
                 Name = "Thickness Average Std Abs Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -104,8 +94,9 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessStdAbsCondition2.CalculationType.Relativity = Relativity.Absolute;
 
-            ICondition<double> thicknessSTDCondition2 = new SimpleCondition()
+            ICondition<double> thicknessStdRelCondition2 = new SimpleCondition()
             {
                 Name = "Thickness Average Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -115,6 +106,7 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessStdRelCondition2.CalculationType.Relativity = Relativity.Relative;
 
             ICondition<double> thicknessCpkCondition2 = new CpkCondition()
             {
@@ -127,18 +119,8 @@ namespace ME_DummyObjectCreator
             };
 
             // resisitivity conditions
-            ICondition<double> resistivityAVGCondition2 = new SimpleCondition()
-            {
-                Name = "Resistivity Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                LeftValue = 0.07,
-                ConditionRelation = Relations.LESSOREQUAL,
-                Enabled = true,
-                ValidIf = Relations.ALLWAYS,
-                ValidIf_Value = 0,
-            };
 
-            ICondition<double> resistivitySTDCondition2 = new SimpleCondition()
+            ICondition<double> resistivityStdRelCondition2 = new SimpleCondition()
             {
                 Name = "Resistivity Std Rel Condition",
                 CalculationType = CalculationTypes.StandardDeviation,
@@ -148,6 +130,7 @@ namespace ME_DummyObjectCreator
                 ValidIf = Relations.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            resistivityStdRelCondition2.CalculationType.Relativity = Relativity.Relative;
 
             ICondition<double> resistivityCpkCondition2 = new CpkCondition()
             {
@@ -161,13 +144,14 @@ namespace ME_DummyObjectCreator
 
 
 
+
             IQuantitySpecificationHandler thicknessQuantitySpecification2 = new QuantitySpecification();
             thicknessQuantitySpecification2.Quantity = new Quantity(Units.um, "Thickness Average");
-            thicknessQuantitySpecification2.Conditions = new List<ICondition> { thicknessAVGCondition2, thicknessSTDCondition2, thicknessCpkCondition2 };
+            thicknessQuantitySpecification2.Conditions = new List<ICondition> { thicknessStdAbsCondition2, thicknessStdRelCondition2, thicknessCpkCondition2 };
 
             IQuantitySpecificationHandler resistivityQuantitySpecification2 = new QuantitySpecification();
             resistivityQuantitySpecification2.Quantity = new Quantity(Units.um, "Resistivity Average");
-            resistivityQuantitySpecification2.Conditions = new List<ICondition> { resistivityAVGCondition2, resistivitySTDCondition2, resistivityCpkCondition2 };
+            resistivityQuantitySpecification2.Conditions = new List<ICondition> { resistivityStdRelCondition2, resistivityCpkCondition2 };
 
             List<IQuantitySpecification> quanSpecList2 = new List<IQuantitySpecification>
             {
