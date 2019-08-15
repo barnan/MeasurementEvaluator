@@ -78,7 +78,7 @@ namespace ME_DummyObjectCreator
             };
             ttvStdAbsCondition.CalculationType.Relativity = Relativity.Absolute;
 
-            // sawmark psecification:
+            // sawmark specification:
             ICondition<double> sawmarkStdAbsCondition = new SimpleCondition()
             {
                 Name = "SawMark Std Abs Condition",

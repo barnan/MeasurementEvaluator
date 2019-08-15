@@ -21,8 +21,8 @@ namespace ME_DummyObjectCreator
             PairingKeyValuePair ttvStdAbs = new PairingKeyValuePair("TTV Std Abs Condition", new List<string> { "TTV[um]" });
             PairingKeyValuePair sawmarkStdAbs = new PairingKeyValuePair("SawMark Std Abs Condition", new List<string> { "SawMark[um]" });
 
-            PairingKeyValuePair resistivityStdAbs = new PairingKeyValuePair("Thickness Std Abs Condition", new List<string> { "Resistivity[Ohmcm]", "Resistivity[Î©cm]" }, "Resistivity");
-            PairingKeyValuePair resistivityStdRel = new PairingKeyValuePair("Thickness Std Rel Condition", new List<string> { "Resistivity[Ohmcm]", "Resistivity[Î©cm]" }, "Resistivity");
+            PairingKeyValuePair resistivityStdAbs = new PairingKeyValuePair("Resistivity Average Rel Condition", new List<string> { "Resistivity[Ohmcm]", "Resistivity[Î©cm]" }, "Resistivity");
+            PairingKeyValuePair resistivityStdRel = new PairingKeyValuePair("Resistivity Std Rel Condition", new List<string> { "Resistivity[Ohmcm]", "Resistivity[Î©cm]" }, "Resistivity");
 
 
 
