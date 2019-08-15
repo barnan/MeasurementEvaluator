@@ -16,8 +16,14 @@ namespace MeasurementEvaluatorUIWPF.UserControls.ResultGridUIWPF
 
         public double CalculationDoubleResult => (ConditionEvaluationResult.CalculationResult as ICalculationResult<double>)?.ResultValue ?? 0;
 
-        public List<double> MeasurementPoints => ConditionEvaluationResult.CalculationResult.MeasurementSerie.MeasuredPoints.Select(p => p.Value).ToList();
+        public List<double> MeasurementPoints
+        {
+            get
+            {
+                var result = ConditionEvaluationResult.CalculationResult.MeasurementSerie.MeasuredPoints.Select(p => p.Value).ToList();
+                return result;
+            }
+        }
     }
-
 
 }

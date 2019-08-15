@@ -51,15 +51,15 @@ namespace MeasurementEvaluatorUI.Commands
                 _isEnabled = value;
                 OnPropertyChanged();
 
-                try
-                {
-                    var eventHandlerToCall = CanExecuteChanged;
-                    eventHandlerToCall?.Invoke(this, new EventArgs());
-                }
-                catch (Exception)
-                {
-                }
+                var eventHandlerToCall = CanExecuteChanged;
+                eventHandlerToCall?.Invoke(this, new EventArgs());
             }
+        }
+
+        public void UpdateCanExecute()
+        {
+            EventHandler handler = CanExecuteChanged;
+            handler?.Invoke(this, new EventArgs());
         }
 
         #endregion

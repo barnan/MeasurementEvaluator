@@ -107,16 +107,17 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="150"/>
                             </Grid.ColumnDefinitions>
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <DataGrid
+                            <!--<DataGrid
                                 Grid.Column="0"
                                 ItemsSource="{Binding MeasurementPoints}"
+                                Visibility="Visible"
                                 CanUserReorderColumns="False"
                                 CanUserResizeRows="False"
                                 CanUserSortColumns="False"
@@ -133,7 +134,12 @@
                                   
                                 SelectionMode="Single"
                                 SelectionUnit="CellOrRowHeader">
-                            </DataGrid>
+                            </DataGrid>-->
+                            <ListView Grid.Column="0"
+                                ItemsSource="{Binding MeasurementPoints}"
+                                HorizontalAlignment="Center"
+                                SelectionMode="Single">
+                            </ListView>
                         </Grid>
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>
@@ -149,4 +155,3 @@
     </Grid>
 
 </base:UserControlBase>
-

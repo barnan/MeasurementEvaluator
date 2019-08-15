@@ -29,8 +29,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             Parameters.InitializationCompleted += Parameters_InitializationCompleted;
             Parameters.Closed += Parameters_Closed;
 
-            BrowseMeasurementDataCommand = new RelayCommand(ExecuteBrowse);
-            CalculateCommand = new RelayCommand(ExecuteCalculate);
+            BrowseMeasurementDataCommand = new RelayCommand(ExecuteBrowse, o => SelectedToolName != null && SelectedSpecification != null);
+            CalculateCommand = new RelayCommand(ExecuteCalculate, o => SelectedToolName != null && SelectedSpecification != null);
         }
 
         private void Parameters_Closed(object sender, EventArgs e)
@@ -112,7 +112,6 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
                 _selectedToolName = value;
                 OnPropertyChanged();
 
-                //AvailableSpecificationList = Parameters.DataCollector.GetSpecificationsByToolName(_selectedToolName);
                 AvailableSpecificationList = _availableToolSpecifications.Where(p => p.ToolName == SelectedToolName);
             }
         }
@@ -128,6 +127,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             set
             {
                 _availableSpecificationList = value;
+                SpecificationcomboBoxIsEnabled = _availableReferenceFileList != null;
+                ((RelayCommand)BrowseMeasurementDataCommand).UpdateCanExecute();
                 OnPropertyChanged();
             }
         }
@@ -143,6 +144,17 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             }
         }
 
+        private bool _specificationcomboBoxIsEnabled;
+        public bool SpecificationcomboBoxIsEnabled
+        {
+            get { return _specificationcomboBoxIsEnabled; }
+            set
+            {
+                _specificationcomboBoxIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion specification
 
         #region referenece sample
@@ -154,6 +166,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             set
             {
                 _availableReferenceFileList = value;
+                ReferencecomboBoxIsEnabled = _availableReferenceFileList != null;
                 OnPropertyChanged();
             }
         }
@@ -165,6 +178,17 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             set
             {
                 _selectedReferenece = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _referencecomboBoxIsEnabled;
+        public bool ReferencecomboBoxIsEnabled
+        {
+            get { return _referencecomboBoxIsEnabled; }
+            set
+            {
+                _referencecomboBoxIsEnabled = value;
                 OnPropertyChanged();
             }
         }
