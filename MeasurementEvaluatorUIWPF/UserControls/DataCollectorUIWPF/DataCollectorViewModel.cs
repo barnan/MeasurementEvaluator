@@ -17,7 +17,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         #region fields
 
         private DataCollectorUIWPFParameters Parameters { get; }
-        private IEnumerable<IToolSpecification> _availableToolSpecifications;
+        private IEnumerable<IToolSpecification> _allAvailableToolSpecifications;
+        private IEnumerable<IReferenceSample> _allAvailableReferenceFiles;
 
         #endregion
 
@@ -30,7 +31,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             Parameters.Closed += Parameters_Closed;
 
             BrowseMeasurementDataCommand = new RelayCommand(ExecuteBrowse, o => SelectedToolName != null && SelectedSpecification != null);
-            CalculateCommand = new RelayCommand(ExecuteCalculate, o => SelectedToolName != null && SelectedSpecification != null);
+            CalculateCommand = new RelayCommand(ExecuteCalculate, o => SelectedToolName != null && SelectedSpecification != null && SelectedMeasurementFiles != null);
         }
 
         private void Parameters_Closed(object sender, EventArgs e)
@@ -42,13 +43,12 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         {
             Parameters.InitializationCompleted -= Parameters_InitializationCompleted;
 
-            _availableToolSpecifications = Parameters.DataCollector.GetAvailableToolSpecifications();
+            _allAvailableToolSpecifications = Parameters.DataCollector.GetAvailableToolSpecifications();
 
-            AvailableReferenceFileList = Parameters.DataCollector.GetReferenceSamples();
+            _allAvailableReferenceFiles = Parameters.DataCollector.GetReferenceSamples();
 
-            foreach (IToolSpecification specification in _availableToolSpecifications)
+            foreach (IToolSpecification specification in _allAvailableToolSpecifications)
             {
-                AvailableToolList = new ObservableCollection<ToolNames>();
                 if (!AvailableToolList.Contains(specification.ToolName))
                 {
                     AvailableToolList.Add(specification.ToolName);
@@ -63,7 +63,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private ICommand _calculateCommand;
         public ICommand CalculateCommand
         {
-            get { return _calculateCommand; }
+            get => _calculateCommand;
             set
             {
                 _calculateCommand = value;
@@ -74,7 +74,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private ICommand _browseMeasurementDataCommand;
         public ICommand BrowseMeasurementDataCommand
         {
-            get { return _browseMeasurementDataCommand; }
+            get => _browseMeasurementDataCommand;
             set
             {
                 _browseMeasurementDataCommand = value;
@@ -88,10 +88,10 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region tool
 
-        private ObservableCollection<ToolNames> _availableToolList;
+        private ObservableCollection<ToolNames> _availableToolList = new ObservableCollection<ToolNames>();
         public ObservableCollection<ToolNames> AvailableToolList
         {
-            get { return _availableToolList; }
+            get => _availableToolList;
             set
             {
                 _availableToolList = value;
@@ -102,17 +102,18 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private ToolNames _selectedToolName;
         public ToolNames SelectedToolName
         {
-            get { return _selectedToolName; }
+            get => _selectedToolName;
             set
             {
                 if (_selectedToolName == value)
                 {
                     return;
                 }
+
                 _selectedToolName = value;
                 OnPropertyChanged();
 
-                AvailableSpecificationList = _availableToolSpecifications.Where(p => p.ToolName == SelectedToolName);
+                AvailableSpecificationList = _allAvailableToolSpecifications.Where(p => p.ToolName == SelectedToolName);
             }
         }
 
@@ -123,12 +124,11 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private IEnumerable<IToolSpecification> _availableSpecificationList;
         public IEnumerable<IToolSpecification> AvailableSpecificationList
         {
-            get { return _availableSpecificationList; }
+            get => _availableSpecificationList;
             set
             {
                 _availableSpecificationList = value;
-                SpecificationcomboBoxIsEnabled = _availableReferenceFileList != null;
-                ((RelayCommand)BrowseMeasurementDataCommand).UpdateCanExecute();
+                SpecificationcomboBoxIsEnabled = SelectedToolName != null;
                 OnPropertyChanged();
             }
         }
@@ -136,10 +136,19 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private IToolSpecification _selectedSpecification;
         public IToolSpecification SelectedSpecification
         {
-            get { return _selectedSpecification; }
+            get => _selectedSpecification;
             set
             {
                 _selectedSpecification = value;
+
+                if (_selectedSpecification != null)
+                {
+                    ((RelayCommand)BrowseMeasurementDataCommand).UpdateCanExecute();
+
+                    AvailableReferenceFileList = _allAvailableReferenceFiles;
+                    ReferencecomboBoxIsEnabled = AvailableReferenceFileList != null;
+                }
+
                 OnPropertyChanged();
             }
         }
@@ -147,7 +156,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private bool _specificationcomboBoxIsEnabled;
         public bool SpecificationcomboBoxIsEnabled
         {
-            get { return _specificationcomboBoxIsEnabled; }
+            get => _specificationcomboBoxIsEnabled;
             set
             {
                 _specificationcomboBoxIsEnabled = value;
@@ -162,11 +171,10 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private IEnumerable<IReferenceSample> _availableReferenceFileList;
         public IEnumerable<IReferenceSample> AvailableReferenceFileList
         {
-            get { return _availableReferenceFileList; }
+            get => _availableReferenceFileList;
             set
             {
                 _availableReferenceFileList = value;
-                ReferencecomboBoxIsEnabled = _availableReferenceFileList != null;
                 OnPropertyChanged();
             }
         }
@@ -205,6 +213,8 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             {
                 _selectedMeasurementFiles = value;
                 OnPropertyChanged();
+
+                ((RelayCommand)CalculateCommand).UpdateCanExecute();
             }
         }
 
