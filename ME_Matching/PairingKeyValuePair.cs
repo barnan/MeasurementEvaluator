@@ -36,7 +36,7 @@ namespace MeasurementEvaluator.ME_Matching
         }
 
 
-        public PairingKeyValuePair(string key, List<string> values, string referenceName)
+        public PairingKeyValuePair(string key, List<string> values, string referenceName = null)
         {
             ConditionName = key;
             MeasDataNames = values;

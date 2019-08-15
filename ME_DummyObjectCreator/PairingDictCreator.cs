@@ -12,14 +12,29 @@ namespace ME_DummyObjectCreator
         internal void Create(string specificationPath, IHDDFileReaderWriter readerWriter)
         {
 
-            PairingKeyValuePair ttrThicknessStdAbs = new PairingKeyValuePair("Thickness Average Std Abs Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Average");
-            PairingKeyValuePair ttrThicknessStdRel = new PairingKeyValuePair("Thickness Average Std Rel Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Average");
+            PairingKeyValuePair thicknessAverageAbs = new PairingKeyValuePair("Thickness Average Abs Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" }, "Thickness Average");
+            PairingKeyValuePair thicknessAverageRel = new PairingKeyValuePair("Thickness Average Rel Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" });
+
+            PairingKeyValuePair thicknessStdAbs = new PairingKeyValuePair("Thickness Std Abs Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" });
+            PairingKeyValuePair thicknessStdRel = new PairingKeyValuePair("Thickness Std Rel Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" });
+
+            PairingKeyValuePair ttvStdAbs = new PairingKeyValuePair("TTV Std Abs Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" });
+            PairingKeyValuePair sawmarkStdAbs = new PairingKeyValuePair("Sawmark Std Rel Condition", new List<string> { "TTR,AvrThickness", "Thickness[um]" });
+
+            PairingKeyValuePair resistivityStdAbs = new PairingKeyValuePair("Thickness Std Abs Condition", new List<string> { "Resistivity[Ohmcm]", "Resistivity[Î©cm]" }, "Resistivity");
+            PairingKeyValuePair resistivityStdRel = new PairingKeyValuePair("Thickness Std Rel Condition", new List<string> { "Resistivity[Ohmcm]", "Resistivity[Î©cm]" }, "Resistivity");
 
 
 
             List<PairingKeyValuePair> pairList = new List<PairingKeyValuePair>();
-            pairList.Add(ttrThicknessStdAbs);
-            pairList.Add(ttrThicknessStdRel);
+            pairList.Add(thicknessAverageAbs);
+            pairList.Add(thicknessAverageRel);
+            pairList.Add(thicknessStdAbs);
+            pairList.Add(thicknessStdRel);
+            pairList.Add(ttvStdAbs);
+            pairList.Add(sawmarkStdAbs);
+            pairList.Add(resistivityStdAbs);
+            pairList.Add(resistivityStdRel);
 
 
 
