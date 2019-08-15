@@ -230,11 +230,11 @@ namespace MeasurementEvaluator.ME_Evaluation
                     try
                     {
                         // skip condition if condition is null:
-                        if (condition == null)
-                        {
-                            _parameters.Logger.LogMethodError("Received condition is null");
-                            continue;
-                        }
+                        //if (condition == null)
+                        //{
+                        //    _parameters.Logger.LogMethodError("Received condition is null");
+                        //    continue;
+                        //}
 
                         _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodInfo($"{quantitySpec.Quantity.Name}-{condition.Name} Evaluation started."));
 
@@ -270,7 +270,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         }
                         IMeasurementSerie jointCalculationInputData = new MeasurementSerie(coherentMeasurementData[0].Name, measPointList, coherentMeasurementData[0].Dimension);
 
-                        _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodInfo($"{coherentMeasurementData.Count} measurement datas were joint together."));
+                        _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodInfo($"{coherentMeasurementData.Count} measurement data(s) were created (joint together)."));
 
                         // find reference associated with the specification
                         string referenceName = _parameters.Matcher.GetReferenceName(condition.Name);

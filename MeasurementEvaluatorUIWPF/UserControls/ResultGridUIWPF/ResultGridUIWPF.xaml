@@ -84,8 +84,8 @@
                     <DataGridTemplateColumn Header="Successful" >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding ConditionEvaluationResult.CalculationResult.Successful}" HorizontalAlignment="Center" 
-                                           Foreground="{Binding ConditionEvaluationResult.CalculationResult.Successful, Converter={StaticResource SuccessToColorConverter}}"/>
+                                <TextBlock Text="{Binding ConditionEvaluationResult.ConditionIsMet}" HorizontalAlignment="Center" 
+                                           Foreground="{Binding ConditionEvaluationResult.ConditionIsMet, Converter={StaticResource SuccessToColorConverter}}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
