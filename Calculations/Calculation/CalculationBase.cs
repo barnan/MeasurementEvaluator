@@ -20,7 +20,7 @@ namespace Calculations.Calculation
 
         #region ICalculation
 
-        public abstract CalculationTypesValues CalculationType { get; }
+        public abstract CalculationTypes CalculationType { get; }
 
         public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {

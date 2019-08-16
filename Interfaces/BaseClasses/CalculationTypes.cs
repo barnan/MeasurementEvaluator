@@ -1,12 +1,9 @@
-﻿using Interfaces.Misc;
-using System;
-using System.ComponentModel;
-using System.Xml.Linq;
+﻿using System.ComponentModel;
 
 namespace Interfaces.BaseClasses
 {
 
-    public enum CalculationTypesValues
+    public enum CalculationTypes
     {
         [Description("Unknown")]
         Unknown = 0,
@@ -24,172 +21,163 @@ namespace Interfaces.BaseClasses
         Cpk = 4,
 
         [Description("GRAndR")]
-        GRAndR = 5,
+        GRAndR = 5
     }
 
 
-    public sealed class CalculationTypes : IXmlStorable, IEquatable<CalculationTypes>
 
-    {
-        private const string XELEMENT_CALCULATIONTYPE = "CalculationType";
-        private const string XELEMENT_RELATIVITY = "Relativity";
+    //public sealed class CalculationTypes : IXmlStorable, IEquatable<CalculationTypes>
+    //{
 
-        public Relativity[] Relativites { get; private set; }
-
-        public Relativity Relativity { get; set; }
+    //    private const string XELEMENT_CALCULATIONTYPE = "CalculationType";
+    //    private const string XELEMENT_RELATIVITY = "Relativity";
 
 
-        public CalculationTypesValues CalculationTypeValue { get; private set; }
+    //    public Relativity[] AvailableRelativities { get; private set; }
 
 
-        public CalculationTypes()
-        {
-        }
-
-        private CalculationTypes(CalculationTypesValues value, Relativity[] relativities)
-        {
-            Relativites = relativities;
-            CalculationTypeValue = value;
-        }
+    //    public Relativity Relativity { get; set; }
 
 
-        public static CalculationTypes Unknown => new CalculationTypes(CalculationTypesValues.Unknown, Array.Empty<Relativity>());
-        public static CalculationTypes Average => new CalculationTypes(CalculationTypesValues.Average, new Relativity[] { Relativity.Absolute });
-        public static CalculationTypes StandardDeviation => new CalculationTypes(CalculationTypesValues.StandardDeviation, new Relativity[] { Relativity.Absolute, Relativity.Relative });
-        public static CalculationTypes Cp => new CalculationTypes(CalculationTypesValues.Cp, new Relativity[] { Relativity.Absolute });
-        public static CalculationTypes Cpk => new CalculationTypes(CalculationTypesValues.Cpk, new Relativity[] { Relativity.Absolute });
-        public static CalculationTypes GRAndR => new CalculationTypes(CalculationTypesValues.GRAndR, new Relativity[] { Relativity.Absolute });
+    //    public CalculationTypesValues CalculationTypeValue { get; private set; }
 
 
-        #region XmlStorable
+    //    public CalculationTypes()
+    //    {
+    //    }
 
-        public XElement SaveToXml(XElement inputElement)
-        {
-            inputElement.SetAttributeValue(XELEMENT_CALCULATIONTYPE, CalculationTypeValue);
-            inputElement.SetAttributeValue(XELEMENT_RELATIVITY, Relativity);
-            return inputElement;
-        }
+    //    private CalculationTypes(CalculationTypesValues value, Relativity[] relativities)
+    //    {
+    //        AvailableRelativities = relativities;
+    //        CalculationTypeValue = value;
+    //    }
 
-        public bool LoadFromXml(XElement inputElement)
-        {
-            var calculationTypeAttrib = inputElement.Attribute(XELEMENT_CALCULATIONTYPE);
-            var relativityAttrib = inputElement.Attribute(XELEMENT_RELATIVITY);
-            if (calculationTypeAttrib == null || relativityAttrib == null)
-            {
-                return false;
-            }
 
-            string calculationTypeValue = calculationTypeAttrib.Value;
-            string relativityValue = relativityAttrib.Value;
+    //    public static CalculationTypes Unknown => new CalculationTypes(CalculationTypesValues.Unknown, Array.Empty<Relativity>());
+    //    public static CalculationTypes Average => new CalculationTypes(CalculationTypesValues.Average, new Relativity[] { Relativity.Absolute });
+    //    public static CalculationTypes StandardDeviation => new CalculationTypes(CalculationTypesValues.StandardDeviation, new Relativity[] { Relativity.Absolute, Relativity.Relative });
+    //    public static CalculationTypes Cp => new CalculationTypes(CalculationTypesValues.Cp, new Relativity[] { Relativity.Absolute });
+    //    public static CalculationTypes Cpk => new CalculationTypes(CalculationTypesValues.Cpk, new Relativity[] { Relativity.Absolute });
+    //    public static CalculationTypes GRAndR => new CalculationTypes(CalculationTypesValues.GRAndR, new Relativity[] { Relativity.Absolute });
 
-            switch (relativityValue)
-            {
-                case nameof(Relativity.Relative):
-                    Relativity = Relativity.Relative;
-                    break;
-                case nameof(Relativity.Absolute):
-                default:
-                    Relativity = Relativity.Absolute;
-                    break;
-            }
 
-            switch (calculationTypeValue)
-            {
-                case nameof(Average):
-                    CalculationTypeValue = CalculationTypesValues.Average;
-                    Relativites = Average.Relativites;
-                    break;
-                case nameof(StandardDeviation):
-                    CalculationTypeValue = CalculationTypesValues.StandardDeviation;
-                    Relativites = StandardDeviation.Relativites;
-                    break;
-                case nameof(Cp):
-                    CalculationTypeValue = CalculationTypesValues.Cp;
-                    Relativites = Cp.Relativites;
-                    break;
-                case nameof(Cpk):
-                    CalculationTypeValue = CalculationTypesValues.Cpk;
-                    Relativites = Cpk.Relativites;
-                    break;
-                case nameof(GRAndR):
-                    CalculationTypeValue = CalculationTypesValues.GRAndR;
-                    Relativites = GRAndR.Relativites;
-                    break;
-                case nameof(Unknown):
-                default:
-                    CalculationTypeValue = CalculationTypesValues.Unknown;
-                    Relativites = Unknown.Relativites;
-                    break;
-            }
+    //    #region XmlStorable
 
-            return true;
-        }
+    //    public XElement SaveToXml(XElement inputElement)
+    //    {
+    //        inputElement.SetAttributeValue(XELEMENT_CALCULATIONTYPE, CalculationTypeValue);
+    //        inputElement.SetAttributeValue(XELEMENT_RELATIVITY, Relativity);
+    //        return inputElement;
+    //    }
 
-        #endregion
+    //    public bool LoadFromXml(XElement inputElement)
+    //    {
+    //        string calculationTypeValue = inputElement.Attribute(XELEMENT_CALCULATIONTYPE)?.Value;
+    //        string relativityValue = inputElement.Attribute(XELEMENT_RELATIVITY)?.Value;
 
-        #region IEquatable
+    //        switch (relativityValue)
+    //        {
+    //            case nameof(Relativity.Relative):
+    //                Relativity = Relativity.Relative;
+    //                break;
+    //            case nameof(Relativity.Absolute):
+    //                Relativity = Relativity.Relative;
+    //                break;
+    //            default:
+    //                return false;
+    //        }
 
-        public bool Equals(CalculationTypes other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-            return CalculationTypeValue == other.CalculationTypeValue;
-        }
+    //        switch (calculationTypeValue)
+    //        {
+    //            case nameof(Average):
+    //                CalculationTypeValue = CalculationTypesValues.Average;
+    //                AvailableRelativities = Average.AvailableRelativities;
+    //                break;
+    //            case nameof(StandardDeviation):
+    //                CalculationTypeValue = CalculationTypesValues.StandardDeviation;
+    //                AvailableRelativities = StandardDeviation.AvailableRelativities;
+    //                break;
+    //            case nameof(Cp):
+    //                CalculationTypeValue = CalculationTypesValues.Cp;
+    //                AvailableRelativities = Cp.AvailableRelativities;
+    //                break;
+    //            case nameof(Cpk):
+    //                CalculationTypeValue = CalculationTypesValues.Cpk;
+    //                AvailableRelativities = Cpk.AvailableRelativities;
+    //                break;
+    //            case nameof(GRAndR):
+    //                CalculationTypeValue = CalculationTypesValues.GRAndR;
+    //                AvailableRelativities = GRAndR.AvailableRelativities;
+    //                break;
+    //            case nameof(Unknown):
+    //            default:
+    //                return false;
+    //        }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            return obj is CalculationTypes && Equals((CalculationTypes)obj);
-        }
+    //        return true;
+    //    }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = (Relativites != null ? Relativites.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (int)Relativity;
-                hashCode = (hashCode * 397) ^ (int)CalculationTypeValue;
-                return hashCode;
-            }
-        }
+    //    #endregion
 
-        #endregion
+    //    #region IEquatable
 
-        #region == operator overloading
+    //    public bool Equals(CalculationTypes other)
+    //    {
+    //        return this == other;
+    //    }
 
-        public static bool operator ==(CalculationTypes left, CalculationTypes right)
-        {
-            return left.Equals(right);
-        }
+    //    public override bool Equals(object obj)
+    //    {
+    //        if (ReferenceEquals(this, obj))
+    //        {
+    //            return true;
+    //        }
+    //        return obj is CalculationTypes types && this == types;
+    //    }
 
-        public static bool operator !=(CalculationTypes left, CalculationTypes right)
-        {
-            return !left.Equals(right);
-        }
+    //    public override int GetHashCode()
+    //    {
+    //        unchecked
+    //        {
+    //            var hashCode = (AvailableRelativities != null ? AvailableRelativities.GetHashCode() : 0);
+    //            hashCode = (hashCode * 397) ^ (int)Relativity;
+    //            hashCode = (hashCode * 397) ^ (int)CalculationTypeValue;
+    //            return hashCode;
+    //        }
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region object.ToString()
+    //    #region == operator overloading
 
-        public override string ToString()
-        {
-            return $"({Relativity}) {CalculationTypeValue}";
-        }
+    //    public static bool operator ==(CalculationTypes left, CalculationTypes right)
+    //    {
+    //        if (ReferenceEquals(null, right))
+    //        {
+    //            return false;
+    //        }
+    //        if (ReferenceEquals(null, left))
+    //        {
+    //            return true;
+    //        }
+    //        return left.CalculationTypeValue == right.CalculationTypeValue;
+    //    }
 
-        #endregion
-    }
+    //    public static bool operator !=(CalculationTypes left, CalculationTypes right)
+    //    {
+    //        return !left.Equals(right);
+    //    }
+
+    //    #endregion
+
+    //    #region object.ToString()
+
+    //    public override string ToString()
+    //    {
+    //        return $"({Relativity}) {CalculationTypeValue}";
+    //    }
+
+    //    #endregion
+    //}
 
 }

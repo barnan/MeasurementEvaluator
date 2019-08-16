@@ -17,6 +17,11 @@ namespace Interfaces.ToolSpecifications
         CalculationTypes CalculationType { get; }
 
         /// <summary>
+        /// Relative or absolute
+        /// </summary>
+        Relativity Relativity { get; }
+
+        /// <summary>
         /// Validity of the condition -> if false, the condition is switched off
         /// </summary>
         bool Enabled { get; }
@@ -53,6 +58,8 @@ namespace Interfaces.ToolSpecifications
     public interface IConditionHandler : ICondition
     {
         new CalculationTypes CalculationType { get; set; }
+
+        new Relativity Relativity { get; set; }
 
         new bool Enabled { get; set; }
 

@@ -10,7 +10,7 @@ namespace Calculations.CalculationContainer
     {
         private readonly CalculationContainerParameters _parameters;
 
-        public IReadOnlyList<CalculationTypesValues> AvailableCalculatons
+        public IReadOnlyList<CalculationTypes> AvailableCalculatons
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Calculations.CalculationContainer
                 _parameters.Logger.LogError($"{nameof(_parameters.AvailableCalculations)} is null or empty.");
             }
 
-            List<ICalculation> calcList = _parameters.AvailableCalculations.Where(p => p.CalculationType == requiredCalculationType.CalculationTypeValue).ToList();
+            List<ICalculation> calcList = _parameters.AvailableCalculations.Where(p => p.CalculationType == requiredCalculationType).ToList();
 
             if (calcList.Count == 0)
             {

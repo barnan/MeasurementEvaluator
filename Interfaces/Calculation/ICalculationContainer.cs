@@ -16,6 +16,6 @@ namespace Interfaces.Calculation
         /// <summary>
         /// Gives back list of all avilable calculations in the container
         /// </summary>
-        IReadOnlyList<CalculationTypesValues> AvailableCalculatons { get; }
+        IReadOnlyList<CalculationTypes> AvailableCalculatons { get; }
     }
 }

@@ -23,8 +23,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, double halfTolerance)
-            : base(name, calculationtype, value, relation, enabled)
+        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, Relativity relativity, bool enabled, double halfTolerance)
+            : base(name, calculationtype, value, relation, relativity, enabled)
         {
             HalfTolerance = halfTolerance;
         }

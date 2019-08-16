@@ -27,8 +27,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, bool enabled, Relations validIf, double validIfValue)
-            : base(name, calculationtype, value, relation, enabled)
+        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, Relativity relativity, bool enabled, Relations validIf, double validIfValue)
+            : base(name, calculationtype, value, relation, relativity, enabled)
         {
             ValidIf = validIf;
             ValidIf_Value = validIfValue;

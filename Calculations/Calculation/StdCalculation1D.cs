@@ -18,12 +18,12 @@ namespace Calculations.Calculation
         {
         }
 
-        public override CalculationTypesValues CalculationType => CalculationTypesValues.StandardDeviation;
+        public override CalculationTypes CalculationType => CalculationTypes.StandardDeviation;
 
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            if (condition.CalculationType.CalculationTypeValue != CalculationType)
+            if (condition.CalculationType != CalculationType)
             {
                 throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
             }
@@ -35,7 +35,7 @@ namespace Calculations.Calculation
             double std = GetStandardDeviation(validElementList, average);
 
             double result = std;
-            if (condition.CalculationType.Relativity == Relativity.Relative)
+            if (condition.Relativity == Relativity.Relative)
             {
                 result = std / average * 100;
             }

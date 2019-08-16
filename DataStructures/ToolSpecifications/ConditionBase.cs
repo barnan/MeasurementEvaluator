@@ -19,10 +19,11 @@ namespace DataStructures.ToolSpecifications
         {
         }
 
-        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled)
+        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, Relativity relativity, bool enabled)
         {
             Name = name;
             CalculationType = calculationtype;
+            Relativity = relativity;
             ConditionRelation = relation;
             Enabled = enabled;
         }
@@ -38,6 +39,7 @@ namespace DataStructures.ToolSpecifications
         #region ICondition
 
         public CalculationTypes CalculationType { get; set; }
+        public Relativity Relativity { get; set; }
         public Relations ConditionRelation { get; set; }
         public bool Enabled { get; set; }
 
@@ -80,8 +82,8 @@ namespace DataStructures.ToolSpecifications
 
         #region ctor
 
-        protected ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, bool enabled)
-            : base(name, calculationtype, relation, enabled)
+        protected ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, Relativity relativity, bool enabled)
+            : base(name, calculationtype, relation, relativity, enabled)
         {
             LeftValue = value;
         }
