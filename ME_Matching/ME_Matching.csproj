@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factory.cs" />
+    <Compile Include="IPairingParameters.cs" />
     <Compile Include="Matching.cs" />
     <Compile Include="PairingKeyValuePair.cs" />
     <Compile Include="PairingParameters.cs" />

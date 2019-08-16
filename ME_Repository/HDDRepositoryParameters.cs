@@ -8,19 +8,19 @@ using System.Linq;
 
 namespace DataAcquisitions.ME_Repository
 {
-    internal class HDDRepositoryParameters
+    internal class HDDRepositoryParameters : IHDDRepositoryParameters
     {
-        internal ILogger Logger { get; private set; }
+        public ILogger Logger { get; private set; }
 
 
         [Configuration("File extension of the files used in the given repository folder", "File Extensions", true)]
         private List<string> _fileExtensionFilters = new List<string> { "*.*" };
-        internal List<string> FileExtensionFilters => _fileExtensionFilters;
+        public List<string> FileExtensionFilters => _fileExtensionFilters;
 
 
         [Configuration("Name of the reader writer component", "Reader writer", true)]
         private string _hddDReaderWriter = null;
-        internal IHDDFileReaderWriter HDDReaderWriter { get; private set; }
+        public IHDDFileReaderWriter HDDReaderWriter { get; private set; }
 
 
         public IUIMessageControl MessageControl { get; private set; }
@@ -29,7 +29,7 @@ namespace DataAcquisitions.ME_Repository
         public string Name { get; private set; }
 
 
-        public bool Load(string sectionName)
+        internal bool Load(string sectionName)
         {
             Name = sectionName;
 

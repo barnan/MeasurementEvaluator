@@ -52,6 +52,7 @@
     <Compile Include="HDDRepositoryGeneric.cs" />
     <Compile Include="HDDRepository.cs" />
     <Compile Include="HDDRepositoryParameters.cs" />
+    <Compile Include="IHDDRepositoryParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryFactory.cs" />
   </ItemGroup>

@@ -6,17 +6,17 @@ using NLog;
 
 namespace MeasurementEvaluator.ME_Matching
 {
-    internal class PairingParameters
+    internal class PairingParameters : IPairingParameters
     {
-        internal ILogger Logger { get; private set; }
+        public ILogger Logger { get; private set; }
 
         [Configuration("Handles the reading of the matching file.", "File Reader", LoadComponent = true)]
         private string _pairingFileReader = null;
-        internal IHDDFileReader PairingFileReader { get; private set; }
+        public IHDDFileReader PairingFileReader { get; private set; }
 
         [Configuration("Name of the matching file", "Name of the matching file", LoadComponent = false)]
         private string _bindingFilePath = "PairingDictionary";
-        internal string BindingFilePath => _bindingFilePath;
+        public string BindingFilePath => _bindingFilePath;
 
         public IUIMessageControl MessageControl { get; private set; }
 

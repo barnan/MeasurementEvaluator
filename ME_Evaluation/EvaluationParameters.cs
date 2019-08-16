@@ -9,25 +9,25 @@ using NLog;
 
 namespace MeasurementEvaluator.ME_Evaluation
 {
-    internal sealed class EvaluationParameters
+    internal sealed class EvaluationParameters : IEvaluationParameters
     {
-        internal ILogger Logger { get; private set; }
+        public ILogger Logger { get; private set; }
 
         [Configuration("Contains the possible calculation", "Calculation Container", LoadComponent = true)]
         private string _calculationContainer = null;
-        internal ICalculationContainer CalculationContainer { get; private set; }
+        public ICalculationContainer CalculationContainer { get; private set; }
 
         [Configuration("Name of the Data Collector component", "Data Collector", LoadComponent = true)]
         private string _dataCollector = null;
-        internal IDataCollector DataCollector { get; private set; }
+        public IDataCollector DataCollector { get; private set; }
 
         [Configuration("Date and time provider", "DateTime Provider", LoadComponent = true)]
         private string _dateTimeProvider = null;
-        internal IDateTimeProvider DateTimeProvider { get; private set; }
+        public IDateTimeProvider DateTimeProvider { get; private set; }
 
         [Configuration("Data matching", "Data Matcher", LoadComponent = true)]
         private string _matcher = null;
-        internal IMatching Matcher { get; private set; }
+        public IMatching Matcher { get; private set; }
 
 
         public IUIMessageControl MessageControl { get; private set; }
@@ -36,7 +36,7 @@ namespace MeasurementEvaluator.ME_Evaluation
         public string Name { get; private set; }
 
 
-        public bool Load(string sectionName)
+        internal bool Load(string sectionName)
         {
             Name = sectionName;
 

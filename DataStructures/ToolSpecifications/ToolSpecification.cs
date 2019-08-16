@@ -28,7 +28,6 @@ namespace DataStructures.ToolSpecifications
 
         #region ctor
 
-
         public ToolSpecification()
         {
         }

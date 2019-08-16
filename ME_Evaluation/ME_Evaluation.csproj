@@ -53,6 +53,7 @@
     <Compile Include="EvaluationParameters.cs" />
     <Compile Include="EvaluationResult.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="IEvaluationParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -11,11 +11,9 @@ namespace Interfaces.DataAcquisition
 
         object Get(string name);
 
-        IEnumerable<object> GetAllElements();
+        IList<object> GetAllElements();
 
-        IEnumerable<string> GetAllNames();
-
-        IEnumerable<object> Find(Predicate<object> predicate);
+        IList<object> Find(Predicate<object> predicate);
 
         bool Add(object item);
 
