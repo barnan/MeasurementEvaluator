@@ -1,6 +1,5 @@
 ﻿using DataStructures.ToolSpecifications.Results;
 using Interfaces.BaseClasses;
-using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
@@ -38,17 +37,17 @@ namespace DataStructures.ToolSpecifications
 
         #region ICondition
 
-        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
+        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IReferenceValue referenceValue)
         {
             ISimpleCalculationResult calculationResult = result as ISimpleCalculationResult;
 
-            if (!CompareValidity(calculationResult.Average))
-            {
-                return null;
-            }
-
-            bool isMet = EvaluateRelation(calculationResult.ResultValue);
-            return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, calculationResult);
+            return CompareValidity(calculationResult.Average) ?
+                new ConditionEvaluationResult(dateTime,
+                    this,
+                    referenceValue,
+                    EvaluateRelation(calculationResult.ResultValue),
+                    calculationResult)
+                : null;
         }
 
 
@@ -72,11 +71,6 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {
-            if (string.IsNullOrEmpty(format))
-            {
-                format = "G";
-            }
-
             if (formatProvider == null)
             {
                 formatProvider = CultureInfo.CurrentCulture;
@@ -84,6 +78,8 @@ namespace DataStructures.ToolSpecifications
 
             switch (format.ToUpperInvariant())
             {
+                case null:
+                case "":
                 case "G":
                     return ToString();
                 case "GRID":

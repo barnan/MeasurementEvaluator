@@ -1,5 +1,4 @@
 ﻿using Interfaces.BaseClasses;
-using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
@@ -44,12 +43,12 @@ namespace DataStructures.ToolSpecifications
         public bool Enabled { get; set; }
 
 
-        public IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
+        public IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IReferenceValue referenceValue)
         {
-            return calculationResult == null || measSerie == null ? null : EvaluateCondition(calculationResult, dateTime, measSerie, referenceValue);
+            return EvaluateCondition(calculationResult, dateTime, referenceValue);
         }
 
-        protected abstract IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTimeProvider, IMeasurementSerie measSerie, IReferenceValue referenceValue);
+        protected abstract IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTimeProvider, IReferenceValue referenceValue);
 
         #endregion
 

@@ -1,5 +1,4 @@
 ﻿using Interfaces.BaseClasses;
-using Interfaces.MeasuredData;
 using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
@@ -39,7 +38,7 @@ namespace Interfaces.ToolSpecifications
         /// <param name="measSerie"></param>
         /// <param name="referenceValue"></param>
         /// <returns>the relation is met (true) or not (false)</returns>
-        IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue);
+        IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IReferenceValue referenceValue);
     }
 
 

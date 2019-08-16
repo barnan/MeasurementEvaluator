@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
@@ -45,9 +46,9 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
             _allAvailableToolSpecifications = Parameters.DataCollector.GetAvailableToolSpecifications();
 
-            _allAvailableReferenceFiles = Parameters.DataCollector.GetReferenceSamples();
+            _allAvailableReferenceFiles = Parameters.DataCollector.GetAvailableReferenceSamples();
 
-            foreach (IToolSpecification specification in _allAvailableToolSpecifications)
+            foreach (IToolSpecification specification in _allAvailableToolSpecifications)   // todo: toolnames into HashSet?
             {
                 if (!AvailableToolList.Contains(specification.ToolName))
                 {
@@ -113,7 +114,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
                 _selectedToolName = value;
                 OnPropertyChanged();
 
-                AvailableSpecificationList = _allAvailableToolSpecifications.Where(p => p.ToolName == SelectedToolName);
+                AvailableSpecificationList = _allAvailableToolSpecifications?.Where(p => p.ToolName == SelectedToolName);
             }
         }
 
@@ -140,16 +141,15 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
             set
             {
                 _selectedSpecification = value;
+                OnPropertyChanged();
 
                 if (_selectedSpecification != null)
                 {
                     ((RelayCommand)BrowseMeasurementDataCommand).UpdateCanExecute();
 
-                    AvailableReferenceFileList = _allAvailableReferenceFiles;
+                    AvailableReferenceFileList = _allAvailableReferenceFiles;       // todo: get tool specific reference files (now all files are listed)
                     ReferencecomboBoxIsEnabled = AvailableReferenceFileList != null;
                 }
-
-                OnPropertyChanged();
             }
         }
 
@@ -193,7 +193,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private bool _referencecomboBoxIsEnabled;
         public bool ReferencecomboBoxIsEnabled
         {
-            get { return _referencecomboBoxIsEnabled; }
+            get => _referencecomboBoxIsEnabled;
             set
             {
                 _referencecomboBoxIsEnabled = value;
@@ -208,7 +208,7 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
         private IEnumerable<string> _selectedMeasurementFiles;
         public IEnumerable<string> SelectedMeasurementFiles
         {
-            get { return _selectedMeasurementFiles; }
+            get => _selectedMeasurementFiles;
             set
             {
                 _selectedMeasurementFiles = value;
@@ -224,14 +224,15 @@ namespace MeasurementEvaluatorUIWPF.UserControls.DataCollectorUIWPF
 
         #region private
 
-        private void ExecuteCalculate()
+        private async void ExecuteCalculate()
         {
-            Parameters.DataCollector.GatherData(SelectedSpecification, SelectedMeasurementFiles, SelectedReferenece);
+            bool result = await Task.Run(() => Parameters.DataCollector.GatherData(SelectedSpecification, SelectedMeasurementFiles, SelectedReferenece));
         }
 
         private void ExecuteBrowse()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog { Multiselect = true, InitialDirectory = Parameters.DataCollector.MeasurementFolderPath };
+
             if (openFileDialog.ShowDialog() == true)
             {
                 SelectedMeasurementFiles = openFileDialog.FileNames.ToList();

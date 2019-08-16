@@ -1,7 +1,6 @@
 ﻿using Frame.PluginLoader;
 using Interfaces.BaseClasses;
 using Interfaces.DataAcquisition;
-using Interfaces.MeasuredData;
 using Interfaces.Misc;
 using Interfaces.ReferenceSample;
 using Interfaces.ToolSpecifications;
@@ -20,9 +19,9 @@ namespace MeasurementEvaluator.ME_DataCollector
         private readonly DataCollectorParameters _parameters;
         private readonly object _queueLockObj = new object();
 
-        private Queue<QueueElement> _processorQueue;
-        private AutoResetEvent _processQueueResetEvent = new AutoResetEvent(false);
-        private CancellationTokenSource _tokenSource;
+        //private Queue<QueueElement> _processorQueue;
+        //private AutoResetEvent _processQueueResetEvent = new AutoResetEvent(false);
+        //private CancellationTokenSource _tokenSource;
         private Thread _processThread;
         private const int _PROCESS_THREAD_JOINT_TIMEOUT_MS = 500;
 
@@ -90,16 +89,16 @@ namespace MeasurementEvaluator.ME_DataCollector
                 return;
             }
 
-            _processorQueue = new Queue<QueueElement>();
-            _tokenSource = new CancellationTokenSource();
+            //_processorQueue = new Queue<QueueElement>();
+            //_tokenSource = new CancellationTokenSource();
 
             // start queue procesor thread:
-            _processThread = new Thread(ProcessQueueElements)
-            {
-                IsBackground = false,
-                Name = "DataCollectorQueueElementProcessor"
-            };
-            _processThread.Start(_tokenSource.Token);
+            //_processThread = new Thread(ProcessQueueElements)
+            //{
+            //    IsBackground = false,
+            //    Name = "DataCollectorQueueElementProcessor"
+            //};
+            //_processThread.Start(_tokenSource.Token);
 
             InitializationState = InitializationStates.Initialized;
 
@@ -108,8 +107,8 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         protected override void InternalClose()
         {
-            _tokenSource.Cancel();
-            _processorQueue.Clear();
+            //_tokenSource.Cancel();
+            //_processorQueue.Clear();
 
             _parameters.SpecificationRepository.Close();
             _parameters.ReferenceRepository.Close();
@@ -124,19 +123,19 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         #region IDataCollector
 
-        public void GatherData(IToolSpecification specification, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null)
+        public bool GatherData(IToolSpecification specification, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null)
         {
             if (!IsInitialized)
             {
                 _parameters.Logger.LogError("Not initialized yet.");
-                return;
+                return false;
             }
 
-            lock (_queueLockObj)
-            {
-                _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specification, reference, measurementDataFileNames, ResultReadyEvent));
-                _processQueueResetEvent.Set();
-            }
+            //lock (_queueLockObj)
+            //{
+            //    _processorQueue.Enqueue(new GetDataQueueElement(_parameters, specification, reference, measurementDataFileNames, ResultReadyEvent));
+            //    _processQueueResetEvent.Set();
+            //}
         }
 
         public IEnumerable<IToolSpecification> GetAvailableToolSpecifications()
@@ -179,7 +178,7 @@ namespace MeasurementEvaluator.ME_DataCollector
         }
 
 
-        public IEnumerable<IReferenceSample> GetReferenceSamples()
+        public IEnumerable<IReferenceSample> GetAvailableReferenceSamples()
         {
             if (!IsInitialized)
             {
@@ -207,125 +206,122 @@ namespace MeasurementEvaluator.ME_DataCollector
 
         #region private
 
-        private void ProcessQueueElements(object obj)
-        {
-            _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
+        //private void ProcessQueueElements(object obj)
+        //{
+        //    _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} {Thread.CurrentThread.ManagedThreadId} thread started.");
 
-            CancellationToken token;
-            try
-            {
-                token = (CancellationToken)obj;
-            }
-            catch (Exception ex)
-            {
-                _parameters.Logger.LogMethodError($"Received parameter is not {nameof(CancellationToken)}. Exception: {ex}");
-                return;
-            }
+        //    CancellationToken token;
+        //    try
+        //    {
+        //        token = (CancellationToken)obj;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _parameters.Logger.LogMethodError($"Received parameter is not {nameof(CancellationToken)}. Exception: {ex}");
+        //        return;
+        //    }
 
-            WaitHandle[] handles = new WaitHandle[] { _processQueueResetEvent, token.WaitHandle };
+        //    WaitHandle[] handles = new WaitHandle[] { _processQueueResetEvent, token.WaitHandle };
 
-            while (true)
-            {
-                WaitHandle.WaitAny(handles);
+        //    while (true)
+        //    {
+        //        WaitHandle.WaitAny(handles);
 
-                if (token.IsCancellationRequested)
-                {
-                    _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
-                    break;
-                }
+        //        if (token.IsCancellationRequested)
+        //        {
+        //            _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+        //            break;
+        //        }
 
-                while (true)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
-                        break;
-                    }
+        //        while (true)
+        //        {
+        //            if (token.IsCancellationRequested)
+        //            {
+        //                _parameters.Logger.LogMethodInfo($"{Thread.CurrentThread.Name} (ID:{Thread.CurrentThread.ManagedThreadId}) thread cancelled.");
+        //                break;
+        //            }
 
-                    QueueElement item;
-                    lock (_queueLockObj)
-                    {
-                        if (_processorQueue.Count > 0)
-                        {
-                            _parameters.Logger.LogTrace("New queue element arrived!");
-                            item = _processorQueue.Dequeue();
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
+        //            QueueElement item;
+        //            lock (_queueLockObj)
+        //            {
+        //                if (_processorQueue.Count > 0)
+        //                {
+        //                    _parameters.Logger.LogTrace("New queue element arrived!");
+        //                    item = _processorQueue.Dequeue();
+        //                }
+        //                else
+        //                {
+        //                    break;
+        //                }
+        //            }
 
-                    if (item == null)
-                    {
-                        _parameters.Logger.LogMethodError("Started to process item, but it is null");
-                        continue;
-                    }
+        //            if (item == null)
+        //            {
+        //                _parameters.Logger.LogMethodError("Started to process item, but it is null");
+        //                continue;
+        //            }
 
-                    item.Process();     // todo: exception védelem
-                }
+        //            item.Process();     // todo: exception védelem
+        //        }
 
 
-            }
-        }
+        //    }
+        //}
 
         #endregion
 
     }
 
 
+    //internal abstract class QueueElement
+    //{
+    //    protected DataCollectorParameters _parameters;
+
+    //    protected QueueElement(DataCollectorParameters parameters)
+    //    {
+    //        _parameters = parameters;
+    //    }
+
+    //    internal abstract void Process();
+    //}
 
 
-
-    internal abstract class QueueElement
-    {
-        protected DataCollectorParameters _parameters;
-
-        protected QueueElement(DataCollectorParameters parameters)
-        {
-            _parameters = parameters;
-        }
-
-        internal abstract void Process();
-    }
+    //internal class GetDataQueueElement : QueueElement
+    //{
+    //    private readonly IToolSpecification _specification;
+    //    private readonly IReferenceSample _reference;
+    //    private readonly IEnumerable<string> _measurementDataFileNames;
+    //    private readonly EventHandler<ResultEventArgs> _resultReadyEvent;
 
 
-    internal class GetDataQueueElement : QueueElement
-    {
-        private readonly IToolSpecification _specification;
-        private readonly IReferenceSample _reference;
-        private readonly IEnumerable<string> _measurementDataFileNames;
-        private readonly EventHandler<ResultEventArgs> _resultReadyEvent;
+    //    public GetDataQueueElement(DataCollectorParameters parameters, IToolSpecification specification, IReferenceSample reference, IEnumerable<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
+    //        : base(parameters)
+    //    {
+    //        _specification = specification;
+    //        _reference = reference;
+    //        _measurementDataFileNames = measurementDataFileNames;
+    //        _resultReadyEvent = resultReadyEvent;
+    //    }
 
 
-        public GetDataQueueElement(DataCollectorParameters parameters, IToolSpecification specification, IReferenceSample reference, IEnumerable<string> measurementDataFileNames, EventHandler<ResultEventArgs> resultReadyEvent)
-            : base(parameters)
-        {
-            _specification = specification;
-            _reference = reference;
-            _measurementDataFileNames = measurementDataFileNames;
-            _resultReadyEvent = resultReadyEvent;
-        }
+    //    internal override void Process()
+    //    {
+    //        List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
+    //        foreach (string name in _measurementDataFileNames)
+    //        {
+    //            IToolMeasurementData measData = (IToolMeasurementData)_parameters.MeasurementDataRepository.Get(name);
 
+    //            measurementDatas.Add(measData);
+    //        }
+    //        if (measurementDatas.Count < 1)
+    //        {
+    //            _parameters.Logger.LogError($"Number of measurement data files that meet the condition ({measurementDatas.Count}) is not acceptable.");
+    //            return;
+    //        }
 
-        internal override void Process()
-        {
-            List<IToolMeasurementData> measurementDatas = new List<IToolMeasurementData>();
-            foreach (string name in _measurementDataFileNames)
-            {
-                IToolMeasurementData measData = (IToolMeasurementData)_parameters.MeasurementDataRepository.Get(name);
-
-                measurementDatas.Add(measData);
-            }
-            if (measurementDatas.Count < 1)
-            {
-                _parameters.Logger.LogError($"Number of measurement data files that meet the condition ({measurementDatas.Count}) is not acceptable.");
-                return;
-            }
-
-            var localResultreadyevent = _resultReadyEvent;
-            localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(_parameters.DateTimeProvider.GetDateTime(), true, _specification, measurementDatas, _reference)));
-        }
-    }
+    //        var localResultreadyevent = _resultReadyEvent;
+    //        localResultreadyevent?.Invoke(this, new ResultEventArgs(new DataCollectorResult(_parameters.DateTimeProvider.GetDateTime(), true, _specification, measurementDatas, _reference)));
+    //    }
+    //}
 
 }

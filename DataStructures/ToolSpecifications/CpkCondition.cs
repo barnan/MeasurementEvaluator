@@ -1,6 +1,5 @@
 ﻿using DataStructures.ToolSpecifications.Results;
 using Interfaces.BaseClasses;
-using Interfaces.MeasuredData;
 using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
@@ -39,11 +38,6 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {
-            if (string.IsNullOrEmpty(format))
-            {
-                format = "G";
-            }
-
             if (formatProvider == null)
             {
                 formatProvider = CultureInfo.CurrentCulture;
@@ -51,6 +45,8 @@ namespace DataStructures.ToolSpecifications
 
             switch (format.ToUpperInvariant())
             {
+                case null:
+                case "":
                 case "G":
                     return ToString();
                 case "GRID":
@@ -64,9 +60,10 @@ namespace DataStructures.ToolSpecifications
 
         #region protected
 
-        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IMeasurementSerie measSerie, IReferenceValue referenceValue)
+        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IReferenceValue referenceValue)
         {
             IQCellsCalculationResult qcellsResult = result as IQCellsCalculationResult;
+
             bool isMet = EvaluateRelation(qcellsResult.ResultValue);
 
             return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, qcellsResult);

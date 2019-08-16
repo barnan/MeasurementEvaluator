@@ -15,13 +15,13 @@ namespace Interfaces.DataAcquisition
         /// <param name="specifaction">specification</param>
         /// <param name="measurementDataFileNames">measurement data files</param>
         /// <param name="reference">reference. This finput parameter can be empty, because not all evaluations require reference samples (or the reference can be unknown)</param>
-        void GatherData(IToolSpecification specifaction, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null);
+        bool GatherData(IToolSpecification specifaction, IEnumerable<string> measurementDataFileNames, IReferenceSample reference = null);
 
         IEnumerable<IToolSpecification> GetAvailableToolSpecifications();
 
         IEnumerable<IToolSpecification> GetSpecificationsByToolName(ToolNames toolName);
 
-        IEnumerable<IReferenceSample> GetReferenceSamples();
+        IEnumerable<IReferenceSample> GetAvailableReferenceSamples();
 
         string MeasurementFolderPath { get; }
     }

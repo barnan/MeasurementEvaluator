@@ -16,11 +16,8 @@ namespace DataStructures.ToolSpecifications
         private List<IQuantitySpecification> _specifications;
         public IReadOnlyList<IQuantitySpecification> QuantitySpecifications
         {
-            get { return _specifications.AsReadOnly(); }
-            set
-            {
-                _specifications = (List<IQuantitySpecification>)value;
-            }
+            get => _specifications.AsReadOnly();
+            set => _specifications = (List<IQuantitySpecification>)value;
         }
 
         public ToolNames ToolName { get; set; }
@@ -38,7 +35,7 @@ namespace DataStructures.ToolSpecifications
 
         #endregion
 
-        #region onject.toString()
+        #region object.toString()
 
         public override string ToString()
         {

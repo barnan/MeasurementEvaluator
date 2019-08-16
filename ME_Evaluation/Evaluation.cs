@@ -285,7 +285,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                             continue;
                         }
 
-                        IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), jointCalculationInputData, referenceValue);
+                        IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), referenceValue);
 
                         conditionResultList.Add(conditionEvaluationResult);
 
