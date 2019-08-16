@@ -1,4 +1,5 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.MessageHandler;
+using Frame.PluginLoader;
 using Interfaces.Evaluation;
 using Interfaces.Misc;
 using Miscellaneous;
@@ -33,8 +34,7 @@ namespace MeasurementEvaluator.ME_Matching
         {
             if (_parameters.PairingFileReader == null)
             {
-                _parameters.Logger.LogError($"{nameof(_parameters.PairingFileReader)} is null");
-                InitializationState = InitializationStates.InitializationFailed;
+                HandleInitializationFailed($"{nameof(_parameters.PairingFileReader)} is null");
                 return;
             }
 
@@ -51,6 +51,13 @@ namespace MeasurementEvaluator.ME_Matching
 
             _parameters.MessageControl.AddMessage("Matching initialized.");
         }
+
+        private void HandleInitializationFailed(string message)
+        {
+            _parameters.MessageControl.AddMessage(_parameters.Logger.LogError(message), MessageSeverityLevels.Error);
+            InitializationState = InitializationStates.InitializationFailed;
+        }
+
 
         protected override void InternalClose()
         {

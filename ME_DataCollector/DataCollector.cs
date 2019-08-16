@@ -1,4 +1,5 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.MessageHandler;
+using Frame.PluginLoader;
 using Interfaces.BaseClasses;
 using Interfaces.DataAcquisition;
 using Interfaces.MeasuredData;
@@ -68,22 +69,20 @@ namespace MeasurementEvaluator.ME_DataCollector
         {
             if (!_parameters.SpecificationRepository.Initiailze())
             {
-                _parameters.Logger.LogError($"{_parameters.SpecificationRepository} could not been initialized.");
-                InitializationState = InitializationStates.InitializationFailed;
+                HandleInitializationFailed($"{_parameters.SpecificationRepository} could not been initialized.");
+
                 return;
             }
 
             if (!_parameters.ReferenceRepository.Initiailze())
             {
-                _parameters.Logger.LogError($"{_parameters.ReferenceRepository} could not been initialized.");
-                InitializationState = InitializationStates.InitializationFailed;
+                HandleInitializationFailed($"{_parameters.ReferenceRepository} could not been initialized.");
                 return;
             }
 
             if (!_parameters.MeasurementDataRepository.Initiailze())
             {
-                _parameters.Logger.LogError($"{_parameters.MeasurementDataRepository} could not been initialized.");
-                InitializationState = InitializationStates.InitializationFailed;
+                HandleInitializationFailed($"{_parameters.MeasurementDataRepository} could not been initialized.");
                 return;
             }
 
@@ -91,6 +90,13 @@ namespace MeasurementEvaluator.ME_DataCollector
 
             _parameters.MessageControl.AddMessage($"{_parameters.Name} initialized.");
         }
+
+        private void HandleInitializationFailed(string message)
+        {
+            _parameters.MessageControl.AddMessage(_parameters.Logger.LogError(message), MessageSeverityLevels.Error);
+            InitializationState = InitializationStates.InitializationFailed;
+        }
+
 
         protected override void InternalClose()
         {

@@ -64,17 +64,13 @@ namespace MeasurementEvaluator.ME_Evaluation
         {
             if (!_parameters.Matcher.Initiailze())
             {
-                string message = $"{nameof(_parameters.Matcher)} could not been initialized.";
-                _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError(message), MessageSeverityLevels.Error);
-                InitializationState = InitializationStates.InitializationFailed;
+                HandleInitializationFailed($"{nameof(_parameters.Matcher)} could not been initialized.");
                 return;
             }
 
             if (!_parameters.DataCollector.Initiailze())
             {
-                string message = $"{nameof(_parameters.DataCollector)} could not been initialized.";
-                _parameters.MessageControl.AddMessage(_parameters.Logger.LogMethodError(message), MessageSeverityLevels.Error);
-                InitializationState = InitializationStates.InitializationFailed;
+                HandleInitializationFailed($"{nameof(_parameters.DataCollector)} could not been initialized.");
                 return;
             }
             _parameters.DataCollector.SubscribeToResultReadyEvent(On_DataCollector_ResultReadyEvent);
@@ -91,6 +87,12 @@ namespace MeasurementEvaluator.ME_Evaluation
 
             InitializationState = InitializationStates.Initialized;
             _parameters.MessageControl.AddMessage($"{_parameters.Name} initialized");
+        }
+
+        private void HandleInitializationFailed(string message)
+        {
+            _parameters.MessageControl.AddMessage(_parameters.Logger.LogError(message), MessageSeverityLevels.Error);
+            InitializationState = InitializationStates.InitializationFailed;
         }
 
         protected override void InternalClose()
@@ -112,15 +114,9 @@ namespace MeasurementEvaluator.ME_Evaluation
 
         private void On_DataCollector_ResultReadyEvent(object sender, ResultEventArgs e)
         {
-            if (e?.Result == null)
+            if (!(e?.Result is IDataCollectorResult collectedData))
             {
-                _parameters.Logger.LogMethodError("Received result event args is null.");
-                return;
-            }
-
-            if (!(e.Result is IDataCollectorResult collectedData))
-            {
-                _parameters.Logger.LogMethodError($"Received result event args is not {nameof(IDataCollectorResult)}");
+                _parameters.Logger.LogMethodError($"Received result event args is null or NOT {nameof(IDataCollectorResult)}");
                 return;
             }
 
