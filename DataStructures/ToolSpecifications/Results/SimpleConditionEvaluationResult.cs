@@ -5,7 +5,7 @@ using System;
 
 namespace DataStructures.ToolSpecifications.Results
 {
-    internal class SimpleConditionEvaluationResult : ConditionEvaluationResult
+    internal class SimpleConditionEvaluationResult : ConditionEvaluationResultBase
     {
         public SimpleConditionEvaluationResult(DateTime creationTime, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, ICalculationResult calculationResult)
             : base(creationTime, condition, referenceValue, conditionIsMet, calculationResult)

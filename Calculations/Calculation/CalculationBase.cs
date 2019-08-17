@@ -20,7 +20,7 @@ namespace Calculations.Calculation
 
         #region ICalculation
 
-        public abstract CalculationTypes CalculationType { get; }
+        public abstract CalculationType CalculationType { get; }
 
         public ICalculationResult Calculate(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
@@ -32,6 +32,11 @@ namespace Calculations.Calculation
 
             try
             {
+                if (condition.CalculationTypeHandler.CalculationType != CalculationType)
+                {
+                    throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationTypeHandler}");
+                }
+
                 return InternalCalculation(measurementSerieData, condition, referenceValue);
             }
             catch (Exception ex)

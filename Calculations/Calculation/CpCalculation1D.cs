@@ -16,7 +16,7 @@ namespace Calculations.Calculation
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.Cp;
+        public override CalculationType CalculationType => CalculationType.Cp;
 
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
@@ -25,11 +25,6 @@ namespace Calculations.Calculation
             {
                 _parameters.Logger.Error($"No {nameof(cpkCondition)} condition received for settings creation.");
                 return null;
-            }
-
-            if (condition.CalculationType != CalculationType)
-            {
-                throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
             }
 
             if (!(referenceValue is IReferenceValue<double>))

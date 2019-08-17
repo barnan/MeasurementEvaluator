@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace DataStructures.ToolSpecifications.Results
 {
-    internal class CpkConditionEvaluationResult : ConditionEvaluationResult
+    internal class CpkConditionEvaluationResult : ConditionEvaluationResultBase
     {
         public CpkConditionEvaluationResult(DateTime creationTime, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, ICalculationResult calculationResult)
             : base(creationTime, condition, referenceValue, conditionIsMet, calculationResult)

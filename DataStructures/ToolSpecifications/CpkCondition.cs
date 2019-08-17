@@ -22,8 +22,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, Relativity relativity, bool enabled, double halfTolerance)
-            : base(name, calculationtype, value, relation, relativity, enabled)
+        public CpkCondition(string name, CalculationTypeHandler calculationtype, double value, RelationHandler relation, Relativity relativity, bool enabled, double halfTolerance)
+            : base(name, calculationtype, value, relation, enabled)
         {
             HalfTolerance = halfTolerance;
         }
@@ -60,13 +60,13 @@ namespace DataStructures.ToolSpecifications
 
         #region protected
 
-        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IReferenceValue referenceValue)
+        protected override IConditionEvaluationResult InternalEvaluate(IResult result, DateTime dateTime, IReferenceValue referenceValue)
         {
             IQCellsCalculationResult qcellsResult = result as IQCellsCalculationResult;
 
             bool isMet = EvaluateRelation(qcellsResult.ResultValue);
 
-            return new ConditionEvaluationResult(dateTime, this, referenceValue, isMet, qcellsResult);
+            return new ConditionEvaluationResultBase(dateTime, this, referenceValue, isMet, qcellsResult);
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace DataStructures.ToolSpecifications
         {
             this.TrySave(Name, inputElement, nameof(Name));
             this.TrySave(Enabled, inputElement, nameof(Enabled));
-            this.TrySave(CalculationType, inputElement, nameof(CalculationType));
+            this.TrySave(CalculationTypeHandler, inputElement, nameof(CalculationTypeHandler));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(LeftValue, inputElement, nameof(LeftValue));
             this.TrySave(HalfTolerance, inputElement, nameof(HalfTolerance));
@@ -89,7 +89,7 @@ namespace DataStructures.ToolSpecifications
         {
             this.TryLoad(inputElement, nameof(Name));
             this.TryLoad(inputElement, nameof(Enabled));
-            this.TryLoad(inputElement, nameof(CalculationType));
+            this.TryLoad(inputElement, nameof(CalculationTypeHandler));
             this.TryLoad(inputElement, nameof(ConditionRelation));
             this.TryLoad(inputElement, nameof(LeftValue));
             this.TryLoad(inputElement, nameof(HalfTolerance));

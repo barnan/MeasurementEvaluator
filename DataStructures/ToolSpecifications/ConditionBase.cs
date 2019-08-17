@@ -18,11 +18,10 @@ namespace DataStructures.ToolSpecifications
         {
         }
 
-        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, Relativity relativity, bool enabled)
+        public ConditionBase(string name, CalculationTypeHandler calculationtype, RelationHandler relation, bool enabled)
         {
             Name = name;
-            CalculationType = calculationtype;
-            Relativity = relativity;
+            CalculationTypeHandler = calculationtype;
             ConditionRelation = relation;
             Enabled = enabled;
         }
@@ -37,18 +36,17 @@ namespace DataStructures.ToolSpecifications
 
         #region ICondition
 
-        public CalculationTypes CalculationType { get; set; }
-        public Relativity Relativity { get; set; }
-        public Relations ConditionRelation { get; set; }
+        public CalculationTypeHandler CalculationTypeHandler { get; set; }
+        public RelationHandler ConditionRelation { get; set; }
         public bool Enabled { get; set; }
 
 
-        public IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IReferenceValue referenceValue)
+        public IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTime, IReferenceValue referenceValue)
         {
-            return EvaluateCondition(calculationResult, dateTime, referenceValue);
+            return InternalEvaluate(calculationResult, dateTime, referenceValue);
         }
 
-        protected abstract IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTimeProvider, IReferenceValue referenceValue);
+        protected abstract IConditionEvaluationResult InternalEvaluate(IResult calculationResult, DateTime dateTimeProvider, IReferenceValue referenceValue);
 
         #endregion
 
@@ -56,18 +54,21 @@ namespace DataStructures.ToolSpecifications
 
         public override string ToString()
         {
-            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationType}";
+            return $"Name: {Name}{Environment.NewLine}Enabled: {Enabled}{Environment.NewLine}CalculationType: {CalculationTypeHandler}";
         }
 
         public abstract string ToString(string format, IFormatProvider formatProvider);
 
         #endregion
 
+        #region IXmlStorable
+
         public abstract XElement SaveToXml(XElement inputElement);
 
         public abstract bool LoadFromXml(XElement inputElement);
-    }
 
+        #endregion
+    }
 
 
 
@@ -81,8 +82,8 @@ namespace DataStructures.ToolSpecifications
 
         #region ctor
 
-        protected ConditionBase(string name, CalculationTypes calculationtype, T value, Relations relation, Relativity relativity, bool enabled)
-            : base(name, calculationtype, relation, relativity, enabled)
+        protected ConditionBase(string name, CalculationTypeHandler calculationtype, T value, RelationHandler relation, bool enabled)
+            : base(name, calculationtype, relation, enabled)
         {
             LeftValue = value;
         }

@@ -13,12 +13,8 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// type of the calculation that is required by this condition 
         /// </summary>
-        CalculationTypes CalculationType { get; }
+        CalculationTypeHandler CalculationTypeHandler { get; }
 
-        /// <summary>
-        /// Relative or absolute
-        /// </summary>
-        Relativity Relativity { get; }
 
         /// <summary>
         /// Validity of the condition -> if false, the condition is switched off
@@ -28,7 +24,7 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// Relation in the condition    e.g.  <  >  ==  >=  <=
         /// </summary>
-        Relations ConditionRelation { get; }
+        RelationHandler ConditionRelation { get; }
 
         /// <summary>
         /// Checks the condition. The calculation result contains the approppriate result
@@ -38,7 +34,7 @@ namespace Interfaces.ToolSpecifications
         /// <param name="measSerie"></param>
         /// <param name="referenceValue"></param>
         /// <returns>the relation is met (true) or not (false)</returns>
-        IConditionEvaluationResult Evaluate(IResult calculationResult, DateTime dateTime, IReferenceValue referenceValue);
+        IConditionEvaluationResult EvaluateCondition(IResult calculationResult, DateTime dateTime, IReferenceValue referenceValue);
     }
 
 
@@ -56,13 +52,13 @@ namespace Interfaces.ToolSpecifications
 
     public interface IConditionHandler : ICondition
     {
-        new CalculationTypes CalculationType { get; set; }
+        new CalculationTypeHandler CalculationTypeHandler { get; set; }
 
-        new Relativity Relativity { get; set; }
+        //new Relativity Relativity { get; set; }
 
         new bool Enabled { get; set; }
 
-        new Relations ConditionRelation { get; set; }
+        new RelationHandler ConditionRelation { get; set; }
     }
 
 

@@ -5,61 +5,55 @@ using System.Xml.Linq;
 namespace Interfaces.BaseClasses
 {
 
-    public enum RelationsEnumValues
-    {
-        EQUAL = 0,
-        NOTEQUAL = 1,
-        LESS = 2,
-        LESSOREQUAL = 3,
-        GREATER = 4,
-        GREATEROREQUAL = 5,
-        ALLWAYS = 6,
-    }
-
-
-    public sealed class Relations : IXmlStorable
+    public sealed class RelationHandler : IXmlStorable
     {
 
         private const string XELEMENT_ATTRIBUTE_NAME = "Relation";
 
-        public RelationsEnumValues Relation { get; private set; }
+        public Relations Relation { get; private set; }
 
         public Func<bool, int, bool> Evaluation { get; set; }
 
         private string Text { get; set; }
 
 
-        public Relations()
+        public RelationHandler()
         {
         }
 
-        private Relations(RelationsEnumValues relation, string text, Func<bool, int, bool> evaluation)
+        private RelationHandler(Relations relation, string text, Func<bool, int, bool> evaluation)
         {
             Relation = relation;
             Text = text;
             Evaluation = evaluation;
         }
 
-        public static Relations EQUAL = new Relations(RelationsEnumValues.EQUAL, "==", (equality, compareResult) => equality);
-        public static Relations NOTEQUAL = new Relations(RelationsEnumValues.NOTEQUAL, "!=", (equality, compareResult) => equality);
-        public static Relations LESS = new Relations(RelationsEnumValues.LESS, ">", (equality, compareResult) => compareResult == -1);
-        public static Relations LESSOREQUAL = new Relations(RelationsEnumValues.LESSOREQUAL, ">=", (equality, compareResult) => compareResult == 1 || equality);
-        public static Relations GREATER = new Relations(RelationsEnumValues.GREATER, "<", (equality, compareResult) => compareResult == 1);
-        public static Relations GREATEROREQUAL = new Relations(RelationsEnumValues.GREATEROREQUAL, "<=", (equality, compareResult) => compareResult == -1 || equality);
-        public static Relations ALLWAYS = new Relations(RelationsEnumValues.ALLWAYS, "ALLWAYS", (equality, compareResult) => true);
+        public static RelationHandler EQUAL = new RelationHandler(Relations.EQUAL, "==", (equality, compareResult) => equality);
+
+        public static RelationHandler NOTEQUAL = new RelationHandler(Relations.NOTEQUAL, "!=", (equality, compareResult) => equality);
+
+        public static RelationHandler LESS = new RelationHandler(Relations.LESS, ">", (equality, compareResult) => compareResult == -1);
+
+        public static RelationHandler LESSOREQUAL = new RelationHandler(Relations.LESSOREQUAL, ">=", (equality, compareResult) => compareResult == 1 || equality);
+
+        public static RelationHandler GREATER = new RelationHandler(Relations.GREATER, "<", (equality, compareResult) => compareResult == 1);
+
+        public static RelationHandler GREATEROREQUAL = new RelationHandler(Relations.GREATEROREQUAL, "<=", (equality, compareResult) => compareResult == -1 || equality);
+
+        public static RelationHandler ALLWAYS = new RelationHandler(Relations.ALLWAYS, "ALLWAYS", (equality, compareResult) => true);
 
         public override string ToString()
         {
             return Text;
         }
 
-        public static implicit operator int(Relations relation)
+        public static implicit operator int(RelationHandler relation)
         {
             return (int)relation.Relation;
         }
 
 
-        public static explicit operator Relations(string val)
+        public static explicit operator RelationHandler(string val)
         {
             if (EQUAL.Text == val)
             {
@@ -97,7 +91,7 @@ namespace Interfaces.BaseClasses
 
         public override bool Equals(object other)
         {
-            if (!(other is Relations otherRelation))
+            if (!(other is RelationHandler otherRelation))
             {
                 return false;
             }
@@ -120,7 +114,7 @@ namespace Interfaces.BaseClasses
 
             string attributeValue = attrib.Value;
 
-            var element = (Relations)attributeValue;
+            var element = (RelationHandler)attributeValue;
             if (element == null)
             {
                 return false;

@@ -6,7 +6,7 @@ namespace Calculations.Calculation.CalculationSettings
 {
     internal class CpkCalculationSettings : CpCalculationSettings, ICpkCalculationSettings
     {
-        public CpkCalculationSettings(CalculationTypes calculationType, double halfTolerance, double referenceValue)
+        public CpkCalculationSettings(CalculationType calculationType, double halfTolerance, double referenceValue)
             : base(calculationType, halfTolerance)
         {
             ReferenceValue = referenceValue;

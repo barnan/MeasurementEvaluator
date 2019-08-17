@@ -242,7 +242,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                         }
 
                         // get the calculation:
-                        ICalculation calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationType);
+                        ICalculation calculation = _parameters.CalculationContainer.GetCalculation(condition.CalculationTypeHandler.CalculationType);
 
                         // find measurement data associated with the condition name from the matcher:
                         IEnumerable<string> coherentMeasurementDataNames = _parameters.Matcher.GetMeasDataNames(condition.Name);
@@ -281,7 +281,7 @@ namespace MeasurementEvaluator.ME_Evaluation
                             continue;
                         }
 
-                        IConditionEvaluationResult conditionEvaluationResult = condition.Evaluate(calcResult, _parameters.DateTimeProvider.GetDateTime(), referenceValue);
+                        IConditionEvaluationResult conditionEvaluationResult = condition.EvaluateCondition(calcResult, _parameters.DateTimeProvider.GetDateTime(), referenceValue);
 
                         conditionResultList.Add(conditionEvaluationResult);
 

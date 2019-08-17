@@ -6,7 +6,7 @@ namespace Calculations.Calculation.CalculationSettings
 {
     internal class CpCalculationSettings : CalculationSettingsBase, ICpCalculationSettings
     {
-        public CpCalculationSettings(CalculationTypes calculationType, double halfTolerance)
+        public CpCalculationSettings(CalculationType calculationType, double halfTolerance)
             : base(calculationType)
         {
             HalfTolerance = halfTolerance;

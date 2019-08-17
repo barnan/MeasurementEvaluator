@@ -10,12 +10,12 @@ namespace Interfaces.Calculation
         /// </summary>
         /// <param name="requiredCalculationType">type of the required calculation</param>
         /// <returns>the calculation object itself</returns>
-        ICalculation GetCalculation(CalculationTypes requiredCalculationType);
+        ICalculation GetCalculation(CalculationType requiredCalculationType);
 
 
         /// <summary>
         /// Gives back list of all avilable calculations in the container
         /// </summary>
-        IReadOnlyList<CalculationTypes> AvailableCalculatons { get; }
+        IReadOnlyList<CalculationType> AvailableCalculatons { get; }
     }
 }

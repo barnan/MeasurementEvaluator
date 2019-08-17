@@ -19,103 +19,109 @@ namespace ME_DummyObjectCreator
             ICondition<double> thicknessAverageAbsCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Abs Condition",
-                CalculationType = CalculationTypes.Average,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.Average,
                 LeftValue = 2,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessAverageAbsCondition.CalculationTypeHandler.Relativity = Relativity.Absolute;
+
 
             ICondition<double> thicknessAverageRelCondition = new SimpleCondition()
             {
                 Name = "Thickness Average Rel Condition",
-                CalculationType = CalculationTypes.Average,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Average,
                 LeftValue = 1,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessAverageRelCondition.CalculationTypeHandler.Relativity = Relativity.Relative;
 
 
             ICondition<double> thicknessStdAbsCondition = new SimpleCondition()
             {
                 Name = "Thickness Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 1,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessStdAbsCondition.CalculationTypeHandler.Relativity = Relativity.Absolute;
+
 
             ICondition<double> thicknessStdRelCondition = new SimpleCondition()
             {
                 Name = "Thickness Std Rel Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 0.5,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessStdRelCondition.CalculationTypeHandler.Relativity = Relativity.Relative;
+
 
             // ttv psecification:
             ICondition<double> ttvStdAbsCondition = new SimpleCondition()
             {
                 Name = "TTV Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 2,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            ttvStdAbsCondition.CalculationTypeHandler.Relativity = Relativity.Absolute;
+
 
             // sawmark specification:
             ICondition<double> sawmarkStdAbsCondition = new SimpleCondition()
             {
                 Name = "SawMark Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 2,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            sawmarkStdAbsCondition.CalculationTypeHandler.Relativity = Relativity.Absolute;
+
 
             // resisitivity conditions
 
             ICondition<double> resistivityAverageRelCondition = new SimpleCondition()
             {
                 Name = "Resistivity Average Rel Condition",
-                CalculationType = CalculationTypes.Average,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Average,
                 LeftValue = 5,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            resistivityAverageRelCondition.CalculationTypeHandler.Relativity = Relativity.Relative;
+
 
             ICondition<double> resistivityStdRelCondition = new SimpleCondition()
             {
                 Name = "Resistivity Std Rel Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 1,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            resistivityStdRelCondition.CalculationTypeHandler.Relativity = Relativity.Relative;
 
 
             IQuantitySpecificationHandler thicknessQuantitySpecification = new QuantitySpecification();
@@ -160,149 +166,154 @@ namespace ME_DummyObjectCreator
             ICondition<double> thicknessAverageAbsCondition2 = new SimpleCondition()
             {
                 Name = "Thickness Average Abs Condition",
-                CalculationType = CalculationTypes.Average,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.Average,
                 LeftValue = 2,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessAverageAbsCondition2.CalculationTypeHandler.Relativity = Relativity.Absolute;
 
             ICondition<double> thicknessAverageRelCondition2 = new SimpleCondition()
             {
                 Name = "Thickness Average Rel Condition",
-                CalculationType = CalculationTypes.Average,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Average,
                 LeftValue = 1,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessAverageRelCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
 
 
             ICondition<double> thicknessStdAbsCondition2 = new SimpleCondition()
             {
                 Name = "Thickness Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 1,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessStdAbsCondition2.CalculationTypeHandler.Relativity = Relativity.Absolute;
 
             ICondition<double> thicknessStdRelCondition2 = new SimpleCondition()
             {
                 Name = "Thickness Std Rel Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 0.5,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            thicknessStdRelCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
 
 
             ICondition<double> thicknessCpkCondition2 = new CpkCondition()
             {
                 Name = "Thickness Cpk Condition",
-                CalculationType = CalculationTypes.Cpk,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Cpk,
                 LeftValue = 1.33,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
                 HalfTolerance = 1
             };
+            thicknessCpkCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
 
 
             // ttv psecification:
             ICondition<double> ttvStdAbsCondition2 = new SimpleCondition()
             {
                 Name = "TTV Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 2,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            ttvStdAbsCondition2.CalculationTypeHandler.Relativity = Relativity.Absolute;
+
 
             ICondition<double> ttvCpkCondition2 = new CpkCondition()
             {
                 Name = "TTV Cpk Condition",
-                CalculationType = CalculationTypes.Cpk,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Cpk,
                 LeftValue = 1.33,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
                 HalfTolerance = 2
             };
+            ttvCpkCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
+
 
             // sawmark psecification:
             ICondition<double> sawmarkStdAbsCondition2 = new SimpleCondition()
             {
                 Name = "SawMark Std Abs Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Absolute,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 2,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            sawmarkStdAbsCondition2.CalculationTypeHandler.Relativity = Relativity.Absolute;
+
 
             ICondition<double> sawmarkCpkCondition2 = new CpkCondition()
             {
                 Name = "SawMark Cpk Condition",
-                CalculationType = CalculationTypes.Cpk,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Cpk,
                 LeftValue = 1.33,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
                 HalfTolerance = 4
             };
+            sawmarkCpkCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
+
 
             // resistivity conditions
-
             ICondition<double> resistivityAverageRelCondition2 = new SimpleCondition()
             {
                 Name = "Resistivity Average Rel Condition",
-                CalculationType = CalculationTypes.Average,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Average,
                 LeftValue = 5,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            resistivityAverageRelCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
+
 
             ICondition<double> resistivityStdRelCondition2 = new SimpleCondition()
             {
                 Name = "Resistivity Std Rel Condition",
-                CalculationType = CalculationTypes.StandardDeviation,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.StandardDeviation,
                 LeftValue = 1,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
-                ValidIf = Relations.ALLWAYS,
+                ValidIf = RelationHandler.ALLWAYS,
                 ValidIf_Value = 0,
             };
+            resistivityStdRelCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
+
 
             ICondition<double> resistivityCpkCondition2 = new CpkCondition()
             {
                 Name = "Resistivity Cpk Condition",
-                CalculationType = CalculationTypes.Cpk,
-                Relativity = Relativity.Relative,
+                CalculationTypeHandler = CalculationTypeHandler.Cpk,
                 LeftValue = 1.33,
-                ConditionRelation = Relations.LESSOREQUAL,
+                ConditionRelation = RelationHandler.LESSOREQUAL,
                 Enabled = true,
                 HalfTolerance = 2.5
             };
+            resistivityCpkCondition2.CalculationTypeHandler.Relativity = Relativity.Relative;
 
 
             IQuantitySpecificationHandler thicknessQuantitySpecification2 = new QuantitySpecification();

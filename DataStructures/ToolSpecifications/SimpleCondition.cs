@@ -14,7 +14,7 @@ namespace DataStructures.ToolSpecifications
     public class SimpleCondition : ConditionBase<double>, ISimpleConditionHandler
     {
 
-        public Relations ValidIf { get; set; }
+        public RelationHandler ValidIf { get; set; }
 
         public double ValidIf_Value { get; set; }
 
@@ -26,8 +26,8 @@ namespace DataStructures.ToolSpecifications
         }
 
 
-        public SimpleCondition(string name, CalculationTypes calculationtype, double value, Relations relation, Relativity relativity, bool enabled, Relations validIf, double validIfValue)
-            : base(name, calculationtype, value, relation, relativity, enabled)
+        public SimpleCondition(string name, CalculationTypeHandler calculationtype, double value, RelationHandler relation, bool enabled, RelationHandler validIf, double validIfValue)
+            : base(name, calculationtype, value, relation, enabled)
         {
             ValidIf = validIf;
             ValidIf_Value = validIfValue;
@@ -37,12 +37,12 @@ namespace DataStructures.ToolSpecifications
 
         #region ICondition
 
-        protected override IConditionEvaluationResult EvaluateCondition(IResult result, DateTime dateTime, IReferenceValue referenceValue)
+        protected override IConditionEvaluationResult InternalEvaluate(IResult result, DateTime dateTime, IReferenceValue referenceValue)
         {
             ISimpleCalculationResult calculationResult = result as ISimpleCalculationResult;
 
             return CompareValidity(calculationResult.Average) ?
-                new ConditionEvaluationResult(dateTime,
+                new ConditionEvaluationResultBase(dateTime,
                     this,
                     referenceValue,
                     EvaluateRelation(calculationResult.ResultValue),
@@ -98,7 +98,7 @@ namespace DataStructures.ToolSpecifications
         {
             this.TrySave(Name, inputElement, nameof(Name));
             this.TrySave(Enabled, inputElement, nameof(Enabled));
-            this.TrySave(CalculationType, inputElement, nameof(CalculationType));
+            this.TrySave(CalculationTypeHandler, inputElement, nameof(CalculationTypeHandler));
             this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             this.TrySave(LeftValue, inputElement, nameof(LeftValue));
             this.TrySave(ValidIf, inputElement, nameof(ValidIf));
@@ -111,7 +111,7 @@ namespace DataStructures.ToolSpecifications
         {
             this.TryLoad(inputElement, nameof(Name));
             this.TryLoad(inputElement, nameof(Enabled));
-            this.TryLoad(inputElement, nameof(CalculationType));
+            this.TryLoad(inputElement, nameof(CalculationTypeHandler));
             this.TryLoad(inputElement, nameof(ConditionRelation));
             this.TryLoad(inputElement, nameof(LeftValue));
             this.TryLoad(inputElement, nameof(ValidIf));

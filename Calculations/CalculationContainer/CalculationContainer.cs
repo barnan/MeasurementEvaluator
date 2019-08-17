@@ -10,7 +10,7 @@ namespace Calculations.CalculationContainer
     {
         private readonly CalculationContainerParameters _parameters;
 
-        public IReadOnlyList<CalculationTypes> AvailableCalculatons
+        public IReadOnlyList<CalculationType> AvailableCalculatons
         {
             get
             {
@@ -21,7 +21,7 @@ namespace Calculations.CalculationContainer
         }
 
 
-        public ICalculation GetCalculation(CalculationTypes requiredCalculationType)
+        public ICalculation GetCalculation(CalculationType requiredCalculationType)
         {
             _parameters.Logger.LogInfo($"Request for {requiredCalculationType} typed calculation.");
 

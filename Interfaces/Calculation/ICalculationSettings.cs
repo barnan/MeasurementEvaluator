@@ -8,7 +8,7 @@ namespace Interfaces.Calculation
     /// </summary>
     public interface ICalculationSettings
     {
-        CalculationTypes ValidCalculation { get; }
+        CalculationType ValidCalculation { get; }
     }
 
 

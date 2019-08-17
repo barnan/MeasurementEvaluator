@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace DataStructures.ToolSpecifications.Results
 {
-    internal class ConditionEvaluationResult : ResultBase, IConditionEvaluationResult
+    internal class ConditionEvaluationResultBase : ResultBase, IConditionEvaluationResult
     {
         public ICondition Condition { get; }
 
@@ -18,7 +18,7 @@ namespace DataStructures.ToolSpecifications.Results
         public ICalculationResult CalculationResult { get; }
 
 
-        public ConditionEvaluationResult(DateTime creationTime, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, ICalculationResult calculationResult)
+        public ConditionEvaluationResultBase(DateTime creationTime, ICondition condition, IReferenceValue referenceValue, bool conditionIsMet, ICalculationResult calculationResult)
             : base(creationTime, calculationResult.Successful)
         {
             Condition = condition;

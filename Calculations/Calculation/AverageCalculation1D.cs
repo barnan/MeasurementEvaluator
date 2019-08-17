@@ -4,7 +4,6 @@ using Interfaces.ReferenceSample;
 using Interfaces.Result;
 using Interfaces.ToolSpecifications;
 using Miscellaneous;
-using System;
 using System.Collections.Generic;
 
 namespace Calculations.Calculation
@@ -17,16 +16,11 @@ namespace Calculations.Calculation
         {
         }
 
-        public override CalculationTypes CalculationType => CalculationTypes.Average;
+        public override CalculationType CalculationType => CalculationType.Average;
 
 
         protected override ICalculationResult InternalCalculation(IMeasurementSerie measurementSerieData, ICondition condition, IReferenceValue referenceValue)
         {
-            if (condition.CalculationType != CalculationType)
-            {
-                throw new ArgumentException($"The current calculation (type: {CalculationType}) can not run with the received condition {condition.CalculationType}");
-            }
-
             List<double> validElementList = GetValidElementList(measurementSerieData);
             double average = GetAverage(validElementList);
 

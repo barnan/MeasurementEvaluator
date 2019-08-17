@@ -2,9 +2,41 @@
 
 namespace Interfaces.BaseClasses
 {
-    /// <summary>
-    /// 
-    /// </summary>
+
+    public enum Relations
+    {
+        EQUAL = 0,
+        NOTEQUAL = 1,
+        LESS = 2,
+        LESSOREQUAL = 3,
+        GREATER = 4,
+        GREATEROREQUAL = 5,
+        ALLWAYS = 6,
+    }
+
+
+    public enum CalculationType
+    {
+        [Description("Unknown")]
+        Unknown = 0,
+
+        [Description("Avg")]
+        Average = 1,
+
+        [Description("Std")]
+        StandardDeviation = 2,
+
+        [Description("Cp")]
+        Cp = 3,
+
+        [Description("Cpk")]
+        Cpk = 4,
+
+        [Description("GRAndR")]
+        GRAndR = 5
+    }
+
+
     public enum Relativity
     {
         [Description("ABSOLUTE")]
@@ -15,9 +47,6 @@ namespace Interfaces.BaseClasses
     }
 
 
-    /// <summary>
-    /// 
-    /// </summary>
     public enum SampleOrientation
     {
         [Description("0 degree")]
@@ -34,10 +63,6 @@ namespace Interfaces.BaseClasses
     }
 
 
-
-    /// <summary>
-    /// 
-    /// </summary>
     public enum Units
     {
         [Description("ADU")]
@@ -58,7 +83,5 @@ namespace Interfaces.BaseClasses
         [Description("sec")]
         sec
     }
-
-
 
 }

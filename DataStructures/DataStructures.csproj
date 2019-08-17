@@ -53,7 +53,7 @@
     <Compile Include="ReferenceSample\ReferenceSample.cs" />
     <Compile Include="ReferenceSample\ReferenceValue.cs" />
     <Compile Include="ResultBase.cs" />
-    <Compile Include="ToolSpecifications\Results\ConditionEvaluationResult.cs" />
+    <Compile Include="ToolSpecifications\Results\ConditionEvaluationResultBase.cs" />
     <Compile Include="ToolSpecifications\Quantity.cs" />
     <Compile Include="ToolSpecifications\Results\CpkConditionEvaluationResult.cs" />
     <Compile Include="ToolSpecifications\Results\SimpleConditionEvaluationResult.cs" />

@@ -6,9 +6,9 @@ namespace Calculations.Calculation.CalculationSettings
 {
     internal class CalculationSettingsBase : ICalculationSettings
     {
-        public CalculationTypes ValidCalculation { get; }
+        public CalculationType ValidCalculation { get; }
 
-        public CalculationSettingsBase(CalculationTypes calculationType)
+        public CalculationSettingsBase(CalculationType calculationType)
         {
             ValidCalculation = calculationType;
         }
