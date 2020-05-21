@@ -3,13 +3,13 @@ using System.Diagnostics;
 
 namespace MyFrameWork.Loggers
 {
-    internal class LoggerTrace : IMyLogger
+    internal class LoggerToTrace : IMyLogger
     {
         private readonly string _outputFileName = "TraceLogger.log";
         private static TraceSwitch _switch = new TraceSwitch("MyAssemblyTraceSwitch", "Application Tracing");
 
 
-        public LoggerTrace()
+        public LoggerToTrace()
         {
             //var valami = System.Configuration.ConfigurationManager.AppSettings;
         }

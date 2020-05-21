@@ -3,7 +3,7 @@ using System;
 
 namespace MyFrameWork.Loggers
 {
-    internal class ConsoleLogger : IMyLogger
+    internal class LoggerToConsole : IMyLogger
     {
         private readonly string _name;
         private readonly ConsoleColor _CONSOLECOLOR_FATAL = ConsoleColor.DarkRed;
@@ -14,7 +14,7 @@ namespace MyFrameWork.Loggers
         private readonly ConsoleColor _CONSOLECOLOR_TRACE = ConsoleColor.DarkGray;
         private readonly ConsoleColor _originalColor = Console.ForegroundColor;
 
-        public ConsoleLogger(string name)
+        public LoggerToConsole(string name)
         {
             _name = name;
             _CONSOLECOLOR_INFO = _originalColor;

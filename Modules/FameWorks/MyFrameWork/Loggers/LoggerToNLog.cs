@@ -3,10 +3,10 @@ using NLog;
 
 namespace MyFrameWork.Loggers
 {
-    internal class LoggerNLog : IMyLogger
+    internal class LoggerToNLog : IMyLogger
     {
         private readonly ILogger _logger;
-        public LoggerNLog(string name)
+        public LoggerToNLog(string name)
         {
             _logger = LogManager.GetLogger(name);
         }

@@ -1,5 +1,6 @@
 ﻿using MyFrameWork.ConfigHandler;
 using MyFrameWork.Interfaces;
+using MyFrameWork.Loggers;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,6 @@ namespace MyFrameWork.PluginLoader
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
-
 
 
         private static ICollection<FactoryElement> _factories;
@@ -50,28 +50,24 @@ namespace MyFrameWork.PluginLoader
 
         //public static IUIMessageControl MessageControll { get; private set; }
 
+        #region static
 
         static PluginLoader()
         {
-            _logger = GetLogger();
+            //_logger = GetLogger();
+            _consoleLogger = GetConsoleLogger();
         }
 
-        public PluginLoader()
-        {
-            _iRunables = new List<KeyValuePair<Type, Assembly>>();
-        }
-
-
-        public static IMyLogger GetLogger([CallerMemberName] string desiredName = null)
+        internal static IMyLogger GetConsoleLogger([CallerMemberName] string desiredName = null)
         {
             string name = desiredName;
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                name = new StackFrame(1, false).GetMethod().FullName;
+                name = new StackFrame(1, false).GetMethod().DeclaringType.Name;
             }
 
-            _logger = LogManager.GetLogger(name);
+            return new LoggerToConsole(name);
         }
 
         public static void SendToInfoLogAndConsole(string message)
@@ -90,6 +86,30 @@ namespace MyFrameWork.PluginLoader
             return message;
         }
 
+        public static IMyLogger GetLogger([CallerMemberName] string desiredName = null)
+        {
+            string name = desiredName;
+
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                name = new StackFrame(1, false).GetMethod().DeclaringType.Name;
+            }
+
+            return LogManager.GetLogger(name);
+        }
+
+        #endregion
+
+        #region ctor
+
+        public PluginLoader()
+        {
+            _iRunables = new List<KeyValuePair<Type, Assembly>>();
+        }
+
+        #endregion
+
+        #region public
 
         /// <summary>
         /// Sets the used pluginfolder to the given path
@@ -253,6 +273,20 @@ namespace MyFrameWork.PluginLoader
             }
         }
 
+        /// <summary>
+        /// creates the component with the given title
+        /// </summary>
+        /// <typeparam name="T">type of the required component</typeparam>
+        /// <param name="name">title of the required component</param>
+        /// <returns>returns the instantiated component</returns>
+        public static T CreateInstance<T>(string name)
+        {
+            return (T)CreateInstance(typeof(T), name);
+        }
+
+        #endregion
+
+        #region private
 
         private static object CreateInstance(Type interfaceType, string name)
         {
@@ -309,19 +343,6 @@ namespace MyFrameWork.PluginLoader
             return instances[0];
         }
 
-        /// <summary>
-        /// creates the component with the given title
-        /// </summary>
-        /// <typeparam name="T">type of the required component</typeparam>
-        /// <param name="name">title of the required component</param>
-        /// <returns>returns the instantiated component</returns>
-        public static T CreateInstance<T>(string name)
-        {
-            return (T)CreateInstance(typeof(T), name);
-        }
-
-
-        #region private
 
         /// <summary>
         /// Load the available factories from the assemblies in the given folder
@@ -494,6 +515,14 @@ namespace MyFrameWork.PluginLoader
             return CheckDirectoryPath(combinedPath);
         }
 
+
+        [Conditional("RELEASE")]
+        private void HideConsole()
+        {
+            ShowWindow(GetConsoleWindow(), SW_HIDE);
+        }
+
+
         #endregion
 
 
@@ -531,12 +560,6 @@ namespace MyFrameWork.PluginLoader
             }
         }
 
-
-        [Conditional("RELEASE")]
-        private void HideConsole()
-        {
-            ShowWindow(GetConsoleWindow(), SW_HIDE);
-        }
 
 
     }
