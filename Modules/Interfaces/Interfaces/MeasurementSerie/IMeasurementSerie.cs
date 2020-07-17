@@ -9,7 +9,7 @@ namespace Interfaces.MeasurementSerie
         /// <summary>
         /// List of measurement result
         /// </summary>
-        IReadOnlyList<INumericMeasurementPoint> MeasuredPoints { get; }
+        List<INumericMeasurementPoint> MeasuredPoints { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index

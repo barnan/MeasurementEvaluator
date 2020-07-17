@@ -1,9 +1,8 @@
 ﻿using BaseClasses;
 using Interfaces.Misc;
 using System.Collections.Generic;
-using ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications;
 
-namespace Interfaces.ToolSpecifications
+namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
 {
 
     public interface IToolSpecification : INamed, IXmlStorable
@@ -11,7 +10,7 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// List of all defined specification of the quantities of the tool
         /// </summary>
-        IReadOnlyList<IQuantitySpecification> QuantitySpecifications { get; }
+        List<IQuantitySpecification> QuantitySpecifications { get; }
 
         /// <summary>
         /// Name of the tool
@@ -25,7 +24,7 @@ namespace Interfaces.ToolSpecifications
         /// <summary>
         /// List of all defined specification of the quantities of the tool
         /// </summary>
-        new IReadOnlyList<IQuantitySpecification> QuantitySpecifications { get; set; }
+        new List<IQuantitySpecification> QuantitySpecifications { get; set; }
 
         /// <summary>
         /// Name of the tool

@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MeasurementEvaluator\ReferenceSample\" />
-  </ItemGroup>
-
 </Project>

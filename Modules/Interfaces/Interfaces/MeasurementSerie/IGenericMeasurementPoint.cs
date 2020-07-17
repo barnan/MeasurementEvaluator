@@ -13,6 +13,7 @@ namespace Interfaces.MeasurementSerie
 
 
     public interface IGenericMeasurementPoint<T> : IValidableMeasurementPoint
+        where T : struct
     {
         /// <summary>
         /// The value of one individual measurement

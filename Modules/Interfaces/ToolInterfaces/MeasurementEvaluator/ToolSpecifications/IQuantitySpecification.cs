@@ -1,5 +1,4 @@
-﻿using Interfaces.ToolSpecifications;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
 {
@@ -13,7 +12,7 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
         /// <summary>
         /// Condition set which is realted to the quantity
         /// </summary>
-        IReadOnlyList<ICondition> Conditions { get; }
+        List<ICondition> Conditions { get; }
 
     }
 
@@ -22,7 +21,7 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
     {
         new IQuantity Quantity { get; set; }
 
-        new IReadOnlyList<ICondition> Conditions { get; set; }
+        new List<ICondition> Conditions { get; set; }
 
     }
 

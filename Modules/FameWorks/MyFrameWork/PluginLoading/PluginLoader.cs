@@ -1,7 +1,5 @@
-﻿using MyFrameWork.ConfigHandler;
-using MyFrameWork.Interfaces;
+﻿using MyFrameWork.Interfaces;
 using MyFrameWork.Loggers;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,9 +9,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Xml.Linq;
 
-namespace MyFrameWork.PluginLoader
+namespace MyFrameWork.PluginLoading
 {
     public class PluginLoader
     {
@@ -31,9 +28,6 @@ namespace MyFrameWork.PluginLoader
         private static IMyLogger _consoleLogger;
         private readonly object _lockObj = new object();
         private static ComponentList _componentList;
-        private readonly string _COMPONENT_SECTION_NAME = "ComponentList";
-        private readonly string _COMPONENT_FILE_NAME = "ComponentList";
-        private readonly string _CONFIG_FILE_EXTENSION = ".config";
 
         private readonly IList<KeyValuePair<Type, Assembly>> _iRunables;
 
@@ -44,7 +38,7 @@ namespace MyFrameWork.PluginLoader
         public static string MeasurementDataFolder { get; private set; }
         public static string PluginsFolder { get; private set; }
         public static string ResultFolder { get; private set; }
-        public static ConfigManager ConfigManager { get; private set; }
+        public static ConfigHandler.ConfigHandler ConfigHandler { get; private set; }
 
         public static bool Initialized { get; private set; }
 
@@ -54,7 +48,6 @@ namespace MyFrameWork.PluginLoader
 
         static PluginLoader()
         {
-            //_logger = GetLogger();
             _consoleLogger = GetConsoleLogger();
         }
 
@@ -64,29 +57,24 @@ namespace MyFrameWork.PluginLoader
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                name = new StackFrame(1, false).GetMethod().DeclaringType.Name;
+                name = new StackFrame(1, false).GetMethod().DeclaringType.Name;     // to get the caller class name
             }
 
             return new LoggerToConsole(name);
         }
 
-        public static void SendToInfoLogAndConsole(string message)
+        internal static void SendToInfoLogAndConsole(string message)
         {
-            _logger?.Info(message);
-            Console.WriteLine(message + Environment.NewLine);
+            _consoleLogger?.Info(message);
         }
 
-        public static string SendToErrorLogAndConsole(string message)
+        internal static string SendToErrorLogAndConsole(string message)
         {
-            _logger?.Error(message);
-            ConsoleColor cc = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message + Environment.NewLine);
-            Console.ForegroundColor = cc;
+            _consoleLogger?.Error(message);
             return message;
         }
 
-        public static IMyLogger GetLogger([CallerMemberName] string desiredName = null)
+        public static IMyLogger GetLogger(string desiredName = null)
         {
             string name = desiredName;
 
@@ -95,7 +83,73 @@ namespace MyFrameWork.PluginLoader
                 name = new StackFrame(1, false).GetMethod().DeclaringType.Name;
             }
 
-            return LogManager.GetLogger(name);
+            return new LoggerToNLog(name);
+        }
+
+        /// <summary>
+        /// creates the component with the given title
+        /// </summary>
+        /// <typeparam name="T">type of the required component</typeparam>
+        /// <param name="name">title of the required component</param>
+        /// <returns>returns the instantiated component</returns>
+        public static T CreateInstance<T>(string name)
+        {
+            return (T)CreateInstance(typeof(T), name);
+        }
+
+        private static object CreateInstance(Type interfaceType, string name)
+        {
+            if (_factories == null)
+            {
+                _logger.Error("Factories are not created yet.");
+                return null;
+            }
+
+            var components = _componentList.Components.Where(p => p.Name == name).ToList();
+            if (components.Count > 1)
+            {
+                _logger.Error($"Ambiguity between components. {name} appears more than once in the ComponentList.");
+                return null;
+            }
+            if (components.Count < 1)
+            {
+                _logger.Error($"No component was found with the given name:{name} in the ComponentList.");
+                return null;
+            }
+
+            //if (components[0].Interfaces.All(p => !(interfaceType.IsAssignableFrom(Type.GetType(p)))))
+            //{
+            //    _logger.Error($"The found compnent (with name: {name}) does not implement the given interface: {nameof(interfaceType)}. The implemented interfaces: {string.Join(",", components[0].Interfaces)}");
+            //    return null;
+            //}
+
+            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == components[0].AssemblyName).ToList();
+
+            List<object> instances = new List<object>();
+            foreach (var factory in fact)
+            {
+                object instance = factory.Factory.Create(interfaceType, name);
+                if (instance == null)
+                {
+                    continue;
+                }
+
+                instances.Add(instance);
+            }
+
+            if (instances.Count == 0)
+            {
+                SendToErrorLogAndConsole($"No factory was found to create: {name}({interfaceType})");
+                return null;
+            }
+
+            if (instances.Count > 1)
+            {
+                SendToErrorLogAndConsole($"More than one factories was found to create: {name}({interfaceType})");
+                return null;
+            }
+
+            return instances[0];
         }
 
         #endregion
@@ -117,20 +171,19 @@ namespace MyFrameWork.PluginLoader
         /// ///
         /// <param name="currentExeFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool Inititialize(string currentExeFolder)
+        public bool Inititialize(string folder)
         {
             try
             {
                 var settings = ConfigurationManager.AppSettings;
 
-
                 lock (_lockObj)
                 {
-                    if (!IsPathFolder(currentExeFolder) || !Directory.Exists(currentExeFolder))
+                    if (!IsPathFolder(folder) || !Directory.Exists(folder))
                     {
                         return false;
                     }
-                    CurrentExeFolder = CheckDirectoryPath(currentExeFolder);
+                    CurrentExeFolder = CheckDirectoryPath(folder);
 
                     // Configuration folder:
                     if (settings[FolderSettingsKeys.ConfigurationFolderKey] == null)
@@ -198,12 +251,14 @@ namespace MyFrameWork.PluginLoader
                         return false;
                     }
 
-                    ConfigManager = new ConfigManager(ConfigurationFolder);
+                    ConfigHandler = new ConfigHandler.ConfigHandler(ConfigurationFolder);
 
-                    if (!LoadPlugins())
+                    if (!LoadPlugins(PluginsFolder))
                     {
                         return Initialized = false;
                     }
+
+                    _logger = GetLogger();
 
                     //MessageControll = new UIMessageControl();
 
@@ -236,12 +291,14 @@ namespace MyFrameWork.PluginLoader
         {
             lock (_lockObj)
             {
-                if (!Initialized)
+                // first initialize if it wasnt't:
+                if (!Initialized && !Inititialize(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName))
                 {
                     _logger.Error($"{nameof(PluginLoader)} not initialized yet.");
                     return;
                 }
 
+                // log out all irunables
                 if (_iRunables.Count > 1)
                 {
                     _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
@@ -256,15 +313,18 @@ namespace MyFrameWork.PluginLoader
 
                 try
                 {
-                    Type type = _iRunables[0].Key;
+                    // try to start all irunnables:
+                    foreach (KeyValuePair<Type, Assembly> iRunable in _iRunables)
+                    {
+                        Type type = iRunable.Key;
+                        IRunable runable = (IRunable)Activator.CreateInstance(type);
 
-                    IRunable runable = (IRunable)Activator.CreateInstance(type);
+                        _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
 
-                    _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
+                        runable.Run();
 
-                    runable.Run();
-
-                    _logger.Info($"{type} started.");
+                        _logger.Info($"{type} started.");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -273,91 +333,24 @@ namespace MyFrameWork.PluginLoader
             }
         }
 
-        /// <summary>
-        /// creates the component with the given title
-        /// </summary>
-        /// <typeparam name="T">type of the required component</typeparam>
-        /// <param name="name">title of the required component</param>
-        /// <returns>returns the instantiated component</returns>
-        public static T CreateInstance<T>(string name)
-        {
-            return (T)CreateInstance(typeof(T), name);
-        }
-
         #endregion
 
-        #region private
-
-        private static object CreateInstance(Type interfaceType, string name)
-        {
-            if (_factories == null)
-            {
-                _logger.Error("Factories are not created yet.");
-                return null;
-            }
-
-            var components = _componentList.Components.Where(p => p.Name == name).ToList();
-            if (components.Count > 1)
-            {
-                _logger.Error($"Ambiguity between components. {name} appears more than once in the ComponentList.");
-                return null;
-            }
-            if (components.Count < 1)
-            {
-                _logger.Error($"No component was found with the given name:{name} in the ComponentList.");
-                return null;
-            }
-
-            //if (components[0].Interfaces.All(p => !(interfaceType.IsAssignableFrom(Type.GetType(p)))))
-            //{
-            //    _logger.Error($"The found compnent (with name: {name}) does not implement the given interface: {nameof(interfaceType)}. The implemented interfaces: {string.Join(",", components[0].Interfaces)}");
-            //    return null;
-            //}
-
-            ICollection<FactoryElement> fact = _factories.Where(p => p.AssemblyName == components[0].AssemblyName).ToList();
-
-            List<object> instances = new List<object>();
-            foreach (var factory in fact)
-            {
-                object instance = factory.Factory.Create(interfaceType, name);
-                if (instance == null)
-                {
-                    continue;
-                }
-
-                instances.Add(instance);
-            }
-
-            if (instances.Count == 0)
-            {
-                SendToErrorLogAndConsole($"No factory was found to create: {name}({interfaceType})");
-                return null;
-            }
-
-            if (instances.Count > 1)
-            {
-                SendToErrorLogAndConsole($"More than one factories was found to create: {name}({interfaceType})");
-                return null;
-            }
-
-            return instances[0];
-        }
-
+        #region private  
 
         /// <summary>
         /// Load the available factories from the assemblies in the given folder
         /// </summary>
         /// <returns>Collection of factories</returns>
-        private bool LoadPlugins()
+        private bool LoadPlugins(string pluginFolder)
         {
-            _componentList = LoadComponentList();
+            _componentList = ComponentList.CreateComponentList();
 
-            if (!Directory.Exists(PluginsFolder))
+            if (!Directory.Exists(pluginFolder))
             {
                 return false;
             }
             // gather all dll names:
-            string[] dllFileNames = Directory.GetFiles(PluginsFolder, "*.dll");
+            string[] dllFileNames = Directory.GetFiles(pluginFolder, "*.dll");
 
             ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
             foreach (string dllFile in dllFileNames)
@@ -407,7 +400,7 @@ namespace MyFrameWork.PluginLoader
 
             if (_iRunables.Count == 0)
             {
-                throw new Exception($"No {nameof(IRunable)} comopnent was found in {PluginsFolder}");
+                throw new Exception($"No {nameof(IRunable)} comopnent was found in {pluginFolder}");
             }
 
             // go through all assemblies and and check whether they implement IPluginFactory interface:
@@ -524,43 +517,6 @@ namespace MyFrameWork.PluginLoader
 
 
         #endregion
-
-
-        /// <summary>
-        /// Reads the list of available components from the ComponentList.config or creates a dummy component list
-        /// </summary>
-        /// <returns>returns with the componentlist from the ComponentList.config or a dummy componentList (example)</returns>
-        internal ComponentList LoadComponentList()
-        {
-            try
-            {
-                string componentListFileName = Path.Combine(ConfigurationFolder, $"{_COMPONENT_FILE_NAME}{_CONFIG_FILE_EXTENSION}");
-
-                ConfigManager.CreateConfigFileIfNotExisting(componentListFileName);
-
-                ComponentList componentList = new ComponentList();
-                XElement componentListSection = ConfigManager.LoadSectionXElementFromFile(componentListFileName, _COMPONENT_SECTION_NAME, typeof(ComponentList));
-
-                if (componentListSection == null)
-                {
-                    componentListSection = ConfigManager.CreateSectionXElement(_COMPONENT_SECTION_NAME, typeof(ComponentList));
-                }
-
-                if (!componentList.Load(componentListSection, _logger))
-                {
-                    ConfigManager.Save(componentListFileName, _COMPONENT_SECTION_NAME, componentListSection, typeof(ComponentList));
-                }
-
-                return componentList;
-            }
-            catch (Exception ex)
-            {
-                // todo throw stacktrace
-                throw new Exception($"Problem during component list loading: {ex.Message}");
-            }
-        }
-
-
 
     }
 }

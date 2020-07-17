@@ -15,7 +15,7 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
         /// <summary>
         /// Validity of the condition -> if false, the condition is switched off
         /// </summary>
-        bool Enabled { get; }
+        bool IsEnabled { get; }
 
         /// <summary>
         /// relation 
@@ -37,7 +37,7 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
     {
         new CalculationType CalculationType { get; set; }
 
-        new bool Enabled { get; set; }
+        new bool IsEnabled { get; set; }
 
         new Relations Relation { get; set; }
     }

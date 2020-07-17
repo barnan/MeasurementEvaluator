@@ -2,7 +2,7 @@
 
 namespace MyFrameWork.ConfigHandler
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
     public class ConfigurationAttribute : Attribute
     {
         public ConfigurationAttribute(string name)

@@ -1,6 +1,6 @@
 ﻿using MyFrameWork.Interfaces;
 
-namespace MyFrameWork.PluginLoader
+namespace MyFrameWork.PluginLoading
 {
     internal class FactoryElement
     {

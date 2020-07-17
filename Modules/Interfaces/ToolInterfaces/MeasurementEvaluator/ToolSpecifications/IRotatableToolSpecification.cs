@@ -1,8 +1,7 @@
 ﻿using BaseClasses;
 using System.Collections.Generic;
-using ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications;
 
-namespace Interfaces.ToolSpecifications
+namespace ToolSpecificInterfaces.MeasurementEvaluator.ToolSpecifications
 {
     public interface IRotatableToolSpecification : IToolSpecification, IRotatable
     {

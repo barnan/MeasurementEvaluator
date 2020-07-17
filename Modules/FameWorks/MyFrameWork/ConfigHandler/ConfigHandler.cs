@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using MyFrameWork.Interfaces;
+using MyFrameWork.PluginLoading;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ using System.Xml.Linq;
 
 namespace MyFrameWork.ConfigHandler
 {
-    public class ConfigManager
+    public class ConfigHandler
     {
-        private ILogger _logger;
+        private IMyLogger _logger;
         private string _configFolder;
         private const string _CONFIG_FILE_EXTENSION = ".config";
         private const string ROOT_NODE_NAME = "Configurations";
@@ -25,9 +26,9 @@ namespace MyFrameWork.ConfigHandler
         private const string LIST_ELEMENT_NODE_NAME = "Element";
 
 
-        public ConfigManager(string folder)
+        public ConfigHandler(string folder)
         {
-            _logger = LogManager.GetCurrentClassLogger();
+            _logger = PluginLoader.GetLogger(nameof(ConfigHandler));
             _configFolder = folder;
         }
 
@@ -53,8 +54,7 @@ namespace MyFrameWork.ConfigHandler
                 string[] namespaceFragments = namespaceOfType.Split('.');
                 string currentConfigFileName = Path.Combine(_configFolder, namespaceFragments[0] + _CONFIG_FILE_EXTENSION);
 
-                _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
-                _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
+                _logger.Info($"Reading object (type: {type}, namespace {namespaceOfType}) parameters in file: {currentConfigFileName} in section: {sectionName}");
 
                 bool differenceFound = false;
 
@@ -62,34 +62,28 @@ namespace MyFrameWork.ConfigHandler
 
                 // load the required section in XElement format:
 
-                XElement currentSectionElement = LoadSectionXElementFromFile(currentConfigFileName, sectionName, type);
+                XElement searchedSection = LoadSectionXElementFromFile(currentConfigFileName, sectionName, type) ?? CreateSectionXElement(sectionName, type);
 
-                if (currentSectionElement == null)
+                if (!CheckAssemblyAttributeOfSection(searchedSection, type))
                 {
-                    currentSectionElement = CreateSectionXElement(sectionName, type);
-                }
-
-                if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
-                {
-                    currentSectionElement = FixAssembylAttributeOfSection(currentSectionElement, type);
+                    searchedSection = FixAssembylAttributeOfSection(searchedSection, type);
                     differenceFound = true;
                 }
 
                 // edit according to the received parameter object:
 
 
-
                 FieldInfo currentObjectField = null;
-                FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
-                foreach (var fieldInfo in fieldInfosWithConfigAttribute)
+                FieldInfo[] fieldsWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).Any()).ToArray();
+                foreach (var fieldInfo in fieldsWithConfigAttribute)
                 {
                     ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
 
                     XAttribute nameAttribute = null;
                     XAttribute valueAttribute = null;
-                    IEnumerable<XElement> xmlListElementNode = null;
+                    IEnumerable<XElement> xElementSubNodes = null;
 
-                    foreach (XNode parameterNode in currentSectionElement.Nodes())
+                    foreach (XNode parameterNode in searchedSection.Nodes())
                     {
                         if (parameterNode is XComment)       // todo
                         {
@@ -101,7 +95,7 @@ namespace MyFrameWork.ConfigHandler
                             continue;       // todo
                         }
 
-                        xmlListElementNode = parameterElement.Elements();
+                        xElementSubNodes = parameterElement.Elements();
                         nameAttribute = GetAttributeValueByAttributeName(parameterElement, NAME_ATTRIBUTE_NAME);
                         valueAttribute = GetAttributeValueByAttributeName(parameterElement, VALUE_ATTRIBUTE_NAME);
 
@@ -128,11 +122,11 @@ namespace MyFrameWork.ConfigHandler
                             Type fieldType = currentObjectField.FieldType;
 
                             // process list if list was found:
-                            if (valueAttribute.Value == string.Empty && xmlListElementNode != null && typeof(ICollection).IsAssignableFrom(fieldType))
+                            if (valueAttribute.Value == string.Empty && xElementSubNodes != null && typeof(ICollection).IsAssignableFrom(fieldType))
                             {
                                 IList listobj = (IList)Activator.CreateInstance(fieldType);
 
-                                foreach (XElement item in xmlListElementNode)
+                                foreach (XElement item in xElementSubNodes)
                                 {
                                     valueAttribute = GetAttributeValueByAttributeName(item, VALUE_ATTRIBUTE_NAME);
                                     string listElement = (string)Convert.ChangeType(valueAttribute.Value, typeof(string));
@@ -140,7 +134,7 @@ namespace MyFrameWork.ConfigHandler
                                 }
                                 currentObjectField.SetValue(inputObj, listobj);
                             }
-                            else // not list, but a single lement was found
+                            else // not list, but a single element was found
                             {
                                 object temporary;
                                 // if a string was found -> no conversion is needed:
@@ -175,8 +169,8 @@ namespace MyFrameWork.ConfigHandler
                         XElement newElement = CreateFieldSectionXElement(fieldConfigurationAttribute.Name, "");
                         XComment comment = CreateXComment(fieldConfigurationAttribute.Description, fieldInfo);
 
-                        currentSectionElement.Add(comment);
-                        currentSectionElement.Add(newElement);
+                        searchedSection.Add(comment);
+                        searchedSection.Add(newElement);
 
                         differenceFound = true;
                     }
@@ -185,7 +179,7 @@ namespace MyFrameWork.ConfigHandler
 
                 // Investigate whether all field sections has pair in the loaded object -> if not make comment from it.
                 XComment previousComment = null;
-                foreach (XNode childXNode in currentSectionElement.Nodes())
+                foreach (XNode childXNode in searchedSection.Nodes())
                 {
                     XAttribute nameXAttribute = null;
 
@@ -199,7 +193,7 @@ namespace MyFrameWork.ConfigHandler
                     nameXAttribute = GetAttributeValueByAttributeName(childXElement, NAME_ATTRIBUTE_NAME);
                     ConfigurationAttribute matchingConfigurationAttribute = null;
 
-                    foreach (var fieldInfo in fieldInfosWithConfigAttribute)
+                    foreach (var fieldInfo in fieldsWithConfigAttribute)
                     {
                         ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
 
@@ -217,8 +211,8 @@ namespace MyFrameWork.ConfigHandler
                         {
                             childXNode.Remove();
                             previousComment.Remove();
-                            currentSectionElement.Add(previousComment);
-                            currentSectionElement.Add(comment);
+                            searchedSection.Add(previousComment);
+                            searchedSection.Add(comment);
                         }
                         catch (Exception ex)
                         {
@@ -231,7 +225,7 @@ namespace MyFrameWork.ConfigHandler
 
                 if (differenceFound)
                 {
-                    Save(currentConfigFileName, sectionName, currentSectionElement, type);
+                    Save(currentConfigFileName, sectionName, searchedSection, type);
                 }
             }
             catch (Exception ex)
@@ -245,14 +239,14 @@ namespace MyFrameWork.ConfigHandler
 
         private bool CheckAssemblyAttributeOfSection(XElement currentSectionElement, Type type)
         {
-            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
+            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME)?.Value;
 
             if (assemblyVersionInfo == null || assemblyVersionInfo != type.Assembly.FullName)
             {
                 return false;
             }
 
-            return true;    // todo befejezni
+            return true;
         }
 
         private XElement FixAssembylAttributeOfSection(XElement currentSectionElement, Type type)
@@ -382,7 +376,7 @@ namespace MyFrameWork.ConfigHandler
 
         #region private
 
-        internal XAttribute GetAttributeValueByAttributeName(XElement element, string attributeName)
+        private XAttribute GetAttributeValueByAttributeName(XElement element, string attributeName)
         {
             foreach (XAttribute attribute in element.Attributes())
             {
@@ -398,13 +392,10 @@ namespace MyFrameWork.ConfigHandler
         internal XElement LoadSectionXElementFromFile(string fileName, string sectionName, Type type)
         {
             XElement readXml = LoadXmlFromFile(fileName);
-
-            XElement currentSectionElement = LoadSectionXElementFromXElement(readXml, sectionName, type);
-
-            return currentSectionElement;
+            return LoadSectionXElementFromXElement(readXml, sectionName, type);
         }
 
-        internal XElement LoadSectionXElementFromXElement(XElement inputXElement, string sectionName, Type type)
+        private XElement LoadSectionXElementFromXElement(XElement inputXElement, string sectionName, Type type)
         {
             if (inputXElement == null)
             {
@@ -413,36 +404,35 @@ namespace MyFrameWork.ConfigHandler
             }
 
             IEnumerable<XElement> childElements = inputXElement.Elements();
-            XElement currentSection = null;
+            XElement searchedSection = null;
 
             foreach (XElement element in childElements)
             {
-                IEnumerable<XAttribute> attributeCollection = element.Attributes();
-                if (attributeCollection == null)
+                List<XAttribute> attributeCollection = element.Attributes().ToList();
+                if (attributeCollection.Count == 0)
                 {
                     _logger.Error($"No attributes was found for node-element: {element.Name.LocalName}");
-                    continue;
                 }
 
                 foreach (XAttribute attribute in attributeCollection)
                 {
                     if (attribute.Name == NAME_ATTRIBUTE_NAME && attribute.Value == sectionName)
                     {
-                        currentSection = element;
+                        searchedSection = element;
                         break;
                     }
                 }
 
-                if (currentSection != null)
+                if (searchedSection != null)
                 {
                     break;
                 }
             }
 
-            return currentSection;
+            return searchedSection;
         }
 
-        internal XComment CreateXComment(string description, FieldInfo fieldInfo = null)
+        private XComment CreateXComment(string description, FieldInfo fieldInfo = null)
         {
             string enumDescription = string.Empty;
             if (fieldInfo?.FieldType.IsEnum ?? false)
@@ -458,7 +448,7 @@ namespace MyFrameWork.ConfigHandler
             return new XComment($"{description} {enumDescription}");
         }
 
-        internal XElement CreateFieldSectionXElement(string name, string value)
+        private XElement CreateFieldSectionXElement(string name, string value)
         {
             if (string.IsNullOrEmpty(name))
             {

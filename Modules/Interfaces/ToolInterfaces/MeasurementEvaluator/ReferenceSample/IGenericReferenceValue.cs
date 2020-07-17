@@ -4,7 +4,7 @@ using Interfaces.Misc;
 namespace ToolSpecificInterfaces.MeasurementEvaluator.ReferenceSample
 {
 
-    public interface IReferenceValue : INamed
+    public interface IGenericReferenceValue : INamed
     {
         /// <summary>
         /// Dimension of the Value
@@ -12,7 +12,7 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ReferenceSample
         Units Dimension { get; }
     }
 
-    public interface IReferenceValue<T> : IReferenceValue
+    public interface IGenericReferenceValue<T> : IGenericReferenceValue
         where T : struct
     {
         /// <summary>
@@ -23,12 +23,12 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ReferenceSample
 
 
 
-    public interface IReferenceValueHandler : IReferenceValue, INamedHandler
+    public interface IGenericReferenceValueHandler : IGenericReferenceValue, INamedHandler
     {
         new Units Dimension { get; set; }
     }
 
-    public interface IReferenceValueHandler<T> : IReferenceValueHandler, IReferenceValue<T>
+    public interface IGenericReferenceValueHandler<T> : IGenericReferenceValueHandler, IGenericReferenceValue<T>
         where T : struct
     {
         /// <summary>

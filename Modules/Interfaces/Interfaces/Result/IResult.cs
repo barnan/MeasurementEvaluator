@@ -13,7 +13,7 @@ namespace Interfaces.Result
         /// <summary>
         /// contains whether the calculation was successful or not. The calculation is successful, if all the sub-result were been able to calculate.
         /// </summary>
-        bool Successful { get; }
+        bool IsSuccessful { get; }
     }
 
 

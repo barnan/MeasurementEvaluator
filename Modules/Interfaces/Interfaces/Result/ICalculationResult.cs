@@ -3,19 +3,14 @@
 namespace Interfaces.Result
 {
 
-    public interface ICalculationResult : IResult
-    {
-    }
-
-
-    public interface ICalculationResult<T> : ICalculationResult
+    public interface ICalculationResult<T> : IResult
     {
         /// <summary>
         /// calculation result
         /// </summary>
         T ResultValue { get; }
 
-        T Average { get; }
+        //T Average { get; }
 
         /// <summary>
         /// the data serie which was used in the calculation

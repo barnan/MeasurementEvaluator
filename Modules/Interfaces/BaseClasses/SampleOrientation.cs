@@ -16,7 +16,7 @@
     }
 
 
-
+    // type safe enum
     public sealed class FixedSampleOrientation : SampleOrientation
     {
         private FixedSampleOrientation(double angle)

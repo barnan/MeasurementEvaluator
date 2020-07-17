@@ -11,9 +11,7 @@
         Fatal
     }
 
-
-
-    interface IMyLogger
+    public interface IMyLogger
     {
         string Trace(string message);
         string Debug(string message);

@@ -1,17 +1,16 @@
 ﻿using BaseClasses;
 using Interfaces.Misc;
-using System;
 using System.Collections.Generic;
 
 namespace ToolSpecificInterfaces.MeasurementEvaluator.ReferenceSample
 {
 
-    public interface IReferenceSample : IComparable<IReferenceSample>, INamed
+    public interface IReferenceSample : INamed   //, IComparable<IGenericReferenceSample>
     {
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>
-        IReadOnlyList<IReferenceValue> ReferenceValues { get; }
+        List<IGenericReferenceValue> ReferenceValues { get; }
 
         /// <summary>
         /// orientation of the sample, when its reference values were measured
@@ -25,7 +24,7 @@ namespace ToolSpecificInterfaces.MeasurementEvaluator.ReferenceSample
         /// <summary>
         /// reference values, which characterise the sample
         /// </summary>
-        new IReadOnlyList<IReferenceValue> ReferenceValues { get; set; }
+        new List<IGenericReferenceValue> ReferenceValues { get; set; }
 
         /// <summary>
         /// orientation of the sample, when its reference values were measured
