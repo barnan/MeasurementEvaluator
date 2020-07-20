@@ -17,13 +17,13 @@ namespace MyFrameWork.ConfigHandler
         private IMyLogger _logger;
         private string _configFolder;
         private const string _CONFIG_FILE_EXTENSION = ".config";
-        private const string ROOT_NODE_NAME = "Configurations";
-        private const string NAME_ATTRIBUTE_NAME = "Name";
-        private const string VALUE_ATTRIBUTE_NAME = "Value";
-        private const string ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
-        private const string FIELD_NODE_NAME = "Parameter";
-        private const string SECTION_NODE_NAME = "Section";
-        private const string LIST_ELEMENT_NODE_NAME = "Element";
+        private const string _ROOT_NODE_NAME = "Configurations";
+        private const string _NAME_ATTRIBUTE_NAME = "Name";
+        private const string _VALUE_ATTRIBUTE_NAME = "Value";
+        private const string _ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
+        private const string _FIELD_NODE_NAME = "Parameter";
+        private const string _SECTION_NODE_NAME = "Section";
+        private const string _LIST_ELEMENT_NODE_NAME = "Element";
 
 
         public ConfigHandler(string folder)
@@ -81,86 +81,98 @@ namespace MyFrameWork.ConfigHandler
 
                     XAttribute nameAttribute = null;
                     XAttribute valueAttribute = null;
-                    IEnumerable<XElement> xElementSubNodes = null;
+                    IEnumerable<XElement> foundElementSubNodes = null;
 
-                    foreach (XNode parameterNode in searchedSection.Nodes())
+                    // get the section with the name of the given property
+                    foreach (XNode examinedNode in searchedSection.Nodes())
                     {
-                        if (parameterNode is XComment)       // todo
+                        if (examinedNode is XComment)
                         {
                             continue;
                         }
 
-                        if (!(parameterNode is XElement parameterElement))
-                        {
-                            continue;       // todo
-                        }
+                        XElement examinedxElement = examinedNode as XElement;
 
-                        xElementSubNodes = parameterElement.Elements();
-                        nameAttribute = GetAttributeValueByAttributeName(parameterElement, NAME_ATTRIBUTE_NAME);
-                        valueAttribute = GetAttributeValueByAttributeName(parameterElement, VALUE_ATTRIBUTE_NAME);
+                        nameAttribute = GetAttributeValueByAttributeName(examinedxElement, _NAME_ATTRIBUTE_NAME);
+                        valueAttribute = GetAttributeValueByAttributeName(examinedxElement, _VALUE_ATTRIBUTE_NAME);
 
                         if (nameAttribute == null || valueAttribute == null)
                         {
-                            parameterNode.Remove();
-                            _logger.Info($"Section ({parameterElement.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
+                            examinedNode.Remove();
+                            _logger.Info($"Section ({examinedxElement.Name}) without {_NAME_ATTRIBUTE_NAME} or {_VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
 
                             continue;
                         }
 
                         if (fieldConfigurationAttribute.Name == nameAttribute.Value)
                         {
+                            foundElementSubNodes = examinedxElement.Elements();
                             break;
                         }
                     }
 
-                    // xnode was found for the given field in the section:
+                    // xnode was found for the given field in the section, now get the value:
                     if (nameAttribute != null && valueAttribute != null && fieldConfigurationAttribute.Name == nameAttribute.Value)
                     {
                         try
                         {
                             currentObjectField = fieldInfo;
                             Type fieldType = currentObjectField.FieldType;
+                            object temporary;
 
                             // process list if list was found:
-                            if (valueAttribute.Value == string.Empty && xElementSubNodes != null && typeof(ICollection).IsAssignableFrom(fieldType))
+                            if (string.IsNullOrEmpty(valueAttribute.Value) && foundElementSubNodes != null && typeof(IList).IsAssignableFrom(fieldType))
                             {
-                                IList listobj = (IList)Activator.CreateInstance(fieldType);
+                                IList listObject = (IList)Activator.CreateInstance(fieldType);
 
-                                foreach (XElement item in xElementSubNodes)
+                                foreach (XElement item in foundElementSubNodes)
                                 {
-                                    valueAttribute = GetAttributeValueByAttributeName(item, VALUE_ATTRIBUTE_NAME);
+                                    valueAttribute = GetAttributeValueByAttributeName(item, _VALUE_ATTRIBUTE_NAME);
                                     string listElement = (string)Convert.ChangeType(valueAttribute.Value, typeof(string));
-                                    listobj.Add(listElement);
+                                    listObject.Add(listElement);
                                 }
-                                currentObjectField.SetValue(inputObj, listobj);
+                                temporary = listObject;
                             }
-                            else // not list, but a single element was found
+
+                            // process list if dictionary was found:
+                            else if (string.IsNullOrEmpty(valueAttribute.Value) && foundElementSubNodes != null && typeof(IDictionary).IsAssignableFrom(fieldType))
                             {
-                                object temporary;
-                                // if a string was found -> no conversion is needed:
-                                if (fieldType.IsEnum && !string.IsNullOrEmpty(valueAttribute.Value))
-                                {
-                                    temporary = Enum.Parse(fieldType, valueAttribute.Value);
-                                }
-                                else
-                                {
-                                    if (fieldType.GenericTypeArguments != null && fieldType.GenericTypeArguments.Length > 0 && fieldType.GenericTypeArguments[0] == typeof(System.String))
-                                    {
-                                        temporary = valueAttribute.Value;
-                                    }
-                                    else // not string -> conversion is needed
-                                    {
-                                        temporary = Convert.ChangeType(valueAttribute.Value, fieldType);
-                                    }
-                                }
+                                IList dictObject = (IList)Activator.CreateInstance(fieldType);
 
-                                currentObjectField.SetValue(inputObj, temporary);
+                                foreach (XElement item in foundElementSubNodes)
+                                {
+                                    valueAttribute = GetAttributeValueByAttributeName(item, _VALUE_ATTRIBUTE_NAME);
+                                    string listElement = (string)Convert.ChangeType(valueAttribute.Value, typeof(string));
+                                    dictObject.Add(listElement);
+                                }
+                                temporary = dictObject;
                             }
 
+                            // enum was found
+                            else if (fieldType.IsEnum && !string.IsNullOrEmpty(valueAttribute.Value))
+                            {
+                                temporary = Enum.Parse(fieldType, valueAttribute.Value);
+                            }
+
+                            // string was found:
+                            else if (fieldType.GenericTypeArguments != null && fieldType.GenericTypeArguments.Length > 0 && fieldType.GenericTypeArguments[0] == typeof(System.String))
+                            {
+                                // if a string was found -> no conversion is needed:
+                                temporary = valueAttribute.Value;
+                            }
+
+                            else
+                            {
+                                // not string, but other singl element -> conversion is needed
+                                temporary = Convert.ChangeType(valueAttribute.Value, fieldType);
+                            }
+
+                            // set the property value:
+                            currentObjectField.SetValue(inputObj, temporary);
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error($"Exception occured during {nameAttribute.Value}, {valueAttribute.Value} conversion: {ex.Message}");
+                            _logger.Error($"Exception occured during {nameAttribute.Value}, {valueAttribute.Value} conversion. {ex.Message}");
                             break;
                         }
                     }
@@ -177,20 +189,20 @@ namespace MyFrameWork.ConfigHandler
                 }
 
 
-                // Investigate whether all field sections has pair in the loaded object -> if not make comment from it.
+                // Investigate whether all field sections has pair in the loaded object -> if not make a commented line from it.
                 XComment previousComment = null;
                 foreach (XNode childXNode in searchedSection.Nodes())
                 {
                     XAttribute nameXAttribute = null;
 
-                    if (childXNode is XComment || childXNode == null)
+                    if (childXNode is XComment commentNode)
                     {
-                        previousComment = (XComment)childXNode;
+                        previousComment = commentNode;
                         continue;
                     }
 
-                    XElement childXElement = (XElement)childXNode;
-                    nameXAttribute = GetAttributeValueByAttributeName(childXElement, NAME_ATTRIBUTE_NAME);
+                    XElement childXElement = childXNode as XElement;
+                    nameXAttribute = GetAttributeValueByAttributeName(childXElement, _NAME_ATTRIBUTE_NAME);
                     ConfigurationAttribute matchingConfigurationAttribute = null;
 
                     foreach (var fieldInfo in fieldsWithConfigAttribute)
@@ -210,7 +222,7 @@ namespace MyFrameWork.ConfigHandler
                         try
                         {
                             childXNode.Remove();
-                            previousComment.Remove();
+                            previousComment?.Remove();
                             searchedSection.Add(previousComment);
                             searchedSection.Add(comment);
                         }
@@ -223,6 +235,7 @@ namespace MyFrameWork.ConfigHandler
                     }
                 }
 
+                // save if any change was found during the search:
                 if (differenceFound)
                 {
                     Save(currentConfigFileName, sectionName, searchedSection, type);
@@ -239,7 +252,7 @@ namespace MyFrameWork.ConfigHandler
 
         private bool CheckAssemblyAttributeOfSection(XElement currentSectionElement, Type type)
         {
-            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME)?.Value;
+            string assemblyVersionInfo = currentSectionElement.Attribute(_ASSEMBLY_ATTRIBUTE_NAME)?.Value;
 
             if (assemblyVersionInfo == null || assemblyVersionInfo != type.Assembly.FullName)
             {
@@ -251,16 +264,16 @@ namespace MyFrameWork.ConfigHandler
 
         private XElement FixAssembylAttributeOfSection(XElement currentSectionElement, Type type)
         {
-            string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
+            string assemblyVersionInfo = currentSectionElement.Attribute(_ASSEMBLY_ATTRIBUTE_NAME).Value;
 
             if (assemblyVersionInfo != null)
             {
-                foreach (XAttribute item in currentSectionElement.Attributes(ASSEMBLY_ATTRIBUTE_NAME))
+                foreach (XAttribute item in currentSectionElement.Attributes(_ASSEMBLY_ATTRIBUTE_NAME))
                 {
                     item.Remove();
                 }
             }
-            XAttribute attrib = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
+            XAttribute attrib = new XAttribute(_ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
             currentSectionElement.Add(attrib);
             return currentSectionElement;
         }
@@ -297,12 +310,12 @@ namespace MyFrameWork.ConfigHandler
 
         internal XElement CreateSectionXElement(string sectionName, Type type)
         {
-            XElement createdXElement = new XElement(SECTION_NODE_NAME);
+            XElement createdXElement = new XElement(_SECTION_NODE_NAME);
 
             _logger.Info($"New {sectionName} section was created.");
 
-            XAttribute sectionNameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, sectionName);
-            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
+            XAttribute sectionNameAttribute = new XAttribute(_NAME_ATTRIBUTE_NAME, sectionName);
+            XAttribute assemblyAttribute = new XAttribute(_ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
 
             createdXElement.Add(sectionNameAttribute);
             createdXElement.Add(assemblyAttribute);
@@ -326,7 +339,7 @@ namespace MyFrameWork.ConfigHandler
 
             if (rootXml == null || rootXml.NodeType != XmlNodeType.Element)
             {
-                rootXml = new XElement(ROOT_NODE_NAME);
+                rootXml = new XElement(_ROOT_NODE_NAME);
             }
 
             if (oldElement != null)
@@ -378,6 +391,11 @@ namespace MyFrameWork.ConfigHandler
 
         private XAttribute GetAttributeValueByAttributeName(XElement element, string attributeName)
         {
+            if (element == null)
+            {
+                return null;
+            }
+
             foreach (XAttribute attribute in element.Attributes())
             {
                 if (attribute.Name == attributeName)
@@ -416,7 +434,7 @@ namespace MyFrameWork.ConfigHandler
 
                 foreach (XAttribute attribute in attributeCollection)
                 {
-                    if (attribute.Name == NAME_ATTRIBUTE_NAME && attribute.Value == sectionName)
+                    if (attribute.Name == _NAME_ATTRIBUTE_NAME && attribute.Value == sectionName)
                     {
                         searchedSection = element;
                         break;
@@ -456,10 +474,10 @@ namespace MyFrameWork.ConfigHandler
                 return null;
             }
 
-            XElement newElement = new XElement(FIELD_NODE_NAME);
+            XElement newElement = new XElement(_FIELD_NODE_NAME);
 
-            XAttribute nameAttrib = new XAttribute(NAME_ATTRIBUTE_NAME, name);
-            XAttribute valueAttrib = new XAttribute(VALUE_ATTRIBUTE_NAME, value);
+            XAttribute nameAttrib = new XAttribute(_NAME_ATTRIBUTE_NAME, name);
+            XAttribute valueAttrib = new XAttribute(_VALUE_ATTRIBUTE_NAME, value);
 
             newElement.Add(nameAttrib);
             newElement.Add(valueAttrib);

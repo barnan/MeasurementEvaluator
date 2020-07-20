@@ -63,11 +63,6 @@ namespace MyFrameWork.PluginLoading
             return new LoggerToConsole(name);
         }
 
-        internal static void SendToInfoLogAndConsole(string message)
-        {
-            _consoleLogger?.Info(message);
-        }
-
         internal static string SendToErrorLogAndConsole(string message)
         {
             _consoleLogger?.Error(message);
@@ -169,7 +164,7 @@ namespace MyFrameWork.PluginLoading
         /// Sets the used pluginfolder to the given path
         /// </summary>
         /// ///
-        /// <param name="currentExeFolder"></param>
+        /// <param name="folder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
         public bool Inititialize(string folder)
         {
