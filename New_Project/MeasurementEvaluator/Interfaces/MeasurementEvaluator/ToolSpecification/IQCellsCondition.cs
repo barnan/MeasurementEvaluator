@@ -1,7 +1,7 @@
 ﻿
 namespace Interfaces.MeasurementEvaluator.ToolSpecification
 {
-    public interface ICpkCondition : ICondition<double>
+    public interface ICpkCondition : ICondition
     {
         /// <summary>
         /// Half of the tolerance interval

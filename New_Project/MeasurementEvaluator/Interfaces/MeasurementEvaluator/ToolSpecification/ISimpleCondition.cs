@@ -3,7 +3,7 @@ using BaseClasses.MeasurementEvaluator;
 
 namespace Interfaces.MeasurementEvaluator.ToolSpecification
 {
-    public interface ISimpleCondition : ICondition<double>
+    public interface ISimpleCondition : ICondition
     {
         /// <summary>
         /// The condition is valid if the average value of the measurement data meets this relation

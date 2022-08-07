@@ -2,7 +2,7 @@
 
 namespace Frame.ConfigHandler
 {
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class ConfigurationAttribute : Attribute
     {
         public ConfigurationAttribute(string description, string name)

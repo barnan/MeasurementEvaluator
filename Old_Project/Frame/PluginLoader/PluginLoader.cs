@@ -4,6 +4,7 @@ using Frame.PluginLoader.Interfaces;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -56,7 +57,14 @@ namespace Frame.PluginLoader
 
         static PluginLoader()
         {
-            _logger = LogManager.GetCurrentClassLogger();
+            try
+            {
+                _logger = LogManager.GetCurrentClassLogger();
+            }
+            catch (Exception ex)
+            {
+                ErrorLog($"Error occured during {nameof(PluginLoader)} static ctor: {ex.Message}");
+            }
         }
 
         public PluginLoader()
@@ -64,20 +72,19 @@ namespace Frame.PluginLoader
             _iRunables = new List<KeyValuePair<Type, Assembly>>();
         }
 
-
-        public static void SendToInfoLogAndConsole(string message)
+        public static void InfoLog(string message)
         {
             _logger?.Info(message);
             Console.WriteLine(message + Environment.NewLine);
         }
 
-        public static string SendToErrorLogAndConsole(string message)
+        public static string ErrorLog(string message)
         {
             _logger?.Error(message);
-            ConsoleColor cc = Console.ForegroundColor;
+            ConsoleColor previousColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message + Environment.NewLine);
-            Console.ForegroundColor = cc;
+            Console.ForegroundColor = previousColor;
             return message;
         }
 
@@ -92,8 +99,7 @@ namespace Frame.PluginLoader
         {
             try
             {
-                var settings = ConfigurationManager.AppSettings;
-
+                NameValueCollection settings = ConfigurationManager.AppSettings;
 
                 lock (_lockObj)
                 {
@@ -183,17 +189,17 @@ namespace Frame.PluginLoader
             }
             catch (ConfigurationErrorsException ex)
             {
-                _logger.Error($"Problem during configuration folder loading from App settings: {ex.Message}");
+                ErrorLog($"Problem during configuration folder loading from App settings: {ex.Message}");
                 return false;
             }
             catch (ArgumentNullException ex)
             {
-                SendToErrorLogAndConsole($"Problem with input variable: {ex.Message}");
+                ErrorLog($"Problem with input variable: {ex.Message}");
                 return false;
             }
             catch (Exception ex)
             {
-                SendToErrorLogAndConsole($"Exception occured: {ex.Message}");
+                ErrorLog($"Exception occured: {ex.Message}");
                 return false;
             }
         }
@@ -209,17 +215,17 @@ namespace Frame.PluginLoader
             {
                 if (!Initialized)
                 {
-                    _logger.Error($"{nameof(PluginLoader)} not initialized yet.");
+                    ErrorLog($"{nameof(PluginLoader)} was not initialized yet");
                     return;
                 }
 
                 if (_iRunables.Count > 1)
                 {
-                    _logger.Error($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
+                    ErrorLog($"More {nameof(IRunable)} was found in folder: {PluginsFolder}");
 
                     foreach (KeyValuePair<Type, Assembly> item in _iRunables)
                     {
-                        _logger.Info($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
+                        InfoLog($"{nameof(IRunable)} was found in type {item.Key} in assembly: {item.Value}");
                     }
 
                     return;
@@ -231,15 +237,15 @@ namespace Frame.PluginLoader
 
                     IRunable runable = (IRunable)Activator.CreateInstance(type);
 
-                    _logger.Info($"{nameof(IRunable)} was created with the type: {type}");
+                    InfoLog($"{nameof(IRunable)} was created with the type: {type}");
 
                     runable.Run();
 
-                    _logger.Info($"{type} started.");
+                    InfoLog($"{type} started.");
                 }
                 catch (Exception ex)
                 {
-                    SendToErrorLogAndConsole($"Exception occured: {ex}");
+                    ErrorLog($"Exception occured: {ex}");
                 }
             }
         }
@@ -249,25 +255,25 @@ namespace Frame.PluginLoader
         {
             if (_factories == null)
             {
-                _logger.Error("Factories are not created yet.");
+                ErrorLog("Factories are not created yet");
                 return null;
             }
 
             var components = _componentList.Components.Where(p => p.Name == name).ToList();
             if (components.Count > 1)
             {
-                _logger.Error($"Ambiguity between components. {name} appears more than once in the ComponentList.");
+                ErrorLog($"Ambiguity between components. {name} appears more than once in the ComponentList");
                 return null;
             }
             if (components.Count < 1)
             {
-                _logger.Error($"No component was found with the given name:{name} in the ComponentList.");
+                ErrorLog($"No component was found with the given name:{name} in the ComponentList");
                 return null;
             }
 
             //if (components[0].Interfaces.All(p => !(interfaceType.IsAssignableFrom(Type.GetType(p)))))
             //{
-            //    _logger.Error($"The found compnent (with name: {name}) does not implement the given interface: {nameof(interfaceType)}. The implemented interfaces: {string.Join(",", components[0].Interfaces)}");
+            //    ErrorLog($"The found compnent (with name: {name}) does not implement the given interface: {nameof(interfaceType)}. The implemented interfaces: {string.Join(",", components[0].Interfaces)}");
             //    return null;
             //}
 
@@ -287,13 +293,13 @@ namespace Frame.PluginLoader
 
             if (instances.Count == 0)
             {
-                SendToErrorLogAndConsole($"No factory was found to create: {name}({interfaceType})");
+                ErrorLog($"No factory was found to create: {name}({interfaceType})");
                 return null;
             }
 
             if (instances.Count > 1)
             {
-                SendToErrorLogAndConsole($"More than one factories was found to create: {name}({interfaceType})");
+                ErrorLog($"More than one factories was found to create: {name}({interfaceType})");
                 return null;
             }
 
@@ -322,28 +328,24 @@ namespace Frame.PluginLoader
         {
             _componentList = LoadComponentList();
 
-            if (!Directory.Exists(PluginsFolder))
-            {
-                return false;
-            }
             // gather all dll names:
             string[] dllFileNames = Directory.GetFiles(PluginsFolder, "*.dll");
 
             ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
-            foreach (string dllFile in dllFileNames)
+            foreach (string dllFileName in dllFileNames)
             {
                 try
                 {
                     // load the assembly:
-                    AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
+                    AssemblyName an = AssemblyName.GetAssemblyName(dllFileName);
                     Assembly assembly = Assembly.Load(an);
                     assemblies.Add(assembly);
 
-                    SendToInfoLogAndConsole($"{assembly.FullName} assembly loadded nad added to the list.");
+                    InfoLog($"{assembly.FullName} assembly loadded and added to the list");
                 }
                 catch (Exception ex)
                 {
-                    SendToErrorLogAndConsole($"Could not load assemby from file: {dllFile} -> {ex}");
+                    ErrorLog($"Could not load assemby from file: {dllFileName} -> {ex}");
                 }
             }
 
@@ -365,13 +367,13 @@ namespace Frame.PluginLoader
                         if (typeof(IRunable).IsAssignableFrom(type))
                         {
                             _iRunables.Add(new KeyValuePair<Type, Assembly>(type, assembly));
-                            SendToInfoLogAndConsole($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
+                            InfoLog($"{nameof(IRunable)} found in {assembly.FullName} -> {type}");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    SendToErrorLogAndConsole($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
+                    ErrorLog($"Exception occured during assembly investigation: {assembly.FullName} -> {ex}");
                 }
             }
 
@@ -401,13 +403,13 @@ namespace Frame.PluginLoader
                             string assemblyName = assembly.FullName.Split(',')[0];
 
                             factories.Add(new FactoryElement { Factory = (IPluginFactory)Activator.CreateInstance(type), AssemblyName = assemblyName });
-                            SendToInfoLogAndConsole($"{type} added to plugin factories.");
+                            InfoLog($"{type} added to plugin factories");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    SendToErrorLogAndConsole($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
+                    ErrorLog($"Could not load factory from assembly: {assembly.FullName} -> {ex}");
                 }
             }
             _factories = factories;
@@ -424,7 +426,7 @@ namespace Frame.PluginLoader
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("Arrived path is null, empty or consists of whitespace.");
+                throw new ArgumentNullException("Arrived path is null, empty or consists of whitespace");
             }
 
             FileAttributes attr = File.GetAttributes(path);
@@ -453,35 +455,37 @@ namespace Frame.PluginLoader
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole("Received path-name is null."));
+                throw new ConfigurationErrorsException(PluginLoader.ErrorLog("Received path-name is null"));
             }
 
             if (string.IsNullOrEmpty(specialFolder))
             {
-                throw new ConfigurationErrorsException(PluginLoader.SendToErrorLogAndConsole($"{name} is null."));
+                throw new ConfigurationErrorsException(PluginLoader.ErrorLog($"{name} is null"));
             }
 
+            // the given "specialfolder" is given with absolute path:
             if (Path.IsPathRooted(specialFolder))
             {
                 if (!Directory.Exists(specialFolder))
                 {
                     Directory.CreateDirectory(specialFolder);
-                    PluginLoader.SendToInfoLogAndConsole($"{specialFolder} created.");
+                    PluginLoader.InfoLog($"{specialFolder} created");
                 }
 
-                PluginLoader.SendToInfoLogAndConsole($"{specialFolder} will be used as {name}");
+                PluginLoader.InfoLog($"{specialFolder} will be used as {name}");
                 return specialFolder;
             }
 
+            // the given specialfolder is not given as relative path:
             string combinedPath = Path.Combine(currentExeFolder, specialFolder);
 
             if (!Directory.Exists(combinedPath))
             {
                 Directory.CreateDirectory(combinedPath);
-                PluginLoader.SendToInfoLogAndConsole($"Combined {name} directory ({combinedPath}) created.");
+                PluginLoader.InfoLog($"Combined directory ({combinedPath}) was created for {name}");
             }
 
-            PluginLoader.SendToInfoLogAndConsole($"Combined {name} ({combinedPath}) will be used.");
+            PluginLoader.InfoLog($"Combined ({combinedPath}) will be used as {name}");
             return CheckDirectoryPath(combinedPath);
         }
 

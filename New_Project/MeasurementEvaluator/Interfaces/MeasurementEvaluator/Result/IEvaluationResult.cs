@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BaseClasses.MeasurementEvaluator;
+﻿using BaseClasses.MeasurementEvaluator;
 using Interfaces.MeasurementEvaluator.ReferenceSample;
 using Interfaces.MeasurementEvaluator.ToolSpecification;
 using Interfaces.Misc;
@@ -34,14 +29,12 @@ namespace Interfaces.MeasurementEvaluator.Result
     }
 
 
-
     public interface IQuantityEvaluationResult
     {
         IReadOnlyList<IConditionEvaluationResult> ConditionEvaluationResults { get; }
 
         IQuantity Quantity { get; }
     }
-
 
 
     public interface IEvaluationResult : IResult, INamed

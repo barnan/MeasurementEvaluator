@@ -21,16 +21,18 @@ namespace Interfaces.Result
 
     public interface IResultProvider
     {
-        /// <summary>
-        /// Subscribe to ResultReadyEvent. ResultReadyEventHandler is fired when the calculation is finished
-        /// </summary>
-        void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
+        ///// <summary>
+        ///// Subscribe to ResultReadyEvent. ResultReadyEventHandler is fired when the calculation is finished
+        ///// </summary>
+        //void SubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
 
 
-        /// <summary>
-        /// Un-Subscribe to ResultReadyEvent. 
-        /// </summary>
-        void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
+        ///// <summary>
+        ///// Un-Subscribe to ResultReadyEvent. 
+        ///// </summary>
+        //void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
+
+        EventHandler<IResult> ResultReady { get; } 
     }
 
 }

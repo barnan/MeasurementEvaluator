@@ -2,7 +2,7 @@
 namespace Interfaces.MeasurementEvaluator.MeasuredData
 {
 
-    public interface IMeasurementPoint
+    public interface IDataPoint
     {
         /// <summary>
         /// it shows whether the measured data point is valid or not
@@ -10,7 +10,7 @@ namespace Interfaces.MeasurementEvaluator.MeasuredData
         bool IsValid { get; }
     }
 
-    public interface IMeasurementPoint<T> : IMeasurementPoint
+    public interface IDataPoint<T> : IDataPoint
     {
         /// <summary>
         /// The value of one individual measurement

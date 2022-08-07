@@ -8,17 +8,17 @@ namespace Interfaces.MeasurementEvaluator.ToolSpecification
         /// <summary>
         /// Validity of the condition -> if false, the condition is switched off
         /// </summary>
-        bool Enabled { get; }
+        bool IsEnabled { get; }
 
         /// <summary>
         /// type of the calculation that is required by this condition 
         /// </summary>
-        CalculationTypes CalculationType { get; set; }
+        CalculationTypes CalculationType { get; }
 
         /// <summary>
         /// relative or absolute
         /// </summary>
-        new Relativities Relativity { get; }
+        Relativities Relativity { get; }
 
         /// <summary>
         /// Relation in the condition    e.g.  <  >  ==  >=  <=
@@ -27,19 +27,19 @@ namespace Interfaces.MeasurementEvaluator.ToolSpecification
     }
 
 
-    public interface ICondition<T> : ICondition
-        where T : struct
-    {
-        /// <summary>
-        /// value of part of the relation. The RIGHT value of the comparison
-        /// </summary>
-        T LeftValue { get; }
-    }
+    //public interface ICondition<T> : ICondition
+    //    where T : struct
+    //{
+    //    /// <summary>
+    //    /// value of part of the relation. The RIGHT value of the comparison
+    //    /// </summary>
+    //    T LeftValue { get; }
+    //}
 
 
     public interface IConditionHandler : ICondition, INamedHandler
     {
-        new bool Enabled { get; set; }
+        new bool IsEnabled { get; set; }
 
         new CalculationTypes CalculationType { get; set; }
 
@@ -49,9 +49,9 @@ namespace Interfaces.MeasurementEvaluator.ToolSpecification
     }
 
 
-    public interface IConditionHandler<T> : ICondition<T>
-        where T : struct
-    {
-        new T LeftValue { get; set; }
-    }
+    //public interface IConditionHandler<T> : ICondition<T>
+    //    where T : struct
+    //{
+    //    new T LeftValue { get; set; }
+    //}
 }

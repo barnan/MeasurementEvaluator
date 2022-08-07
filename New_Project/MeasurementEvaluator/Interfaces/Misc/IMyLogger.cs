@@ -1,7 +1,7 @@
 ﻿
 namespace Interfaces.Misc
 {
-    internal interface IMyLogger
+    public interface IMyLogger
     {
         string Trace(string input, params object[] parameters);
         string Info(string input, params object[] parameters);

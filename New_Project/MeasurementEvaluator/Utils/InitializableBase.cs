@@ -5,10 +5,10 @@ namespace Utils
     public abstract class InitializableBase : IInitializable
     {
         private readonly object _initLock = new object();
-        private readonly ILogger _logger;
+        private readonly IMyLogger _logger;
         private InitializationStates _initializationState;
 
-        protected InitializableBase(ILogger logger)
+        protected InitializableBase(IMyLogger logger)
         {
             _logger = logger;
         }

@@ -19,32 +19,32 @@ namespace Start
             {
                 _logger = LogManager.GetCurrentClassLogger();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Logger could not been created.");
+                Console.WriteLine($"Logger could not been created: {ex.Message}");
                 return;
             }
 
             try
             {
                 Process currentprocess = Process.GetCurrentProcess();
-                SendToInfoLogAndConsole($"Process {currentprocess} started.");
+                InfoLog($"Process {currentprocess} started.");
 
                 _currentExeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                SendToInfoLogAndConsole($"Application started: {Assembly.GetExecutingAssembly().FullName}");
-                SendToInfoLogAndConsole($"Application runtime folder: {_currentExeFolder}");
+                InfoLog($"Application started: {Assembly.GetExecutingAssembly().FullName}");
+                InfoLog($"Application runtime folder: {_currentExeFolder}");
 
                 // frame start:
                 PluginLoader pluginLoader = new PluginLoader();
                 if (!pluginLoader.Inititialize(_currentExeFolder))
                 {
-                    SendToErrorLogAndConsole("Frame initialization was NOT successful.");
+                    ErrorLog("Frame initialization was NOT successful.");
                     return;
                 }
                 pluginLoader.Start();
 
-                SendToInfoLogAndConsole($"Process {currentprocess} ended.");
+                InfoLog($"Process {currentprocess} ended.");
             }
             catch (Exception ex)
             {
@@ -54,14 +54,14 @@ namespace Start
 
 
 
-        private static void SendToInfoLogAndConsole(string message)
+        private static void InfoLog(string message)
         {
-            PluginLoader.SendToInfoLogAndConsole(message);
+            PluginLoader.InfoLog(message);
         }
 
-        private static void SendToErrorLogAndConsole(string message)
+        private static void ErrorLog(string message)
         {
-            PluginLoader.SendToErrorLogAndConsole(message);
+            PluginLoader.ErrorLog(message);
         }
     }
 }

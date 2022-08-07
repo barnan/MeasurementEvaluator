@@ -5,29 +5,43 @@ using Interfaces.MeasurementEvaluator.ToolSpecification;
 
 namespace Evaluation.DataStructures.ToolSpecification
 {
-    public class CpkCondition : ConditionBase<double>, ICpkConditionHandler
+    public class SimpleCondition : ConditionBase, ISimpleConditionHandler
     {
-        public double HalfTolerance { get; set; }
+
+        public Relations ValidIf { get; set; }
+
+        public double ValidIf_Value { get; set; }
 
 
-        public CpkCondition()
+        #region ctor
+
+        public SimpleCondition(string name, CalculationTypes calculationtype, Relations relation, bool enabled, Relations validIf, double validIfValue)
+            : base(name, calculationtype, relation, enabled)
         {
-            HalfTolerance = 0;
+            ValidIf = validIf;
+            ValidIf_Value = validIfValue;
         }
 
+        #endregion
 
-        public CpkCondition(string name, CalculationTypes calculationtype, double value, Relations relation, Relativities relativity, bool enabled, double halfTolerance)
-            : base(name, calculationtype, value, relation, enabled)
+        #region ICondition
+        
+        // evaluation calls it from derived classes:
+        private bool CompareValidity(double rightValue)
         {
-            HalfTolerance = halfTolerance;
+            bool equality = EqualityComparer<double>.Default.Equals(ValidIf_Value, rightValue);
+            int compResult = Comparer<double>.Default.Compare(ValidIf_Value, rightValue);
+
+            return ValidIf.Evaluation(equality, compResult);
         }
 
+        #endregion
 
         #region object.ToString()
 
         public override string ToString()
         {
-            return $"{base.ToString()}{Environment.NewLine}HalfTolerance: {HalfTolerance}";
+            return $"{base.ToString()}{Environment.NewLine}Valid, if {ValidIf} than {ValidIf_Value}";
         }
 
         public override string ToString(string format, IFormatProvider formatProvider)
@@ -44,7 +58,7 @@ namespace Evaluation.DataStructures.ToolSpecification
                 case "G":
                     return ToString();
                 case "GRID":
-                    return $"{LeftValue.ToString(format, formatProvider)} {Relation}";
+                    return $"{LeftValue.ToString("N2")} {Relation}";
                 default:
                     throw new FormatException(String.Format($"The {format} format string is not supported."));
             }
@@ -52,7 +66,7 @@ namespace Evaluation.DataStructures.ToolSpecification
 
         #endregion
 
-        
+
         #region XmlStorable
 
         public override XElement SaveToXml(XElement inputElement)
@@ -64,7 +78,8 @@ namespace Evaluation.DataStructures.ToolSpecification
             //this.TrySave(CalculationTypeHandler, inputElement, nameof(CalculationTypeHandler));
             //this.TrySave(ConditionRelation, inputElement, nameof(ConditionRelation));
             //this.TrySave(LeftValue, inputElement, nameof(LeftValue));
-            //this.TrySave(HalfTolerance, inputElement, nameof(HalfTolerance));
+            //this.TrySave(ValidIf, inputElement, nameof(ValidIf));
+            //this.TrySave(ValidIf_Value, inputElement, nameof(ValidIf_Value));
 
             return inputElement;
         }
@@ -78,10 +93,12 @@ namespace Evaluation.DataStructures.ToolSpecification
             //this.TryLoad(inputElement, nameof(CalculationTypeHandler));
             //this.TryLoad(inputElement, nameof(ConditionRelation));
             //this.TryLoad(inputElement, nameof(LeftValue));
-            //this.TryLoad(inputElement, nameof(HalfTolerance));
+            //this.TryLoad(inputElement, nameof(ValidIf));
+            //this.TryLoad(inputElement, nameof(ValidIf_Value));
             return true;
         }
 
         #endregion
+
     }
 }

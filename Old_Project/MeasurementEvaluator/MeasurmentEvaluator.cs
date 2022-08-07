@@ -143,12 +143,12 @@ namespace MeasurementEvaluator
 
         private void _application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            PluginLoader.SendToErrorLogAndConsole($"Exception occured: {sender} - {e.Exception.Message}");
+            PluginLoader.ErrorLog($"Exception occured: {sender} - {e.Exception.Message}");
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs eventArgs)
         {
-            PluginLoader.SendToInfoLogAndConsole("MainWindow closed.");
+            PluginLoader.InfoLog("MainWindow closed.");
 
             Evaluator.Close();
 
@@ -160,12 +160,12 @@ namespace MeasurementEvaluator
 
         private void SendToErrorLogAndConsole(string message)
         {
-            PluginLoader.SendToInfoLogAndConsole(message);
+            PluginLoader.InfoLog(message);
         }
 
         private void SendToInfoLogAndConsole(string message)
         {
-            PluginLoader.SendToInfoLogAndConsole(message);
+            PluginLoader.InfoLog(message);
         }
 
 

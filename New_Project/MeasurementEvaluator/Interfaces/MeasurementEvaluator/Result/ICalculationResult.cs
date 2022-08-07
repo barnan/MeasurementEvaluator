@@ -5,15 +5,16 @@ namespace Interfaces.MeasurementEvaluator.Result
 {
     public interface ICalculationResult : IResult
     {
-        /// <summary>
-        /// the data serie which was used in the calculation
-        /// </summary>
-        IMeasurementSerie MeasurementSerie { get; }
     }
 
 
     public interface ICalculationResult<T> : ICalculationResult
     {
+        /// <summary>
+        /// the data serie which was used in the calculation
+        /// </summary>
+        IDataSerie<T> MeasurementSerie { get; }
+
         /// <summary>
         /// calculation result
         /// </summary>
