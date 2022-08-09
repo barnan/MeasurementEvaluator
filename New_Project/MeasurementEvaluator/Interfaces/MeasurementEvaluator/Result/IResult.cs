@@ -30,7 +30,7 @@ namespace Interfaces.MeasurementEvaluator.Result
         ///// </summary>
         //void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
 
-        void FeedResult(IResult);
+        void FeedResult(IResult result);
 
         EventHandler<IResult> ResultReady { get; }
     }

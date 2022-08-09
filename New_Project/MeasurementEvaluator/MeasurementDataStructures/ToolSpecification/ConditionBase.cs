@@ -2,14 +2,14 @@
 using BaseClasses.MeasurementEvaluator;
 using Interfaces.MeasurementEvaluator.ToolSpecification;
 
-namespace Evaluation.DataStructures.ToolSpecification
+namespace MeasurementDataStructures.ToolSpecification
 {
-    public abstract class ConditionBase : IConditionHandler
+    public abstract class ConditionBase : ICondition
     {
-        public ConditionBase(string name, CalculationTypes calculationtype, Relations relation, bool enabled)
+        public ConditionBase(string name, CalculationTypes calculationType, Relations relation, bool enabled)
         {
             Name = name;
-            CalculationType = calculationtype;
+            CalculationType = calculationType;
             Relation = relation;
             IsEnabled = enabled;
         }

@@ -1,9 +1,8 @@
-﻿using System.Globalization;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using BaseClasses.MeasurementEvaluator;
 using Interfaces.MeasurementEvaluator.ToolSpecification;
 
-namespace Evaluation.DataStructures.ToolSpecification
+namespace MeasurementDataStructures.ToolSpecification
 {
     public class SimpleCondition : ConditionBase, ISimpleConditionHandler
     {
@@ -24,44 +23,12 @@ namespace Evaluation.DataStructures.ToolSpecification
 
         #endregion
 
-        #region ICondition
-        
-        // evaluation calls it from derived classes:
-        private bool CompareValidity(double rightValue)
-        {
-            bool equality = EqualityComparer<double>.Default.Equals(ValidIf_Value, rightValue);
-            int compResult = Comparer<double>.Default.Compare(ValidIf_Value, rightValue);
-
-            return ValidIf.Evaluation(equality, compResult);
-        }
-
-        #endregion
 
         #region object.ToString()
 
         public override string ToString()
         {
             return $"{base.ToString()}{Environment.NewLine}Valid, if {ValidIf} than {ValidIf_Value}";
-        }
-
-        public override string ToString(string format, IFormatProvider formatProvider)
-        {
-            if (formatProvider == null)
-            {
-                formatProvider = CultureInfo.CurrentCulture;
-            }
-
-            switch (format.ToUpperInvariant())
-            {
-                case null:
-                case "":
-                case "G":
-                    return ToString();
-                case "GRID":
-                    return $"{LeftValue.ToString("N2")} {Relation}";
-                default:
-                    throw new FormatException(String.Format($"The {format} format string is not supported."));
-            }
         }
 
         #endregion

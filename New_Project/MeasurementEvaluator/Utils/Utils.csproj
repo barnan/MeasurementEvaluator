@@ -4,14 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <BaseOutputPath>$(SolutionDir)\bin\$(Configuration)\Plugins</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <Compile Remove="DateTime\**" />
+    <EmbeddedResource Remove="DateTime\**" />
+    <None Remove="DateTime\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DateTime\" />
+    <ProjectReference Include="..\FrameInterfaces\FrameInterfaces.csproj" />
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

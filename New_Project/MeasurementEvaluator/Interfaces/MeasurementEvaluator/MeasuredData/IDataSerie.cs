@@ -8,7 +8,7 @@ namespace Interfaces.MeasurementEvaluator.MeasuredData
         /// <summary>
         /// List of measurement result
         /// </summary>
-        IReadOnlyList<IDataPoint> MeasuredPoints { get; }
+        IReadOnlyList<IDataPoint> DataPoints { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index
@@ -28,7 +28,7 @@ namespace Interfaces.MeasurementEvaluator.MeasuredData
         /// <summary>
         /// List of measurement result
         /// </summary>
-        new IReadOnlyList<IDataPoint<T>> MeasuredPoints { get; }
+        new IReadOnlyList<IDataPoint<T>> DataPoints { get; }
 
         /// <summary>
         /// indexer to get a data point with a given index

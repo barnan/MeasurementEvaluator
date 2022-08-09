@@ -8,6 +8,8 @@ namespace Interfaces.MeasurementEvaluator.MeasuredData
         /// it shows whether the measured data point is valid or not
         /// </summary>
         bool IsValid { get; }
+
+        DateTime CreationTime { get; }
     }
 
     public interface IDataPoint<T> : IDataPoint

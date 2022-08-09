@@ -1,5 +1,5 @@
 ﻿
-namespace Interfaces.Misc
+namespace FrameInterfaces
 {
     public interface IMyLogger
     {
@@ -8,5 +8,11 @@ namespace Interfaces.Misc
         string Debug(string input, params object[] parameters);
         string Warning(string input, params object[] parameters);
         string Error(string input, params object[] parameters);
+
+        bool IsTraceEnabled { get; }
+        bool IsInfoEnabled { get; }
+        bool IsDebugEnabled { get; }
+        bool IsWarningEnabled { get; }
+        bool IsErrorEnabled { get; }
     }
 }

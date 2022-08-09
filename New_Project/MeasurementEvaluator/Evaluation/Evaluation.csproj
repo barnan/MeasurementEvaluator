@@ -4,14 +4,17 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <BaseOutputPath>$(SolutionDir)\bin\$(Configuration)\Plugins</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <Compile Remove="DataStructures\**" />
+    <EmbeddedResource Remove="DataStructures\**" />
+    <None Remove="DataStructures\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataStructures\" />
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
