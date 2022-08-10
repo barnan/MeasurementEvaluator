@@ -30,29 +30,39 @@ namespace StandardLogger
             return _loggers[name];
         }
 
-        public string Trace(string input, params object[] parameters)
+        public string Trace(string inputMessage, Exception exception)
         {
-            throw new NotImplementedException();
+            string message = exception == null ? inputMessage : $"{inputMessage}{exception}";
+            _logger.Trace(message);
+            return message;
         }
 
-        public string Info(string input, params object[] parameters)
+        public string Info(string inputMessage, Exception exception)
         {
-            throw new NotImplementedException();
+            string message = exception == null ? inputMessage : $"{inputMessage}{exception}";
+            _logger.Info(message);
+            return message;
         }
 
-        public string Debug(string input, params object[] parameters)
+        public string Debug(string inputMessage, Exception exception = null)
         {
-            throw new NotImplementedException();
+            string message = exception == null ? inputMessage : $"{inputMessage}{exception}";
+            _logger.Debug(message);
+            return message;
         }
 
-        public string Warning(string input, params object[] parameters)
+        public string Warning(string inputMessage, Exception exception = null)
         {
-            throw new NotImplementedException();
+            string message = exception == null ? inputMessage : $"{inputMessage}{exception}";
+            _logger.Warn(message);
+            return message;
         }
 
-        public string Error(string input, params object[] parameters)
+        public string Error(string inputMessage, Exception exception = null)
         {
-            throw new NotImplementedException();
+            string message = exception == null ? inputMessage : $"{inputMessage}{exception}";
+            _logger.Error(message);
+            return message;
         }
 
         public bool IsTraceEnabled => _logger.IsTraceEnabled;

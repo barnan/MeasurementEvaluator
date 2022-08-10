@@ -1,7 +1,7 @@
 ﻿
 namespace FrameInterfaces
 {
-    public interface IPluginHandler
+    public interface IPluginFactory
     {
         object Create(Type t, string name);
     }

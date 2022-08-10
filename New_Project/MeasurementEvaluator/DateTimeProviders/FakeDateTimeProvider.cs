@@ -1,4 +1,5 @@
-﻿using FrameInterfaces;
+﻿using Frame.PluginLoader;
+using FrameInterfaces;
 using Interfaces.Misc;
 
 namespace DateTimeProviders
@@ -37,7 +38,7 @@ namespace DateTimeProviders
         {
             PluginLoader.ConfigManager.Load(this, sectionName);
 
-            Logger = LogManager.GetLogger(sectionName);
+            Logger = PluginLoader.GetLogger(sectionName);
 
             return true;
         }

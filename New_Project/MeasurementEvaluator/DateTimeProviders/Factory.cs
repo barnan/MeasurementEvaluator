@@ -1,4 +1,5 @@
-﻿using Interfaces.Misc;
+﻿using FrameInterfaces;
+using Interfaces.Misc;
 
 namespace DateTimeProviders
 {

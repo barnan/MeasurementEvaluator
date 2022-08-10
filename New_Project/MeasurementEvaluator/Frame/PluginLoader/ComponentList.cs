@@ -72,7 +72,7 @@ namespace Frame.PluginLoader
 
                 XAttribute nameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, "MeasurementEvaluator");
                 XAttribute typeAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, "MeasurementEValuator");
-                XAttribute interfaceAttribute = new XAttribute(INTERFACE_ATTRIBUTE_NAME, nameof(IRunable));
+                XAttribute interfaceAttribute = new XAttribute(INTERFACE_ATTRIBUTE_NAME, nameof(IRunnable));
 
                 dummyChildElement.Add(nameAttribute);
                 dummyChildElement.Add(typeAttribute);

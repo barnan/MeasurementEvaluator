@@ -1,7 +1,7 @@
 ﻿
 namespace FrameInterfaces
 {
-    public interface IRunable
+    public interface IRunnable
     {
         void Run();
     }

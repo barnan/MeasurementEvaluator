@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FrameInterfaces\FrameInterfaces.csproj" />
+    <ProjectReference Include="..\Frame\Frame.csproj" />
     <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
   </ItemGroup>
 

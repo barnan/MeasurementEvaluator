@@ -11,7 +11,7 @@ namespace Frame.Configuration
     {
         private IMyLogger _logger;
         private string _configFolder;
-        private const string _CONFIG_FILE_EXTENSION = ".config";
+        private const string CONFIG_FILE_EXTENSION = ".config";
         private const string ROOT_NODE_NAME = "Configurations";
         private const string NAME_ATTRIBUTE_NAME = "Name";
         private const string VALUE_ATTRIBUTE_NAME = "Value";
@@ -23,7 +23,7 @@ namespace Frame.Configuration
 
         public ConfigManager(string folder)
         {
-            _logger = LogManager.GetCurrentClassLogger();
+            _logger = PluginLoader.PluginLoader.GetLogger(nameof(ConfigManager));
             _configFolder = folder;
         }
 
@@ -47,7 +47,7 @@ namespace Frame.Configuration
                 Type type = inputObj.GetType();
                 string namespaceOfType = type.Namespace ?? "Unknown";
                 string[] namespaceFragments = namespaceOfType.Split('.');
-                string currentConfigFileName = Path.Combine(_configFolder, namespaceFragments[0] + _CONFIG_FILE_EXTENSION);
+                string currentConfigFileName = Path.Combine(_configFolder, namespaceFragments[0] + CONFIG_FILE_EXTENSION);
 
                 _logger.Info($"Reading object (type: {type}) parameters in section name: {sectionName}");
                 _logger.Info($"Object (type: {type}) namespace {namespaceOfType}");
@@ -58,11 +58,11 @@ namespace Frame.Configuration
 
                 // load the required section in XElement format:
 
-                XElement currentSectionElement = LoadSectionXElementFromFile(currentConfigFileName, sectionName, type);
+                XElement currentSectionElement = LoadSectionFromFile(currentConfigFileName, sectionName);
 
                 if (currentSectionElement == null)
                 {
-                    currentSectionElement = CreateSectionXElement(sectionName, type);
+                    currentSectionElement = CreateSection(sectionName, type.Assembly.ToString());
                 }
 
                 if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
@@ -227,7 +227,7 @@ namespace Frame.Configuration
 
                 if (differenceFound)
                 {
-                    Save(currentConfigFileName, sectionName, currentSectionElement, type);
+                    Save(currentConfigFileName, sectionName, currentSectionElement);
                 }
             }
             catch (Exception ex)
@@ -276,7 +276,7 @@ namespace Frame.Configuration
             }
             catch (Exception ex)
             {
-                _logger.Error($"Exception occured loading xml from file ({currentConfigFileName}): {ex.Message}");
+                _logger.Error($"Exception occurred loading xml from file ({currentConfigFileName}): {ex.Message}");
                 return null;
             }
         }
@@ -284,27 +284,31 @@ namespace Frame.Configuration
         internal void CreateConfigFileIfNotExisting(string currentConfigFileName)
         {
             //get config file list:
-            string[] configFiles = Directory.GetFiles(_configFolder, "*" + _CONFIG_FILE_EXTENSION, SearchOption.TopDirectoryOnly);
+            string[] configFiles = Directory.GetFiles(_configFolder, "*" + CONFIG_FILE_EXTENSION, SearchOption.TopDirectoryOnly);
 
-            if (!Array.Exists<string>(configFiles, p => Path.GetFileName(p) == Path.GetFileName(currentConfigFileName)))
+            if (Array.Exists<string>(configFiles, p => Path.GetFileName(p) == Path.GetFileName(currentConfigFileName)))
             {
-                _logger.Error($"{currentConfigFileName} file was NOT found in {_configFolder}");
-
-                FileStream fs = File.Create(currentConfigFileName);
-                fs.Close();
-
-                _logger.Info($"{currentConfigFileName} created.");
+                return;
             }
+            
+            _logger.Error($"{currentConfigFileName} file was NOT found in {_configFolder}");
+
+            using (FileStream fs = File.Create(currentConfigFileName))
+            {
+                fs.Close();
+            }
+
+            _logger.Info($"{currentConfigFileName} created.");
         }
 
-        internal XElement CreateSectionXElement(string sectionName, Type type)
+        internal XElement CreateSection(string sectionName, string typeString)
         {
             XElement createdXElement = new XElement(SECTION_NODE_NAME);
 
             _logger.Info($"New {sectionName} section was created.");
 
             XAttribute sectionNameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, sectionName);
-            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
+            XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, typeString);
 
             createdXElement.Add(sectionNameAttribute);
             createdXElement.Add(assemblyAttribute);
@@ -313,7 +317,7 @@ namespace Frame.Configuration
         }
 
 
-        internal bool Save(string currentConfigFileName, string sectionName, XElement newElement, Type type)
+        internal bool Save(string currentConfigFileName, string sectionName, XElement newElement)
         {
             if (newElement == null)
             {
@@ -324,7 +328,7 @@ namespace Frame.Configuration
             // read in the xml:
 
             XElement rootXml = LoadXmlFromFile(currentConfigFileName);
-            XElement oldElement = LoadSectionXElementFromXElement(rootXml, sectionName, type);
+            XElement oldElement = LoadSectionXElementFromXElement(rootXml, sectionName);
 
             if (rootXml == null || rootXml.NodeType != XmlNodeType.Element)
             {
@@ -391,16 +395,16 @@ namespace Frame.Configuration
         }
 
 
-        internal XElement LoadSectionXElementFromFile(string fileName, string sectionName, Type type)
+        internal XElement LoadSectionFromFile(string fileName, string sectionName)
         {
             XElement readXml = LoadXmlFromFile(fileName);
 
-            XElement currentSectionElement = LoadSectionXElementFromXElement(readXml, sectionName, type);
+            XElement currentSectionElement = LoadSectionXElementFromXElement(readXml, sectionName);
 
             return currentSectionElement;
         }
 
-        internal XElement LoadSectionXElementFromXElement(XElement inputXElement, string sectionName, Type type)
+        internal XElement LoadSectionXElementFromXElement(XElement inputXElement, string sectionName)
         {
             if (inputXElement == null)
             {
@@ -409,33 +413,23 @@ namespace Frame.Configuration
             }
 
             IEnumerable<XElement> childElements = inputXElement.Elements();
-            XElement currentSection = null;
 
             foreach (XElement element in childElements)
             {
                 IEnumerable<XAttribute> attributeCollection = element.Attributes();
-                if (attributeCollection == null)
+                if (!attributeCollection.Any())
                 {
                     _logger.Error($"No attributes was found for node-element: {element.Name.LocalName}");
                     continue;
                 }
 
-                foreach (XAttribute attribute in attributeCollection)
+                if (attributeCollection.Any(attribute => attribute.Name == NAME_ATTRIBUTE_NAME && attribute.Value == sectionName))
                 {
-                    if (attribute.Name == NAME_ATTRIBUTE_NAME && attribute.Value == sectionName)
-                    {
-                        currentSection = element;
-                        break;
-                    }
-                }
-
-                if (currentSection != null)
-                {
-                    break;
+                    return element;
                 }
             }
 
-            return currentSection;
+            return null;
         }
 
         internal XComment CreateXComment(string description, FieldInfo fieldInfo = null)
@@ -448,7 +442,7 @@ namespace Frame.Configuration
 
             if (string.IsNullOrEmpty(description))
             {
-                _logger.Error("Received description is null or empty.");
+                _logger.Error("Received description is null or empty");
                 return null;
             }
             return new XComment($"{description} {enumDescription}");
@@ -458,7 +452,7 @@ namespace Frame.Configuration
         {
             if (string.IsNullOrEmpty(name))
             {
-                _logger.Error("Received name is null or empty.");
+                _logger.Error("Received name is null or empty");
                 return null;
             }
 
