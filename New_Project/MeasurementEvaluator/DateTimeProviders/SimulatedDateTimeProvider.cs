@@ -1,13 +1,17 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.Configuration;
+using Frame.PluginLoader;
 using FrameInterfaces;
 using Interfaces.Misc;
 
 namespace DateTimeProviders
 {
+    /// <summary>
+    /// Returns the elapsed time from a parameter given time-point
+    /// </summary>
     internal sealed class SimulatedDateTimeProvider : IDateTimeProvider
     {
-        SimulatedDateTimeProviderParameter _parameter;
-        DateTime _instantiationDateTime;
+        private readonly SimulatedDateTimeProviderParameter _parameter;
+        readonly DateTime _instantiationDateTime;
 
 
         public DateTime GetDateTime()
@@ -35,16 +39,18 @@ namespace DateTimeProviders
 
     internal sealed class SimulatedDateTimeProviderParameter
     {
-        public DateTime DateTimeToStart { get; }
+        [Configuration("DateTimeToStart", "DateTimeToStart")]
+        private DateTime _dateTimeToStart = DateTime.Now;
+        internal DateTime DateTimeToStart => _dateTimeToStart;
 
-        internal IMyLogger Logger { get; private set; }
+        internal IMyLogger Logger { get; set; }
 
 
         internal bool Load(string sectionName)
         {
-            PluginLoader.ConfigManager.Load(this, sectionName);
-
             Logger = PluginLoader.GetLogger(sectionName);
+
+            PluginLoader.ConfigManager.Load(this, sectionName);
 
             return true;
         }

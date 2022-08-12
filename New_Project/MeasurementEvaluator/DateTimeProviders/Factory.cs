@@ -7,7 +7,7 @@ namespace DateTimeProviders
     {
         readonly Dictionary<string, IDateTimeProvider> _fakeDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
         readonly Dictionary<string, IDateTimeProvider> _simulatedDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
-        readonly Dictionary<string, IDateTimeProvider> _standardDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
+        readonly Dictionary<string, IDateTimeProvider> _simpleDateTimeProviderDict = new Dictionary<string, IDateTimeProvider>();
 
 
         public object Create(Type t, string name)
@@ -50,16 +50,14 @@ namespace DateTimeProviders
 
             if (t.IsAssignableFrom(typeof(IDateTimeProvider)))
             {
-                if (!_standardDateTimeProviderDict.ContainsKey(name))
+                if (!_simpleDateTimeProviderDict.ContainsKey(name))
                 {
-                    IDateTimeProvider instance = new StandardDateTimeProvider(name);
-                    _standardDateTimeProviderDict.Add(name, instance);
+                    IDateTimeProvider instance = new SimpleDateTimeProvider(name);
+                    _simpleDateTimeProviderDict.Add(name, instance);
                     return instance;
                 }
-                else
-                {
-                    return _standardDateTimeProviderDict[name];
-                }
+
+                return _simpleDateTimeProviderDict[name];
             }
 
             return null;

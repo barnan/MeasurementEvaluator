@@ -14,8 +14,8 @@ namespace MeasurementDataStructures.ToolSpecification
 
         #region ctor
 
-        public SimpleCondition(string name, CalculationTypes calculationtype, Relations relation, bool enabled, Relations validIf, double validIfValue)
-            : base(name, calculationtype, relation, enabled)
+        public SimpleCondition(string name, CalculationTypes calculationType, Relations relation, bool enabled, Relations validIf, double validIfValue)
+            : base(name, calculationType, relation, enabled)
         {
             ValidIf = validIf;
             ValidIf_Value = validIfValue;

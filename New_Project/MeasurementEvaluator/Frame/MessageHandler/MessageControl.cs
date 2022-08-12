@@ -1,5 +1,4 @@
-﻿using BaseClasses.Frame;
-using FrameInterfaces;
+﻿using FrameInterfaces;
 
 namespace Frame.MessageHandler
 {
@@ -9,7 +8,7 @@ namespace Frame.MessageHandler
 
         public void AddMessage(string message)
         {
-            AddMessage(message, MessageSeverityLevels.Trace);
+            AddMessage(message, MessageSeverityLevels.Info);
         }
 
         public void AddMessage(string message, MessageSeverityLevels severityLevel)
@@ -27,16 +26,14 @@ namespace Frame.MessageHandler
 
     public class MessageEventArg : EventArgs
     {
-        private readonly string _data1;
-        private readonly MessageSeverityLevels _data2;
-
         public MessageEventArg(string data1, MessageSeverityLevels data2)
         {
-            _data1 = data1;
-            _data2 = data2;
+            Data1 = data1;
+            Data2 = data2;
         }
 
-        public string Data1 => _data1;
-        public MessageSeverityLevels Data2 => _data2;
+        public string Data1 { get; }
+
+        public MessageSeverityLevels Data2 { get; }
     }
 }

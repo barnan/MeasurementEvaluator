@@ -4,9 +4,12 @@ using Interfaces.Misc;
 
 namespace DateTimeProviders
 {
-    internal sealed class StandardDateTimeProvider : IDateTimeProvider
+    /// <summary>
+    /// Returns the current (DateTime-Now) time
+    /// </summary>
+    internal sealed class SimpleDateTimeProvider : IDateTimeProvider
     {
-        IMyLogger _logger;
+        private readonly IMyLogger _logger;
 
         public DateTime GetDateTime()
         {
@@ -20,11 +23,11 @@ namespace DateTimeProviders
             return datetime;
         }
 
-        public StandardDateTimeProvider(string name)
+        public SimpleDateTimeProvider(string name)
         {
             _logger = PluginLoader.GetLogger(name);
 
-            _logger.Info("Instantiated.");
+            _logger.Info("Instantiated");
         }
     }
 }

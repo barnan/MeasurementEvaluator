@@ -6,6 +6,7 @@ namespace Frame.PluginLoader
     internal class ComponentList
     {
         internal List<Component> Components { get; private set; }
+
         private const string NAME_ATTRIBUTE_NAME = "Name";
         private const string ASSEMBLY_ATTRIBUTE_NAME = "Assembly";
         private const string INTERFACE_ATTRIBUTE_NAME = "Interfaces";
@@ -16,8 +17,8 @@ namespace Frame.PluginLoader
         /// <summary>
         /// Loads the compnent name and type list from the received XmlElement
         /// </summary>
-        /// <param name="xmlDoc"></param>
         /// <param name="inputElement">input xml element</param>
+        /// <param name="logger"></param>
         /// <returns>false -> should be saved (it was empty), true -> save not needed </returns>
         internal bool Load(XElement inputElement, IMyLogger logger)
         {
@@ -58,7 +59,7 @@ namespace Frame.PluginLoader
                             string[] interfaces = interfaceText.Split(';');
                             Components.Add(new Component { Name = nameText, Interfaces = interfaces.ToList(), AssemblyName = assemblyText });
 
-                            logger.Info($"{nameText} {assemblyText} {string.Join(",", interfaces)} added to the component list.");
+                            logger.Info($"{nameText} {assemblyText} {string.Join(",", interfaces)} added to the component list");
                         }
                     }
                 }

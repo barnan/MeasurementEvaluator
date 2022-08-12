@@ -1,12 +1,16 @@
-﻿using Frame.PluginLoader;
+﻿using Frame.Configuration;
+using Frame.PluginLoader;
 using FrameInterfaces;
 using Interfaces.Misc;
 
 namespace DateTimeProviders
 {
+    /// <summary>
+    /// Returns always the same parameter given time point
+    /// </summary>
     internal sealed class FakeDateTimeProvider : IDateTimeProvider
     {
-        FakeDateTimeProviderParameter _parameter;
+        private readonly FakeDateTimeProviderParameter _parameter;
 
         public DateTime GetDateTime()
         {
@@ -29,16 +33,17 @@ namespace DateTimeProviders
 
     internal sealed class FakeDateTimeProviderParameter
     {
-        private DateTime _dateTimeToUse = default(DateTime);
+        [Configuration("DateTimeToUse", "DateTimeToUse")]
+        private DateTime _dateTimeToUse = DateTime.Now;
         internal DateTime DateTimeToUse => _dateTimeToUse;
 
-        internal IMyLogger Logger { get; private set; }
+        internal IMyLogger Logger { get; set; }
 
         internal bool Load(string sectionName)
         {
-            PluginLoader.ConfigManager.Load(this, sectionName);
-
             Logger = PluginLoader.GetLogger(sectionName);
+
+            PluginLoader.ConfigManager.Load(this, sectionName);
 
             return true;
         }

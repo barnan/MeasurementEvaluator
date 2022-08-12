@@ -1,5 +1,5 @@
 ﻿
-namespace BaseClasses.Frame
+namespace FrameInterfaces
 {
     public enum MessageSeverityLevels
     {

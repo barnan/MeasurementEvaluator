@@ -1,5 +1,4 @@
-﻿using BaseClasses.Frame;
-
+﻿
 namespace FrameInterfaces
 {
     public interface IUIMessageControl

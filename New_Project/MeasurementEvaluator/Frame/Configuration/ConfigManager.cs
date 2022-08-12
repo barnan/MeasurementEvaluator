@@ -32,7 +32,7 @@ namespace Frame.Configuration
         {
             if (inputObj == null)
             {
-                _logger.Error("Received object is null.");
+                _logger.Error("Received object is null");
                 return false;
             }
 
@@ -67,7 +67,7 @@ namespace Frame.Configuration
 
                 if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
                 {
-                    currentSectionElement = FixAssembylAttributeOfSection(currentSectionElement, type);
+                    currentSectionElement = FixAssemblyAttributeOfSection(currentSectionElement, type);
                     differenceFound = true;
                 }
 
@@ -104,7 +104,7 @@ namespace Frame.Configuration
                         if (nameAttribute == null || valueAttribute == null)
                         {
                             parameterNode.Remove();
-                            _logger.Info($"Section ({parameterElement.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed.");
+                            _logger.Info($"Section ({parameterElement.Name}) without {NAME_ATTRIBUTE_NAME} or {VALUE_ATTRIBUTE_NAME} attribute was found. It is removed");
 
                             continue;
                         }
@@ -251,7 +251,7 @@ namespace Frame.Configuration
             return true;    // todo befejezni
         }
 
-        private XElement FixAssembylAttributeOfSection(XElement currentSectionElement, Type type)
+        private XElement FixAssemblyAttributeOfSection(XElement currentSectionElement, Type type)
         {
             string assemblyVersionInfo = currentSectionElement.Attribute(ASSEMBLY_ATTRIBUTE_NAME).Value;
 
@@ -262,8 +262,8 @@ namespace Frame.Configuration
                     item.Remove();
                 }
             }
-            XAttribute attrib = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
-            currentSectionElement.Add(attrib);
+            XAttribute attribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, type.Assembly);
+            currentSectionElement.Add(attribute);
             return currentSectionElement;
         }
 
@@ -291,21 +291,21 @@ namespace Frame.Configuration
                 return;
             }
             
-            _logger.Error($"{currentConfigFileName} file was NOT found in {_configFolder}");
+            _logger.Info($"{currentConfigFileName} file was NOT found in {_configFolder}");
 
             using (FileStream fs = File.Create(currentConfigFileName))
             {
                 fs.Close();
             }
 
-            _logger.Info($"{currentConfigFileName} created.");
+            _logger.Info($"{currentConfigFileName} created");
         }
 
         internal XElement CreateSection(string sectionName, string typeString)
         {
             XElement createdXElement = new XElement(SECTION_NODE_NAME);
 
-            _logger.Info($"New {sectionName} section was created.");
+            _logger.Info($"New {sectionName} section was created");
 
             XAttribute sectionNameAttribute = new XAttribute(NAME_ATTRIBUTE_NAME, sectionName);
             XAttribute assemblyAttribute = new XAttribute(ASSEMBLY_ATTRIBUTE_NAME, typeString);
@@ -321,7 +321,7 @@ namespace Frame.Configuration
         {
             if (newElement == null)
             {
-                _logger.Error("Received element is null, can not be saved.");
+                _logger.Error("Received element is null, can not be saved");
                 return false;
             }
 
@@ -408,7 +408,7 @@ namespace Frame.Configuration
         {
             if (inputXElement == null)
             {
-                _logger.Error($"Received ipnutXElement is null, {sectionName} is not found.");
+                _logger.Error($"Received inputXElement is null, {sectionName} is not found");
                 return null;
             }
 

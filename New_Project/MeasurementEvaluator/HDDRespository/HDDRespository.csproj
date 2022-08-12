@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\BaseClasses\BaseClasses.csproj" />
+    <ProjectReference Include="..\Frame\Frame.csproj" />
+    <ProjectReference Include="..\MeasurementDataStructures\MeasurementDataStructures.csproj" />
     <ProjectReference Include="..\Utils\Utils.csproj" />
   </ItemGroup>
 

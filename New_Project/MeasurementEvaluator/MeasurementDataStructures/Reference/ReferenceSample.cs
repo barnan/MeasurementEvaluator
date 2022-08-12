@@ -19,20 +19,13 @@ namespace MeasurementDataStructures.Reference
             set => _referenceValues = (List<IReferenceValue>)value;
         }
 
-
         public SampleOrientations SampleOrientation { get; set; }
-
-
-        public ReferenceSample()
-        {
-        }
 
         public ReferenceSample(string name, IReadOnlyList<IReferenceValue> referenceValues)
         {
             Name = name;
             ReferenceValues = referenceValues;
         }
-
 
         #region IComparable
 

@@ -1,5 +1,4 @@
-﻿using BaseClasses.MeasurementEvaluator;
-
+﻿
 namespace Interfaces.MeasurementEvaluator.Calculation
 {
     /// <summary>
@@ -7,7 +6,7 @@ namespace Interfaces.MeasurementEvaluator.Calculation
     /// </summary>
     public interface ICalculationSettings
     {
-        CalculationTypes ValidCalculation { get; }
+        CalculationTypes CalculationType { get; }
     }
 
 

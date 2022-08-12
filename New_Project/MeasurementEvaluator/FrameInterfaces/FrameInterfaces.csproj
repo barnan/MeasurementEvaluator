@@ -7,8 +7,4 @@
     <BaseOutputPath>$(SolutionDir)\bin\$(Configuration)\Plugins</BaseOutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BaseClasses\BaseClasses.csproj" />
-  </ItemGroup>
-
 </Project>

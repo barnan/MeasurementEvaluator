@@ -1,5 +1,4 @@
-﻿using BaseClasses.MeasurementEvaluator;
-using Interfaces.MeasurementEvaluator.MeasuredData;
+﻿using Interfaces.MeasurementEvaluator.MeasuredData;
 using Interfaces.MeasurementEvaluator.Result;
 
 namespace Interfaces.MeasurementEvaluator.Calculation

@@ -7,7 +7,7 @@ namespace Interfaces.MeasurementEvaluator.Result
     public interface IDataCollectorResult : IResult
     {
         /// <summary>
-        /// The selected (loaded) toolspecification
+        /// The selected (loaded) tool specification
         /// </summary>
         IToolSpecification Specification { get; }
 
@@ -19,7 +19,7 @@ namespace Interfaces.MeasurementEvaluator.Result
         /// <summary>
         /// The selected (loaded) measurement data file contents
         /// </summary>
-        IReadOnlyList<IToolMeasurementData> MeasurementData { get; }
+        IReadOnlyList<IToolMeasurementData> MeasurementDatas { get; }
 
     }
 }

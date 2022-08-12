@@ -13,16 +13,6 @@ namespace Frame.PluginLoader
 {
     public class PluginLoader
     {
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
-
-
-
         private static ICollection<FactoryElement> _factories;
         private static object _lockObj = new object();
         private const string _COMPONENT_SECTION_NAME = "ComponentList";
@@ -61,23 +51,7 @@ namespace Frame.PluginLoader
         {
             _iRunnables = new List<KeyValuePair<Type, Assembly>>();
         }
-
-        //public static void InfoLog(string message)
-        //{
-        //    _logger.Info(message);
-        //    //Console.WriteLine(message + Environment.NewLine);         // todo -> into the standardlogger
-        //}
-
-        //public static void ErrorLog(string message)
-        //{
-        //    _logger.Error(message);
-        //    //ConsoleColor previousColor = Console.ForegroundColor;     // todo
-        //    //Console.ForegroundColor = ConsoleColor.Red;
-        //    //Console.WriteLine(message + Environment.NewLine);
-        //    //Console.ForegroundColor = previousColor;
-        //    //return message;
-        //}
-
+        
 
         /// <summary>
         /// Sets the used pluginfolder to the given path
@@ -232,7 +206,7 @@ namespace Frame.PluginLoader
 
                     runnable.Run();
 
-                    Logger.Info($"{type} started.");
+                    Logger.Info($"{type} started");
                 }
                 catch (Exception ex)
                 {
@@ -529,14 +503,6 @@ namespace Frame.PluginLoader
                 throw new Exception($"Problem during component list loading: {ex.Message}");
             }
         }
-
-
-        [Conditional("RELEASE")]
-        private void HideConsole()
-        {
-            ShowWindow(GetConsoleWindow(), SW_HIDE);
-        }
-
-
+        
     }
 }

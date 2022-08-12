@@ -29,9 +29,14 @@ namespace Interfaces.MeasurementEvaluator.Result
         ///// Un-Subscribe to ResultReadyEvent. 
         ///// </summary>
         //void UnSubscribeToResultReadyEvent(EventHandler<ResultEventArgs> method);
-
-        void FeedResult(IResult result);
-
+        
         EventHandler<IResult> ResultReady { get; }
     }
+
+
+    public interface IResultConsumer
+    {
+        void FeedResult(IResult result);
+    }
+
 }

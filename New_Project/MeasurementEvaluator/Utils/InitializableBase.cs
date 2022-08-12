@@ -6,7 +6,7 @@ namespace Utils
     public abstract class InitializableBase : IInitializable
     {
         private readonly object _initLock = new object();
-        private readonly IMyLogger _logger;
+        protected readonly IMyLogger _logger;
         private InitializationStates _initializationState;
 
         protected InitializableBase(IMyLogger logger)
@@ -19,7 +19,7 @@ namespace Utils
         {
             if (IsInitialized)
             {
-                _logger.Info("Already initialized.");
+                _logger.Info("Already initialized");
                 return IsInitialized;
             }
 
@@ -28,11 +28,14 @@ namespace Utils
             {
                 if (InitializationState == InitializationStates.Initialized)
                 {
-                    _logger.Info("Already initialized.");
+                    _logger.Info("Already initialized");
                     return IsInitialized;
                 }
                 InitializationState = InitializationStates.Initializing;
+                
                 InternalInit();
+                
+                InitializationState = InitializationStates.Initialized;
             }
             catch (Exception ex)
             {
@@ -53,7 +56,7 @@ namespace Utils
         {
             if (!IsInitialized)
             {
-                _logger.Info("Not initialized yet.");
+                _logger.Info("Not initialized yet");
                 return;
             }
 
@@ -62,12 +65,15 @@ namespace Utils
             {
                 if (!IsInitialized)
                 {
-                    _logger.Info("Not initialized yet.");
+                    _logger.Info("Not initialized yet");
                     return;
                 }
 
                 InitializationState = InitializationStates.Closing;
+
                 InternalClose();
+
+                InitializationState = InitializationStates.NotInitialized;
             }
             catch (Exception ex)
             {

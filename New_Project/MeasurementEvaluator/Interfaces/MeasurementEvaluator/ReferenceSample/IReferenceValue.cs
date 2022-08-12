@@ -1,5 +1,4 @@
-﻿using BaseClasses.MeasurementEvaluator;
-using Interfaces.Misc;
+﻿using Interfaces.Misc;
 
 namespace Interfaces.MeasurementEvaluator.ReferenceSample
 {

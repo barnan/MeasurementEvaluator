@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace BaseClasses.MeasurementEvaluator
+namespace Interfaces
 {
     public enum Relations
     {

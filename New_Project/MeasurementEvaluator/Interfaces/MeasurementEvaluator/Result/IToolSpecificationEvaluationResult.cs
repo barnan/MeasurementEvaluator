@@ -1,5 +1,4 @@
-﻿using BaseClasses.MeasurementEvaluator;
-using Interfaces.MeasurementEvaluator.ReferenceSample;
+﻿using Interfaces.MeasurementEvaluator.ReferenceSample;
 using Interfaces.MeasurementEvaluator.ToolSpecification;
 using Interfaces.Misc;
 
@@ -29,7 +28,7 @@ namespace Interfaces.MeasurementEvaluator.Result
     }
 
 
-    public interface IQuantityEvaluationResult
+    public interface IQuantitySpecificationEvaluationResult
     {
         IReadOnlyList<IConditionEvaluationResult> ConditionEvaluationResults { get; }
 
@@ -37,9 +36,9 @@ namespace Interfaces.MeasurementEvaluator.Result
     }
 
 
-    public interface IEvaluationResult : IResult, INamed
+    public interface IToolSpecificationEvaluationResult : IResult, INamed
     {
-        IReadOnlyList<IQuantityEvaluationResult> QuantityEvaluationResults { get; }
+        IReadOnlyList<IQuantitySpecificationEvaluationResult> QuantityEvaluationResults { get; }
 
         ToolNames ToolName { get; }
     }

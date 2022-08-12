@@ -1,5 +1,4 @@
-﻿using BaseClasses.MeasurementEvaluator;
-using Interfaces.Misc;
+﻿using Interfaces.Misc;
 
 namespace Interfaces.MeasurementEvaluator.MeasuredData
 {
@@ -33,7 +32,7 @@ namespace Interfaces.MeasurementEvaluator.MeasuredData
     /// <summary>
     /// interface that describes the measurement result of more than one tools
     /// </summary>
-    public interface IMeasurementDatas<T>
+    public interface IToolMeasurementDatas<T>
     {
         IReadOnlyList<IToolMeasurementData> MeasurementDatas { get; }
     }

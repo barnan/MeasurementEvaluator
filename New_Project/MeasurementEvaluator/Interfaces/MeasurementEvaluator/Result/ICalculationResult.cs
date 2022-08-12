@@ -5,6 +5,10 @@ namespace Interfaces.MeasurementEvaluator.Result
 {
     public interface ICalculationResult : IResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        CalculationTypes CalculationType { get; }
     }
 
 

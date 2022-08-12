@@ -6,7 +6,7 @@ namespace MeasurementDataStructures.ToolSpecification
 {
     public abstract class ConditionBase : ICondition
     {
-        public ConditionBase(string name, CalculationTypes calculationType, Relations relation, bool enabled)
+        protected ConditionBase(string name, CalculationTypes calculationType, Relations relation, bool enabled)
         {
             Name = name;
             CalculationType = calculationType;
