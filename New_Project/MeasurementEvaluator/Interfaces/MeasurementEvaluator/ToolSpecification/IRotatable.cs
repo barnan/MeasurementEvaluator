@@ -1,6 +1,4 @@
 ﻿
-using BaseClasses.MeasurementEvaluator;
-
 namespace Interfaces.MeasurementEvaluator.ToolSpecification
 {
     public interface IRotatable

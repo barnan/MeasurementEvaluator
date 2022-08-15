@@ -1,4 +1,4 @@
-﻿using BaseClasses.MeasurementEvaluator;
+﻿using Interfaces;
 using Interfaces.MeasurementEvaluator.MeasuredData;
 
 namespace MeasurementDataStructures.Data

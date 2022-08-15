@@ -1,5 +1,5 @@
 ﻿using System.Xml.Linq;
-using BaseClasses.MeasurementEvaluator;
+using Interfaces;
 using Interfaces.MeasurementEvaluator.ReferenceSample;
 
 namespace MeasurementDataStructures.Reference
