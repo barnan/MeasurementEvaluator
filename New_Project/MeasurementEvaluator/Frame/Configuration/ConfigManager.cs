@@ -74,7 +74,6 @@ namespace Frame.Configuration
                 // edit according to the received parameter object:
 
 
-
                 FieldInfo currentObjectField = null;
                 FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
                 foreach (var fieldInfo in fieldInfosWithConfigAttribute)

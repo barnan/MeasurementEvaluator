@@ -34,7 +34,7 @@ namespace Starter
 
                 // frame start:
                 PluginLoader pluginLoader = new PluginLoader();
-                if (!pluginLoader.Inititialize(_currentExeFolder))
+                if (!pluginLoader.Initialize(_currentExeFolder))
                 {
                     _logger.Error("Frame initialization was NOT successful");
                     return;

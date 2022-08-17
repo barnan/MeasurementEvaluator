@@ -1,13 +1,10 @@
 ﻿using System.Collections.Specialized;
 using System.Configuration;
-using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Xml.Linq;
 using Frame.Configuration;
 using Frame.MessageHandler;
 using FrameInterfaces;
-using StandardLogger;
 
 namespace Frame.PluginLoader
 {
@@ -58,7 +55,7 @@ namespace Frame.PluginLoader
         /// </summary>
         /// <param name="currentExeFolder"></param>
         /// <returns>if the path is a valid usable folder path -> true, otherwise -> false</returns>
-        public bool Inititialize(string currentExeFolder)
+        public bool Initialize(string currentExeFolder)
         {
             try
             {
@@ -164,7 +161,7 @@ namespace Frame.PluginLoader
             }
             catch (Exception ex)
             {
-                Logger.Error($"Exception occurred during {nameof(Inititialize)}: {ex.Message}");
+                Logger.Error($"Exception occurred during {nameof(Initialize)}: {ex.Message}");
                 return false;
             }
         }
