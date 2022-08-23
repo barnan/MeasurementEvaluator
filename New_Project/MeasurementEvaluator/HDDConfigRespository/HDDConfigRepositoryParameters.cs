@@ -1,8 +1,8 @@
 ﻿using BaseClasses.Repository;
 
-namespace HDDRespository
+namespace HDDConfigRespository
 {
-    internal class HDDRepositoryParameters : GenericHDDRepositoryParameters
+    internal class HDDConfigRepositoryParameters : GenericHDDRepositoryParameters
     {
 
         internal bool Load(string sectionName)

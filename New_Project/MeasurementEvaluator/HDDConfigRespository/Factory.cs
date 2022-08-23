@@ -3,7 +3,7 @@ using FrameInterfaces;
 using Interfaces.DataAcquisition;
 using Interfaces.Misc;
 
-namespace HDDRespository
+namespace HDDConfigRespository
 {
     public class Factory : IPluginFactory
     {
@@ -16,10 +16,10 @@ namespace HDDRespository
             {
                 if (!_repositories.ContainsKey(name))
                 {
-                    HDDRepositoryParameters param = new HDDRepositoryParameters();
+                    HDDConfigRepositoryParameters param = new HDDConfigRepositoryParameters();
                     if (param.Load(name))
                     {
-                        IRepository<INamedContent<XElement>> instance = new HDDRepository(param);
+                        IRepository<INamedContent<XElement>> instance = new HDDConfigRepository(param);
                         _repositories.Add(name, instance);
                         return instance;
                     }

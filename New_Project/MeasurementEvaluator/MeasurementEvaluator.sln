@@ -23,11 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frame", "Frame\Frame.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starter", "Starter\Starter.csproj", "{E6F037A9-3BC1-4529-8E67-3AA8E464AAD9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HDDRespository", "HDDRespository\HDDRespository.csproj", "{5F131A99-7160-4F0A-BF9C-0EEAB08271E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasurementEvaluator", "MeasurementEvaluator\MeasurementEvaluator.csproj", "{CF0A9AA3-4BB0-448B-92FB-8D38645D2742}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluator", "MeasurementEvaluator\MeasurementEvaluator.csproj", "{CF0A9AA3-4BB0-448B-92FB-8D38645D2742}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasurementEvaluatorUIWPF", "MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj", "{A196A8B6-0FEF-4C6F-8C8F-3815FEE3456B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementEvaluatorUIWPF", "MeasurementEvaluatorUIWPF\MeasurementEvaluatorUIWPF.csproj", "{A196A8B6-0FEF-4C6F-8C8F-3815FEE3456B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ME_DummyObjectCreator", "ME_DummyObjectCreator\ME_DummyObjectCreator.csproj", "{9D5969C1-BF77-49A1-882E-05D80D256183}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HDDConfigRespository", "HDDConfigRespository\HDDConfigRespository.csproj", "{2E565880-E23D-477F-A195-313F20AACFA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,10 +77,6 @@ Global
 		{E6F037A9-3BC1-4529-8E67-3AA8E464AAD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6F037A9-3BC1-4529-8E67-3AA8E464AAD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6F037A9-3BC1-4529-8E67-3AA8E464AAD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F131A99-7160-4F0A-BF9C-0EEAB08271E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F131A99-7160-4F0A-BF9C-0EEAB08271E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F131A99-7160-4F0A-BF9C-0EEAB08271E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F131A99-7160-4F0A-BF9C-0EEAB08271E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF0A9AA3-4BB0-448B-92FB-8D38645D2742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF0A9AA3-4BB0-448B-92FB-8D38645D2742}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0A9AA3-4BB0-448B-92FB-8D38645D2742}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,6 +85,14 @@ Global
 		{A196A8B6-0FEF-4C6F-8C8F-3815FEE3456B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A196A8B6-0FEF-4C6F-8C8F-3815FEE3456B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A196A8B6-0FEF-4C6F-8C8F-3815FEE3456B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D5969C1-BF77-49A1-882E-05D80D256183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D5969C1-BF77-49A1-882E-05D80D256183}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D5969C1-BF77-49A1-882E-05D80D256183}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D5969C1-BF77-49A1-882E-05D80D256183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E565880-E23D-477F-A195-313F20AACFA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E565880-E23D-477F-A195-313F20AACFA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E565880-E23D-477F-A195-313F20AACFA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E565880-E23D-477F-A195-313F20AACFA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

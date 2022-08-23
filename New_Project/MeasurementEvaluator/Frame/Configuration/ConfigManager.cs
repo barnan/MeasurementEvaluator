@@ -21,10 +21,10 @@ namespace Frame.Configuration
         private const string LIST_ELEMENT_NODE_NAME = "Element";
 
 
-        public ConfigManager(string folder)
+        public ConfigManager(string configFolder)
         {
             _logger = PluginLoader.PluginLoader.GetLogger(nameof(ConfigManager));
-            _configFolder = folder;
+            _configFolder = configFolder;
         }
 
 
@@ -54,16 +54,8 @@ namespace Frame.Configuration
 
                 bool differenceFound = false;
 
-                CreateConfigFileIfNotExisting(currentConfigFileName);
-
                 // load the required section in XElement format:
-
-                XElement currentSectionElement = LoadSectionFromFile(currentConfigFileName, sectionName);
-
-                if (currentSectionElement == null)
-                {
-                    currentSectionElement = CreateSection(sectionName, type.Assembly.ToString());
-                }
+                XElement currentSectionElement = LoadSectionFromFile(currentConfigFileName, sectionName, type);
 
                 if (!CheckAssemblyAttributeOfSection(currentSectionElement, type))
                 {
@@ -75,7 +67,7 @@ namespace Frame.Configuration
 
 
                 FieldInfo currentObjectField = null;
-                FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => p.GetCustomAttributes(typeof(ConfigurationAttribute)).ToList().Count == 1).ToArray();
+                FieldInfo[] fieldInfosWithConfigAttribute = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToArray();
                 foreach (var fieldInfo in fieldInfosWithConfigAttribute)
                 {
                     ConfigurationAttribute fieldConfigurationAttribute = (ConfigurationAttribute)fieldInfo.GetCustomAttribute(typeof(ConfigurationAttribute));
@@ -108,7 +100,7 @@ namespace Frame.Configuration
                             continue;
                         }
 
-                        if (fieldConfigurationAttribute.Name == nameAttribute.Value)
+                        if (fieldConfigurationAttribute.Name == nameAttribute.Value)        // the node of the given field was found in the section
                         {
                             break;
                         }
@@ -122,7 +114,7 @@ namespace Frame.Configuration
                             currentObjectField = fieldInfo;
                             Type fieldType = currentObjectField.FieldType;
 
-                            // process list if list was found:
+                            // in case of list:
                             if (valueAttribute.Value == string.Empty && xmlListElementNode != null && typeof(ICollection).IsAssignableFrom(fieldType))
                             {
                                 IList listobj = (IList)Activator.CreateInstance(fieldType);
@@ -135,16 +127,17 @@ namespace Frame.Configuration
                                 }
                                 currentObjectField.SetValue(inputObj, listobj);
                             }
-                            else // not list, but a single lement was found
+                            else // not list, but a single element was found
                             {
                                 object temporary;
-                                // if a string was found -> no conversion is needed:
+                                // the field is an enum:
                                 if (fieldType.IsEnum && !string.IsNullOrEmpty(valueAttribute.Value))
                                 {
                                     temporary = Enum.Parse(fieldType, valueAttribute.Value);
                                 }
                                 else
                                 {
+                                    // if a string was found -> no conversion is needed:
                                     if (fieldType.GenericTypeArguments != null && fieldType.GenericTypeArguments.Length > 0 && fieldType.GenericTypeArguments[0] == typeof(System.String))
                                     {
                                         temporary = valueAttribute.Value;
@@ -161,7 +154,7 @@ namespace Frame.Configuration
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error($"Exception occured during {nameAttribute.Value}, {valueAttribute.Value} conversion: {ex.Message}");
+                            _logger.Error($"Exception was occurred during {nameAttribute.Value}, {valueAttribute.Value} conversion: {ex.Message}");
                             break;
                         }
                     }
@@ -217,7 +210,7 @@ namespace Frame.Configuration
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error($"Exception occured during node commenting: {ex.Message}");
+                            _logger.Error($"Exception occurred during node commenting: {ex.Message}");
                         }
 
                         differenceFound = true;
@@ -231,7 +224,7 @@ namespace Frame.Configuration
             }
             catch (Exception ex)
             {
-                _logger.Error($"Exception occured: {ex}");
+                _logger.Error($"Exception occurred: {ex}");
                 return false;
             }
 
@@ -297,7 +290,7 @@ namespace Frame.Configuration
                 fs.Close();
             }
 
-            _logger.Info($"{currentConfigFileName} created");
+            _logger.Info($"{currentConfigFileName} was created");
         }
 
         internal XElement CreateSection(string sectionName, string typeString)
@@ -316,9 +309,9 @@ namespace Frame.Configuration
         }
 
 
-        internal bool Save(string currentConfigFileName, string sectionName, XElement newElement)
+        internal bool Save(string currentConfigFileName, string sectionName, XElement newElementToSave)
         {
-            if (newElement == null)
+            if (newElementToSave == null)
             {
                 _logger.Error("Received element is null, can not be saved");
                 return false;
@@ -327,12 +320,13 @@ namespace Frame.Configuration
             // read in the xml:
 
             XElement rootXml = LoadXmlFromFile(currentConfigFileName);
-            XElement oldElement = LoadSectionXElementFromXElement(rootXml, sectionName);
 
             if (rootXml == null || rootXml.NodeType != XmlNodeType.Element)
             {
                 rootXml = new XElement(ROOT_NODE_NAME);
             }
+
+            XElement oldElement = LoadSectionXElementFromXElement(rootXml, sectionName);
 
             if (oldElement != null)
             {
@@ -348,11 +342,11 @@ namespace Frame.Configuration
 
             try
             {
-                rootXml.Add(newElement);
+                rootXml.Add(newElementToSave);
             }
             catch (Exception ex)
             {
-                _logger.Error($"Tried to add child node: ({newElement.Name}, {sectionName}), but adding was not successful: {ex.Message}");
+                _logger.Error($"Tried to add child node: ({newElementToSave.Name}, {sectionName}), but adding was not successful: {ex.Message}");
                 return false;
             }
 
@@ -372,7 +366,7 @@ namespace Frame.Configuration
             }
             catch (Exception ex)
             {
-                _logger.Error($"Config file ({currentConfigFileName}) could not write: {ex.Message}");
+                _logger.Error($"Config file ({currentConfigFileName}) could not been written: {ex.Message}");
                 return false;
             }
 
@@ -394,23 +388,28 @@ namespace Frame.Configuration
         }
 
 
-        internal XElement LoadSectionFromFile(string fileName, string sectionName)
+        internal XElement LoadSectionFromFile(string fileName, string sectionName, Type type)
         {
+            CreateConfigFileIfNotExisting(fileName);
+
             XElement readXml = LoadXmlFromFile(fileName);
+            XElement section = null;
 
-            XElement currentSectionElement = LoadSectionXElementFromXElement(readXml, sectionName);
+            if (readXml != null)
+            {
+                section = LoadSectionXElementFromXElement(readXml, sectionName);
+            }
 
-            return currentSectionElement;
+            if (section == null)
+            {
+                section = CreateSection(sectionName, type.Assembly.ToString());
+            }
+
+            return section;
         }
 
         internal XElement LoadSectionXElementFromXElement(XElement inputXElement, string sectionName)
         {
-            if (inputXElement == null)
-            {
-                _logger.Error($"Received inputXElement is null, {sectionName} is not found");
-                return null;
-            }
-
             IEnumerable<XElement> childElements = inputXElement.Elements();
 
             foreach (XElement element in childElements)
@@ -449,12 +448,6 @@ namespace Frame.Configuration
 
         internal XElement CreateFieldSectionXElement(string name, string value)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                _logger.Error("Received name is null or empty");
-                return null;
-            }
-
             XElement newElement = new XElement(FIELD_NODE_NAME);
 
             XAttribute nameAttrib = new XAttribute(NAME_ATTRIBUTE_NAME, name);

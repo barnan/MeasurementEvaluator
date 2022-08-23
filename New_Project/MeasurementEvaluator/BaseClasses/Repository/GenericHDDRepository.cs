@@ -12,10 +12,9 @@ namespace BaseClasses.Repository
         private List<INamedContent<T>> _fileContentDictionaryCache;
         private Thread _maintenanceThread;
         private CancellationTokenSource _cts;
-        private static string NAME_ATTRIBUTE_NAME = "Name";
 
 
-        public GenericHDDRepository(GenericHDDRepositoryParameters parameters)
+        protected GenericHDDRepository(GenericHDDRepositoryParameters parameters)
             : base(parameters.Logger)
         {
             _parameters = parameters;

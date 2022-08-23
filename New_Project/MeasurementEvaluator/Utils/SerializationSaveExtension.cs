@@ -10,12 +10,12 @@ namespace Utils
 {
     public static class SerializationSaveExtension
     {
-        public static void TryLoad<T, TV>(this IXmlStorable storable, Expression<Func<T, TV>> expr, XElement inputElement, string name = null)
-        {
-            MemberExpression memberExpression = expr.Body as MemberExpression;
-            PropertyInfo propInfo = memberExpression.Member as PropertyInfo;
-            storable.TryLoad(inputElement, name ?? propInfo.Name);
-        }
+        //public static void TryLoad<T, TV>(this IXmlStorable storable, Expression<Func<T, TV>> expr, XElement inputElement, string name = null)
+        //{
+        //    MemberExpression memberExpression = expr.Body as MemberExpression;
+        //    PropertyInfo propInfo = memberExpression.Member as PropertyInfo;
+        //    storable.TryLoad(inputElement, name ?? propInfo.Name);
+        //}
 
         public static void TryLoad(this IXmlStorable storable, XElement inputElement, string name)
         {

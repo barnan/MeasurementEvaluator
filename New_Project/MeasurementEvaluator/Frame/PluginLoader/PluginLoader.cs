@@ -476,17 +476,8 @@ namespace Frame.PluginLoader
             try
             {
                 string componentListFileName = Path.Combine(ConfigurationFolder, $"{_COMPONENT_FILE_NAME}{_CONFIG_FILE_EXTENSION}");
-
-                ConfigManager.CreateConfigFileIfNotExisting(componentListFileName);
-
+                XElement componentListSection = ConfigManager.LoadSectionFromFile(componentListFileName, _COMPONENT_SECTION_NAME, typeof(ComponentList));
                 ComponentList componentList = new ComponentList();
-                XElement componentListSection = ConfigManager.LoadSectionFromFile(componentListFileName, _COMPONENT_SECTION_NAME);
-
-                if (componentListSection == null)
-                {
-                    componentListSection = ConfigManager.CreateSection(_COMPONENT_SECTION_NAME, typeof(ComponentList).Assembly.ToString());
-                }
-
                 if (!componentList.Load(componentListSection, Logger))
                 {
                     ConfigManager.Save(componentListFileName, _COMPONENT_SECTION_NAME, componentListSection);

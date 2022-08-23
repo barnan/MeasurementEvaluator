@@ -5,20 +5,24 @@ using BaseClasses.Repository;
 using Interfaces.Misc;
 using MeasurementDataStructures;
 
-namespace HDDRespository
+namespace HDDConfigRespository
 {
-    internal class HDDRepository : GenericHDDRepository<XElement>
+    internal class HDDConfigRepository : GenericHDDRepository<XElement>
     {
-        public HDDRepository(GenericHDDRepositoryParameters parameters) 
+        public HDDConfigRepository(GenericHDDRepositoryParameters parameters) 
             : base(parameters)
         {
         }
 
+
+        /// <summary>
+        /// it assumes that the XElement has a name attribute!!
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         protected override INamedContent<XElement> CreateNamedObjectFromFile(string fileName)
         {
             XElement fileContent = XElement.Load(fileName);
-
-            // it assumes that the XElement has a name attribute!!
 
             string name = Path.GetFileNameWithoutExtension(fileName);
 
