@@ -1,0 +1,52 @@
+﻿<base:UserControlBase x:Class="MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF.SampleOrientationUIWPF"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MeasurementEvaluatorUI.UserControls.SampleOrientationUIWPF"
+             xmlns:base="clr-namespace:MeasurementEvaluatorUI.Base"
+             mc:Ignorable="d" 
+             d:DesignHeight="130" d:DesignWidth="200" MinWidth="200" MinHeight="130">
+
+    <GroupBox Header="Sample orientation"> 
+
+        <Grid>
+            
+            <Grid.Resources>
+                <Style x:Key="MarginStyle" TargetType="Control">
+                    <Setter Property="Margin" Value="5 0 5 0"/>
+                </Style>
+                <Style x:Key="TopMarginStyle" TargetType="Control">
+                    <Setter Property="Margin" Value="5 10 5 0"/>
+                </Style>
+                <Style x:Key="BottomMarginStyle" TargetType="Control">
+                    <Setter Property="Margin" Value="5 0 5 10"/>
+                </Style>
+            </Grid.Resources>
+               
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <!--0 degree-->
+            <RadioButton Grid.Row="0" GroupName="SampleDegree" Content="0°" Visibility="{Binding Is_0_DegreeVisible}" Style="{StaticResource TopMarginStyle}">
+            </RadioButton>
+            <!--90 degree-->
+            <RadioButton Grid.Row="1" GroupName="SampleDegree" Content="90°" Visibility="{Binding Is_90_Degreevisible}" Style="{StaticResource MarginStyle}"/>
+            <!--180 degree-->
+            <RadioButton Grid.Row="2" GroupName="SampleDegree" Content="180°" Visibility="{Binding Is_180_Degreevisible}" Style="{StaticResource MarginStyle}"/>
+            <!--270 degree-->
+            <RadioButton Grid.Row="3" GroupName="SampleDegree" Content="270°" Visibility="{Binding Is_270_DegreeVisible}" Style="{StaticResource BottomMarginStyle}"/>
+
+            <!--flip edge-defect order (for WSI)-->
+            <CheckBox Grid.Row="4" Content="Flip edge-defect order" Visibility="{Binding IsdefectOrderFlipVisible}"/>
+        </Grid>
+
+    </GroupBox>
+
+</base:UserControlBase>
+

@@ -11,7 +11,7 @@
   <ItemGroup>
     <Folder Include="Commands\" />
     <Folder Include="Converters\" />
-    <Folder Include="UserControls\" />
+    <Folder Include="UserControls\DataCollectorUIWPF\" />
   </ItemGroup>
 
   <ItemGroup>
